@@ -47,7 +47,7 @@ class SonarrAPI(RequestAPI):
             })
 
         res = self.request_get(path, **data)
-        return res
+        return res.json()
 
 
     def command(self, data):
@@ -61,7 +61,7 @@ class SonarrAPI(RequestAPI):
         """
         path = '/api/command'
         res = self.request_post(path, data)
-        return res        
+        return res.json()        
 
     @staticmethod
     def _build_manual_import_request(manual_dict):
@@ -123,7 +123,7 @@ class SonarrAPI(RequestAPI):
         path = '/api/manualimport'
 
         res = self.request_get(path, **url_params)
-        return res
+        return res.json()
 
     def auto_manual_import(self, **kwargs):
         """Manual import command
@@ -151,7 +151,7 @@ class SonarrAPI(RequestAPI):
     def get_diskspace(self):
         """Return Information about Diskspace in json"""
         res = self.request_get('/api/diskspace')
-        return res.json
+        return res.json()
 
     # TODO: Test this
     def get_episodes_by_series_id(self, series_id):
@@ -167,7 +167,7 @@ class SonarrAPI(RequestAPI):
         }
         path = '/api/episode'
         res = self.request_get(path, **data)
-        return res
+        return res.json()
 
     # TODO: Test this
     def get_episode_by_episode_id(self, episode_id):
@@ -180,7 +180,7 @@ class SonarrAPI(RequestAPI):
         """
         path = '/api/episode/{}'.format(episode_id)
         res = self.request_get(path)
-        return res
+        return res.json()
 
     # TODO: Test this
     def upd_episode(self, data):
@@ -197,7 +197,7 @@ class SonarrAPI(RequestAPI):
         """
         path = '/api/episode'
         res = self.request_put(path, data)
-        return res
+        return res.json()
 
     # TODO: Test this
     def get_episode_files_by_series_id(self, series_id):
@@ -214,7 +214,7 @@ class SonarrAPI(RequestAPI):
         }
         path = '/api/episodefile'
         res = self.request_get(path, **data)
-        return res
+        return res.json()
 
     # TODO: Test this
     def get_episode_file_by_episode_id(self, episode_id):
@@ -228,7 +228,7 @@ class SonarrAPI(RequestAPI):
         """
         path = '/api/episodefile/{}'.format(episode_id)
         res = self.request_get(path)
-        return res
+        return res.json()
 
     # TODO: Test this
     def rem_episode_file_by_episode_id(self, episode_id):
@@ -242,7 +242,7 @@ class SonarrAPI(RequestAPI):
         """
         path = '/api/episodefile/{}'.format(episode_id)
         res = self.request_del(path, data=None)
-        return res
+        return res.json()
 
     # TODO: Test this
     def get_logs(self, **kwargs):
@@ -274,7 +274,7 @@ class SonarrAPI(RequestAPI):
 
         path = '/api/log'
         res = self.request_get(path, **data)
-        return res
+        return res.json()
 
     # TODO: Work in progress.
     def serach_selected(self):
@@ -302,7 +302,7 @@ class SonarrAPI(RequestAPI):
         """
         path = '/api/queue'
         res = self.request_get(path)
-        return res
+        return res.json()
 
 
     # TODO: Test this
@@ -314,7 +314,7 @@ class SonarrAPI(RequestAPI):
         """
         path = '/api/profile'
         res = self.request_get(path)
-        return res
+        return res.json()
 
     # TODO: Test this
     def push_release(self, **kwargs):
@@ -335,7 +335,7 @@ class SonarrAPI(RequestAPI):
         """
         path = '/api/release/push'
         res = self.request_post(path, data=kwargs)
-        return res
+        return res.json()
 
     # TODO: Test this
     def get_root_folder(self):
@@ -346,7 +346,7 @@ class SonarrAPI(RequestAPI):
         """
         path = '/api/rootfolder'
         res = self.request_get(path)
-        return res
+        return res.json()
 
     # TODO: Test this
     def get_series(self):
@@ -357,7 +357,7 @@ class SonarrAPI(RequestAPI):
         """
         path = '/api/series'
         res = self.request_get(path)
-        return res
+        return res.json()
 
     # TODO: Test this
     def get_series_by_series_id(self, series_id):
@@ -372,7 +372,7 @@ class SonarrAPI(RequestAPI):
         """
         path = '/api/series/{}'.format(series_id)
         res = self.request_get(path)
-        return res
+        return res.json()
 
     # TODO: Test this
     def constuct_series_json(self, tvdbId, quality_profile):
@@ -413,7 +413,7 @@ class SonarrAPI(RequestAPI):
         """
         path = '/api/series'
         res = self.request_post(path, data=series_json)
-        return res
+        return res.json()
 
     # TODO: Test this
     def upd_series(self, data):
@@ -424,7 +424,7 @@ class SonarrAPI(RequestAPI):
         """
         path = '/api/series'
         res = self.request_put(path, data)
-        return res
+        return res.json()
 
     # TODO: Test this
     def rem_series(self, series_id, rem_files=False):
@@ -440,7 +440,7 @@ class SonarrAPI(RequestAPI):
         }
         path = '/api/series/{}'.format(series_id)
         res = self.request_del(path, data)
-        return res
+        return res.json()
 
     # TODO: Test this
     def lookup_series(self, **kwargs):
@@ -455,9 +455,8 @@ class SonarrAPI(RequestAPI):
         """
         path = '/api/series/lookup'
         res = self.request_get(path, **kwargs)
-        return res
+        return res.json()
 
-    # TODO: Test this
     def get_system_status(self):
         """Returns the System Status as json"""
         res = self.request_get('/api/system/status')
