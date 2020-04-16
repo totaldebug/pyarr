@@ -52,6 +52,3 @@ __pycache__
 
 # python
 *.pyc
-
-# IDE
-.vscode/*
