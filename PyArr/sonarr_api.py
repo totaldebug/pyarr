@@ -149,11 +149,7 @@ class SonarrAPI(RequestAPI):
         return self.command(data)
 
     def get_diskspace(self):
-        """Return Information about Diskspace
-        
-            Returns:
-                requests.models.Response: Response object form requests.
-        """
+        """Return Information about Diskspace in json"""
         res = self.request_get('/api/diskspace')
         return res.json
 
@@ -463,6 +459,6 @@ class SonarrAPI(RequestAPI):
 
     # TODO: Test this
     def get_system_status(self):
-        """Returns the System Status"""
+        """Returns the System Status as json"""
         res = self.request_get('/api/system/status')
         return res.json()
