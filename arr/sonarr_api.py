@@ -465,6 +465,6 @@ class SonarrAPI(RequestAPI):
     # TODO: Test this
     def get_system_status(self):
         """Returns the System Status"""
-        path = '/system/status'
+        path = '/api/system/status'
         res = self.request_get(path)
         return res

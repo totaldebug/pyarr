@@ -8,7 +8,7 @@ with open('README.md') as r:
 
 setup(
     name='arr',
-    version='0.1',
+    version='0.2',
     install_requires=requirements,
     packages=['arr',],
     license='Sonarr and Radarr API Wrapper',
