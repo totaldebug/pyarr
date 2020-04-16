@@ -465,5 +465,5 @@ class SonarrAPI(RequestAPI):
     # TODO: Test this
     def get_system_status(self):
         """Returns the System Status"""
-        res = self.request_get(f'{self.host_url}/api/system/status')
+        res = self.request_get('/api/system/status')
         return res.json()
