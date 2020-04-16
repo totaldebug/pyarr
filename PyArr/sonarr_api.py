@@ -448,8 +448,7 @@ class SonarrAPI(RequestAPI):
 
                 term (str): term filter for lookup_series.
         """
-        path = '/api/series/lookup'
-        res = self.request_get(f'/series/lookup?term={term}')
+        res = self.request_get(f'/api/series/lookup?term={term}')
         return res.json()
 
     def get_system_status(self):
