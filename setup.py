@@ -7,10 +7,10 @@ with open('README.md') as r:
     readme = r.read()
 
 setup(
-    name='arr',
+    name='PyArr',
     version='0.2',
     install_requires=requirements,
-    packages=['arr',],
+    packages=['PyArr',],
     license='Sonarr and Radarr API Wrapper',
     long_description=readme
 )
