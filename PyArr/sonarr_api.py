@@ -154,9 +154,8 @@ class SonarrAPI(RequestAPI):
             Returns:
                 requests.models.Response: Response object form requests.
         """
-        path = '/api/diskspace'
-        res = self.request_get(path)
-        return res
+        res = self.request_get('/api/diskspace')
+        return res.json
 
     # TODO: Test this
     def get_episodes_by_series_id(self, series_id):
