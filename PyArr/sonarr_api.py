@@ -439,22 +439,17 @@ class SonarrAPI(RequestAPI):
             'deleteFiles': 'true'
         }
         path = '/api/series/{}'.format(series_id)
-        res = self.request_del(path, data)
+        res = self.request_del(path, term)
         return res.json()
 
     # TODO: Test this
-    def lookup_series(self, **kwargs):
+    def lookup_series(self, term):
         """Searches for new shows on trakt
-        
-            Kwargs:
+
                 term (str): term filter for lookup_series.
-                **kwargs: Any url attributes to add to the request.
-        
-            Returns:
-                requests.models.Response: Response object form requests.
         """
         path = '/api/series/lookup'
-        res = self.request_get(path, **kwargs)
+        res = self.request_get(f'/series/lookup?term={term}')
         return res.json()
 
     def get_system_status(self):
