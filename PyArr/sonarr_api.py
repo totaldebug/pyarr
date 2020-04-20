@@ -337,15 +337,9 @@ class SonarrAPI(RequestAPI):
         res = self.request_post(path, data=kwargs)
         return res.json()
 
-    # TODO: Test this
     def get_root_folder(self):
-        """Returns the Root Folder
-        
-            Returns:
-                requests.models.Response: Response object form requests.
-        """
-        path = '/api/rootfolder'
-        res = self.request_get(path)
+        """Returns the Root Folder"""
+        res = self.request_get('/api/rootfolder')
         return res.json()
 
     # TODO: Test this
