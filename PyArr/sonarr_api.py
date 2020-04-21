@@ -370,9 +370,8 @@ class SonarrAPI(RequestAPI):
 
     # TODO: Test this
     def construct_series_json(self, tvdbId, quality_profile):
-        """Searches for new series and creates a construct for adding"""
-        path = f'/api/series/lookup?term=tvdbId:{str(tvdbId)}'
-        res = self.request_get(path)
+        """Searches for new shows on trakt and returns Series object to add"""
+        res = self.request_get("{}/series/lookup?term={}".format(self.host_url, 'tvdbId:' + str(tvdbId)))
         s_dict = res.json()[0]
 
         # get root folder path
@@ -387,9 +386,9 @@ class SonarrAPI(RequestAPI):
             'tvdbId': tvdbId,
             'images': s_dict['images'],
             'titleSlug': s_dict['titleSlug'],
-            'addOptions': {
-                          'ignoreEpisodesWithFiles': True,
-                          'ignoreEpisodesWithoutFiles': True
+            "addOptions": {
+                          "ignoreEpisodesWithFiles": True,
+                          "ignoreEpisodesWithoutFiles": True
                         }
                     }
         return series_json
