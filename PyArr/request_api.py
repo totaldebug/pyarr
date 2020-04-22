@@ -51,6 +51,7 @@ class RequestAPI:
             url = self.host_url,
             path=path
         )
+        print(request_url)
         try:
             encoded_params = urlencode(kwargs)
             request_url = "{}?{}".format(
