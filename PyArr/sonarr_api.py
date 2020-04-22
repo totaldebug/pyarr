@@ -443,7 +443,7 @@ class SonarrAPI(RequestAPI):
             term = f'tvdb:{term}'
             print(term)
             kwargs = {"term": term}
-        res = self.request_get(f'/api/series/lookup', kwargs)
+        res = self.request_get('/api/series/lookup', kwargs)
         return res.json()
 
     def get_system_status(self):
