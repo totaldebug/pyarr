@@ -58,6 +58,7 @@ class RequestAPI:
                 request_url,
                 encoded_params
             )
+            print(request_url)
         except:
             pass
 
