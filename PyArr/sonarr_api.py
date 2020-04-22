@@ -441,7 +441,7 @@ class SonarrAPI(RequestAPI):
         """
         if term.isdigit():
             term = f'tvdb:{term}'
-
+            print(term)
         res = self.request_get(f'/api/series/lookup?term={term}')
         return res.json()
 
