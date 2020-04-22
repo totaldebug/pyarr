@@ -372,7 +372,7 @@ class SonarrAPI(RequestAPI):
     def construct_series_json(self, tvdbId):
         quality_profile = 1
         """Searches for new shows on trakt and returns Series object to add"""
-        res = self.lookup_series(tvdbId):
+        res = self.lookup_series(tvdbId)
         return print(res)
         s_dict = res[0]
 
