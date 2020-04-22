@@ -51,7 +51,6 @@ class RequestAPI:
             url = self.host_url,
             path=path
         )
-        print(request_url)
         try:
             if len(kwargs) >= 1:
                 encoded_params = urlencode(kwargs)
@@ -59,7 +58,6 @@ class RequestAPI:
                     request_url,
                     encoded_params
                 )
-            print(request_url)
         except:
             pass
 
