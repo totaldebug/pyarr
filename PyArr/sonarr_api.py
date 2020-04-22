@@ -373,8 +373,8 @@ class SonarrAPI(RequestAPI):
         quality_profile = 1
         """Searches for new shows on trakt and returns Series object to add"""
         res = self.lookup_series(tvdbId):
-        return print(res.json())
-        s_dict = res.json()[0]
+        return print(res)
+        s_dict = res[0]
 
         # get root folder path
         root = self.get_root_folder()[0]['path']
