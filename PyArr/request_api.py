@@ -53,11 +53,12 @@ class RequestAPI:
         )
         print(request_url)
         try:
-            encoded_params = urlencode(kwargs)
-            request_url = "{}?{}".format(
-                request_url,
-                encoded_params
-            )
+            if len(kwargs) >= 1:
+                encoded_params = urlencode(kwargs)
+                request_url = "{}?{}".format(
+                    request_url,
+                    encoded_params
+                )
             print(request_url)
         except:
             pass
