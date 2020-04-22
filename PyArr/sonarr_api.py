@@ -371,8 +371,8 @@ class SonarrAPI(RequestAPI):
     # TODO: Test this
     def construct_series_json(self, tvdbId, quality_profile):
         """Searches for new shows on trakt and returns Series object to add"""
-        print(tvdbId, quality_profile)
-        res = self.request_get('/api/series/lookup?term=tvdb:{}'.format(str(tvdbId)))
+        tvdbId = f'tvdb:{tvdbId}'
+        res = self.request_get(f'/api/series/lookup?term={tvdbId}')
         print(res.json())
         s_dict = res.json()[0]
 
