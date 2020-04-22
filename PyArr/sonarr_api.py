@@ -369,12 +369,12 @@ class SonarrAPI(RequestAPI):
         return res.json()
 
     # TODO: Test this
-    def constuct_series_json(self, tvdbId):
-        quality_profile = 1
+    def construct_series_json(self, tvdbId, quality_profile):
         """Searches for new shows on trakt and returns Series object to add"""
-        res = self.lookup_series(tvdbId)
-        return print(res)
-        s_dict = res[0]
+        
+        res = self.request_get(f'/api/series/lookup?term=tvdb:{tvdbId}')
+        return print(res.json())
+        s_dict = res.json()[0]
 
         # get root folder path
         root = self.get_root_folder()[0]['path']
@@ -441,9 +441,8 @@ class SonarrAPI(RequestAPI):
         """
         if term.isdigit():
             term = f'tvdb:{term}'
-            print(term)
-            kwargs = {"term": term}
-        res = self.request_get('/api/series/lookup', kwargs)
+
+        res = self.request_get(f'/api/series/lookup?term={term}')
         return res.json()
 
     def get_system_status(self):
