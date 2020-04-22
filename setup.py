@@ -8,7 +8,7 @@ with open('README.md') as r:
 
 setup(
     name='PyArr',
-    version='0.3.1dev',
+    version='0.3.2dev',
     install_requires=requirements,
     packages=['PyArr',],
     license='Sonarr and Radarr API Wrapper',

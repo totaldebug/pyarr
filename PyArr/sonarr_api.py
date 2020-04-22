@@ -369,7 +369,8 @@ class SonarrAPI(RequestAPI):
         return res.json()
 
     # TODO: Test this
-    def construct_series_json(self, tvdbId, quality_profile):
+    def construct_series_json(self, tvdbId):
+        quality_profile = 1
         """Searches for new shows on trakt and returns Series object to add"""
         if tvdbId.isdigit():
             tvdbId = f'tvdb:{tvdbId}'
