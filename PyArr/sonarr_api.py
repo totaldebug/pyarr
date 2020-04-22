@@ -442,7 +442,7 @@ class SonarrAPI(RequestAPI):
         if term.isdigit():
             term = f'tvdb:{term}'
             print(term)
-        res = self.request_get(f'/api/series/lookup?term={term}')
+        res = self.request_get(f'/api/series/lookup', f'term={term}')
         return res.json()
 
     def get_system_status(self):
