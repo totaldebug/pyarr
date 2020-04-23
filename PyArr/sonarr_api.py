@@ -304,14 +304,8 @@ class SonarrAPI(RequestAPI):
         res = self.request_get(path)
         return res.json()
 
-
-    # TODO: Test this
     def get_quality_profiles(self):
-        """Gets all quality profiles
-        
-            Returns:
-                requests.models.Response: Response object form requests.
-        """
+        """Gets all quality profiles"""
         path = '/api/profile'
         res = self.request_get(path)
         return res.json()
@@ -368,7 +362,6 @@ class SonarrAPI(RequestAPI):
         res = self.request_get(path)
         return res.json()
 
-    # TODO: Test this
     def construct_series_json(self, tvdbId, quality_profile):
         """Searches for new shows on trakt and returns Series object to add"""
         
@@ -394,35 +387,22 @@ class SonarrAPI(RequestAPI):
                     }
         return series_json
 
-    # TODO: Test this
     def add_series(self, series_json):
-        """Add a new series to your collection
-        
-            Returns:
-                requests.models.Response: Response object form requests.
-        """
+        """Add a new series to your collection"""
         path = '/api/series'
         res = self.request_post(path, data=series_json)
         return res.json()
 
     # TODO: Test this
     def upd_series(self, data):
-        """Update an existing series
-        
-            Returns:
-                requests.models.Response: Response object form requests.
-        """
+        """Update an existing series"""
         path = '/api/series'
         res = self.request_put(path, data)
         return res.json()
 
     # TODO: Test this
     def rem_series(self, series_id, rem_files=False):
-        """Delete the series with the given ID
-
-            Returns:
-                requests.models.Response: Response object form requests.
-        """
+        """Delete the series with the given ID"""
         # File deletion does not work
         data = {
             # 'id': series_id,
@@ -432,17 +412,21 @@ class SonarrAPI(RequestAPI):
         res = self.request_del(path, term)
         return res.json()
 
-    # TODO: Test this
     def lookup_series(self, term):
-        """Searches for new shows on trakt
-
-                term (str): term filter for lookup_series.
-        """
+        """Searches for new shows on tvdb"""
         if term.isdigit():
             term = f'tvdb:{term}'
 
         res = self.request_get(f'/api/series/lookup?term={term}')
         return res.json()
+
+    def get_image(self, tvdbId, type):
+        if type == 'banner':
+            return self.request_get(f'/api/MediaCover/{tvdbId}/banner.jpg')
+        elif type == 'fanart':
+            return self.request_get(f'/api/MediaCover/{tvdbId}/fanart.jpg')
+        else:
+            return self.request_get(f'/api/MediaCover/{tvdbId}/poster.jpg')
 
     def get_system_status(self):
         """Returns the System Status as json"""
