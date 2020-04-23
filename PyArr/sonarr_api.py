@@ -420,14 +420,6 @@ class SonarrAPI(RequestAPI):
         res = self.request_get(f'/api/series/lookup?term={term}')
         return res.json()
 
-    def get_image(self, tvdbId, type):
-        if type == 'banner':
-            return self.request_get(f'/api/MediaCover/{tvdbId}/banner.jpg')
-        elif type == 'fanart':
-            return self.request_get(f'/api/MediaCover/{tvdbId}/fanart.jpg')
-        else:
-            return self.request_get(f'/api/MediaCover/{tvdbId}/poster.jpg')
-
     def get_system_status(self):
         """Returns the System Status as json"""
         res = self.request_get('/api/system/status')
