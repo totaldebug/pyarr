@@ -420,6 +420,11 @@ class SonarrAPI(RequestAPI):
         res = self.request_get(f'/api/series/lookup?term={term}')
         return res.json()
 
+    deg get_backups(self):
+        """Returns the backups as json"""
+        res = self.request_get('/api/system/backup')
+        return res.json()
+
     def get_system_status(self):
         """Returns the System Status as json"""
         res = self.request_get('/api/system/status')
