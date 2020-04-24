@@ -20,34 +20,85 @@ class SonarrAPI(RequestAPI):
         """
         super().__init__(host_url, api_key)
 
-    def get_calendar(self, **kwargs):
-        """Gets upcoming episodes, if start/end are not supplied episodes 
-        airing today and tomorrow will be returned
+    #TODO: TEST
+    def getCalendar(self, **kwargs):
+        """getCalendar retrieves info about when episodes were/will be downloaded.
+           If start and end are not provided, retrieves episodes airing today and tomorrow.
 
             Kwargs:
                 start_date (datetime):
                 end_date (datetime): 
         
             Returns:
-                requests.models.Response: Response object form requests.
+                json response
 
         """
         path = '/api/calendar'
         data = {}
         if isinstance(kwargs['start_date'], datetime):
-            date = kwargs['start_date'].strftime('%Y-%m-%dT%H:%M:%S.000Z') 
-            data.update({
-                'start': date
-            })
+            startDate = kwargs['start_date'].strftime('%Y-%m-%dT%H:%M:%S.000Z') 
+        else:
+            startDate = datetime.now().strftime('%Y-%m-%dT%H:%M:%S.000Z') 
 
         if isinstance(kwargs['end_date'], datetime):
-            date = kwargs['end_date'].strftime('%Y-%m-%dT%H:%M:%S.000Z') 
-            data.update({
-                'end': date
-            })
+            endDate = kwargs['end_date'].strftime('%Y-%m-%dT%H:%M:%S.000Z') 
+        else:
+            startDate = datetime.now().strftime('%Y-%m-%dT%H:%M:%S.000Z')   
+
+        data.update({
+            'start': startDate,
+            'end': endDate
+        })
 
         res = self.request_get(path, **data)
         return res.json()
+
+    def getDiskSpace(self):
+        """GetDiskSpace retrieves info about the disk space remaining on the server.
+        
+            Returns:
+                json response
+
+        """
+        res = self.request_get('/api/diskspace')
+        return res.json()
+
+    # TODO: Test this
+    def getEpisodes(self, **kwargs):
+        """Returns all episodes for the given series
+            Args:
+                series_id (int):
+        
+            Returns:
+                json response
+        """
+        for key, value in kwargs.items():
+            if key == 'seriesId':
+                data = {
+                    key: value
+                }
+                path = '/api/episode'
+            elif key == 'episodeId':
+                data = {
+                    key: value
+                }
+                path = f'/api/episode/{value}'
+        res = self.request_get(path, **data)
+        return res.json()
+
+    # TODO: Test this
+    def getEpisode_by_episode_id(self, episode_id):
+        """Returns the episode with the matching id
+            Args:
+                episode_id (int): 
+        
+            Returns:
+                requests.models.Response: Response object form requests.
+        """
+        path = '/api/episode/{}'.format(episode_id)
+        res = self.request_get(path)
+        return res.json()
+
 
 
     def command(self, data):
@@ -148,39 +199,7 @@ class SonarrAPI(RequestAPI):
         data = self._build_manual_import_request(rejections)
         return self.command(data)
 
-    def get_diskspace(self):
-        """Return Information about Diskspace in json"""
-        res = self.request_get('/api/diskspace')
-        return res.json()
-
-    # TODO: Test this
-    def get_episodes_by_series_id(self, series_id):
-        """Returns all episodes for the given series
-            Args:
-                series_id (int):
-        
-            Returns:
-                requests.models.Response: Response object form requests.
-        """
-        data = {
-            'seriesId': series_id
-        }
-        path = '/api/episode'
-        res = self.request_get(path, **data)
-        return res.json()
-
-    # TODO: Test this
-    def get_episode_by_episode_id(self, episode_id):
-        """Returns the episode with the matching id
-            Args:
-                episode_id (int): 
-        
-            Returns:
-                requests.models.Response: Response object form requests.
-        """
-        path = '/api/episode/{}'.format(episode_id)
-        res = self.request_get(path)
-        return res.json()
+    
 
     # TODO: Test this
     def upd_episode(self, data):
