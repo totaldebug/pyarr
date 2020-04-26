@@ -21,9 +21,9 @@ class SonarrAPI(RequestAPI):
         super().__init__(host_url, api_key)
 
     #TODO: TEST
-    def getCalendar(self, **kwargs):
-        """getCalendar retrieves info about when episodes were/will be downloaded.
-           If start and end are not provided, retrieves episodes airing today and tomorrow.
+    def getCalendar(self, *args):
+        """getCalendar retrieves info about when series were/will be downloaded.
+           If start and end are not provided, retrieves series airing today and tomorrow.
 
             Kwargs:
                 start_date (datetime):
@@ -35,20 +35,22 @@ class SonarrAPI(RequestAPI):
         """
         path = '/api/calendar'
         data = {}
-        if isinstance(kwargs['start_date'], datetime):
-            startDate = kwargs['start_date'].strftime('%Y-%m-%dT%H:%M:%S.000Z') 
-        else:
-            startDate = datetime.now().strftime('%Y-%m-%dT%H:%M:%S.000Z') 
+        
+        if len(args) == 2:
+            start_date = args[0]
+            end_date = args[1]
+             
+            if isinstance(start_date, datetime):
+                startDate = start_date.strftime('%Y-%m-%d')
+                data.update({
+                    'start': startDate                
+                })
 
-        if isinstance(kwargs['end_date'], datetime):
-            endDate = kwargs['end_date'].strftime('%Y-%m-%dT%H:%M:%S.000Z') 
-        else:
-            startDate = datetime.now().strftime('%Y-%m-%dT%H:%M:%S.000Z')   
-
-        data.update({
-            'start': startDate,
-            'end': endDate
-        })
+            if isinstance(end_date, datetime):
+                endDate = end_date.strftime('%Y-%m-%d') 
+                data.update({
+                    'end': endDate
+                })
 
         res = self.request_get(path, **data)
         return res.json()
