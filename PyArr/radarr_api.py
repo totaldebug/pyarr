@@ -19,3 +19,38 @@ class RadarrAPI(RequestAPI):
                 api_key: API key from Radarr. You can find this
         """
         super().__init__(host_url, api_key)
+    
+    #TODO: TEST
+    def getCalendar(self, *args):
+        """getCalendar retrieves info about when movies were/will be downloaded.
+           If start and end are not provided, retrieves movies airing today and tomorrow.
+
+            Kwargs:
+                start_date (datetime):
+                end_date (datetime): 
+        
+            Returns:
+                json response
+
+        """
+        path = '/api/calendar'
+        data = {}
+        
+        if len(args) == 2:
+            start_date = args[0]
+            end_date = args[1]
+             
+            if isinstance(start_date, datetime):
+                startDate = start_date.strftime('%Y-%m-%d')
+                data.update({
+                    'start': startDate                
+                })
+
+            if isinstance(end_date, datetime):
+                endDate = end_date.strftime('%Y-%m-%d') 
+                data.update({
+                    'end': endDate
+                })
+
+        res = self.request_get(path, **data)
+        return res.json()
