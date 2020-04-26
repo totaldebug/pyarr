@@ -25,7 +25,7 @@ class RadarrAPI(RequestAPI):
         """getCalendar retrieves info about when movies were/will be downloaded.
            If start and end are not provided, retrieves movies airing today and tomorrow.
 
-            Kwargs:
+            args:
                 start_date (datetime):
                 end_date (datetime): 
         
@@ -39,7 +39,7 @@ class RadarrAPI(RequestAPI):
         if len(args) == 2:
             start_date = args[0]
             end_date = args[1]
-             
+
             if isinstance(start_date, datetime):
                 startDate = start_date.strftime('%Y-%m-%d')
                 data.update({
@@ -54,3 +54,26 @@ class RadarrAPI(RequestAPI):
 
         res = self.request_get(path, **data)
         return res.json()
+
+    def getCommand(self):
+        """getCommand Queries the status of a previously 
+            started command, or all currently started commands.
+
+            Returns:
+                json response
+
+        """
+        path = '/api/command'
+
+        res = self.request_get(path)
+        return res.json()
+
+    def setCommand(self, cmdName):
+        """setCommand runs the specified command aginst Radarr.
+
+            Parameters:
+                cmdName - Name of the command to run
+            Returns:
+                json response
+
+        """
