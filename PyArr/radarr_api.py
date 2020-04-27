@@ -68,7 +68,7 @@ class RadarrAPI(RequestAPI):
         res = self.request_get(path)
         return res.json()
 
-    def setCommand(self, cmdName):
+    def setCommand(self, **kwargs):
         """setCommand runs the specified command aginst Radarr.
 
             Parameters:
@@ -77,3 +77,29 @@ class RadarrAPI(RequestAPI):
                 json response
 
         """
+        possibleCommands = {
+            'RefreshMovie',
+            'MoviesSearch',
+            'DownloadedMoviesScan',
+            'RssSync',
+            'RenameFiles',
+            'RenameMovie',
+            'CutOffUnmetMoviesSearch',
+            'NetImportSync',
+            'missingMoviesSearch'
+        }
+        data = {}
+        if len(kwargs) >= 1:
+            for key, value in kwargs.items():
+                print("{0} = {1}".format(key, value))
+            name = kwargs['Name']
+            
+            if name in possibleCommands:
+                data.update({
+                    'name': name
+                })
+
+                path = '/api/command'
+                res = self.request_post(path, data)
+                return res.json()
+
