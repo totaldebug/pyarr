@@ -25,9 +25,9 @@ class SonarrAPI(RequestAPI):
         """getCalendar retrieves info about when series were/will be downloaded.
            If start and end are not provided, retrieves series airing today and tomorrow.
 
-            Kwargs:
-                start_date (datetime):
-                end_date (datetime): 
+            args:
+                start_date:
+                end_date: 
         
             Returns:
                 json response
