@@ -55,7 +55,7 @@ class RadarrAPI(RequestAPI):
         res = self.request_get(path, **data)
         return res.json()
 
-    def getCommand(self):
+    def getCommand(self, *args):
         """getCommand Queries the status of a previously 
             started command, or all currently started commands.
 
@@ -63,7 +63,10 @@ class RadarrAPI(RequestAPI):
                 json response
 
         """
-        path = '/api/command'
+        if len(args) == 1:
+            path = f'/api/command/{args[0]}'
+        else:
+            path = '/api/command'
 
         res = self.request_get(path)
         return res.json()
