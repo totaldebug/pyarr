@@ -169,7 +169,7 @@ class RadarrAPI(RequestAPI):
 
         """
         term = str(term)
-
+        #TODO: find what is wrong with the TMDB & IMDB Lookups
         if term.isdigit():
             path = f'/api/movie/lookup/tmdb?tmdbId={term}'
             print(path)
@@ -182,6 +182,7 @@ class RadarrAPI(RequestAPI):
         res = self.request_get(path)
         return res.json()  
 
+    #TODO: Need to finish building this
     def constructMovieJson(self, tmdbId, qualityProfileId ):
         """Searches for movie on tmdb and returns Movie json to add"""
         
@@ -207,6 +208,7 @@ class RadarrAPI(RequestAPI):
                     }
         return series_json
 
+    #TODO: Need to finish building this
     def addMovie(self, *args):
         """addMovie adds a new movie to collection
             
