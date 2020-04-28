@@ -55,15 +55,109 @@ class SonarrAPI(RequestAPI):
         res = self.request_get(path, **data)
         return res.json()
 
-    def getDiskSpace(self):
-        """GetDiskSpace retrieves info about the disk space remaining on the server.
-        
+    def getCommand(self, *args):
+        """getCommand Queries the status of a previously 
+            started command, or all currently started commands.
+
+            Args:
+                Optional - id (int) Unique ID of command
             Returns:
                 json response
 
         """
-        res = self.request_get('/api/diskspace')
+        if len(args) == 1:
+            path = f'/api/command/{args[0]}'
+        else:
+            path = '/api/command'
+
+        res = self.request_get(path)
         return res.json()
+
+    def __setCommand(self, data):
+        """Private Command Method
+            
+            Args:
+                data (dict): data payload to send to /api/command
+
+            Returns:
+                json response
+        """
+        path = '/api/command'
+        res = self.request_post(path, data)
+        return res.json()  
+
+    def RefreshSeries(self, *args):
+        """RefreshSeries refreshes series information and rescans disk.
+
+            Args:
+                Optional - seriesId (int)        
+            Returns:
+                json response
+
+        """
+        data = {}
+        if len(args) == 1: 
+            data.update({
+                'name': 'RefreshSeries',
+                'seriesId': args[0]
+            })
+        else:
+            data.update({
+                'name': 'RefreshSeries'
+            })
+        return self.__setCommand(data)
+
+    def RescanSeries(self, *args):
+        """RescanSeries scans disk for any downloaded episodes for all or specified series.
+
+            Args:
+                Optional - seriesId (int)        
+            Returns:
+                json response
+
+        """
+        data = {}
+        if len(args) == 1: 
+            data.update({
+                'name': 'RescanSeries',
+                'seriesId': args[0]
+            })
+        else:
+            data.update({
+                'name': 'RescanSeries'
+            })
+        return self.__setCommand(data)
+
+    def getDiskSpace(self):
+        """GetDiskSpace retrieves info about the disk space on the server.
+            
+            Args: 
+                None
+            Returns:
+                json response
+
+        """
+        path = '/api/diskspace'
+        res = self.request_get(path)
+        return res.json()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     # TODO: Test this
     def getEpisodes(self, **kwargs):
@@ -99,109 +193,7 @@ class SonarrAPI(RequestAPI):
         """
         path = '/api/episode/{}'.format(episode_id)
         res = self.request_get(path)
-        return res.json()
-
-
-
-    def command(self, data):
-        """Command Method
-
-            Args:
-                data (dict): data payload to send to /api/command
-
-            Returns:
-                requests.models.Response: Response object form requests.
-        """
-        path = '/api/command'
-        res = self.request_post(path, data)
-        return res.json()        
-
-    @staticmethod
-    def _build_manual_import_request(manual_dict):
-        """This will build the request to post to /api/command for manual
-        imports. Filter the episodes you want to process from /api/manualimport
-        and pass the dictionary here. This will generate your data response for
-        the method command().
-
-            Args:
-                manual_dict (dict): Pass a filtered dict from manual_import 
-                method
-            
-            Returns:
-                data (dict): Returns the data dictionary used to pass to the 
-                command method.
-
-        """
-        data = {
-            'name': 'manualImport',
-            'files': [],
-            'importMode': 'Move'
-        }
-        for episode in manual_dict:
-            try:
-                episode_ids = [ep['id'] for ep in episode['episodes']]
-            except:
-                print(episode)
-                
-            path = episode['path']
-            series_id = episode['episodes'][0]['seriesId']
-            
-            data['files'].append({
-                'path': path,
-                'seriesId': series_id,
-                'episodeIds': episode_ids,
-                'quality': episode['quality']
-            })
-        return data
-     
-    def manual_import(self, **kwargs):
-        """Manual import command
-            Kwargs:
-                folder (str): Folder to manually look at. Default is '/'.
-                sort_by (str): What field to sort by. Default is 
-                'qualityWeight'.
-                order (str): desc or asc. Default is 'desc' 
-            
-            Returns:
-                requests.models.Response: Response object form requests.
-        
-        """     
-        url_params = {
-            'folder': kwargs.get('folder', '/'),
-            'sort_by': kwargs.get('sort_by', 'qualityWeight'),
-            'order': kwargs.get('sort_by', 'desc'),
-            'apikey': self.api_key
-        }        
-        
-        path = '/api/manualimport'
-
-        res = self.request_get(path, **url_params)
-        return res.json()
-
-    def auto_manual_import(self, **kwargs):
-        """Manual import command
-            Kwargs:
-                folder (str): Folder to manually look at.
-                sort_by (str): What field to sort by.
-                order (str): desc or asc. 
-                verbose (bool): Want it to print out what episodes it found?
-
-            Returns:
-                requests.models.Response: Response object form requests.     
-        """     
-        verbose = kwargs.get('verbose', False)
-        manual_import = self.manual_import(**kwargs)
-        mi_dict = manual_import.json()
-        rejections = [data for data in mi_dict if len(data['rejections']) < 1]
-
-        if verbose:
-            for episode in rejections:
-                print(episode['name'])
-
-        data = self._build_manual_import_request(rejections)
-        return self.command(data)
-
-    
+        return res.json()   
 
     # TODO: Test this
     def upd_episode(self, data):
