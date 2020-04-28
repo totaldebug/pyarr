@@ -13,7 +13,8 @@ nav_order: 5
 
 - New release{: .label .label-purple } - RefreshMovie
 - New release{: .label .label-purple } - RescanMovie
-- Coming soon{: .label .label-yellow } - lookupMovie
+- New release{: .label .label-yellow } - lookupMovie
+- New release{: .label .label-yellow } - addMovie
 
 ## Sonarr Specific
 

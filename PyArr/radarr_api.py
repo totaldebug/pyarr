@@ -169,54 +169,67 @@ class RadarrAPI(RequestAPI):
 
         """
         term = str(term)
-        #TODO: find what is wrong with the TMDB & IMDB Lookups
         if term.isdigit():
             path = f'/api/movie/lookup/tmdb?tmdbId={term}'
-            print(path)
         elif term.startswith('tt'):
             path = f'/api/movie/lookup/imdb?imdbId={term}'
         else:
             term = term.replace(' ', '%20')
             path = f'/api/movie/lookup?term={term}'
-
         res = self.request_get(path)
-        return res.json()  
+        return res.json()
 
-    #TODO: Need to finish building this
-    def constructMovieJson(self, tmdbId, qualityProfileId ):
-        """Searches for movie on tmdb and returns Movie json to add"""
+    def getRoot(self):
+        """Returns the Root Folder"""
+        path = '/api/rootfolder'
+        res = self.request_get(path)
+        return res.json()
+
+    def constructMovieJson(self, dbId, qualityProfileId):
+        """Searches for movie on tmdb and returns Movie json to add
         
-        res = self.lookupMovie(tvdbId)
+            Args:
+                Required - dbID, <imdb or tmdb id>
+                Required - qualityProfileId (int)
+            
+            Return:
+                JsonArray
+        
+        """
+        
+        res = self.lookupMovie(dbId)
         s_dict = res[0]
 
-        # get root folder path
-        root = self.get_root_folder()[0]['path']
-        series_json = {
+        root = self.getRoot()[0]['path']
+        movie_json = {
             'title': s_dict['title'],
-            'seasons': s_dict['seasons'],
             'path': root + s_dict['title'],
-            'qualityProfileId': quality_profile,
-            'seasonFolder': True,
-            'monitored': True,
-            'tvdbId': tvdbId,
+            'qualityProfileId': qualityProfileId,
+            'profileId': qualityProfileId,
+            'year': s_dict['year'],
+            'tmdbId': s_dict['tmdbId'],
             'images': s_dict['images'],
             'titleSlug': s_dict['titleSlug'],
+            'monitored': True,
             "addOptions": {
-                          "ignoreEpisodesWithFiles": True,
-                          "ignoreEpisodesWithoutFiles": True
+                          "searchForMovie": True
                         }
                     }
-        return series_json
+        return movie_json
 
     #TODO: Need to finish building this
-    def addMovie(self, *args):
+    def addMovie(self, dbId, qualityProfileId):
         """addMovie adds a new movie to collection
             
             Args: 
-                tmdbid
+                Required - dbid
+                Required - qualityProfileId
             Returns:
                 json response
 
         """
+        movie_json = self.constructMovieJson(dbId, qualityProfileId)
 
-        self.constructMovieJson(tmdbId, qualityProfileId)
+        path = '/api/movie'
+        res = self.request_post(path, data=movie_json)
+        return res.json()

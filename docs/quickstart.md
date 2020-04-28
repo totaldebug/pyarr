@@ -6,6 +6,11 @@ nav_order: 1
 
 # 🚀 Quick Start With GitHub Pages
 
+## Requirements
+
+- Minimum Radarr ver: 0.2.0.1480
+- Minimum Sonarr ver: 2.0.0.5344
+
 ## Install as module
 
 * Run the following command:
