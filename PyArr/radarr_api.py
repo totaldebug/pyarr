@@ -244,7 +244,7 @@ class RadarrAPI(RequestAPI):
         return res.json()
 
     # Not Tested
-    def delQueue(self, *args):
+    def delQueue(self, id, *args):
         """Deletes an item from the queue and download client. Optionally blacklist item after deletion.
         
             Args: 
@@ -254,15 +254,36 @@ class RadarrAPI(RequestAPI):
                 json response        
         """
         data = {}
+        data.update({
+            'id': id
+        })
         if len(args) == 1:
             data.update({
-                'id': args[0]
-            })
-        if len(args) == 2:
-            data.update({
-                'id': args[0],
                 'blacklist': args[1],
             })
         path = '/api/queue/'
         res = self.request_del(path, data)
+        return res.json()
+
+    def getHistory(self, page, **kwargs):
+        """Gets history (grabs/failures/completed)
+        
+            Args: 
+                Required - page (int) - 1-indexed
+                Optional - pageSize (int) - Default: 0
+                Optional - sortKey (string) - movie.title or date
+                Optional - sortDir (string) - asc or desc - Default: asc
+            Returns:
+                json response        
+        """
+        data = {}
+        data.update({
+            'page': page
+        })
+        for key, value in kwargs.items(): 
+            data.update({
+                key: value
+            })
+        path = '/api/history/'
+        res = self.request_post(path, data)
         return res.json()
