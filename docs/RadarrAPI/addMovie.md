@@ -1,6 +1,6 @@
 ---
 layout: default
-title: lookupMovie
+title: addMovie
 parent: RadarrAPI
 nav_order: 4
 ---
