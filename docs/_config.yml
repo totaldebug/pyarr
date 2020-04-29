@@ -12,5 +12,5 @@ color_scheme: "dark"
 footer_content: "Copyright &copy; 2017-2020 Steven Marks. Distributed by an <a href=\"https://github.com/marksie1988/pulsarr/tree/master/LICENSE.md\">MIT license.</a>"
 # Aux links for the upper right navigation
 aux_links:
-    "Pulsarr on GitHub":
-      - "//github.com/marksie1988/pulsarr"
+    "PyArr on GitHub":
+      - "//github.com/marksie1988/PyArr"

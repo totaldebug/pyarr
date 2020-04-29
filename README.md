@@ -1,9 +1,11 @@
 Sonarr and Radarr API Python Wrapper
 ==========================
 
-Forked from [SLiX69/Sonarr-API-Python-Wrapper](https://github.com/SLiX69/Sonarr-API-Python-Wrapper)
+Original Sonarr wrapper from [SLiX69/Sonarr-API-Python-Wrapper](https://github.com/SLiX69/Sonarr-API-Python-Wrapper) which has been mostly re-written and Radarr added by myself. 
 
-Unofficial Python Wrapper for the [Sonarr](https://github.com/Sonarr/Sonarr) and [Radarr](https://github.com/Radarr/Radarr) API. We currently only support Sonarr and have not tested for Radarr. 
+Unofficial Python Wrapper for the [Sonarr](https://github.com/Sonarr/Sonarr) and [Radarr](https://github.com/Radarr/Radarr) API.
+
+Currently the package is under development, see the full [documentation](https://marksie1988.github.io/PyArr) for supported commands
 
 ### Requirements
 - requests
@@ -48,4 +50,6 @@ print(radarr.getCalendar())
 
 ### Documentation
 
-[Sonarr API Documentation](https://github.com/Sonarr/Sonarr/wiki/API)
+- [PyArr Documentation](https://marksie1988.github.io/PyArr) 
+- [Sonarr API Documentation](https://github.com/Sonarr/Sonarr/wiki/API)
+- [Radarr API Documentation](https://github.com/Radarr/Radarr/wiki/API)
