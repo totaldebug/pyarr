@@ -8,7 +8,9 @@ nav_order: 4
 ## Summary
 
 Work in Progress
-{: .label .label-yellow } Returns all Movies in your collection
+{: .label .label-yellow } 
+
+Returns all Movies in your collection
 
 ## Parameters
 
