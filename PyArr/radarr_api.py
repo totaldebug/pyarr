@@ -85,7 +85,7 @@ class RadarrAPI(RequestAPI):
         res = self.request_post(path, data)
         return res.json()   
 
-    def RefreshMovie(self, *args):
+    def refreshMovie(self, *args):
         """RefreshMovie refreshes movie information and rescans disk.
 
             Args:
@@ -106,7 +106,7 @@ class RadarrAPI(RequestAPI):
             })
         return self.__setCommand(data)
 
-    def RescanMovie(self, *args):
+    def rescanMovie(self, *args):
         """RescanMovie scans disk for any downloaded movie for all or specified movie.
 
             Args:
@@ -196,9 +196,7 @@ class RadarrAPI(RequestAPI):
                 JsonArray
         
         """
-        
-        res = self.lookupMovie(dbId)
-        s_dict = res[0]
+        s_dict = self.lookupMovie(dbId)
 
         root = self.getRoot()[0]['path']
         movie_json = {
@@ -217,7 +215,6 @@ class RadarrAPI(RequestAPI):
                     }
         return movie_json
 
-    #TODO: Need to finish building this
     def addMovie(self, dbId, qualityProfileId):
         """addMovie adds a new movie to collection
             
