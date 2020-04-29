@@ -86,7 +86,7 @@ class SonarrAPI(RequestAPI):
         res = self.request_post(path, data)
         return res.json()  
 
-    def RefreshSeries(self, *args):
+    def refreshSeries(self, *args):
         """RefreshSeries refreshes series information and rescans disk.
 
             Args:
@@ -107,7 +107,7 @@ class SonarrAPI(RequestAPI):
             })
         return self.__setCommand(data)
 
-    def RescanSeries(self, *args):
+    def rescanSeries(self, *args):
         """RescanSeries scans disk for any downloaded episodes for all or specified series.
 
             Args:

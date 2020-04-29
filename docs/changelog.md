@@ -4,6 +4,21 @@ title: ChangeLog
 nav_order: 7
 ---
 
+# v0.8.0
+
+## New Features
+
+- Updated docs
+
+### Radarr
+
+- API Calls
+  - getQueue
+  - delQueue
+  - getHistory
+
+### Sonarr
+
 # v0.7.0
 
 ## New Features
