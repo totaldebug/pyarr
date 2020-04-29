@@ -236,3 +236,33 @@ class RadarrAPI(RequestAPI):
         path = '/api/system/status'
         res = self.request_get(path)
         return res.json()
+    
+    def getQueue(self):
+        """Gets queue info (downloading/completed, ok/warning) as json"""
+        path = '/api/queue'
+        res = self.request_get(path)
+        return res.json()
+
+    # Not Tested
+    def delQueue(self, *args):
+        """Deletes an item from the queue and download client. Optionally blacklist item after deletion.
+        
+            Args: 
+                Required - id (int)
+                Optional - blacklist (bool)
+            Returns:
+                json response        
+        """
+        data = {}
+        if len(args) == 1:
+            data.update({
+                'id': args[0]
+            })
+        if len(args) == 2:
+            data.update({
+                'id': args[0],
+                'blacklist': args[1],
+            })
+        path = '/api/queue/'
+        res = self.request_del(path, data)
+        return res.json()
