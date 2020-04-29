@@ -1,4 +1,4 @@
-from distutils.core import setup
+import setuptools
 
 with open('requirements.txt') as f:
     requirements = f.read().splitlines()
@@ -6,11 +6,21 @@ with open('requirements.txt') as f:
 with open('README.md') as r:
     readme = r.read()
 
-setup(
+setuptools.setup(
     name='PyArr',
     version='0.6.0',
+    author="marksie1988",
+    description="A Sonarr and Radarr API Wrapper",
+    long_description=readme,
+    long_description_content_type="text/markdown",
+    url="https://github.com/marksie1988/PyArr",
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+    ],
+    python_requires='>=3.8',
     install_requires=requirements,
     packages=['PyArr',],
-    license='Sonarr and Radarr API Wrapper',
-    long_description=readme
+    license='MIT'
 )

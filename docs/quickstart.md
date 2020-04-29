@@ -11,13 +11,24 @@ nav_order: 1
 - Minimum Radarr ver: 0.2.0.1480
 - Minimum Sonarr ver: 2.0.0.5344
 
-## Install as module
+## Install with pip
+
+### from package
+
+```shell
+pip install PyArr
+```
+
+### from source
 
 * Run the following command:
+  
   ```shell
   pip install -e https://github.com/marksie1988/PyArr.git#egg=PyArr
   ```
+
 * Add this to requirements.txt or run a requirements export
+  
   ```shell
   -e git+https://github.com/marksie1988/PyArr.git#egg=PyArr
   ```
