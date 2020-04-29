@@ -230,3 +230,9 @@ class RadarrAPI(RequestAPI):
         path = '/api/movie'
         res = self.request_post(path, data=movie_json)
         return res.json()
+
+    def getSystemStatus(self):
+        """Returns the System Status as json"""
+        path = '/api/system/status'
+        res = self.request_get(path)
+        return res.json()
