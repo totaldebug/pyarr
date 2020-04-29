@@ -8,14 +8,14 @@ Unofficial Python Wrapper for the [Sonarr](https://github.com/Sonarr/Sonarr) and
 ### Requirements
 - requests
 
-### Example Usage:
+### Example Sonarr Usage:
 
 ```
 # Import SonarrAPI Class
-from arr import SonarrAPI
+from PyArr import SonarrAPI
 
 # Set Host URL and API-Key
-host_url = 'http://your-domain.com/api'
+host_url = 'http://your-domain.com'
 
 # You can find your API key in Settings > General.
 api_key = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
@@ -24,7 +24,26 @@ api_key = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 sonarr = SonarrAPI(host_url, api_key)
 
 # Get and print TV Shows
-print sonarr.get_series()
+print(sonarr.getSeries())
+```
+
+### Example Radarr Usage:
+
+```
+# Import RadarrAPI Class
+from PyArr import RadarrAPI
+
+# Set Host URL and API-Key
+host_url = 'http://your-domain.com'
+
+# You can find your API key in Settings > General.
+api_key = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+
+# Instantiate RadarrAPI Object
+radarr = RadarrAPI(host_url, api_key)
+
+# Get and print TV Shows
+print(radarr.getCalendar())
 ```
 
 ### Documentation
