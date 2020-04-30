@@ -1,4 +1,4 @@
- 
+
 from urllib.parse import urlencode
 
 import requests
@@ -7,8 +7,8 @@ import requests
 class RequestAPI:
 
     def __init__(
-        self, 
-        host_url: str, 
+        self,
+        host_url: str,
         api_key: str,
     ):
         """Constructor requires Host-URL and API-KEY
@@ -66,13 +66,13 @@ class RequestAPI:
 
     def request_post(self, path, data):
         """Wrapper on the requests.post
-        
+
             Args:
                 path (str): Path to API. E.g. /api/manualimport
                 data (dict): data payload to send with request.
 
             Returns:
-                requests.models.Response: Response object form requests.     
+                requests.models.Response: Response object form requests.
         """
         headers = {
             'X-Api-Key': self.api_key
@@ -82,22 +82,22 @@ class RequestAPI:
             path=path
         )
         res = self.session.post(
-            request_url, 
-            headers=headers, 
-            json=data, 
+            request_url,
+            headers=headers,
+            json=data,
             auth=self.auth
         )
         return res
 
     def request_put(self, path, data):
         """Wrapper on the requests.put
-        
+
             Args:
                 path (str): Path to API. E.g. /api/manualimport
                 data (dict): data payload to send with request.
 
             Returns:
-                requests.models.Response: Response object form requests.    
+                requests.models.Response: Response object form requests.
         """
         headers = {
             'X-Api-Key': self.api_key
@@ -107,16 +107,16 @@ class RequestAPI:
             path=path
         )
         res = self.session.put(
-            request_url, 
-            headers=headers, 
-            json=data, 
+            request_url,
+            headers=headers,
+            json=data,
             auth=self.auth
         )
         return res
 
     def request_del(self, path, data):
         """Wrapper on the requests.delete
-        
+
             Args:
                 path (str): Path to API. E.g. /api/manualimport
                 data (dict): data payload to send with request.
@@ -132,9 +132,9 @@ class RequestAPI:
             path=path
         )
         res = self.session.delete(
-            request_url, 
-            headers=headers, 
-            json=data, 
+            request_url,
+            headers=headers,
+            json=data,
             auth=self.auth
         )
         return res

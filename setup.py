@@ -1,3 +1,5 @@
+"""This module provides a Python wrapper for Radarr and Sonarr"""
+
 import setuptools
 
 with open('requirements.txt') as f:

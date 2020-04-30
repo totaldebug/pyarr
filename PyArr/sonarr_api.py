@@ -8,8 +8,8 @@ from .request_api import RequestAPI
 class SonarrAPI(RequestAPI):
 
     def __init__(
-            self, 
-            host_url: str, 
+            self,
+            host_url: str,
             api_key: str,
         ):
         """Constructor requires Host-URL and API-KEY
@@ -27,27 +27,27 @@ class SonarrAPI(RequestAPI):
 
             args:
                 start_date:
-                end_date: 
-        
+                end_date:
+
             Returns:
                 json response
 
         """
         path = '/api/calendar'
         data = {}
-        
+
         if len(args) == 2:
             start_date = args[0]
             end_date = args[1]
-             
+
             if isinstance(start_date, datetime):
                 startDate = start_date.strftime('%Y-%m-%d')
                 data.update({
-                    'start': startDate                
+                    'start': startDate
                 })
 
             if isinstance(end_date, datetime):
-                endDate = end_date.strftime('%Y-%m-%d') 
+                endDate = end_date.strftime('%Y-%m-%d')
                 data.update({
                     'end': endDate
                 })
@@ -56,7 +56,7 @@ class SonarrAPI(RequestAPI):
         return res.json()
 
     def getCommand(self, *args):
-        """getCommand Queries the status of a previously 
+        """getCommand Queries the status of a previously
             started command, or all currently started commands.
 
             Args:
@@ -75,7 +75,7 @@ class SonarrAPI(RequestAPI):
 
     def __setCommand(self, data):
         """Private Command Method
-            
+
             Args:
                 data (dict): data payload to send to /api/command
 
@@ -84,19 +84,19 @@ class SonarrAPI(RequestAPI):
         """
         path = '/api/command'
         res = self.request_post(path, data)
-        return res.json()  
+        return res.json()
 
     def refreshSeries(self, *args):
         """RefreshSeries refreshes series information and rescans disk.
 
             Args:
-                Optional - seriesId (int)        
+                Optional - seriesId (int)
             Returns:
                 json response
 
         """
         data = {}
-        if len(args) == 1: 
+        if len(args) == 1:
             data.update({
                 'name': 'RefreshSeries',
                 'seriesId': args[0]
@@ -111,13 +111,13 @@ class SonarrAPI(RequestAPI):
         """RescanSeries scans disk for any downloaded episodes for all or specified series.
 
             Args:
-                Optional - seriesId (int)        
+                Optional - seriesId (int)
             Returns:
                 json response
 
         """
         data = {}
-        if len(args) == 1: 
+        if len(args) == 1:
             data.update({
                 'name': 'RescanSeries',
                 'seriesId': args[0]
@@ -130,8 +130,8 @@ class SonarrAPI(RequestAPI):
 
     def getDiskSpace(self):
         """GetDiskSpace retrieves info about the disk space on the server.
-            
-            Args: 
+
+            Args:
                 None
             Returns:
                 json response
@@ -164,7 +164,7 @@ class SonarrAPI(RequestAPI):
         """Returns all episodes for the given series
             Args:
                 series_id (int):
-        
+
             Returns:
                 json response
         """
@@ -186,23 +186,23 @@ class SonarrAPI(RequestAPI):
     def getEpisode_by_episode_id(self, episode_id):
         """Returns the episode with the matching id
             Args:
-                episode_id (int): 
-        
+                episode_id (int):
+
             Returns:
                 requests.models.Response: Response object form requests.
         """
         path = '/api/episode/{}'.format(episode_id)
         res = self.request_get(path)
-        return res.json()   
+        return res.json()
 
     # TODO: Test this
     def upd_episode(self, data):
-        """Update the given episodes, currently only monitored is changed, all 
-        other modifications are ignored. All parameters (you should perform a 
-        GET/{id} and submit the full body with the changes, as other values may 
+        """Update the given episodes, currently only monitored is changed, all
+        other modifications are ignored. All parameters (you should perform a
+        GET/{id} and submit the full body with the changes, as other values may
         be editable in the future.
 
-            Args: 
+            Args:
                 data (dict): data payload
 
             Returns:
@@ -218,7 +218,7 @@ class SonarrAPI(RequestAPI):
 
             Args:
                 series_id (int):
-        
+
             Returns:
                 requests.models.Response: Response object form requests.
         """
@@ -237,7 +237,7 @@ class SonarrAPI(RequestAPI):
                 episode_id (int):
 
             Returns:
-                requests.models.Response: Response object form requests.     
+                requests.models.Response: Response object form requests.
         """
         path = '/api/episodefile/{}'.format(episode_id)
         res = self.request_get(path)
@@ -246,12 +246,12 @@ class SonarrAPI(RequestAPI):
     # TODO: Test this
     def rem_episode_file_by_episode_id(self, episode_id):
         """Delete the given episode file
-        
+
             Kwargs:
                 episode_id (str):
 
             Returns:
-                requests.models.Response: Response object form requests. 
+                requests.models.Response: Response object form requests.
         """
         path = '/api/episodefile/{}'.format(episode_id)
         res = self.request_del(path, data=None)
@@ -265,14 +265,14 @@ class SonarrAPI(RequestAPI):
                 page (int): Page number. Default 1.
                 page_size (int): How many records per page. Default 50.
                 sort_key (str): What key to sort on. Default 'time'.
-                sort_dir (str): What direction to sort asc or desc. Default 
+                sort_dir (str): What direction to sort asc or desc. Default
                 desc.
                 filter_key (str): What key to filter on. Default None.
                 filter_value (str): What to filter on (Warn, Info, Error, All).
                 Default All.
 
             Returns:
-                requests.models.Response: Response object form requests.        
+                requests.models.Response: Response object form requests.
         """
         data = {
             'page': kwargs.get('page', 1),
@@ -296,9 +296,9 @@ class SonarrAPI(RequestAPI):
     # TODO: Test this
     def search_all_missing(self):
         """Gets all missing episodes and task's the indexer/downloader.
-        
+
             Returns:
-                requests.models.Response: Response object form requests. 
+                requests.models.Response: Response object form requests.
         """
         data = {
             'name': 'missingEpisodeSearch'
@@ -309,7 +309,7 @@ class SonarrAPI(RequestAPI):
     # TODO: Test this
     def get_queue(self):
         """Gets current downloading info
-        
+
             Returns:
                 requests.models.Response: Response object form requests.
         """
@@ -332,7 +332,7 @@ class SonarrAPI(RequestAPI):
             publishDate: ISO8601 date string
 
             Kwargs:
-                title (str): 
+                title (str):
                 downloadUrl (str):
                 protocol (str):
                 publishDate (str):
@@ -352,7 +352,7 @@ class SonarrAPI(RequestAPI):
     # TODO: Test this
     def get_series(self):
         """Return all series in your collection
-        
+
             Returns:
                 requests.models.Response: Response object form requests.
         """
@@ -362,9 +362,9 @@ class SonarrAPI(RequestAPI):
 
     # TODO: Test this
     def get_series_by_series_id(self, series_id):
-        """Return the series with the matching ID or 404 if no matching series 
+        """Return the series with the matching ID or 404 if no matching series
         is found
-        
+
             Args:
                 series_id (int):
 
@@ -377,7 +377,7 @@ class SonarrAPI(RequestAPI):
 
     def construct_series_json(self, tvdbId, quality_profile):
         """Searches for new shows on trakt and returns Series object to add"""
-        
+
         res = self.lookup_series(tvdbId)
         s_dict = res[0]
 
