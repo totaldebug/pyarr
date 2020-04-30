@@ -21,4 +21,4 @@ jobs:
       - name: Running PyLint
         uses: "docker://clburlison/pylint:latest"
         with:
-          args: pylint .
+          args: pylint setup.py
