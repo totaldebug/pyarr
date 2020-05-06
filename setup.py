@@ -1,14 +1,14 @@
 import setuptools
 
-with open('requirements.txt') as f:
+with open("requirements.txt") as f:
     requirements = f.read().splitlines()
 
-with open('README.md') as r:
+with open("README.md") as r:
     readme = r.read()
 
 setuptools.setup(
-    name='PyArr',
-    version='0.7.0',
+    name="PyArr",
+    version="0.7.0",
     author="marksie1988",
     description="A Sonarr and Radarr API Wrapper",
     long_description=readme,
@@ -19,8 +19,8 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.8',
+    python_requires=">=3.8",
     install_requires=requirements,
-    packages=['PyArr',],
-    license='MIT'
+    packages=["PyArr",],
+    license="MIT",
 )

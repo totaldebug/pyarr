@@ -6,12 +6,9 @@ from .request_api import RequestAPI
 
 
 class SonarrAPI(RequestAPI):
-
     def __init__(
-            self, 
-            host_url: str, 
-            api_key: str,
-        ):
+        self, host_url: str, api_key: str,
+    ):
         """Constructor requires Host-URL and API-KEY
 
             Args:
@@ -20,7 +17,7 @@ class SonarrAPI(RequestAPI):
         """
         super().__init__(host_url, api_key)
 
-    #TODO: TEST
+    # TODO: TEST
     def getCalendar(self, *args):
         """getCalendar retrieves info about when series were/will be downloaded.
            If start and end are not provided, retrieves series airing today and tomorrow.
@@ -33,24 +30,20 @@ class SonarrAPI(RequestAPI):
                 json response
 
         """
-        path = '/api/calendar'
+        path = "/api/calendar"
         data = {}
-        
+
         if len(args) == 2:
             start_date = args[0]
             end_date = args[1]
-             
+
             if isinstance(start_date, datetime):
-                startDate = start_date.strftime('%Y-%m-%d')
-                data.update({
-                    'start': startDate                
-                })
+                startDate = start_date.strftime("%Y-%m-%d")
+                data.update({"start": startDate})
 
             if isinstance(end_date, datetime):
-                endDate = end_date.strftime('%Y-%m-%d') 
-                data.update({
-                    'end': endDate
-                })
+                endDate = end_date.strftime("%Y-%m-%d")
+                data.update({"end": endDate})
 
         res = self.request_get(path, **data)
         return res.json()
@@ -66,9 +59,9 @@ class SonarrAPI(RequestAPI):
 
         """
         if len(args) == 1:
-            path = f'/api/command/{args[0]}'
+            path = f"/api/command/{args[0]}"
         else:
-            path = '/api/command'
+            path = "/api/command"
 
         res = self.request_get(path)
         return res.json()
@@ -82,9 +75,9 @@ class SonarrAPI(RequestAPI):
             Returns:
                 json response
         """
-        path = '/api/command'
+        path = "/api/command"
         res = self.request_post(path, data)
-        return res.json()  
+        return res.json()
 
     def RefreshSeries(self, *args):
         """RefreshSeries refreshes series information and rescans disk.
@@ -96,15 +89,10 @@ class SonarrAPI(RequestAPI):
 
         """
         data = {}
-        if len(args) == 1: 
-            data.update({
-                'name': 'RefreshSeries',
-                'seriesId': args[0]
-            })
+        if len(args) == 1:
+            data.update({"name": "RefreshSeries", "seriesId": args[0]})
         else:
-            data.update({
-                'name': 'RefreshSeries'
-            })
+            data.update({"name": "RefreshSeries"})
         return self.__setCommand(data)
 
     def RescanSeries(self, *args):
@@ -117,15 +105,10 @@ class SonarrAPI(RequestAPI):
 
         """
         data = {}
-        if len(args) == 1: 
-            data.update({
-                'name': 'RescanSeries',
-                'seriesId': args[0]
-            })
+        if len(args) == 1:
+            data.update({"name": "RescanSeries", "seriesId": args[0]})
         else:
-            data.update({
-                'name': 'RescanSeries'
-            })
+            data.update({"name": "RescanSeries"})
         return self.__setCommand(data)
 
     def getDiskSpace(self):
@@ -137,27 +120,9 @@ class SonarrAPI(RequestAPI):
                 json response
 
         """
-        path = '/api/diskspace'
+        path = "/api/diskspace"
         res = self.request_get(path)
         return res.json()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     # TODO: Test this
     def getEpisodes(self, **kwargs):
@@ -169,16 +134,12 @@ class SonarrAPI(RequestAPI):
                 json response
         """
         for key, value in kwargs.items():
-            if key == 'seriesId':
-                data = {
-                    key: value
-                }
-                path = '/api/episode'
-            elif key == 'episodeId':
-                data = {
-                    key: value
-                }
-                path = f'/api/episode/{value}'
+            if key == "seriesId":
+                data = {key: value}
+                path = "/api/episode"
+            elif key == "episodeId":
+                data = {key: value}
+                path = f"/api/episode/{value}"
         res = self.request_get(path, **data)
         return res.json()
 
@@ -191,9 +152,9 @@ class SonarrAPI(RequestAPI):
             Returns:
                 requests.models.Response: Response object form requests.
         """
-        path = '/api/episode/{}'.format(episode_id)
+        path = "/api/episode/{}".format(episode_id)
         res = self.request_get(path)
-        return res.json()   
+        return res.json()
 
     # TODO: Test this
     def upd_episode(self, data):
@@ -208,7 +169,7 @@ class SonarrAPI(RequestAPI):
             Returns:
                 requests.models.Response: Response object form requests.
         """
-        path = '/api/episode'
+        path = "/api/episode"
         res = self.request_put(path, data)
         return res.json()
 
@@ -222,10 +183,8 @@ class SonarrAPI(RequestAPI):
             Returns:
                 requests.models.Response: Response object form requests.
         """
-        data = {
-            'seriesId': series_id
-        }
-        path = '/api/episodefile'
+        data = {"seriesId": series_id}
+        path = "/api/episodefile"
         res = self.request_get(path, **data)
         return res.json()
 
@@ -239,7 +198,7 @@ class SonarrAPI(RequestAPI):
             Returns:
                 requests.models.Response: Response object form requests.     
         """
-        path = '/api/episodefile/{}'.format(episode_id)
+        path = "/api/episodefile/{}".format(episode_id)
         res = self.request_get(path)
         return res.json()
 
@@ -253,7 +212,7 @@ class SonarrAPI(RequestAPI):
             Returns:
                 requests.models.Response: Response object form requests. 
         """
-        path = '/api/episodefile/{}'.format(episode_id)
+        path = "/api/episodefile/{}".format(episode_id)
         res = self.request_del(path, data=None)
         return res.json()
 
@@ -275,17 +234,17 @@ class SonarrAPI(RequestAPI):
                 requests.models.Response: Response object form requests.        
         """
         data = {
-            'page': kwargs.get('page', 1),
-            'pageSize': kwargs.get('page_size', 50),
-            'sortKey': kwargs.get('sort_key', 'time'),
-            'sortDir': kwargs.get('sort_dir', 'desc'),
-            'filterKey': kwargs.get('filter_key', None),
-            'filterValue': kwargs.get('filter_value', None)
+            "page": kwargs.get("page", 1),
+            "pageSize": kwargs.get("page_size", 50),
+            "sortKey": kwargs.get("sort_key", "time"),
+            "sortDir": kwargs.get("sort_dir", "desc"),
+            "filterKey": kwargs.get("filter_key", None),
+            "filterValue": kwargs.get("filter_value", None),
         }
-        if 'All' in data['filterValue'] or 'all' in data['filterValue']:
-            data['filterValue'] = None
+        if "All" in data["filterValue"] or "all" in data["filterValue"]:
+            data["filterValue"] = None
 
-        path = '/api/log'
+        path = "/api/log"
         res = self.request_get(path, **data)
         return res.json()
 
@@ -300,11 +259,8 @@ class SonarrAPI(RequestAPI):
             Returns:
                 requests.models.Response: Response object form requests. 
         """
-        data = {
-            'name': 'missingEpisodeSearch'
-        }
+        data = {"name": "missingEpisodeSearch"}
         return self.command(data)
-
 
     # TODO: Test this
     def get_queue(self):
@@ -313,13 +269,13 @@ class SonarrAPI(RequestAPI):
             Returns:
                 requests.models.Response: Response object form requests.
         """
-        path = '/api/queue'
+        path = "/api/queue"
         res = self.request_get(path)
         return res.json()
 
     def get_quality_profiles(self):
         """Gets all quality profiles"""
-        path = '/api/profile'
+        path = "/api/profile"
         res = self.request_get(path)
         return res.json()
 
@@ -340,13 +296,13 @@ class SonarrAPI(RequestAPI):
             Returns:
                 requests.models.Response: Response object form requests.
         """
-        path = '/api/release/push'
+        path = "/api/release/push"
         res = self.request_post(path, data=kwargs)
         return res.json()
 
     def get_root_folder(self):
         """Returns the Root Folder"""
-        res = self.request_get('/api/rootfolder')
+        res = self.request_get("/api/rootfolder")
         return res.json()
 
     # TODO: Test this
@@ -356,7 +312,7 @@ class SonarrAPI(RequestAPI):
             Returns:
                 requests.models.Response: Response object form requests.
         """
-        path = '/api/series'
+        path = "/api/series"
         res = self.request_get(path)
         return res.json()
 
@@ -371,45 +327,45 @@ class SonarrAPI(RequestAPI):
             Returns:
                 requests.models.Response: Response object form requests.
         """
-        path = '/api/series/{}'.format(series_id)
+        path = "/api/series/{}".format(series_id)
         res = self.request_get(path)
         return res.json()
 
     def construct_series_json(self, tvdbId, quality_profile):
         """Searches for new shows on trakt and returns Series object to add"""
-        
+
         res = self.lookup_series(tvdbId)
         s_dict = res[0]
 
         # get root folder path
-        root = self.get_root_folder()[0]['path']
+        root = self.get_root_folder()[0]["path"]
         series_json = {
-            'title': s_dict['title'],
-            'seasons': s_dict['seasons'],
-            'path': root + s_dict['title'],
-            'qualityProfileId': quality_profile,
-            'seasonFolder': True,
-            'monitored': True,
-            'tvdbId': tvdbId,
-            'images': s_dict['images'],
-            'titleSlug': s_dict['titleSlug'],
+            "title": s_dict["title"],
+            "seasons": s_dict["seasons"],
+            "path": root + s_dict["title"],
+            "qualityProfileId": quality_profile,
+            "seasonFolder": True,
+            "monitored": True,
+            "tvdbId": tvdbId,
+            "images": s_dict["images"],
+            "titleSlug": s_dict["titleSlug"],
             "addOptions": {
-                          "ignoreEpisodesWithFiles": True,
-                          "ignoreEpisodesWithoutFiles": True
-                        }
-                    }
+                "ignoreEpisodesWithFiles": True,
+                "ignoreEpisodesWithoutFiles": True,
+            },
+        }
         return series_json
 
     def add_series(self, series_json):
         """Add a new series to your collection"""
-        path = '/api/series'
+        path = "/api/series"
         res = self.request_post(path, data=series_json)
         return res.json()
 
     # TODO: Test this
     def upd_series(self, data):
         """Update an existing series"""
-        path = '/api/series'
+        path = "/api/series"
         res = self.request_put(path, data)
         return res.json()
 
@@ -419,26 +375,26 @@ class SonarrAPI(RequestAPI):
         # File deletion does not work
         data = {
             # 'id': series_id,
-            'deleteFiles': 'true'
+            "deleteFiles": "true"
         }
-        path = '/api/series/{}'.format(series_id)
+        path = "/api/series/{}".format(series_id)
         res = self.request_del(path, term)
         return res.json()
 
     def lookup_series(self, term):
         """Searches for new shows on tvdb"""
         if term.isdigit():
-            term = f'tvdb:{term}'
+            term = f"tvdb:{term}"
 
-        res = self.request_get(f'/api/series/lookup?term={term}')
+        res = self.request_get(f"/api/series/lookup?term={term}")
         return res.json()
 
     def get_backups(self):
         """Returns the backups as json"""
-        res = self.request_get('/api/system/backup')
+        res = self.request_get("/api/system/backup")
         return res.json()
 
     def get_system_status(self):
         """Returns the System Status as json"""
-        res = self.request_get('/api/system/status')
+        res = self.request_get("/api/system/status")
         return res.json()

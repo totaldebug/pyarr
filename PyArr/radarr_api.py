@@ -6,12 +6,9 @@ from .request_api import RequestAPI
 
 
 class RadarrAPI(RequestAPI):
-
     def __init__(
-            self, 
-            host_url: str, 
-            api_key: str,
-        ):
+        self, host_url: str, api_key: str,
+    ):
         """Constructor requires Host-URL and API-KEY
 
             Args:
@@ -32,24 +29,20 @@ class RadarrAPI(RequestAPI):
                 json response
 
         """
-        path = '/api/calendar'
+        path = "/api/calendar"
         data = {}
-        
+
         if len(args) == 2:
             start_date = args[0]
             end_date = args[1]
 
             if isinstance(start_date, datetime):
-                startDate = start_date.strftime('%Y-%m-%d')
-                data.update({
-                    'start': startDate                
-                })
+                startDate = start_date.strftime("%Y-%m-%d")
+                data.update({"start": startDate})
 
             if isinstance(end_date, datetime):
-                endDate = end_date.strftime('%Y-%m-%d') 
-                data.update({
-                    'end': endDate
-                })
+                endDate = end_date.strftime("%Y-%m-%d")
+                data.update({"end": endDate})
 
         res = self.request_get(path, **data)
         return res.json()
@@ -65,9 +58,9 @@ class RadarrAPI(RequestAPI):
 
         """
         if len(args) == 1:
-            path = f'/api/command/{args[0]}'
+            path = f"/api/command/{args[0]}"
         else:
-            path = '/api/command'
+            path = "/api/command"
 
         res = self.request_get(path)
         return res.json()
@@ -81,9 +74,9 @@ class RadarrAPI(RequestAPI):
             Returns:
                 json response
         """
-        path = '/api/command'
+        path = "/api/command"
         res = self.request_post(path, data)
-        return res.json()   
+        return res.json()
 
     def refreshMovie(self, *args):
         """RefreshMovie refreshes movie information and rescans disk.
@@ -95,15 +88,10 @@ class RadarrAPI(RequestAPI):
 
         """
         data = {}
-        if len(args) == 1: 
-            data.update({
-                'name': 'RefreshMovie',
-                'movieId': args[0]
-            })
+        if len(args) == 1:
+            data.update({"name": "RefreshMovie", "movieId": args[0]})
         else:
-            data.update({
-                'name': 'RefreshMovie'
-            })
+            data.update({"name": "RefreshMovie"})
         return self.__setCommand(data)
 
     def rescanMovie(self, *args):
@@ -116,17 +104,12 @@ class RadarrAPI(RequestAPI):
 
         """
         data = {}
-        if len(args) == 1: 
-            data.update({
-                'name': 'RescanMovie',
-                'movieId': args[0]
-            })
+        if len(args) == 1:
+            data.update({"name": "RescanMovie", "movieId": args[0]})
         else:
-            data.update({
-                'name': 'RescanMovie'
-            })
+            data.update({"name": "RescanMovie"})
         return self.__setCommand(data)
-    
+
     def getDiskSpace(self):
         """GetDiskSpace retrieves info about the disk space on the server.
             
@@ -136,9 +119,9 @@ class RadarrAPI(RequestAPI):
                 json response
 
         """
-        path = '/api/diskspace'
+        path = "/api/diskspace"
         res = self.request_get(path)
-        return res.json()    
+        return res.json()
 
     def getMovie(self, *args):
         """getMovie returns all movies in collection.
@@ -151,13 +134,13 @@ class RadarrAPI(RequestAPI):
         """
         movieId = args[0]
 
-        if len(movieId) == 1 and isinstance(movieId, (int)): 
-            path = f'/api/movie/{movieId}'
+        if len(movieId) == 1 and isinstance(movieId, (int)):
+            path = f"/api/movie/{movieId}"
         else:
-            path = '/api/movie'
-        
+            path = "/api/movie"
+
         res = self.request_get(path)
-        return res.json()   
+        return res.json()
 
     def lookupMovie(self, term):
         """lookupMovie serches for movie
@@ -170,18 +153,18 @@ class RadarrAPI(RequestAPI):
         """
         term = str(term)
         if term.isdigit():
-            path = f'/api/movie/lookup/tmdb?tmdbId={term}'
-        elif term.startswith('tt'):
-            path = f'/api/movie/lookup/imdb?imdbId={term}'
+            path = f"/api/movie/lookup/tmdb?tmdbId={term}"
+        elif term.startswith("tt"):
+            path = f"/api/movie/lookup/imdb?imdbId={term}"
         else:
-            term = term.replace(' ', '%20')
-            path = f'/api/movie/lookup?term={term}'
+            term = term.replace(" ", "%20")
+            path = f"/api/movie/lookup?term={term}"
         res = self.request_get(path)
         return res.json()
 
     def getRoot(self):
         """Returns the Root Folder"""
-        path = '/api/rootfolder'
+        path = "/api/rootfolder"
         res = self.request_get(path)
         return res.json()
 
@@ -198,21 +181,19 @@ class RadarrAPI(RequestAPI):
         """
         s_dict = self.lookupMovie(dbId)
 
-        root = self.getRoot()[0]['path']
+        root = self.getRoot()[0]["path"]
         movie_json = {
-            'title': s_dict['title'],
-            'path': root + s_dict['title'],
-            'qualityProfileId': qualityProfileId,
-            'profileId': qualityProfileId,
-            'year': s_dict['year'],
-            'tmdbId': s_dict['tmdbId'],
-            'images': s_dict['images'],
-            'titleSlug': s_dict['titleSlug'],
-            'monitored': True,
-            "addOptions": {
-                          "searchForMovie": True
-                        }
-                    }
+            "title": s_dict["title"],
+            "path": root + s_dict["title"],
+            "qualityProfileId": qualityProfileId,
+            "profileId": qualityProfileId,
+            "year": s_dict["year"],
+            "tmdbId": s_dict["tmdbId"],
+            "images": s_dict["images"],
+            "titleSlug": s_dict["titleSlug"],
+            "monitored": True,
+            "addOptions": {"searchForMovie": True},
+        }
         return movie_json
 
     def addMovie(self, dbId, qualityProfileId):
@@ -227,12 +208,12 @@ class RadarrAPI(RequestAPI):
         """
         movie_json = self.constructMovieJson(dbId, qualityProfileId)
 
-        path = '/api/movie'
+        path = "/api/movie"
         res = self.request_post(path, data=movie_json)
         return res.json()
 
     def getSystemStatus(self):
         """Returns the System Status as json"""
-        path = '/api/system/status'
+        path = "/api/system/status"
         res = self.request_get(path)
         return res.json()
