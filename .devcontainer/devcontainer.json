@@ -1,0 +1,22 @@
+{
+    "name": "PyArr",
+    "dockerFile": "Dockerfile",
+    "context": "..",
+    "workspaceFolder": "/PyArr",
+    "workspaceMount": "type=bind,source=/home/${env:USERNAME}/repos/PyArr,target=/PyArr",
+    "extensions": [
+		"github.vscode-pull-request-github",
+		"esbenp.prettier-vscode",
+		"yzhang.markdown-all-in-one"
+    ],
+    "settings": {
+        "files.eol": "\n",
+        "editor.tabSize": 2,
+        "terminal.integrated.shell.linux": "/bin/zsh",
+        "editor.formatOnPaste": false,
+        "editor.formatOnSave": true,
+        "editor.formatOnType": true,
+        "files.trimTrailingWhitespace": true
+    },
+    "postCreateCommand": "pip install -r requirements.txt"
+}
