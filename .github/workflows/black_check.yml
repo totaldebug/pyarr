@@ -1,6 +1,6 @@
 # This workflow will check that code matches black recommendations
 
-name: Python application
+name: Check Code Format
 
 on:
   push:
