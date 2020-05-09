@@ -1,0 +1,22 @@
+# This workflow will check that code matches black recommendations
+
+name: Check Code Format
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  schedule:
+    - cron: 0 12 * * *
+
+jobs:
+  Black:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Getting your configuration from GitHub
+        uses: actions/checkout@v1
+      - name: Running Black Check
+        uses: lgeiger/black-action@master
+        with:
+          args: ". --check"

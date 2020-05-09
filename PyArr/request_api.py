@@ -1,15 +1,11 @@
-
 from urllib.parse import urlencode
 
 import requests
 
 
 class RequestAPI:
-
     def __init__(
-        self,
-        host_url: str,
-        api_key: str,
+        self, host_url: str, api_key: str,
     ):
         """Constructor requires Host-URL and API-KEY
 
@@ -44,20 +40,12 @@ class RequestAPI:
             Returns:
                 requests.models.Response: Response object form requests.
         """
-        headers = {
-            'X-Api-Key': self.api_key
-        }
-        request_url = "{url}{path}".format(
-            url = self.host_url,
-            path=path
-        )
+        headers = {"X-Api-Key": self.api_key}
+        request_url = "{url}{path}".format(url=self.host_url, path=path)
         try:
             if len(kwargs) >= 1:
                 encoded_params = urlencode(kwargs)
-                request_url = "{}?{}".format(
-                    request_url,
-                    encoded_params
-                )
+                request_url = "{}?{}".format(request_url, encoded_params)
         except:
             pass
 
@@ -74,19 +62,9 @@ class RequestAPI:
             Returns:
                 requests.models.Response: Response object form requests.
         """
-        headers = {
-            'X-Api-Key': self.api_key
-        }
-        request_url = "{url}{path}".format(
-            url=self.host_url,
-            path=path
-        )
-        res = self.session.post(
-            request_url,
-            headers=headers,
-            json=data,
-            auth=self.auth
-        )
+        headers = {"X-Api-Key": self.api_key}
+        request_url = "{url}{path}".format(url=self.host_url, path=path)
+        res = self.session.post(request_url, headers=headers, json=data, auth=self.auth)
         return res
 
     def request_put(self, path, data):
@@ -99,19 +77,9 @@ class RequestAPI:
             Returns:
                 requests.models.Response: Response object form requests.
         """
-        headers = {
-            'X-Api-Key': self.api_key
-        }
-        request_url = "{url}{path}".format(
-            url=self.host_url,
-            path=path
-        )
-        res = self.session.put(
-            request_url,
-            headers=headers,
-            json=data,
-            auth=self.auth
-        )
+        headers = {"X-Api-Key": self.api_key}
+        request_url = "{url}{path}".format(url=self.host_url, path=path)
+        res = self.session.put(request_url, headers=headers, json=data, auth=self.auth)
         return res
 
     def request_del(self, path, data):
@@ -124,17 +92,9 @@ class RequestAPI:
             Returns:
                 res (Request Response Object)
         """
-        headers = {
-            'X-Api-Key': self.api_key
-        }
-        request_url = "{url}{path}".format(
-            url=self.host_url,
-            path=path
-        )
+        headers = {"X-Api-Key": self.api_key}
+        request_url = "{url}{path}".format(url=self.host_url, path=path)
         res = self.session.delete(
-            request_url,
-            headers=headers,
-            json=data,
-            auth=self.auth
+            request_url, headers=headers, json=data, auth=self.auth
         )
         return res
