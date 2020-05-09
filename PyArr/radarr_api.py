@@ -224,7 +224,7 @@ class RadarrAPI(RequestAPI):
         res = self.request_get(path)
         return res.json()
 
-    # Not Tested
+    # TODO: Test
     def delQueue(self, id, *args):
         """Deletes an item from the queue and download client. Optionally blacklist item after deletion.
 

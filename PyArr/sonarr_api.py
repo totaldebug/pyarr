@@ -17,7 +17,6 @@ class SonarrAPI(RequestAPI):
         """
         super().__init__(host_url, api_key)
 
-    # TODO: TEST
     def getCalendar(self, *args):
         """getCalendar retrieves info about when series were/will be downloaded.
            If start and end are not provided, retrieves series airing today and tomorrow.
@@ -32,18 +31,17 @@ class SonarrAPI(RequestAPI):
         """
         path = "/api/calendar"
         data = {}
-
-        if len(args) == 2:
+        if args:
             start_date = args[0]
             end_date = args[1]
 
-            if isinstance(start_date, datetime):
-                startDate = start_date.strftime("%Y-%m-%d")
-                data.update({"start": startDate})
+            startDate = datetime.strptime(start_date, "%Y-%m-%d").strftime("%Y-%m-%d")
+            data.update({"start": startDate})
 
-            if isinstance(end_date, datetime):
-                endDate = end_date.strftime("%Y-%m-%d")
-                data.update({"end": endDate})
+            endDate = datetime.strptime(end_date, "%Y-%m-%d").strftime("%Y-%m-%d")
+            data.update({"end": endDate})
+        else:
+            print("no args")
 
         res = self.request_get(path, **data)
         return res.json()
@@ -124,40 +122,49 @@ class SonarrAPI(RequestAPI):
         res = self.request_get(path)
         return res.json()
 
-    # TODO: Test this
-    def getEpisodes(self, **kwargs):
+    def getEpisodesBySeriesId(self, seriesId):
         """Returns all episodes for the given series
-            Args:
-                series_id (int):
 
+            Args:
+                seriesId (int):
             Returns:
                 json response
         """
-        for key, value in kwargs.items():
-            if key == "seriesId":
-                data = {key: value}
-                path = "/api/episode"
-            elif key == "episodeId":
-                data = {key: value}
-                path = f"/api/episode/{value}"
-        res = self.request_get(path, **data)
+        path = f"/api/episode?seriesId={seriesId}"
+        res = self.request_get(path)
         return res.json()
 
-    # TODO: Test this
-    def getEpisode_by_episode_id(self, episode_id):
+    def getEpisodeByEpisodeId(self, episodeId):
         """Returns the episode with the matching id
+
             Args:
                 episode_id (int):
-
             Returns:
-                requests.models.Response: Response object form requests.
+                json response
         """
-        path = "/api/episode/{}".format(episode_id)
+        path = f"/api/episode/{episodeId}"
+        res = self.request_get(path)
+        return res.json()
+
+    def lookupSeries(self, term):
+        """Searches for new shows on tvdb
+            Args:
+                Requried - term / tvdbId
+            Returns:
+                json response
+
+        """
+        term = str(term)
+        if term.isdigit():
+            term = f"tvdb:{term}"
+        else:
+            term = term.replace(" ", "%20")
+        path = f"/api/series/lookup?term={term}"
         res = self.request_get(path)
         return res.json()
 
     # TODO: Test this
-    def upd_episode(self, data):
+    def updEpisode(self, data):
         """Update the given episodes, currently only monitored is changed, all
         other modifications are ignored. All parameters (you should perform a
         GET/{id} and submit the full body with the changes, as other values may
@@ -167,11 +174,12 @@ class SonarrAPI(RequestAPI):
                 data (dict): data payload
 
             Returns:
-                requests.models.Response: Response object form requests.
+                json response
         """
         path = "/api/episode"
         res = self.request_put(path, data)
         return res.json()
+
 
     # TODO: Test this
     def get_episode_files_by_series_id(self, series_id):
@@ -381,13 +389,7 @@ class SonarrAPI(RequestAPI):
         res = self.request_del(path, term)
         return res.json()
 
-    def lookup_series(self, term):
-        """Searches for new shows on tvdb"""
-        if term.isdigit():
-            term = f"tvdb:{term}"
 
-        res = self.request_get(f"/api/series/lookup?term={term}")
-        return res.json()
 
     def get_backups(self):
         """Returns the backups as json"""
