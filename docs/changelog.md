@@ -23,6 +23,8 @@ nav_order: 7
   - getEpisodesBySeriesId
   - getEpisodeByEpisodeId
   - LookupSeries
+  - getRoot
+  - addSeries
 
 # v0.7.0
 

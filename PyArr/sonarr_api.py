@@ -163,6 +163,63 @@ class SonarrAPI(RequestAPI):
         res = self.request_get(path)
         return res.json()
 
+    def getRoot(self):
+        """Returns the Root Folder"""
+        path = "/api/rootfolder"
+        res = self.request_get(path)
+        return res.json()
+
+    def constructSeriesJson(self, tvdbId, qualityProfileId):
+        """Searches for new shows on trakt and returns Series json to add
+
+            Args:
+                Required - dbID, <tvdb id>
+                Required - qualityProfileId (int)
+
+            Return:
+                JsonArray
+
+        """
+        res = self.lookupSeries(tvdbId)
+        s_dict = res[0]
+
+        # get root folder path
+        root = self.getRoot()[0]["path"]
+        series_json = {
+            "title": s_dict["title"],
+            "seasons": s_dict["seasons"],
+            "path": root + s_dict["title"],
+            "qualityProfileId": qualityProfileId,
+            "seasonFolder": True,
+            "monitored": True,
+            "tvdbId": tvdbId,
+            "images": s_dict["images"],
+            "titleSlug": s_dict["titleSlug"],
+            "addOptions": {
+                "ignoreEpisodesWithFiles": True,
+                "ignoreEpisodesWithoutFiles": True,
+            },
+        }
+        return series_json
+
+    def addSeries(self, dbId, qualityProfileId):
+        """Add a new series to your collection
+
+            Args:
+                Required - dbid
+                Required - qualityProfileId
+            Returns:
+                json response
+
+        """
+        series_json = self.constructSeriesJson(dbId, qualityProfileId)
+
+        path = "/api/series"
+        res = self.request_post(path, data=series_json)
+        return res.json()
+
+
+
     # TODO: Test this
     def updEpisode(self, data):
         """Update the given episodes, currently only monitored is changed, all
@@ -308,11 +365,6 @@ class SonarrAPI(RequestAPI):
         res = self.request_post(path, data=kwargs)
         return res.json()
 
-    def get_root_folder(self):
-        """Returns the Root Folder"""
-        res = self.request_get("/api/rootfolder")
-        return res.json()
-
     # TODO: Test this
     def get_series(self):
         """Return all series in your collection
@@ -339,36 +391,8 @@ class SonarrAPI(RequestAPI):
         res = self.request_get(path)
         return res.json()
 
-    def construct_series_json(self, tvdbId, quality_profile):
-        """Searches for new shows on trakt and returns Series object to add"""
 
-        res = self.lookup_series(tvdbId)
-        s_dict = res[0]
 
-        # get root folder path
-        root = self.get_root_folder()[0]["path"]
-        series_json = {
-            "title": s_dict["title"],
-            "seasons": s_dict["seasons"],
-            "path": root + s_dict["title"],
-            "qualityProfileId": quality_profile,
-            "seasonFolder": True,
-            "monitored": True,
-            "tvdbId": tvdbId,
-            "images": s_dict["images"],
-            "titleSlug": s_dict["titleSlug"],
-            "addOptions": {
-                "ignoreEpisodesWithFiles": True,
-                "ignoreEpisodesWithoutFiles": True,
-            },
-        }
-        return series_json
-
-    def add_series(self, series_json):
-        """Add a new series to your collection"""
-        path = "/api/series"
-        res = self.request_post(path, data=series_json)
-        return res.json()
 
     # TODO: Test this
     def upd_series(self, data):
