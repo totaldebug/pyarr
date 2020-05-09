@@ -25,6 +25,9 @@ nav_order: 7
   - LookupSeries
   - getRoot
   - addSeries
+  - getSystemStatus
+  - getQueue
+  - delQueue
 
 # v0.7.0
 

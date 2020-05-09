@@ -218,7 +218,43 @@ class SonarrAPI(RequestAPI):
         res = self.request_post(path, data=series_json)
         return res.json()
 
+    def getSystemStatus(self):
+        """Returns the System Status as json"""
+        path = "/api/system/status"
+        res = self.request_get(path)
+        return res.json()
 
+    def getQueue(self):
+        """Gets current downloading info
+
+            Returns:
+                json Array
+        """
+        path = "/api/queue"
+        res = self.request_get(path)
+        return res.json()
+
+    # TODO: Test
+    def delQueue(self, id, *args):
+        """Deletes an item from the queue and download client. Optionally blacklist item after deletion.
+
+            Args:
+                Required - id (int)
+                Optional - blacklist (bool)
+            Returns:
+                json response
+        """
+        data = {}
+        data.update({
+            'id': id
+        })
+        if len(args) == 1:
+            data.update({
+                'blacklist': args[1],
+            })
+        path = '/api/queue/'
+        res = self.request_del(path, data)
+        return res.json()
 
     # TODO: Test this
     def updEpisode(self, data):
@@ -327,17 +363,6 @@ class SonarrAPI(RequestAPI):
         data = {"name": "missingEpisodeSearch"}
         return self.command(data)
 
-    # TODO: Test this
-    def get_queue(self):
-        """Gets current downloading info
-
-            Returns:
-                requests.models.Response: Response object form requests.
-        """
-        path = "/api/queue"
-        res = self.request_get(path)
-        return res.json()
-
     def get_quality_profiles(self):
         """Gets all quality profiles"""
         path = "/api/profile"
@@ -420,7 +445,3 @@ class SonarrAPI(RequestAPI):
         res = self.request_get("/api/system/backup")
         return res.json()
 
-    def get_system_status(self):
-        """Returns the System Status as json"""
-        res = self.request_get("/api/system/status")
-        return res.json()

@@ -13,10 +13,12 @@ Gets queue info (downloading/completed, ok/warning)
 
 ## Parameters
 
-Required: 
+Required:
+
 - None
 
-Optional: 
+Optional:
+
 - None
 
 ## Example
@@ -82,9 +84,7 @@ getQueue()
       "tmdbId": 407436,
       "titleSlug": "mowgli-407436",
       "genres": [],
-      "tags": [
-        1
-      ],
+      "tags": [1],
       "added": "2019-08-12T15:34:18.737789Z",
       "ratings": {
         "votes": 1466,
@@ -160,10 +160,12 @@ Deletes an item from the queue and download client. Optionally blacklist item af
 
 ## Parameters
 
-Required: 
+Required:
+
 - `id (int)` Unique ID of the command
 
-Optional: 
+Optional:
+
 - `blacklist (bool)` Set to 'true' to blacklist after delete
 
 ## Example
@@ -171,6 +173,7 @@ Optional:
 ```python
 delQueue(473989688)
 ```
+
 ```python
 delQueue(473989688, True)
 ```
