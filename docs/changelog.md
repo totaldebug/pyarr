@@ -19,6 +19,11 @@ nav_order: 7
 
 ### Sonarr
 
+- API Calls
+  - getEpisodesBySeriesId
+  - getEpisodeByEpisodeId
+  - LookupSeries
+
 # v0.7.0
 
 ## New Features
@@ -33,16 +38,16 @@ nav_order: 7
 ## New Features
 
 - Documentation Added
-- Uploaded to PyPi 
+- Uploaded to PyPi
 
 ### Radarr Specific
 
 - API Calls
   - getCalendar
-  - getRoot 
+  - getRoot
   - addMovie
   - getMovie
-  - getDiskSpace 
+  - getDiskSpace
   - lookupMovie
   - refreshMovie
   - rescanMovie
