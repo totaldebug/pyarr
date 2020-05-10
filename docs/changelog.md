@@ -15,7 +15,6 @@ nav_order: 7
 - API Calls
   - getQueue
   - delQueue
-  - getHistory (WIP)
   - getQualityProfiles
 
 ### Sonarr
@@ -29,7 +28,6 @@ nav_order: 7
   - getSystemStatus
   - getQueue
   - delQueue
-  - getHistory (WIP)
   - getQualityProfiles
 
 # v0.7.0

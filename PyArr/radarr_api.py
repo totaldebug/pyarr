@@ -250,22 +250,21 @@ class RadarrAPI(RequestAPI):
         res = self.request_del(path, data)
         return res.json()
 
-    # TODO: Not Working needs work
     def getHistory(self, page, **kwargs):
         """Gets history (grabs/failures/completed)
 
             Args:
-                Required - page (int) - 1-indexed
-                Optional - pageSize (int) - Default: 0
+                Required - page (int) - 1-indexed (1 default)
                 Optional - sortKey (string) - movie.title or date
+                Optional - pageSize (int) - Default: 0
                 Optional - sortDir (string) - asc or desc - Default: asc
             Returns:
                 json response
         """
         data = {}
-        data.update({"page": page})
+        data.update({"page": kwargs.get("page", 1)})
         for key, value in kwargs.items():
             data.update({key: value})
         path = "/api/history/"
-        res = self.request_post(path, data)
+        res = self.request_get(path, **data)
         return res.json()

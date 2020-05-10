@@ -260,25 +260,24 @@ class SonarrAPI(RequestAPI):
         res = self.request_del(path, data)
         return res.json()
 
-    # TODO: Not Working needs work
-    def getHistory(self, sortKey, **kwargs):
+    def getHistory(self, **kwargs):
         """Gets history (grabs/failures/completed)
 
             Args:
-                Required - sortKey (string) - series.title or date
+                Required - sortKey (string) - series.title or date (default)
                 Optional - page (int) - 1-indexed
                 Optional - pageSize (int) - Default: 0
                 Optional - sortDir (string) - asc or desc - Default: asc
+                Optional - episodeId (int) - Filters to a specific episode ID
             Returns:
                 json response
         """
         data = {}
-        data.update({"sortKey": sortKey})
+        data.update({"sortKey": kwargs.get("sortKey", "date")})
         for key, value in kwargs.items():
             data.update({key: value})
-        print(data)
         path = "/api/history"
-        res = self.request_post(path, data)
+        res = self.request_get(path, **data)
         return res.json()
 
     # TODO: Test this
@@ -366,8 +365,6 @@ class SonarrAPI(RequestAPI):
             "filterKey": kwargs.get("filter_key", None),
             "filterValue": kwargs.get("filter_value", None),
         }
-        if "All" in data["filterValue"] or "all" in data["filterValue"]:
-            data["filterValue"] = None
 
         path = "/api/log"
         res = self.request_get(path, **data)
