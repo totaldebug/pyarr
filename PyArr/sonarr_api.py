@@ -169,6 +169,12 @@ class SonarrAPI(RequestAPI):
         res = self.request_get(path)
         return res.json()
 
+    def getQualityProfiles(self):
+        """Gets all quality profiles"""
+        path = "/api/profile"
+        res = self.request_get(path)
+        return res.json()
+
     def constructSeriesJson(self, tvdbId, qualityProfileId):
         """Searches for new shows on trakt and returns Series json to add
 
@@ -245,15 +251,34 @@ class SonarrAPI(RequestAPI):
                 json response
         """
         data = {}
-        data.update({
-            'id': id
-        })
+        data.update({"id": id})
         if len(args) == 1:
-            data.update({
-                'blacklist': args[1],
-            })
-        path = '/api/queue/'
+            data.update(
+                {"blacklist": args[1],}
+            )
+        path = "/api/queue/"
         res = self.request_del(path, data)
+        return res.json()
+
+    # TODO: Not Working needs work
+    def getHistory(self, sortKey, **kwargs):
+        """Gets history (grabs/failures/completed)
+
+            Args:
+                Required - sortKey (string) - series.title or date
+                Optional - page (int) - 1-indexed
+                Optional - pageSize (int) - Default: 0
+                Optional - sortDir (string) - asc or desc - Default: asc
+            Returns:
+                json response
+        """
+        data = {}
+        data.update({"sortKey": sortKey})
+        for key, value in kwargs.items():
+            data.update({key: value})
+        print(data)
+        path = "/api/history"
+        res = self.request_post(path, data)
         return res.json()
 
     # TODO: Test this
@@ -272,7 +297,6 @@ class SonarrAPI(RequestAPI):
         path = "/api/episode"
         res = self.request_put(path, data)
         return res.json()
-
 
     # TODO: Test this
     def get_episode_files_by_series_id(self, series_id):
@@ -363,12 +387,6 @@ class SonarrAPI(RequestAPI):
         data = {"name": "missingEpisodeSearch"}
         return self.command(data)
 
-    def get_quality_profiles(self):
-        """Gets all quality profiles"""
-        path = "/api/profile"
-        res = self.request_get(path)
-        return res.json()
-
     # TODO: Test this
     def push_release(self, **kwargs):
         """Notifies Sonarr of a new release.
@@ -416,9 +434,6 @@ class SonarrAPI(RequestAPI):
         res = self.request_get(path)
         return res.json()
 
-
-
-
     # TODO: Test this
     def upd_series(self, data):
         """Update an existing series"""
@@ -438,10 +453,7 @@ class SonarrAPI(RequestAPI):
         res = self.request_del(path, term)
         return res.json()
 
-
-
     def get_backups(self):
         """Returns the backups as json"""
         res = self.request_get("/api/system/backup")
         return res.json()
-

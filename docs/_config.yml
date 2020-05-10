@@ -1,4 +1,4 @@
-remote_theme: pmarsceill/just-the-docs
+remote_theme: totaldebug/just-the-docs
 
 title: PyArr
 description: PyArr is a Python Sonarr and Radarr API Wrapper
@@ -9,8 +9,8 @@ search_tokenizer_separator: /[\s/]+/
 ga_tracking: UA-XXXXX-Y
 heading_anchors: true
 color_scheme: "dark"
-footer_content: "Copyright &copy; 2017-2020 Steven Marks. Distributed by an <a href=\"https://github.com/marksie1988/pulsarr/tree/master/LICENSE.md\">MIT license.</a>"
+footer_content: 'Copyright &copy; 2017-2020 Steven Marks. Distributed by an <a href="https://github.com/marksie1988/pulsarr/tree/master/LICENSE.md">MIT license.</a>'
 # Aux links for the upper right navigation
 aux_links:
-    "PyArr on GitHub":
-      - "//github.com/marksie1988/PyArr"
+  "PyArr on GitHub":
+    - "//github.com/marksie1988/PyArr"

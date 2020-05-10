@@ -168,6 +168,12 @@ class RadarrAPI(RequestAPI):
         res = self.request_get(path)
         return res.json()
 
+    def getQualityProfiles(self):
+        """Gets all quality profiles"""
+        path = "/api/profile"
+        res = self.request_get(path)
+        return res.json()
+
     def constructMovieJson(self, dbId, qualityProfileId):
         """Searches for movie on tmdb and returns Movie json to add
 
@@ -220,7 +226,7 @@ class RadarrAPI(RequestAPI):
 
     def getQueue(self):
         """Gets queue info (downloading/completed, ok/warning) as json"""
-        path = '/api/queue'
+        path = "/api/queue"
         res = self.request_get(path)
         return res.json()
 
@@ -235,17 +241,16 @@ class RadarrAPI(RequestAPI):
                 json response
         """
         data = {}
-        data.update({
-            'id': id
-        })
+        data.update({"id": id})
         if len(args) == 1:
-            data.update({
-                'blacklist': args[1],
-            })
-        path = '/api/queue/'
+            data.update(
+                {"blacklist": args[1],}
+            )
+        path = "/api/queue/"
         res = self.request_del(path, data)
         return res.json()
 
+    # TODO: Not Working needs work
     def getHistory(self, page, **kwargs):
         """Gets history (grabs/failures/completed)
 
@@ -258,13 +263,9 @@ class RadarrAPI(RequestAPI):
                 json response
         """
         data = {}
-        data.update({
-            'page': page
-        })
+        data.update({"page": page})
         for key, value in kwargs.items():
-            data.update({
-                key: value
-            })
-        path = '/api/history/'
+            data.update({key: value})
+        path = "/api/history/"
         res = self.request_post(path, data)
         return res.json()
