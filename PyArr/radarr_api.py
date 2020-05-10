@@ -23,8 +23,8 @@ class RadarrAPI(RequestAPI):
 
             args:
                 start_date (datetime):
-                end_date (datetime): 
-        
+                end_date (datetime):
+
             Returns:
                 json response
 
@@ -48,9 +48,9 @@ class RadarrAPI(RequestAPI):
         return res.json()
 
     def getCommand(self, *args):
-        """getCommand Queries the status of a previously 
+        """getCommand Queries the status of a previously
             started command, or all currently started commands.
-            
+
             Args:
                 Optional - id (int) Unique ID of command
             Returns:
@@ -82,7 +82,7 @@ class RadarrAPI(RequestAPI):
         """RefreshMovie refreshes movie information and rescans disk.
 
             Args:
-                Optional - movieId (int)        
+                Optional - movieId (int)
             Returns:
                 json response
 
@@ -98,7 +98,7 @@ class RadarrAPI(RequestAPI):
         """RescanMovie scans disk for any downloaded movie for all or specified movie.
 
             Args:
-                Optional - movieId (int)        
+                Optional - movieId (int)
             Returns:
                 json response
 
@@ -112,8 +112,8 @@ class RadarrAPI(RequestAPI):
 
     def getDiskSpace(self):
         """GetDiskSpace retrieves info about the disk space on the server.
-            
-            Args: 
+
+            Args:
                 None
             Returns:
                 json response
@@ -125,8 +125,8 @@ class RadarrAPI(RequestAPI):
 
     def getMovie(self, *args):
         """getMovie returns all movies in collection.
-            
-            Args: 
+
+            Args:
                 Optional - id (int) ID of movie
             Returns:
                 json response
@@ -144,8 +144,8 @@ class RadarrAPI(RequestAPI):
 
     def lookupMovie(self, term):
         """lookupMovie serches for movie
-            
-            Args: 
+
+            Args:
                 Requried - term / tmdbId / imdbId
             Returns:
                 json response
@@ -168,16 +168,22 @@ class RadarrAPI(RequestAPI):
         res = self.request_get(path)
         return res.json()
 
+    def getQualityProfiles(self):
+        """Gets all quality profiles"""
+        path = "/api/profile"
+        res = self.request_get(path)
+        return res.json()
+
     def constructMovieJson(self, dbId, qualityProfileId):
         """Searches for movie on tmdb and returns Movie json to add
-        
+
             Args:
                 Required - dbID, <imdb or tmdb id>
                 Required - qualityProfileId (int)
-            
+
             Return:
                 JsonArray
-        
+
         """
         s_dict = self.lookupMovie(dbId)
 
@@ -198,8 +204,8 @@ class RadarrAPI(RequestAPI):
 
     def addMovie(self, dbId, qualityProfileId):
         """addMovie adds a new movie to collection
-            
-            Args: 
+
+            Args:
                 Required - dbid
                 Required - qualityProfileId
             Returns:
@@ -216,4 +222,49 @@ class RadarrAPI(RequestAPI):
         """Returns the System Status as json"""
         path = "/api/system/status"
         res = self.request_get(path)
+        return res.json()
+
+    def getQueue(self):
+        """Gets queue info (downloading/completed, ok/warning) as json"""
+        path = "/api/queue"
+        res = self.request_get(path)
+        return res.json()
+
+    # TODO: Test
+    def delQueue(self, id, *args):
+        """Deletes an item from the queue and download client. Optionally blacklist item after deletion.
+
+            Args:
+                Required - id (int)
+                Optional - blacklist (bool)
+            Returns:
+                json response
+        """
+        data = {}
+        data.update({"id": id})
+        if len(args) == 1:
+            data.update(
+                {"blacklist": args[1],}
+            )
+        path = "/api/queue/"
+        res = self.request_del(path, data)
+        return res.json()
+
+    def getHistory(self, page, **kwargs):
+        """Gets history (grabs/failures/completed)
+
+            Args:
+                Required - page (int) - 1-indexed (1 default)
+                Optional - sortKey (string) - movie.title or date
+                Optional - pageSize (int) - Default: 0
+                Optional - sortDir (string) - asc or desc - Default: asc
+            Returns:
+                json response
+        """
+        data = {}
+        data.update({"page": kwargs.get("page", 1)})
+        for key, value in kwargs.items():
+            data.update({key: value})
+        path = "/api/history/"
+        res = self.request_get(path, **data)
         return res.json()

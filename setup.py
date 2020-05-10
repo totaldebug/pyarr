@@ -1,3 +1,5 @@
+"""This module provides a Python wrapper for Radarr and Sonarr"""
+
 import setuptools
 
 with open("requirements.txt") as f:
@@ -8,7 +10,7 @@ with open("README.md") as r:
 
 setuptools.setup(
     name="PyArr",
-    version="0.7.0",
+    version="0.8.0",
     author="marksie1988",
     description="A Sonarr and Radarr API Wrapper",
     long_description=readme,

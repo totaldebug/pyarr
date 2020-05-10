@@ -4,6 +4,34 @@ title: ChangeLog
 nav_order: 7
 ---
 
+# v0.8.0
+
+## New Features
+
+- Updated docs
+
+### Radarr
+
+- API Calls
+  - getQueue
+  - delQueue
+  - getQualityProfiles
+  - getHistory
+
+### Sonarr
+
+- API Calls
+  - getEpisodesBySeriesId
+  - getEpisodeByEpisodeId
+  - LookupSeries
+  - getRoot
+  - addSeries
+  - getSystemStatus
+  - getQueue
+  - delQueue
+  - getQualityProfiles
+  - getHistory
+
 # v0.7.0
 
 ## New Features
@@ -18,16 +46,16 @@ nav_order: 7
 ## New Features
 
 - Documentation Added
-- Uploaded to PyPi 
+- Uploaded to PyPi
 
 ### Radarr Specific
 
 - API Calls
   - getCalendar
-  - getRoot 
+  - getRoot
   - addMovie
   - getMovie
-  - getDiskSpace 
+  - getDiskSpace
   - lookupMovie
   - refreshMovie
   - rescanMovie

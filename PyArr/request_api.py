@@ -54,13 +54,13 @@ class RequestAPI:
 
     def request_post(self, path, data):
         """Wrapper on the requests.post
-        
+
             Args:
                 path (str): Path to API. E.g. /api/manualimport
                 data (dict): data payload to send with request.
 
             Returns:
-                requests.models.Response: Response object form requests.     
+                requests.models.Response: Response object form requests.
         """
         headers = {"X-Api-Key": self.api_key}
         request_url = "{url}{path}".format(url=self.host_url, path=path)
@@ -69,13 +69,13 @@ class RequestAPI:
 
     def request_put(self, path, data):
         """Wrapper on the requests.put
-        
+
             Args:
                 path (str): Path to API. E.g. /api/manualimport
                 data (dict): data payload to send with request.
 
             Returns:
-                requests.models.Response: Response object form requests.    
+                requests.models.Response: Response object form requests.
         """
         headers = {"X-Api-Key": self.api_key}
         request_url = "{url}{path}".format(url=self.host_url, path=path)
@@ -84,7 +84,7 @@ class RequestAPI:
 
     def request_del(self, path, data):
         """Wrapper on the requests.delete
-        
+
             Args:
                 path (str): Path to API. E.g. /api/manualimport
                 data (dict): data payload to send with request.
