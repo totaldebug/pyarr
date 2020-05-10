@@ -10,7 +10,7 @@ with open("README.md") as r:
 
 setuptools.setup(
     name="PyArr",
-    version="0.7.0",
+    version="0.8.0",
     author="marksie1988",
     description="A Sonarr and Radarr API Wrapper",
     long_description=readme,
