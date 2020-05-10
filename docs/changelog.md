@@ -16,6 +16,7 @@ nav_order: 7
   - getQueue
   - delQueue
   - getQualityProfiles
+  - getHistory
 
 ### Sonarr
 
@@ -29,6 +30,7 @@ nav_order: 7
   - getQueue
   - delQueue
   - getQualityProfiles
+  - getHistory
 
 # v0.7.0
 
