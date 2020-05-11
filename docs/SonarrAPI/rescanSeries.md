@@ -1,7 +1,7 @@
 ---
 layout: default
-title: rescanMovie
-parent: RadarrAPI
+title: rescanSeries
+parent: SonarrAPI
 nav_order: 4
 ---
 
@@ -25,23 +25,23 @@ rescanSeries()
 
 ```json
 {
-    'name': 'RescanSeries', 
-    'body': {
-        'sendUpdatesToClient': True, 
-        'updateScheduledTask': True, 
-        'completionMessage': 'Completed', 
-        'name': 'RescanSeries', 
-        'trigger': 'manual'
-    }, 
-    'priority': 'normal', 
-    'status': 'queued', 
-    'queued': '2020-04-29T19:02:23.926955Z', 
-    'trigger': 'manual', 
-    'state': 'queued', 
-    'manual': True, 
-    'startedOn': '2020-04-29T19:02:23.926955Z', 
-    'sendUpdatesToClient': True, 
-    'updateScheduledTask': True, 
-    'id': 2658453
+  "name": "RescanSeries",
+  "body": {
+    "sendUpdatesToClient": True,
+    "updateScheduledTask": True,
+    "completionMessage": "Completed",
+    "name": "RescanSeries",
+    "trigger": "manual"
+  },
+  "priority": "normal",
+  "status": "queued",
+  "queued": "2020-04-29T19:02:23.926955Z",
+  "trigger": "manual",
+  "state": "queued",
+  "manual": True,
+  "startedOn": "2020-04-29T19:02:23.926955Z",
+  "sendUpdatesToClient": True,
+  "updateScheduledTask": True,
+  "id": 2658453
 }
 ```

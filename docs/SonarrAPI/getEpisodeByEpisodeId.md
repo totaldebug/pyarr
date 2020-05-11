@@ -1,6 +1,6 @@
 ---
 layout: default
-title: getEpisodesBySeriesId
+title: getEpisodesByEpisodeId
 parent: SonarrAPI
 nav_order: 4
 ---
@@ -18,7 +18,7 @@ Optional: None
 ## Example
 
 ```python
-getEpisodesBySeriesId(2673)
+getEpisodesByEpisodeId(1)
 ```
 
 ## Returns JsonArray

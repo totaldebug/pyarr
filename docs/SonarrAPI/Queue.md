@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Queue
-parent: RadarrAPI
+parent: SonarrAPI
 nav_order: 4
 ---
 
