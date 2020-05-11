@@ -3,11 +3,12 @@
   "dockerFile": "Dockerfile",
   "context": "..",
   "workspaceFolder": "/PyArr",
-  "workspaceMount": "type=bind,source=/home/${env:USERNAME}/repos/PyArr,target=/PyArr",
+  "workspaceMount": "type=bind,source=/home/stev2673/repos/PyArr,target=/PyArr",
   "extensions": [
     "github.vscode-pull-request-github",
     "esbenp.prettier-vscode",
-    "yzhang.markdown-all-in-one"
+    "yzhang.markdown-all-in-one",
+    "wakatime.vscode-wakatime"
   ],
   "settings": {
     "files.eol": "\n",
@@ -16,8 +17,7 @@
     "editor.formatOnPaste": false,
     "editor.formatOnSave": true,
     "editor.formatOnType": true,
-    "files.trimTrailingWhitespace": true,
-    "wakatime.vscode-wakatime": true
+    "files.trimTrailingWhitespace": true
   },
   "postCreateCommand": "pip install -r requirements.txt"
 }
