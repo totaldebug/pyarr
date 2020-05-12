@@ -1,0 +1,53 @@
+[project]
+name = "PyArr"
+version = "0.8.1"
+description = "A Sonarr and Radarr API Wrapper"
+authors = [
+    "Steven Marks github.com/totaldebug"
+]
+license = "MIT"
+readme = "README.md"
+python = "^3.8"
+homepage = "https://github.com/totaldebug/PyArr"
+repository = "https://github.com/totaldebug/PyArr"
+documentation = "https://docs.totaldebug.uk/PyArr"
+
+keywords = ["sonarr", "radarr", "api", "wrapper"]
+
+classifiers = [
+    "Topic :: Software Development :: Libraries :: Python Modules"
+    "Topic :: Multimedia :: Video"
+    "License :: OSI Approved :: MIT License"
+    "Development Status :: 3 - Alpha"
+    "Intended Audience :: Developers"
+    "Programming Language :: Python :: 3.8"
+]
+
+# Requirements
+[dependencies]
+requests = "^2.21.0"
+
+[dev-dependencies]
+black = { version = "^19.10b0", python = "^3.8" }
+
+[tool.black]
+line-length = 88
+target_version = ['py38']
+include = '\.pyi?$'
+exclude = '''
+
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+  )/
+)
+'''
