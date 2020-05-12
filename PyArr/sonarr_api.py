@@ -251,9 +251,7 @@ class SonarrAPI(RequestAPI):
     def delSeries(self, seriesId, delFiles=False):
         """Delete the series with the given ID"""
         # File deletion does not work
-        data = {
-            "deleteFiles": delFiles
-        }
+        data = {"deleteFiles": delFiles}
         path = f"/api/series/{seriesId}"
         res = self.request_del(path, data)
         return res.json()
@@ -360,7 +358,6 @@ class SonarrAPI(RequestAPI):
         path = "/api/system/backup"
         res = self.request_get(path)
         return res.json()
-
 
     # TODO: Test this
     def updEpisode(self, data):
