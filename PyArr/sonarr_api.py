@@ -208,6 +208,22 @@ class SonarrAPI(RequestAPI):
         }
         return series_json
 
+    def getSeries(self, *args):
+        """Return all series in your collection or the series with the matching ID if one is found
+            Args:
+                Optional - seriesID
+
+            Returns:
+                Json Array
+        """
+        if len(args) == 1:
+            path = f"/api/series/{args[0]}"
+        else:
+            path = "/api/series"
+
+        res = self.request_get(path)
+        return res.json()
+
     def addSeries(self, dbId, qualityProfileId):
         """Add a new series to your collection
 
@@ -222,6 +238,24 @@ class SonarrAPI(RequestAPI):
 
         path = "/api/series"
         res = self.request_post(path, data=series_json)
+        return res.json()
+
+    # TODO: Test
+    def updSeries(self, data):
+        """Update an existing series"""
+
+        path = "/api/series"
+        res = self.request_put(path, data=series_json)
+        return res.json()
+
+    def delSeries(self, seriesId, delFiles=False):
+        """Delete the series with the given ID"""
+        # File deletion does not work
+        data = {
+            "deleteFiles": delFiles
+        }
+        path = f"/api/series/{seriesId}"
+        res = self.request_del(path, data)
         return res.json()
 
     def getSystemStatus(self):
@@ -240,7 +274,7 @@ class SonarrAPI(RequestAPI):
         res = self.request_get(path)
         return res.json()
 
-    # TODO: Test
+    # TODO: requires Test
     def delQueue(self, id, *args):
         """Deletes an item from the queue and download client. Optionally blacklist item after deletion.
 
@@ -258,6 +292,25 @@ class SonarrAPI(RequestAPI):
             )
         path = "/api/queue/"
         res = self.request_del(path, data)
+        return res.json()
+
+    def getWanted(self, **kwargs):
+        """Gets Wanted / Missing episodes
+
+            Args:
+                Required - sortKey (string) - series.title or airDateUtc (default)
+                Optional - page (int) - 1-indexed Default: 1
+                Optional - pageSize (int) - Default: 10
+                Optional - sortDir (string) - asc or desc - Default: asc
+            Returns:
+                json response
+        """
+        data = {}
+        data.update({"sortKey": kwargs.get("sortKey", "airDateUtc")})
+        for key, value in kwargs.items():
+            data.update({key: value})
+        path = "/api/wanted/missing"
+        res = self.request_get(path, **data)
         return res.json()
 
     def getHistory(self, **kwargs):
@@ -279,6 +332,35 @@ class SonarrAPI(RequestAPI):
         path = "/api/history"
         res = self.request_get(path, **data)
         return res.json()
+
+    def getLogs(self, **kwargs):
+        """Gets Sonarr Logs
+
+            Kwargs;
+                Required - None
+                Optional - page (int) - Page number - Default: 1.
+                optional - pageSize (int) - How many records per page - Default: 10.
+                optional - sortKey (str) - What key to sort on - Default: 'time'.
+                optional - sortDir (str) - What direction to sort asc or desc - Default: desc.
+                optional - filterKey (str) - What key to filter on - Default: None.
+                optional - filterValue (str) - What to filter on (Warn, Info, Error, All) - Default: All.
+
+            Returns:
+                Json Array
+        """
+        data = {}
+        for key, value in kwargs.items():
+            data.update({key: value})
+        path = "/api/log"
+        res = self.request_get(path, **data)
+        return res.json()
+
+    def getBackup(self):
+        """Returns the backups as json"""
+        path = "/api/system/backup"
+        res = self.request_get(path)
+        return res.json()
+
 
     # TODO: Test this
     def updEpisode(self, data):
@@ -340,49 +422,9 @@ class SonarrAPI(RequestAPI):
         res = self.request_del(path, data=None)
         return res.json()
 
-    # TODO: Test this
-    def get_logs(self, **kwargs):
-        """Gets Sonarr Logs
-
-            Kwargs;
-                page (int): Page number. Default 1.
-                page_size (int): How many records per page. Default 50.
-                sort_key (str): What key to sort on. Default 'time'.
-                sort_dir (str): What direction to sort asc or desc. Default
-                desc.
-                filter_key (str): What key to filter on. Default None.
-                filter_value (str): What to filter on (Warn, Info, Error, All).
-                Default All.
-
-            Returns:
-                requests.models.Response: Response object form requests.
-        """
-        data = {
-            "page": kwargs.get("page", 1),
-            "pageSize": kwargs.get("page_size", 50),
-            "sortKey": kwargs.get("sort_key", "time"),
-            "sortDir": kwargs.get("sort_dir", "desc"),
-            "filterKey": kwargs.get("filter_key", None),
-            "filterValue": kwargs.get("filter_value", None),
-        }
-
-        path = "/api/log"
-        res = self.request_get(path, **data)
-        return res.json()
-
     # TODO: Work in progress.
     def serach_selected(self):
         pass
-
-    # TODO: Test this
-    def search_all_missing(self):
-        """Gets all missing episodes and task's the indexer/downloader.
-
-            Returns:
-                requests.models.Response: Response object form requests.
-        """
-        data = {"name": "missingEpisodeSearch"}
-        return self.command(data)
 
     # TODO: Test this
     def push_release(self, **kwargs):
@@ -406,17 +448,6 @@ class SonarrAPI(RequestAPI):
         return res.json()
 
     # TODO: Test this
-    def get_series(self):
-        """Return all series in your collection
-
-            Returns:
-                requests.models.Response: Response object form requests.
-        """
-        path = "/api/series"
-        res = self.request_get(path)
-        return res.json()
-
-    # TODO: Test this
     def get_series_by_series_id(self, series_id):
         """Return the series with the matching ID or 404 if no matching series
         is found
@@ -429,28 +460,4 @@ class SonarrAPI(RequestAPI):
         """
         path = "/api/series/{}".format(series_id)
         res = self.request_get(path)
-        return res.json()
-
-    # TODO: Test this
-    def upd_series(self, data):
-        """Update an existing series"""
-        path = "/api/series"
-        res = self.request_put(path, data)
-        return res.json()
-
-    # TODO: Test this
-    def rem_series(self, series_id, rem_files=False):
-        """Delete the series with the given ID"""
-        # File deletion does not work
-        data = {
-            # 'id': series_id,
-            "deleteFiles": "true"
-        }
-        path = "/api/series/{}".format(series_id)
-        res = self.request_del(path, term)
-        return res.json()
-
-    def get_backups(self):
-        """Returns the backups as json"""
-        res = self.request_get("/api/system/backup")
         return res.json()
