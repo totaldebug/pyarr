@@ -29,7 +29,7 @@ getHistory()
 ```
 
 ```python
-getHistory("sortKey"="series.title", "page"=1, "pageSize"=50, "sortDir"=desc)
+getHistory(sortKey = "series.title", page = 1, pageSize = 50, sortDir = "desc")
 ```
 
 ## Returns JsonArray

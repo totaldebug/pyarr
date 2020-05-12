@@ -1,11 +1,9 @@
 ---
 layout: default
-title: Queue
+title: getQueue
 parent: SonarrAPI
 nav_order: 4
 ---
-
-# Get
 
 ## Summary
 
@@ -122,30 +120,4 @@ getQueue()
     "id": 759726777
   }
 ]
-```
-
-# Delete
-
-## Summary
-
-Deletes an item from the queue and download client. Optionally blacklist item after deletion.
-
-## Parameters
-
-Required:
-
-- `id (int)` Unique ID of the command
-
-Optional:
-
-- `blacklist (bool)` Set to 'true' to blacklist after delete
-
-## Example
-
-```python
-delQueue(473989688)
-```
-
-```python
-delQueue(473989688, True)
 ```

@@ -4,6 +4,20 @@ title: ChangeLog
 nav_order: 7
 ---
 
+# v0.9.0
+
+## New Features
+
+### Sonarr
+
+- API Calls
+  - getWanted
+  - getLogs
+  - getSeries
+  - delSeries
+  - getBackups
+  - delQueue
+
 # v0.8.0
 
 ## New Features
