@@ -3,7 +3,7 @@ name = "PyArr"
 version = "0.9.0"
 description = "A Sonarr and Radarr API Wrapper"
 authors = [
-    "Steven Marks github.com/totaldebug"
+    "Steven Marks info@totaldebug.uk"
 ]
 license = "MIT"
 readme = "README.md"
