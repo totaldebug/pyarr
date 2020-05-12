@@ -20,7 +20,8 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
-    "Programming Language :: Python :: 3.8"
+    "Programming Language :: Python :: 3.8",
+    "Operating System :: OS Independent"
 ]
 
 # Requirements
@@ -29,6 +30,10 @@ requests = "^2.21.0"
 
 [dev-dependencies]
 black = { version = "^19.10b0", python = "^3.8" }
+
+[build-system]
+requires = ["setuptools >= 40.6.0", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [tool.black]
 line-length = 88
