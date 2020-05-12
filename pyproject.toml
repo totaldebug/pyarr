@@ -15,11 +15,11 @@ documentation = "https://docs.totaldebug.uk/PyArr"
 keywords = ["sonarr", "radarr", "api", "wrapper"]
 
 classifiers = [
-    "Topic :: Software Development :: Libraries :: Python Modules"
-    "Topic :: Multimedia :: Video"
-    "License :: OSI Approved :: MIT License"
-    "Development Status :: 3 - Alpha"
-    "Intended Audience :: Developers"
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Multimedia :: Video",
+    "License :: OSI Approved :: MIT License",
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
     "Programming Language :: Python :: 3.8"
 ]
 
