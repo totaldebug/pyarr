@@ -1,18 +1,13 @@
-[project]
+[tool.poetry]
 name = "PyArr"
 version = "0.9.0"
 description = "A Sonarr and Radarr API Wrapper"
-authors = [
-    "Steven Marks github.com/totaldebug"
-]
+authors = ["Steven Marks <marksie1988@users.noreply.github.com>"]
 license = "MIT"
-readme = "README.md"
-python = "^3.8"
+keywords = ["sonarr", "radarr", "api", "wrapper"]
 homepage = "https://github.com/totaldebug/PyArr"
 repository = "https://github.com/totaldebug/PyArr"
 documentation = "https://docs.totaldebug.uk/PyArr"
-
-keywords = ["sonarr", "radarr", "api", "wrapper"]
 
 classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
@@ -24,16 +19,16 @@ classifiers = [
     "Operating System :: OS Independent"
 ]
 
-# Requirements
-[dependencies]
+[tool.poetry.dependencies]
+python = "^3.8"
 requests = "^2.21.0"
 
-[dev-dependencies]
-black = { version = "^19.10b0", python = "^3.8" }
+[tool.poetry.dev-dependencies]
+black = "^19.10b0"
 
 [build-system]
-requires = ["setuptools >= 46.1.3", "wheel >= 0.34.2"]
-build-backend = "setuptools.build_meta"
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
 
 [tool.black]
 line-length = 88

@@ -19,5 +19,5 @@
     "editor.formatOnType": true,
     "files.trimTrailingWhitespace": true
   },
-  "postCreateCommand": "pip install -r requirements.txt"
+  "postCreateCommand": "poetry install"
 }
