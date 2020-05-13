@@ -4,6 +4,7 @@ version = "0.9.0"
 description = "A Sonarr and Radarr API Wrapper"
 authors = ["Steven Marks <marksie1988@users.noreply.github.com>"]
 license = "MIT"
+readme = "README.md"
 keywords = ["sonarr", "radarr", "api", "wrapper"]
 homepage = "https://github.com/totaldebug/PyArr"
 repository = "https://github.com/totaldebug/PyArr"
