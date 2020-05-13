@@ -19,5 +19,5 @@
     "editor.formatOnType": true,
     "files.trimTrailingWhitespace": true
   },
-  "postCreateCommand": "poetry install"
+  "postCreateCommand": "poetry shell && poetry install"
 }
