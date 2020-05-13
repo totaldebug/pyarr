@@ -74,6 +74,7 @@ class RadarrAPI(RequestAPI):
             Returns:
                 json response
         """
+        print(data)
         path = "/api/command"
         res = self.request_post(path, data)
         return res.json()
@@ -108,6 +109,18 @@ class RadarrAPI(RequestAPI):
             data.update({"name": "RescanMovie", "movieId": args[0]})
         else:
             data.update({"name": "RescanMovie"})
+        return self.__setCommand(data)
+
+    def syncRss(self):
+        """Instruct Sonarr to perform an RSS sync with all enabled indexers
+
+            Args:
+                none
+            Returns:
+                json response
+
+        """
+        data = {"name": "RssSync"}
         return self.__setCommand(data)
 
     def getDiskSpace(self):
@@ -216,6 +229,22 @@ class RadarrAPI(RequestAPI):
 
         path = "/api/movie"
         res = self.request_post(path, data=movie_json)
+        return res.json()
+
+    def delMovie(self, movieId, delFiles=False, addExclusion=False):
+        """Delete the movie with the given ID
+            Args:
+                Required - movieId (int)
+                Optional - delFiles (bool)
+                Optional - addExclusion (bool)
+            Returns:
+                json response
+
+        """
+        # File deletion does not work
+        data = {"deleteFiles": delFiles, "addExclusion": addExclusion}
+        path = f"/api/movie/{movieId}"
+        res = self.request_del(path, data)
         return res.json()
 
     def getSystemStatus(self):

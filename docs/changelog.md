@@ -4,6 +4,14 @@ title: ChangeLog
 nav_order: 7
 ---
 
+# v0.9.1
+
+## Minor Feature
+
+### Radarr
+- API Calls
+  - delMovie
+
 # v0.9.0
 
 ## New Features
