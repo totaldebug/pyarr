@@ -145,10 +145,8 @@ class RadarrAPI(RequestAPI):
                 json response
 
         """
-        movieId = args[0]
-
-        if len(movieId) == 1 and isinstance(movieId, (int)):
-            path = f"/api/movie/{movieId}"
+        if len(args) == 1:
+            path = f"/api/movie/{args[0]}"
         else:
             path = "/api/movie"
 
