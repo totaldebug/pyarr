@@ -4,20 +4,20 @@ title: ChangeLog
 nav_order: 7
 ---
 
+# v0.9.2
+### Radarr Bug Fix
+- API Calls
+  - getMovie
+
+
 # v0.9.1
-
-## Minor Feature
-
-### Radarr
+### Radarr New Features
 - API Calls
   - delMovie
 
+
 # v0.9.0
-
-## New Features
-
-### Sonarr
-
+### Sonarr New Features
 - API Calls
   - getWanted
   - getLogs
@@ -26,22 +26,16 @@ nav_order: 7
   - getBackups
   - delQueue
 
+
 # v0.8.0
-
-## New Features
-
 - Updated docs
-
-### Radarr
-
+### Radarr New Features
 - API Calls
   - getQueue
   - delQueue
   - getQualityProfiles
   - getHistory
-
-### Sonarr
-
+### Sonarr New Features
 - API Calls
   - getEpisodesBySeriesId
   - getEpisodeByEpisodeId
@@ -54,24 +48,17 @@ nav_order: 7
   - getQualityProfiles
   - getHistory
 
+
 # v0.7.0
-
-## New Features
-
-### Radarr Specific
-
+### Radarr New Features
 - API Calls
   - getSystemStatus
 
+
 # v0.6.0
-
-## New Features
-
 - Documentation Added
 - Uploaded to PyPi
-
-### Radarr Specific
-
+### Radarr New Features
 - API Calls
   - getCalendar
   - getRoot
