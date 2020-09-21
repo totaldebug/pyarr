@@ -19,5 +19,5 @@
     "editor.formatOnType": true,
     "files.trimTrailingWhitespace": true
   },
-  "postCreateCommand": "poetry shell && poetry install"
+  "postCreateCommand": "source $HOME/.poetry/env && poetry shell && poetry install"
 }
