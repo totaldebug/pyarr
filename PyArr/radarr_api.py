@@ -7,26 +7,28 @@ from .request_api import RequestAPI
 
 class RadarrAPI(RequestAPI):
     def __init__(
-        self, host_url: str, api_key: str,
+        self,
+        host_url: str,
+        api_key: str,
     ):
         """Constructor requires Host-URL and API-KEY
 
-            Args:
-                host_url (str): Host url to radarr.
-                api_key: API key from Radarr. You can find this
+        Args:
+            host_url (str): Host url to radarr.
+            api_key: API key from Radarr. You can find this
         """
         super().__init__(host_url, api_key)
 
     def getCalendar(self, *args):
         """getCalendar retrieves info about when movies were/will be downloaded.
-           If start and end are not provided, retrieves movies airing today and tomorrow.
+        If start and end are not provided, retrieves movies airing today and tomorrow.
 
-            args:
-                start_date (datetime):
-                end_date (datetime):
+         args:
+             start_date (datetime):
+             end_date (datetime):
 
-            Returns:
-                json response
+         Returns:
+             json response
 
         """
         path = "/api/calendar"
@@ -49,12 +51,12 @@ class RadarrAPI(RequestAPI):
 
     def getCommand(self, *args):
         """getCommand Queries the status of a previously
-            started command, or all currently started commands.
+        started command, or all currently started commands.
 
-            Args:
-                Optional - id (int) Unique ID of command
-            Returns:
-                json response
+        Args:
+            Optional - id (int) Unique ID of command
+        Returns:
+            json response
 
         """
         if len(args) == 1:
@@ -68,11 +70,11 @@ class RadarrAPI(RequestAPI):
     def __setCommand(self, data):
         """Private Command Method
 
-            Args:
-                data (dict): data payload to send to /api/command
+        Args:
+            data (dict): data payload to send to /api/command
 
-            Returns:
-                json response
+        Returns:
+            json response
         """
         print(data)
         path = "/api/command"
@@ -82,10 +84,10 @@ class RadarrAPI(RequestAPI):
     def refreshMovie(self, *args):
         """RefreshMovie refreshes movie information and rescans disk.
 
-            Args:
-                Optional - movieId (int)
-            Returns:
-                json response
+        Args:
+            Optional - movieId (int)
+        Returns:
+            json response
 
         """
         data = {}
@@ -98,10 +100,10 @@ class RadarrAPI(RequestAPI):
     def rescanMovie(self, *args):
         """RescanMovie scans disk for any downloaded movie for all or specified movie.
 
-            Args:
-                Optional - movieId (int)
-            Returns:
-                json response
+        Args:
+            Optional - movieId (int)
+        Returns:
+            json response
 
         """
         data = {}
@@ -114,10 +116,10 @@ class RadarrAPI(RequestAPI):
     def syncRss(self):
         """Instruct Sonarr to perform an RSS sync with all enabled indexers
 
-            Args:
-                none
-            Returns:
-                json response
+        Args:
+            none
+        Returns:
+            json response
 
         """
         data = {"name": "RssSync"}
@@ -126,10 +128,10 @@ class RadarrAPI(RequestAPI):
     def getDiskSpace(self):
         """GetDiskSpace retrieves info about the disk space on the server.
 
-            Args:
-                None
-            Returns:
-                json response
+        Args:
+            None
+        Returns:
+            json response
 
         """
         path = "/api/diskspace"
@@ -139,10 +141,10 @@ class RadarrAPI(RequestAPI):
     def getMovie(self, *args):
         """getMovie returns all movies in collection.
 
-            Args:
-                Optional - id (int) ID of movie
-            Returns:
-                json response
+        Args:
+            Optional - id (int) ID of movie
+        Returns:
+            json response
 
         """
         if len(args) == 1:
@@ -156,10 +158,10 @@ class RadarrAPI(RequestAPI):
     def lookupMovie(self, term):
         """lookupMovie serches for movie
 
-            Args:
-                Requried - term / tmdbId / imdbId
-            Returns:
-                json response
+        Args:
+            Requried - term / tmdbId / imdbId
+        Returns:
+            json response
 
         """
         term = str(term)
@@ -188,12 +190,12 @@ class RadarrAPI(RequestAPI):
     def constructMovieJson(self, dbId, qualityProfileId):
         """Searches for movie on tmdb and returns Movie json to add
 
-            Args:
-                Required - dbID, <imdb or tmdb id>
-                Required - qualityProfileId (int)
+        Args:
+            Required - dbID, <imdb or tmdb id>
+            Required - qualityProfileId (int)
 
-            Return:
-                JsonArray
+        Return:
+            JsonArray
 
         """
         s_dict = self.lookupMovie(dbId)
@@ -216,11 +218,11 @@ class RadarrAPI(RequestAPI):
     def addMovie(self, dbId, qualityProfileId):
         """addMovie adds a new movie to collection
 
-            Args:
-                Required - dbid
-                Required - qualityProfileId
-            Returns:
-                json response
+        Args:
+            Required - dbid
+            Required - qualityProfileId
+        Returns:
+            json response
 
         """
         movie_json = self.constructMovieJson(dbId, qualityProfileId)
@@ -231,12 +233,12 @@ class RadarrAPI(RequestAPI):
 
     def delMovie(self, movieId, delFiles=False, addExclusion=False):
         """Delete the movie with the given ID
-            Args:
-                Required - movieId (int)
-                Optional - delFiles (bool)
-                Optional - addExclusion (bool)
-            Returns:
-                json response
+        Args:
+            Required - movieId (int)
+            Optional - delFiles (bool)
+            Optional - addExclusion (bool)
+        Returns:
+            json response
 
         """
         # File deletion does not work
@@ -261,17 +263,19 @@ class RadarrAPI(RequestAPI):
     def delQueue(self, id, *args):
         """Deletes an item from the queue and download client. Optionally blacklist item after deletion.
 
-            Args:
-                Required - id (int)
-                Optional - blacklist (bool)
-            Returns:
-                json response
+        Args:
+            Required - id (int)
+            Optional - blacklist (bool)
+        Returns:
+            json response
         """
         data = {}
         data.update({"id": id})
         if len(args) == 1:
             data.update(
-                {"blacklist": args[1],}
+                {
+                    "blacklist": args[1],
+                }
             )
         path = "/api/queue/"
         res = self.request_del(path, data)
@@ -280,13 +284,13 @@ class RadarrAPI(RequestAPI):
     def getHistory(self, page, **kwargs):
         """Gets history (grabs/failures/completed)
 
-            Args:
-                Required - page (int) - 1-indexed (1 default)
-                Optional - sortKey (string) - movie.title or date
-                Optional - pageSize (int) - Default: 0
-                Optional - sortDir (string) - asc or desc - Default: asc
-            Returns:
-                json response
+        Args:
+            Required - page (int) - 1-indexed (1 default)
+            Optional - sortKey (string) - movie.title or date
+            Optional - pageSize (int) - Default: 0
+            Optional - sortDir (string) - asc or desc - Default: asc
+        Returns:
+            json response
         """
         data = {}
         data.update({"page": kwargs.get("page", 1)})

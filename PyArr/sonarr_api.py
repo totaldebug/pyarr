@@ -7,26 +7,28 @@ from .request_api import RequestAPI
 
 class SonarrAPI(RequestAPI):
     def __init__(
-        self, host_url: str, api_key: str,
+        self,
+        host_url: str,
+        api_key: str,
     ):
         """Constructor requires Host-URL and API-KEY
 
-            Args:
-                host_url (str): Host url to sonarr.
-                api_key: API key from Sonarr. You can find this
+        Args:
+            host_url (str): Host url to sonarr.
+            api_key: API key from Sonarr. You can find this
         """
         super().__init__(host_url, api_key)
 
     def getCalendar(self, *args):
         """getCalendar retrieves info about when series were/will be downloaded.
-           If start and end are not provided, retrieves series airing today and tomorrow.
+        If start and end are not provided, retrieves series airing today and tomorrow.
 
-            args:
-                start_date:
-                end_date:
+         args:
+             start_date:
+             end_date:
 
-            Returns:
-                json response
+         Returns:
+             json response
 
         """
         path = "/api/calendar"
@@ -48,12 +50,12 @@ class SonarrAPI(RequestAPI):
 
     def getCommand(self, *args):
         """getCommand Queries the status of a previously
-            started command, or all currently started commands.
+        started command, or all currently started commands.
 
-            Args:
-                Optional - id (int) Unique ID of command
-            Returns:
-                json response
+        Args:
+            Optional - id (int) Unique ID of command
+        Returns:
+            json response
 
         """
         if len(args) == 1:
@@ -67,11 +69,11 @@ class SonarrAPI(RequestAPI):
     def __setCommand(self, data):
         """Private Command Method
 
-            Args:
-                data (dict): data payload to send to /api/command
+        Args:
+            data (dict): data payload to send to /api/command
 
-            Returns:
-                json response
+        Returns:
+            json response
         """
         path = "/api/command"
         res = self.request_post(path, data)
@@ -80,10 +82,10 @@ class SonarrAPI(RequestAPI):
     def refreshSeries(self, *args):
         """RefreshSeries refreshes series information and rescans disk.
 
-            Args:
-                Optional - seriesId (int)
-            Returns:
-                json response
+        Args:
+            Optional - seriesId (int)
+        Returns:
+            json response
 
         """
         data = {}
@@ -96,10 +98,10 @@ class SonarrAPI(RequestAPI):
     def rescanSeries(self, *args):
         """RescanSeries scans disk for any downloaded episodes for all or specified series.
 
-            Args:
-                Optional - seriesId (int)
-            Returns:
-                json response
+        Args:
+            Optional - seriesId (int)
+        Returns:
+            json response
 
         """
         data = {}
@@ -112,10 +114,10 @@ class SonarrAPI(RequestAPI):
     def getDiskSpace(self):
         """GetDiskSpace retrieves info about the disk space on the server.
 
-            Args:
-                None
-            Returns:
-                json response
+        Args:
+            None
+        Returns:
+            json response
 
         """
         path = "/api/diskspace"
@@ -125,10 +127,10 @@ class SonarrAPI(RequestAPI):
     def getEpisodesBySeriesId(self, seriesId):
         """Returns all episodes for the given series
 
-            Args:
-                seriesId (int):
-            Returns:
-                json response
+        Args:
+            seriesId (int):
+        Returns:
+            json response
         """
         path = f"/api/episode?seriesId={seriesId}"
         res = self.request_get(path)
@@ -137,10 +139,10 @@ class SonarrAPI(RequestAPI):
     def getEpisodeByEpisodeId(self, episodeId):
         """Returns the episode with the matching id
 
-            Args:
-                episode_id (int):
-            Returns:
-                json response
+        Args:
+            episode_id (int):
+        Returns:
+            json response
         """
         path = f"/api/episode/{episodeId}"
         res = self.request_get(path)
@@ -148,10 +150,10 @@ class SonarrAPI(RequestAPI):
 
     def lookupSeries(self, term):
         """Searches for new shows on tvdb
-            Args:
-                Requried - term / tvdbId
-            Returns:
-                json response
+        Args:
+            Requried - term / tvdbId
+        Returns:
+            json response
 
         """
         term = str(term)
@@ -178,12 +180,12 @@ class SonarrAPI(RequestAPI):
     def constructSeriesJson(self, tvdbId, qualityProfileId):
         """Searches for new shows on trakt and returns Series json to add
 
-            Args:
-                Required - dbID, <tvdb id>
-                Required - qualityProfileId (int)
+        Args:
+            Required - dbID, <tvdb id>
+            Required - qualityProfileId (int)
 
-            Return:
-                JsonArray
+        Return:
+            JsonArray
 
         """
         res = self.lookupSeries(tvdbId)
@@ -210,11 +212,11 @@ class SonarrAPI(RequestAPI):
 
     def getSeries(self, *args):
         """Return all series in your collection or the series with the matching ID if one is found
-            Args:
-                Optional - seriesID
+        Args:
+            Optional - seriesID
 
-            Returns:
-                Json Array
+        Returns:
+            Json Array
         """
         if len(args) == 1:
             path = f"/api/series/{args[0]}"
@@ -227,11 +229,11 @@ class SonarrAPI(RequestAPI):
     def addSeries(self, dbId, qualityProfileId):
         """Add a new series to your collection
 
-            Args:
-                Required - dbid
-                Required - qualityProfileId
-            Returns:
-                json response
+        Args:
+            Required - dbid
+            Required - qualityProfileId
+        Returns:
+            json response
 
         """
         series_json = self.constructSeriesJson(dbId, qualityProfileId)
@@ -265,8 +267,8 @@ class SonarrAPI(RequestAPI):
     def getQueue(self):
         """Gets current downloading info
 
-            Returns:
-                json Array
+        Returns:
+            json Array
         """
         path = "/api/queue"
         res = self.request_get(path)
@@ -276,17 +278,19 @@ class SonarrAPI(RequestAPI):
     def delQueue(self, id, *args):
         """Deletes an item from the queue and download client. Optionally blacklist item after deletion.
 
-            Args:
-                Required - id (int)
-                Optional - blacklist (bool)
-            Returns:
-                json response
+        Args:
+            Required - id (int)
+            Optional - blacklist (bool)
+        Returns:
+            json response
         """
         data = {}
         data.update({"id": id})
         if len(args) == 1:
             data.update(
-                {"blacklist": args[1],}
+                {
+                    "blacklist": args[1],
+                }
             )
         path = "/api/queue/"
         res = self.request_del(path, data)
@@ -295,13 +299,13 @@ class SonarrAPI(RequestAPI):
     def getWanted(self, **kwargs):
         """Gets Wanted / Missing episodes
 
-            Args:
-                Required - sortKey (string) - series.title or airDateUtc (default)
-                Optional - page (int) - 1-indexed Default: 1
-                Optional - pageSize (int) - Default: 10
-                Optional - sortDir (string) - asc or desc - Default: asc
-            Returns:
-                json response
+        Args:
+            Required - sortKey (string) - series.title or airDateUtc (default)
+            Optional - page (int) - 1-indexed Default: 1
+            Optional - pageSize (int) - Default: 10
+            Optional - sortDir (string) - asc or desc - Default: asc
+        Returns:
+            json response
         """
         data = {}
         data.update({"sortKey": kwargs.get("sortKey", "airDateUtc")})
@@ -314,14 +318,14 @@ class SonarrAPI(RequestAPI):
     def getHistory(self, **kwargs):
         """Gets history (grabs/failures/completed)
 
-            Args:
-                Required - sortKey (string) - series.title or date (default)
-                Optional - page (int) - 1-indexed
-                Optional - pageSize (int) - Default: 0
-                Optional - sortDir (string) - asc or desc - Default: asc
-                Optional - episodeId (int) - Filters to a specific episode ID
-            Returns:
-                json response
+        Args:
+            Required - sortKey (string) - series.title or date (default)
+            Optional - page (int) - 1-indexed
+            Optional - pageSize (int) - Default: 0
+            Optional - sortDir (string) - asc or desc - Default: asc
+            Optional - episodeId (int) - Filters to a specific episode ID
+        Returns:
+            json response
         """
         data = {}
         data.update({"sortKey": kwargs.get("sortKey", "date")})
@@ -334,17 +338,17 @@ class SonarrAPI(RequestAPI):
     def getLogs(self, **kwargs):
         """Gets Sonarr Logs
 
-            Kwargs;
-                Required - None
-                Optional - page (int) - Page number - Default: 1.
-                optional - pageSize (int) - How many records per page - Default: 10.
-                optional - sortKey (str) - What key to sort on - Default: 'time'.
-                optional - sortDir (str) - What direction to sort asc or desc - Default: desc.
-                optional - filterKey (str) - What key to filter on - Default: None.
-                optional - filterValue (str) - What to filter on (Warn, Info, Error, All) - Default: All.
+        Kwargs;
+            Required - None
+            Optional - page (int) - Page number - Default: 1.
+            optional - pageSize (int) - How many records per page - Default: 10.
+            optional - sortKey (str) - What key to sort on - Default: 'time'.
+            optional - sortDir (str) - What direction to sort asc or desc - Default: desc.
+            optional - filterKey (str) - What key to filter on - Default: None.
+            optional - filterValue (str) - What to filter on (Warn, Info, Error, All) - Default: All.
 
-            Returns:
-                Json Array
+        Returns:
+            Json Array
         """
         data = {}
         for key, value in kwargs.items():
@@ -380,11 +384,11 @@ class SonarrAPI(RequestAPI):
     def get_episode_files_by_series_id(self, series_id):
         """Returns all episode files for the given series
 
-            Args:
-                series_id (int):
+        Args:
+            series_id (int):
 
-            Returns:
-                requests.models.Response: Response object form requests.
+        Returns:
+            requests.models.Response: Response object form requests.
         """
         data = {"seriesId": series_id}
         path = "/api/episodefile"
@@ -395,11 +399,11 @@ class SonarrAPI(RequestAPI):
     def get_episode_file_by_episode_id(self, episode_id):
         """Returns the episode file with the matching id
 
-            Kwargs:
-                episode_id (int):
+        Kwargs:
+            episode_id (int):
 
-            Returns:
-                requests.models.Response: Response object form requests.
+        Returns:
+            requests.models.Response: Response object form requests.
         """
         path = "/api/episodefile/{}".format(episode_id)
         res = self.request_get(path)
@@ -409,11 +413,11 @@ class SonarrAPI(RequestAPI):
     def rem_episode_file_by_episode_id(self, episode_id):
         """Delete the given episode file
 
-            Kwargs:
-                episode_id (str):
+        Kwargs:
+            episode_id (str):
 
-            Returns:
-                requests.models.Response: Response object form requests.
+        Returns:
+            requests.models.Response: Response object form requests.
         """
         path = "/api/episodefile/{}".format(episode_id)
         res = self.request_del(path, data=None)
@@ -426,19 +430,19 @@ class SonarrAPI(RequestAPI):
     # TODO: Test this
     def push_release(self, **kwargs):
         """Notifies Sonarr of a new release.
-            title: release name
-            downloadUrl: .torrent file URL
-            protocol: usenet / torrent
-            publishDate: ISO8601 date string
+        title: release name
+        downloadUrl: .torrent file URL
+        protocol: usenet / torrent
+        publishDate: ISO8601 date string
 
-            Kwargs:
-                title (str):
-                downloadUrl (str):
-                protocol (str):
-                publishDate (str):
+        Kwargs:
+            title (str):
+            downloadUrl (str):
+            protocol (str):
+            publishDate (str):
 
-            Returns:
-                requests.models.Response: Response object form requests.
+        Returns:
+            requests.models.Response: Response object form requests.
         """
         path = "/api/release/push"
         res = self.request_post(path, data=kwargs)
