@@ -15,3 +15,5 @@ dist
 build
 .vscode
 *.egg-info
+
+devcontainer.json

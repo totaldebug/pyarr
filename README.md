@@ -4,7 +4,7 @@ Original Sonarr wrapper from [SLiX69/Sonarr-API-Python-Wrapper](https://github.c
 
 Unofficial Python Wrapper for the [Sonarr](https://github.com/Sonarr/Sonarr) and [Radarr](https://github.com/Radarr/Radarr) API.
 
-Currently the package is under development, see the full [documentation](https://marksie1988.github.io/PyArr) for supported commands
+Currently the package is under development, see the full [documentation](https://docs.totaldebug.uk/PyArr/) for supported commands
 
 ### Requirements
 
@@ -14,7 +14,7 @@ Currently the package is under development, see the full [documentation](https:/
 
 ```
 # Import SonarrAPI Class
-from PyArr import SonarrAPI
+from pyarr import SonarrAPI
 
 # Set Host URL and API-Key
 host_url = 'http://your-domain.com'
@@ -33,7 +33,7 @@ print(sonarr.getSeries())
 
 ```
 # Import RadarrAPI Class
-from PyArr import RadarrAPI
+from pyarr import RadarrAPI
 
 # Set Host URL and API-Key
 host_url = 'http://your-domain.com'
