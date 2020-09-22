@@ -6,13 +6,14 @@
   "workspaceMount": "type=bind,source=/home/marksie1988/repos/PyArr,target=/PyArr",
   "extensions": [
     "github.vscode-pull-request-github",
-    "esbenp.prettier-vscode",
+    "ms-python.python",
     "yzhang.markdown-all-in-one",
-    "wakatime.vscode-wakatime"
+    "wakatime.vscode-wakatime",
+	"tabnine.tabnine-vscode"
   ],
   "settings": {
     "files.eol": "\n",
-    "editor.tabSize": 2,
+    "editor.tabSize": 4,
     "terminal.integrated.shell.linux": "/bin/zsh",
     "editor.formatOnPaste": false,
     "editor.formatOnSave": true,

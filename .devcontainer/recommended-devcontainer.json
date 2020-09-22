@@ -1,0 +1,21 @@
+{
+    "name": "PyArr",
+    "dockerFile": "Dockerfile",
+    "context": "..",
+    "extensions": [
+        "github.vscode-pull-request-github",
+        "ms-python.python",
+        "yzhang.markdown-all-in-one",
+        "tabnine.tabnine-vscode"
+    ],
+    "settings": {
+        "files.eol": "\n",
+        "editor.tabSize": 4,
+        "terminal.integrated.shell.linux": "/bin/zsh",
+        "editor.formatOnPaste": false,
+        "editor.formatOnSave": true,
+        "editor.formatOnType": true,
+        "files.trimTrailingWhitespace": true
+    },
+    "postCreateCommand": "source $HOME/.poetry/env && poetry shell && poetry install"
+}
