@@ -14,7 +14,7 @@ Currently the package is under development, see the full [documentation](https:/
 
 ```
 # Import SonarrAPI Class
-from pyarr import SonarrAPI
+from PyArr import SonarrAPI
 
 # Set Host URL and API-Key
 host_url = 'http://your-domain.com'
@@ -33,7 +33,7 @@ print(sonarr.getSeries())
 
 ```
 # Import RadarrAPI Class
-from pyarr import RadarrAPI
+from PyArr import RadarrAPI
 
 # Set Host URL and API-Key
 host_url = 'http://your-domain.com'
