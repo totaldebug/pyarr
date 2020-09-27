@@ -285,12 +285,11 @@ class SonarrAPI(RequestAPI):
         res = self.request_post(path, data=series_json)
         return res.json()
 
-    # TODO: Test
     def updSeries(self, data):
         """Update an existing series"""
 
         path = "/api/series"
-        res = self.request_put(path, data=series_json)
+        res = self.request_put(path, data)
         return res.json()
 
     def delSeries(self, seriesId, delFiles=False):
