@@ -188,17 +188,22 @@ class RadarrAPI(RequestAPI):
         }
         return movie_json
 
-    def addMovie(self, dbId, qualityProfileId):
+    def addMovie(
+        self, dbId, qualityProfileId, rootDir, monitored=True, searchForMovie=True
+    ):
         """addMovie adds a new movie to collection
 
         Args:
-            Required - dbid
-            Required - qualityProfileId
+            Required - dbid <imdb or tmdb id>
+            Required - qualityProfileId (int)
+            Required - rootDir (string)
         Returns:
             json response
 
         """
-        movie_json = self.constructMovieJson(dbId, qualityProfileId)
+        movie_json = self.constructMovieJson(
+            dbId, qualityProfileId, rootDir, monitored, searchForMovie
+        )
 
         path = "/api/movie"
         res = self.request_post(path, data=movie_json)
