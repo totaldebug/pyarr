@@ -463,10 +463,6 @@ class SonarrAPI(RequestAPI):
         res = self.request_del(path, data=None)
         return res.json()
 
-    # TODO: Work in progress.
-    def serach_selected(self):
-        pass
-
     # TODO: Test this
     def push_release(self, **kwargs):
         """Notifies Sonarr of a new release.
