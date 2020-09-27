@@ -1,24 +1,26 @@
 ---
 layout: default
-title: rescanSeries
+title: setCommand
 parent: SonarrAPI
 nav_order: 4
 ---
 
 ## Summary
 
-Refresh rescan disk for a single series
+Performs any of the predetermined Sonarr command routines.
+
+Options available: RefreshSeries, RescanSeries, EpisodeSearch, SeasonSearch, SeriesSearch, DownloadedEpisodesScan, RssSync, RenameFiles, RenameSeries, Backup, missingEpisodeSearch
 
 ## Parameters
 
-Required: None
+Required: name (string)
 
-Optional: `seriesId (int)` - if not set all series will be scanned
+Optional: Additional parameters may be required or optional. See [https://github.com/Radarr/Radarr/wiki/API:Command](https://github.com/Radarr/Radarr/wiki/API:Command) on a per command basis.
 
 ## Example
 
 ```python
-rescanSeries()
+setCommand(name="RescanSeries", seriesId=series_id)
 ```
 
 ## Returns JsonArray
