@@ -117,6 +117,13 @@ class RadarrAPI(RequestAPI):
         res = self.request_get(path)
         return res.json()
 
+    def updMovie(self, data):
+        """Update an existing movie"""
+
+        path = "/api/movie"
+        res = self.request_put(path, data)
+        return res.json()
+
     def lookupMovie(self, term):
         """lookupMovie serches for movie
 
