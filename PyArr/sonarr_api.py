@@ -450,8 +450,7 @@ class SonarrAPI(RequestAPI):
         res = self.request_get(path)
         return res.json()
 
-    # TODO: Test this
-    def rem_episode_file_by_episode_id(self, episode_id):
+    def del_episode_file_by_episode_id(self, episode_id):
         """Delete the given episode file
 
         Kwargs:
