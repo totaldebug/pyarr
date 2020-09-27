@@ -156,12 +156,17 @@ class RadarrAPI(RequestAPI):
         res = self.request_get(path)
         return res.json()
 
-    def constructMovieJson(self, dbId, qualityProfileId):
+    def constructMovieJson(
+        self, dbId, qualityProfileId, rootDir, monitored=True, searchForMovie=True
+    ):
         """Searches for movie on tmdb and returns Movie json to add
 
         Args:
             Required - dbID, <imdb or tmdb id>
             Required - qualityProfileId (int)
+            Required - rootDir (string)
+            Optional - monitored (boolean)
+            Optional - searchForMovie (boolean)
 
         Return:
             JsonArray
@@ -169,18 +174,17 @@ class RadarrAPI(RequestAPI):
         """
         s_dict = self.lookupMovie(dbId)
 
-        root = self.getRoot()[0]["path"]
         movie_json = {
             "title": s_dict["title"],
-            "path": root + s_dict["title"],
+            "path": rootDir + s_dict["title"],
             "qualityProfileId": qualityProfileId,
             "profileId": qualityProfileId,
             "year": s_dict["year"],
             "tmdbId": s_dict["tmdbId"],
             "images": s_dict["images"],
             "titleSlug": s_dict["titleSlug"],
-            "monitored": True,
-            "addOptions": {"searchForMovie": True},
+            "monitored": monitored,
+            "addOptions": {"searchForMovie": searchForMovie},
         }
         return movie_json
 
