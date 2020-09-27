@@ -244,17 +244,42 @@ class SonarrAPI(RequestAPI):
         res = self.request_get(path)
         return res.json()
 
-    def addSeries(self, dbId, qualityProfileId):
+    def addSeries(
+        self,
+        tvdbId,
+        qualityProfileId,
+        rootDir,
+        seasonFolder=True,
+        monitored=True,
+        ignoreEpisodesWithFiles=False,
+        ignoreEpisodesWithoutFiles=False,
+        searchForMissingEpisodes=False,
+    ):
         """Add a new series to your collection
 
         Args:
-            Required - dbid
-            Required - qualityProfileId
+            Required - tvdbID (int)
+            Required - qualityProfileId (int)
+            Required - rootDir (string)
+            Optional - seasonFolder (boolean)
+            Optional - monitored (boolean)
+            Optional - ignoreEpisodesWithFiles (boolean)
+            Optional - ignoreEpisodesWithoutFiles (boolean)
+            Optional - searchForMissingEpisodes (boolean)
         Returns:
             json response
 
         """
-        series_json = self.constructSeriesJson(dbId, qualityProfileId)
+        series_json = self.constructSeriesJson(
+            tvdbId,
+            qualityProfileId,
+            rootDir,
+            seasonFolder,
+            monitored,
+            ignoreEpisodesWithFiles,
+            ignoreEpisodesWithoutFiles,
+            searchForMissingEpisodes,
+        )
 
         path = "/api/series"
         res = self.request_post(path, data=series_json)
