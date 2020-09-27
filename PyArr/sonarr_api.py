@@ -405,7 +405,6 @@ class SonarrAPI(RequestAPI):
         res = self.request_get(path)
         return res.json()
 
-    # TODO: Test this
     def updEpisode(self, data):
         """Update the given episodes, currently only monitored is changed, all
         other modifications are ignored. All parameters (you should perform a
