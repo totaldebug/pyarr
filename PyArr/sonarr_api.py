@@ -261,7 +261,13 @@ class SonarrAPI(RequestAPI):
         return res.json()
 
     def updSeries(self, data):
-        """Update an existing series"""
+        """Update an existing series.
+
+        Args:
+            data (dictionary containing an object obtained by getSeries())
+        Returns:
+            json response
+        """
 
         path = "/api/series"
         res = self.request_put(path, data)
