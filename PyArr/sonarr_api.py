@@ -66,50 +66,25 @@ class SonarrAPI(RequestAPI):
         res = self.request_get(path)
         return res.json()
 
-    def __setCommand(self, data):
-        """Private Command Method
+    def setCommand(self, **kwargs):
+        """Performs any of the predetermined Sonarr command routines.
 
-        Args:
-            data (dict): data payload to send to /api/command
+        Kwargs:
+            Required - name (string).
 
+            Options available: RefreshSeries, RescanSeries, EpisodeSearch, SeasonSearch, SeriesSearch, DownloadedEpisodesScan, RssSync, RenameFiles, RenameSeries, Backup, missingEpisodeSearch
+
+            Additional Parameters may be required or optional...
+            See https://github.com/Sonarr/Sonarr/wiki/Command
         Returns:
             json response
+
         """
         path = "/api/command"
+
+        data = kwargs
         res = self.request_post(path, data)
         return res.json()
-
-    def refreshSeries(self, *args):
-        """RefreshSeries refreshes series information and rescans disk.
-
-        Args:
-            Optional - seriesId (int)
-        Returns:
-            json response
-
-        """
-        data = {}
-        if len(args) == 1:
-            data.update({"name": "RefreshSeries", "seriesId": args[0]})
-        else:
-            data.update({"name": "RefreshSeries"})
-        return self.__setCommand(data)
-
-    def rescanSeries(self, *args):
-        """RescanSeries scans disk for any downloaded episodes for all or specified series.
-
-        Args:
-            Optional - seriesId (int)
-        Returns:
-            json response
-
-        """
-        data = {}
-        if len(args) == 1:
-            data.update({"name": "RescanSeries", "seriesId": args[0]})
-        else:
-            data.update({"name": "RescanSeries"})
-        return self.__setCommand(data)
 
     def getDiskSpace(self):
         """GetDiskSpace retrieves info about the disk space on the server.
