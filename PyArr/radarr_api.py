@@ -118,7 +118,13 @@ class RadarrAPI(RequestAPI):
         return res.json()
 
     def updMovie(self, data):
-        """Update an existing movie"""
+        """Update an existing movie.
+
+        Args:
+            data (dictionary containing an object obtained by getMovie())
+        Returns:
+            json response
+        """
 
         path = "/api/movie"
         res = self.request_put(path, data)
