@@ -177,12 +177,28 @@ class SonarrAPI(RequestAPI):
         res = self.request_get(path)
         return res.json()
 
-    def constructSeriesJson(self, tvdbId, qualityProfileId):
+    def constructSeriesJson(
+        self,
+        tvdbId,
+        qualityProfileId,
+        rootDir,
+        seasonFolder=True,
+        monitored=True,
+        ignoreEpisodesWithFiles=False,
+        ignoreEpisodesWithoutFiles=False,
+        searchForMissingEpisodes=False,
+    ):
         """Searches for new shows on trakt and returns Series json to add
 
         Args:
-            Required - dbID, <tvdb id>
+            Required - tvdbID (int)
             Required - qualityProfileId (int)
+            Required - rootDir (string)
+            Optional - seasonFolder (boolean)
+            Optional - monitored (boolean)
+            Optional - ignoreEpisodesWithFiles (boolean)
+            Optional - ignoreEpisodesWithoutFiles (boolean)
+            Optional - searchForMissingEpisodes (boolean)
 
         Return:
             JsonArray
@@ -190,22 +206,24 @@ class SonarrAPI(RequestAPI):
         """
         res = self.lookupSeries(tvdbId)
         s_dict = res[0]
+        if monitored == False:
+            for season in s_dict["seasons"]:
+                season["monitored"] = False
 
-        # get root folder path
-        root = self.getRoot()[0]["path"]
         series_json = {
             "title": s_dict["title"],
             "seasons": s_dict["seasons"],
-            "path": root + s_dict["title"],
+            "path": rootDir + s_dict["title"],
             "qualityProfileId": qualityProfileId,
-            "seasonFolder": True,
-            "monitored": True,
+            "seasonFolder": seasonFolder,
+            "monitored": monitored,
             "tvdbId": tvdbId,
             "images": s_dict["images"],
             "titleSlug": s_dict["titleSlug"],
             "addOptions": {
-                "ignoreEpisodesWithFiles": True,
-                "ignoreEpisodesWithoutFiles": True,
+                "ignoreEpisodesWithFiles": ignoreEpisodesWithFiles,
+                "ignoreEpisodesWithoutFiles": ignoreEpisodesWithoutFiles,
+                "searchForMissingEpisodes": searchForMissingEpisodes,
             },
         }
         return series_json
