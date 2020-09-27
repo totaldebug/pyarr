@@ -487,18 +487,3 @@ class SonarrAPI(RequestAPI):
         path = "/api/release/push"
         res = self.request_post(path, data=kwargs)
         return res.json()
-
-    # TODO: Test this
-    def get_series_by_series_id(self, series_id):
-        """Return the series with the matching ID or 404 if no matching series
-        is found
-
-            Args:
-                series_id (int):
-
-            Returns:
-                requests.models.Response: Response object form requests.
-        """
-        path = "/api/series/{}".format(series_id)
-        res = self.request_get(path)
-        return res.json()
