@@ -67,63 +67,25 @@ class RadarrAPI(RequestAPI):
         res = self.request_get(path)
         return res.json()
 
-    def __setCommand(self, data):
-        """Private Command Method
+    def setCommand(self, **kwargs):
+        """Performs any of the predetermined Radarr command routines.
 
-        Args:
-            data (dict): data payload to send to /api/command
+        Kwargs:
+            Required - name (string).
 
+            Options available: RefreshMovie, RescanMovie, MoviesSearch, DownloadedMoviesScan, RssSync, RenameFiles, RenameMovie, CutOffUnmetMoviesSearch, NetImportSync, missingMoviesSearch
+
+            Additional Parameters may be required or optional...
+            See https://github.com/Radarr/Radarr/wiki/API:Command
         Returns:
-            json response
+        json response
+
         """
-        print(data)
         path = "/api/command"
+
+        data = kwargs
         res = self.request_post(path, data)
         return res.json()
-
-    def refreshMovie(self, *args):
-        """RefreshMovie refreshes movie information and rescans disk.
-
-        Args:
-            Optional - movieId (int)
-        Returns:
-            json response
-
-        """
-        data = {}
-        if len(args) == 1:
-            data.update({"name": "RefreshMovie", "movieId": args[0]})
-        else:
-            data.update({"name": "RefreshMovie"})
-        return self.__setCommand(data)
-
-    def rescanMovie(self, *args):
-        """RescanMovie scans disk for any downloaded movie for all or specified movie.
-
-        Args:
-            Optional - movieId (int)
-        Returns:
-            json response
-
-        """
-        data = {}
-        if len(args) == 1:
-            data.update({"name": "RescanMovie", "movieId": args[0]})
-        else:
-            data.update({"name": "RescanMovie"})
-        return self.__setCommand(data)
-
-    def syncRss(self):
-        """Instruct Sonarr to perform an RSS sync with all enabled indexers
-
-        Args:
-            none
-        Returns:
-            json response
-
-        """
-        data = {"name": "RssSync"}
-        return self.__setCommand(data)
 
     def getDiskSpace(self):
         """GetDiskSpace retrieves info about the disk space on the server.
