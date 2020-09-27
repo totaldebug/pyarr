@@ -1,36 +1,38 @@
 ---
 layout: default
-title: rescanMovie
+title: setCommand
 parent: RadarrAPI
 nav_order: 4
 ---
 
 ## Summary
 
-Rescan disk for movies
+Performs any of the predetermined Radarr command routines.
+
+Options available: RefreshMovie, RescanMovie, MoviesSearch, DownloadedMoviesScan, RssSync, RenameFiles, RenameMovie, CutOffUnmetMoviesSearch, NetImportSync, missingMoviesSearch
 
 ## Parameters
 
-Required: None
+Required: name (string)
 
-Optional: `movieId (int)` - if not set all movies will be scanned
+Optional: Additional parameters may be required or optional. See [https://github.com/Radarr/Radarr/wiki/API:Command](https://github.com/Radarr/Radarr/wiki/API:Command) on a per command basis.
 
 ## Example
 
 ```python
-rescanMovie()
+setCommand(name="MoviesSearch", movieIds=movie_id)
 ```
 
 ## Returns JsonArray
 
 ```json
 {
-    'name': 'RescanMovie', 
+    'name': 'MoviesSearch', 
     'body': {
         'sendUpdatesToClient': True, 
         'updateScheduledTask': True, 
         'completionMessage': 'Completed', 
-        'name': 'RescanMovie', 
+        'name': 'MoviesSearch', 
         'trigger': 'manual'
     },   
     'priority': 'normal', 
