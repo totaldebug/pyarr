@@ -66,50 +66,25 @@ class SonarrAPI(RequestAPI):
         res = self.request_get(path)
         return res.json()
 
-    def __setCommand(self, data):
-        """Private Command Method
+    def setCommand(self, **kwargs):
+        """Performs any of the predetermined Sonarr command routines.
 
-        Args:
-            data (dict): data payload to send to /api/command
+        Kwargs:
+            Required - name (string).
 
+            Options available: RefreshSeries, RescanSeries, EpisodeSearch, SeasonSearch, SeriesSearch, DownloadedEpisodesScan, RssSync, RenameFiles, RenameSeries, Backup, missingEpisodeSearch
+
+            Additional Parameters may be required or optional...
+            See https://github.com/Sonarr/Sonarr/wiki/Command
         Returns:
             json response
+
         """
         path = "/api/command"
+
+        data = kwargs
         res = self.request_post(path, data)
         return res.json()
-
-    def refreshSeries(self, *args):
-        """RefreshSeries refreshes series information and rescans disk.
-
-        Args:
-            Optional - seriesId (int)
-        Returns:
-            json response
-
-        """
-        data = {}
-        if len(args) == 1:
-            data.update({"name": "RefreshSeries", "seriesId": args[0]})
-        else:
-            data.update({"name": "RefreshSeries"})
-        return self.__setCommand(data)
-
-    def rescanSeries(self, *args):
-        """RescanSeries scans disk for any downloaded episodes for all or specified series.
-
-        Args:
-            Optional - seriesId (int)
-        Returns:
-            json response
-
-        """
-        data = {}
-        if len(args) == 1:
-            data.update({"name": "RescanSeries", "seriesId": args[0]})
-        else:
-            data.update({"name": "RescanSeries"})
-        return self.__setCommand(data)
 
     def getDiskSpace(self):
         """GetDiskSpace retrieves info about the disk space on the server.
@@ -177,12 +152,28 @@ class SonarrAPI(RequestAPI):
         res = self.request_get(path)
         return res.json()
 
-    def constructSeriesJson(self, tvdbId, qualityProfileId):
+    def constructSeriesJson(
+        self,
+        tvdbId,
+        qualityProfileId,
+        rootDir,
+        seasonFolder=True,
+        monitored=True,
+        ignoreEpisodesWithFiles=False,
+        ignoreEpisodesWithoutFiles=False,
+        searchForMissingEpisodes=False,
+    ):
         """Searches for new shows on trakt and returns Series json to add
 
         Args:
-            Required - dbID, <tvdb id>
+            Required - tvdbID (int)
             Required - qualityProfileId (int)
+            Required - rootDir (string)
+            Optional - seasonFolder (boolean)
+            Optional - monitored (boolean)
+            Optional - ignoreEpisodesWithFiles (boolean)
+            Optional - ignoreEpisodesWithoutFiles (boolean)
+            Optional - searchForMissingEpisodes (boolean)
 
         Return:
             JsonArray
@@ -190,22 +181,24 @@ class SonarrAPI(RequestAPI):
         """
         res = self.lookupSeries(tvdbId)
         s_dict = res[0]
+        if monitored == False:
+            for season in s_dict["seasons"]:
+                season["monitored"] = False
 
-        # get root folder path
-        root = self.getRoot()[0]["path"]
         series_json = {
             "title": s_dict["title"],
             "seasons": s_dict["seasons"],
-            "path": root + s_dict["title"],
+            "path": rootDir + s_dict["title"],
             "qualityProfileId": qualityProfileId,
-            "seasonFolder": True,
-            "monitored": True,
+            "seasonFolder": seasonFolder,
+            "monitored": monitored,
             "tvdbId": tvdbId,
             "images": s_dict["images"],
             "titleSlug": s_dict["titleSlug"],
             "addOptions": {
-                "ignoreEpisodesWithFiles": True,
-                "ignoreEpisodesWithoutFiles": True,
+                "ignoreEpisodesWithFiles": ignoreEpisodesWithFiles,
+                "ignoreEpisodesWithoutFiles": ignoreEpisodesWithoutFiles,
+                "searchForMissingEpisodes": searchForMissingEpisodes,
             },
         }
         return series_json
@@ -226,28 +219,58 @@ class SonarrAPI(RequestAPI):
         res = self.request_get(path)
         return res.json()
 
-    def addSeries(self, dbId, qualityProfileId):
+    def addSeries(
+        self,
+        tvdbId,
+        qualityProfileId,
+        rootDir,
+        seasonFolder=True,
+        monitored=True,
+        ignoreEpisodesWithFiles=False,
+        ignoreEpisodesWithoutFiles=False,
+        searchForMissingEpisodes=False,
+    ):
         """Add a new series to your collection
 
         Args:
-            Required - dbid
-            Required - qualityProfileId
+            Required - tvdbID (int)
+            Required - qualityProfileId (int)
+            Required - rootDir (string)
+            Optional - seasonFolder (boolean)
+            Optional - monitored (boolean)
+            Optional - ignoreEpisodesWithFiles (boolean)
+            Optional - ignoreEpisodesWithoutFiles (boolean)
+            Optional - searchForMissingEpisodes (boolean)
         Returns:
             json response
 
         """
-        series_json = self.constructSeriesJson(dbId, qualityProfileId)
+        series_json = self.constructSeriesJson(
+            tvdbId,
+            qualityProfileId,
+            rootDir,
+            seasonFolder,
+            monitored,
+            ignoreEpisodesWithFiles,
+            ignoreEpisodesWithoutFiles,
+            searchForMissingEpisodes,
+        )
 
         path = "/api/series"
         res = self.request_post(path, data=series_json)
         return res.json()
 
-    # TODO: Test
     def updSeries(self, data):
-        """Update an existing series"""
+        """Update an existing series.
+
+        Args:
+            data (dictionary containing an object obtained by getSeries())
+        Returns:
+            json response
+        """
 
         path = "/api/series"
-        res = self.request_put(path, data=series_json)
+        res = self.request_put(path, data)
         return res.json()
 
     def delSeries(self, seriesId, delFiles=False):
@@ -363,7 +386,6 @@ class SonarrAPI(RequestAPI):
         res = self.request_get(path)
         return res.json()
 
-    # TODO: Test this
     def updEpisode(self, data):
         """Update the given episodes, currently only monitored is changed, all
         other modifications are ignored. All parameters (you should perform a
@@ -409,8 +431,7 @@ class SonarrAPI(RequestAPI):
         res = self.request_get(path)
         return res.json()
 
-    # TODO: Test this
-    def rem_episode_file_by_episode_id(self, episode_id):
+    def del_episode_file_by_episode_id(self, episode_id):
         """Delete the given episode file
 
         Kwargs:
@@ -422,10 +443,6 @@ class SonarrAPI(RequestAPI):
         path = "/api/episodefile/{}".format(episode_id)
         res = self.request_del(path, data=None)
         return res.json()
-
-    # TODO: Work in progress.
-    def serach_selected(self):
-        pass
 
     # TODO: Test this
     def push_release(self, **kwargs):
@@ -446,19 +463,4 @@ class SonarrAPI(RequestAPI):
         """
         path = "/api/release/push"
         res = self.request_post(path, data=kwargs)
-        return res.json()
-
-    # TODO: Test this
-    def get_series_by_series_id(self, series_id):
-        """Return the series with the matching ID or 404 if no matching series
-        is found
-
-            Args:
-                series_id (int):
-
-            Returns:
-                requests.models.Response: Response object form requests.
-        """
-        path = "/api/series/{}".format(series_id)
-        res = self.request_get(path)
         return res.json()

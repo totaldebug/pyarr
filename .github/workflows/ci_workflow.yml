@@ -14,7 +14,7 @@ on:
 
 jobs:
   black:
-    name: Check PyArr formatting with Balck
+    name: Check PyArr formatting with Black
     runs-on: ubuntu-latest
     steps:
       - name: Getting your configuration from GitHub

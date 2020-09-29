@@ -4,6 +4,26 @@ title: ChangeLog
 nav_order: 7
 ---
 
+# v0.9.4
+
+### Sonarr New Features
+
+- More robust addSeries
+- API Calls
+  - setCommand 
+    - Options Available: RefreshSeries, RescanSeries, EpisodeSearch, SeasonSearch, SeriesSearch, DownloadedEpisodesScan, RssSync, RenameFiles, RenameSeries, Backup, missingEpisodeSearch
+  - updSeries
+  - updEpisode
+  - del_episode_file_by_episode_id
+
+### Radarr New Features
+
+- More robust addMovie
+- API Calls
+  - setCommand
+    - Options Available: RefreshMovie, RescanMovie, MoviesSearch, DownloadedMoviesScan, RssSync, RenameFiles, RenameMovie, CutOffUnmetMoviesSearch, NetImportSync, missingMoviesSearch
+  - updMovie
+
 # v0.9.3
 
 - Fixed formatting issues
