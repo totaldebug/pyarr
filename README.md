@@ -14,7 +14,7 @@ Currently the package is under development, see the full [documentation](https:/
 
 ```
 # Import SonarrAPI Class
-from PyArr import SonarrAPI
+from pyarr import SonarrAPI
 
 # Set Host URL and API-Key
 host_url = 'http://your-domain.com'
@@ -29,11 +29,11 @@ sonarr = SonarrAPI(host_url, api_key)
 print(sonarr.getSeries())
 ```
 
-### Example Radarr Usage:
+### Example Radarr API v1 Usage:
 
 ```
 # Import RadarrAPI Class
-from PyArr import RadarrAPI
+from pyarr import RadarrAPIv1
 
 # Set Host URL and API-Key
 host_url = 'http://your-domain.com'
@@ -42,7 +42,7 @@ host_url = 'http://your-domain.com'
 api_key = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 
 # Instantiate RadarrAPI Object
-radarr = RadarrAPI(host_url, api_key)
+radarr = RadarrAPIv1(host_url, api_key)
 
 # Get and print TV Shows
 print(radarr.getCalendar())
@@ -50,6 +50,6 @@ print(radarr.getCalendar())
 
 ### Documentation
 
-- [PyArr Documentation](https://docs.totaldebug.uk/PyArr)
+- [pyarr Documentation](https://docs.totaldebug.uk/pyarr)
 - [Sonarr API Documentation](https://github.com/Sonarr/Sonarr/wiki/API)
 - [Radarr API Documentation](https://github.com/Radarr/Radarr/wiki/API)

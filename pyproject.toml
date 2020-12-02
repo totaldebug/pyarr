@@ -1,14 +1,14 @@
 [tool.poetry]
-name = "PyArr"
-version = "0.9.4"
+name = "pyarr"
+version = "1.0.0"
 description = "A Sonarr and Radarr API Wrapper"
 authors = ["Steven Marks <marksie1988@users.noreply.github.com>"]
 license = "MIT"
 readme = "README.md"
 keywords = ["sonarr", "radarr", "api", "wrapper"]
-homepage = "https://github.com/totaldebug/PyArr"
-repository = "https://github.com/totaldebug/PyArr"
-documentation = "https://docs.totaldebug.uk/PyArr"
+homepage = "https://github.com/totaldebug/pyarr"
+repository = "https://github.com/totaldebug/pyarr"
+documentation = "https://docs.totaldebug.uk/pyarr"
 
 classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
@@ -20,7 +20,7 @@ classifiers = [
     "Operating System :: OS Independent"
 ]
 packages = [
-    {include = "PyArr"}
+    {include = "pyarr"}
 ]
 
 [tool.poetry.dependencies]
@@ -29,6 +29,7 @@ requests = "^2.21.0"
 
 [tool.poetry.dev-dependencies]
 black = {version = "^20.8b1", allow-prereleases = true}
+pep8 = "^1.7.1"
 
 [tool.black]
 line-length = 88

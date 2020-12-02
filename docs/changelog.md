@@ -4,13 +4,21 @@ title: ChangeLog
 nav_order: 7
 ---
 
+# v1.0.0
+
+- Moved fully to requests from urllib
+- Functions changed to snake_case
+
+### Radarr Changes
+- Radarr API Renamed to `RadarrApiv1` and `RadarrAPIv3`
+
 # v0.9.4
 
 ### Sonarr New Features
 
 - More robust addSeries
 - API Calls
-  - setCommand 
+  - setCommand
     - Options Available: RefreshSeries, RescanSeries, EpisodeSearch, SeasonSearch, SeriesSearch, DownloadedEpisodesScan, RssSync, RenameFiles, RenameSeries, Backup, missingEpisodeSearch
   - updSeries
   - updEpisode
