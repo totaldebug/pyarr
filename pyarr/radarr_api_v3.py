@@ -68,6 +68,11 @@ class RadarrAPIv3(RequestAPI):
     ## metadata
 
     ## system
+    def get_system_status(self):
+        """Find out information such as OS, version, paths used, etc"""
+        path = "/api/v3/system/status"
+        res = self.request_get(path)
+        return res.json()
 
     ## health
     def get_health(self):
