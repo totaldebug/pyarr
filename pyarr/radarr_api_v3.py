@@ -21,7 +21,7 @@ class RadarrAPIv3(RequestAPI):
 
     ## Movies
     # TODO: GET Movie
-    def get_movie(self, tmdbid = None):
+    def get_movie(self, tmdbid=None):
         """get_movie returns all movies in collection.
 
         Args:

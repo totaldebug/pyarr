@@ -1,5 +1,6 @@
 import requests
 
+
 class RequestAPI:
     def __init__(
         self,
