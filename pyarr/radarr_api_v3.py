@@ -19,7 +19,7 @@ class RadarrAPIv3(RequestAPI):
         """
         super().__init__(host_url, api_key)
 
-    ## Movies
+    # Movies
     # TODO: GET Movie
     def get_movie(self, tmdbid=None):
         """get_movie returns all movies in collection.
@@ -154,12 +154,27 @@ class RadarrAPIv3(RequestAPI):
     # TODO: DELETE Movie Editor
     # TODO: POST Movie import
 
-    ## Movie Files
+    # Movie Files
     # TODO: GET movieFiles
-    # TODO: GET Movie File
-    # TODO: DELETE Movie Files
+    def get_movie_file(self):
+        """Returns multiple movie files"""
+        path = "/api/v3/moviefile/"
+        res = self.request_get(path)
+        return res.json()
 
-    ## history
+    # TODO: DELETE Movie Files
+    def del_movie_file(self, movieId):
+        """Allows for deletion of a moviefile by its database id.
+        Args:
+            Required - movieId (int)
+        Returns:
+            json response
+
+        """
+        path = f"/api/v3/movie/{movieId}"
+        res = self.request_del(path)
+        return res.json()
+    # history
     # TODO: GET history
     def get_history(self, page, **kwargs):
         """Return a json object list of items in your history
@@ -198,13 +213,13 @@ class RadarrAPIv3(RequestAPI):
         res = self.request_get(path, data)
         return res.json()
 
-    ## blacklist
+    # blacklist
     # TODO: GET blacklist
     # TODO: DELETE blacklist
     # TODO: GET blacklist movie
     # TODO: DELETE Blacklist Bulk
 
-    ## queue
+    # queue
     # GET
     def get_queue(self):
         """Return a json object list of items in the queue"""
@@ -234,21 +249,21 @@ class RadarrAPIv3(RequestAPI):
         res = self.request_del(path, data)
         return res.json()
 
-    ## indexer
+    # indexer
     # TODO: GET indexer
     # TODO: GET Indexer by ID
     # TODO: PUT Indexer by id
     # TODO: DELETE Indexer by id
 
-    ## Download client
+    # Download client
 
-    ## Import Lists
+    # Import Lists
 
-    ## Notification
+    # Notification
 
-    ## Tag
+    # Tag
 
-    ## diskspace
+    # diskspace
     def get_disk_space(self):
         """Query Radarr for disk usage information
 
@@ -264,25 +279,25 @@ class RadarrAPIv3(RequestAPI):
         res = self.request_get(path)
         return res.json()
 
-    ## Settings
+    # Settings
 
-    ## metadata
+    # metadata
 
-    ## system
+    # system
     def get_system_status(self):
         """Find out information such as OS, version, paths used, etc"""
         path = "/api/v3/system/status"
         res = self.request_get(path)
         return res.json()
 
-    ## health
+    # health
     def get_health(self):
         """Query radarr for health information"""
         path = "/api/v3/health"
         res = self.request_get(path)
         return res.json()
 
-    ## command
+    # command
     def post_command(self, **kwargs):
         """Performs any of the predetermined Radarr command routines.
 
@@ -314,7 +329,7 @@ class RadarrAPIv3(RequestAPI):
         res = self.request_post(path, data)
         return res.json()
 
-    ## update
+    # update
     def get_update(self):
         """Returns a list of recent updates to Radarr
 
@@ -324,14 +339,14 @@ class RadarrAPIv3(RequestAPI):
         res = self.reuqest_get(path)
         return res.json()
 
-    ## quality
+    # quality
     def get_quality_profiles(self):
         """Query Radarr for quality profiles"""
         path = "/api/v3/qualityProfile"
         res = self.reuqest_get(path)
         return res.json()
 
-    ## calendar
+    # calendar
     def get_calendar(self, unmonitored, start_date=None, end_date=None):
         """Get a list of movies based on calendar parameters.
         If start and end are not provided, retrieves movies airing today and tomorrow.
@@ -361,6 +376,6 @@ class RadarrAPIv3(RequestAPI):
         res = self.request_get(path, **data)
         return res.json()
 
-    ## custom filters
+    # custom filters
 
-    ## remote path mapping
+    # remote path mapping

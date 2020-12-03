@@ -181,7 +181,7 @@ class SonarrAPI(RequestAPI):
         """
         res = self.lookupSeries(tvdbId)
         s_dict = res[0]
-        if monitored == False:
+        if monitored is False:
             for season in s_dict["seasons"]:
                 season["monitored"] = False
 
