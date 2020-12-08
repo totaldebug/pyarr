@@ -48,7 +48,7 @@ class RadarrAPIv3(RequestAPI):
         term = term.replace(" ", "%20")
         path = f"/api/v3/movie/lookup?term={term}"
         res = self.request_get(path)
-        return res.json()
+        return res
 
     def get_root(self):
         """Returns the Root Folder"""
@@ -61,7 +61,7 @@ class RadarrAPIv3(RequestAPI):
         """Query Radarr for quality profiles"""
         path = "/api/v3/qualityProfile"
         res = self.request_get(path)
-        return res.json()
+        return res
 
     def construct_movie_json(
         self, dbId, qualityProfileId, rootDir, monitored=True, searchForMovie=True
@@ -114,7 +114,7 @@ class RadarrAPIv3(RequestAPI):
 
         path = "/api/v3/movie"
         res = self.request_post(path, data=movie_json)
-        return res.json()
+        return res
 
     # TODO: PUT Movie
     def update_movie(self, data):
@@ -128,7 +128,7 @@ class RadarrAPIv3(RequestAPI):
 
         path = "/api/movie"
         res = self.request_put(path, data)
-        return res.json()
+        return res
 
     # DELETE Movie
     def del_movie(self, movieId, delFiles=False, addExclusion=False):
@@ -145,7 +145,7 @@ class RadarrAPIv3(RequestAPI):
         data = {"deleteFiles": delFiles, "addExclusion": addExclusion}
         path = f"/api/v3/movie/{movieId}"
         res = self.request_del(path, data)
-        return res.json()
+        return res
 
     # TODO: PUT Movie Editor
     # TODO: DELETE Movie Editor
@@ -157,7 +157,7 @@ class RadarrAPIv3(RequestAPI):
         """Returns multiple movie files"""
         path = "/api/v3/moviefile/"
         res = self.request_get(path)
-        return res.json()
+        return res
 
     # TODO: DELETE Movie Files
     def del_movie_file(self, movieId):
@@ -170,7 +170,7 @@ class RadarrAPIv3(RequestAPI):
         """
         path = f"/api/v3/movie/{movieId}"
         res = self.request_del(path)
-        return res.json()
+        return res
 
     # history
     # TODO: GET history
@@ -191,7 +191,7 @@ class RadarrAPIv3(RequestAPI):
             data.update({key: value})
         path = "/api/v3/history/"
         res = self.request_get(path, **data)
-        return res.json()
+        return res
 
     # TODO: GET History Movies
     def get_history_movie(self, page, movieId, eventType=None):
@@ -209,7 +209,7 @@ class RadarrAPIv3(RequestAPI):
 
         path = "/api/v3/history/movie"
         res = self.request_get(path, data)
-        return res.json()
+        return res
 
     # blacklist
     # TODO: GET blacklist
@@ -223,7 +223,7 @@ class RadarrAPIv3(RequestAPI):
         """Return a json object list of items in the queue"""
         path = "/api/v3/queue"
         res = self.request_get(path)
-        return res.json()
+        return res
 
     # TODO: DELETE Check still exists
     def del_queue(self, id, blacklist=None):
@@ -245,7 +245,7 @@ class RadarrAPIv3(RequestAPI):
             )
         path = "/api/v3/queue/"
         res = self.request_del(path, data)
-        return res.json()
+        return res
 
     # indexer
     # TODO: GET indexer
@@ -275,7 +275,7 @@ class RadarrAPIv3(RequestAPI):
         """
         path = "/api/v3/diskspace"
         res = self.request_get(path)
-        return res.json()
+        return res
 
     # Settings
 
@@ -286,14 +286,14 @@ class RadarrAPIv3(RequestAPI):
         """Find out information such as OS, version, paths used, etc"""
         path = "/api/v3/system/status"
         res = self.request_get(path)
-        return res.json()
+        return res
 
     # health
     def get_health(self):
         """Query radarr for health information"""
         path = "/api/v3/health"
         res = self.request_get(path)
-        return res.json()
+        return res
 
     # command
     def post_command(self, **kwargs):
@@ -325,7 +325,7 @@ class RadarrAPIv3(RequestAPI):
 
         data = kwargs
         res = self.request_post(path, data)
-        return res.json()
+        return res
 
     # update
     def get_update(self):
@@ -335,7 +335,7 @@ class RadarrAPIv3(RequestAPI):
         """
         path = "/api/v3/update"
         res = self.request_get(path)
-        return res.json()
+        return res
 
     # calendar
     def get_calendar(self, unmonitored, start_date=None, end_date=None):
@@ -365,7 +365,7 @@ class RadarrAPIv3(RequestAPI):
                 data.update({"end": endDate})
 
         res = self.request_get(path, **data)
-        return res.json()
+        return res
 
     # custom filters
 

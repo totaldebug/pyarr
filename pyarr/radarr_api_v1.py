@@ -47,7 +47,7 @@ class RadarrAPIv1(RequestAPI):
                 data.update({"end": endDate})
 
         res = self.request_get(path, **data)
-        return res.json()
+        return res
 
     def get_command(self, *args):
         """Queries the status of a previously
@@ -65,7 +65,7 @@ class RadarrAPIv1(RequestAPI):
             path = "/api/command"
 
         res = self.request_get(path)
-        return res.json()
+        return res
 
     def set_command(self, **kwargs):
         """Performs any of the predetermined Radarr command routines.
@@ -87,7 +87,7 @@ class RadarrAPIv1(RequestAPI):
 
         data = kwargs
         res = self.request_post(path, data)
-        return res.json()
+        return res
 
     def get_disk_space(self):
         """Retrieves info about the disk space on the server.
@@ -100,7 +100,7 @@ class RadarrAPIv1(RequestAPI):
         """
         path = "/api/diskspace"
         res = self.request_get(path)
-        return res.json()
+        return res
 
     def get_movie(self, *args):
         """getMovie returns all movies in collection.
@@ -117,7 +117,7 @@ class RadarrAPIv1(RequestAPI):
             path = "/api/movie"
 
         res = self.request_get(path)
-        return res.json()
+        return res
 
     def update_movie(self, data):
         """Update an existing movie.
@@ -130,7 +130,7 @@ class RadarrAPIv1(RequestAPI):
 
         path = "/api/movie"
         res = self.request_put(path, data)
-        return res.json()
+        return res
 
     def lookup_movie(self, term):
         """Searches for movie
@@ -150,19 +150,19 @@ class RadarrAPIv1(RequestAPI):
             term = term.replace(" ", "%20")
             path = f"/api/movie/lookup?term={term}"
         res = self.request_get(path)
-        return res.json()
+        return res
 
     def get_root(self):
         """Returns the Root Folder"""
         path = "/api/rootfolder"
         res = self.request_get(path)
-        return res.json()
+        return res
 
     def get_quality_profiles(self):
         """Gets all quality profiles"""
         path = "/api/profile"
         res = self.request_get(path)
-        return res.json()
+        return res
 
     def construct_movie_json(
         self, dbId, qualityProfileId, rootDir, monitored=True, searchForMovie=True
@@ -215,7 +215,7 @@ class RadarrAPIv1(RequestAPI):
 
         path = "/api/movie"
         res = self.request_post(path, data=movie_json)
-        return res.json()
+        return res
 
     def del_movie(self, movieId, delFiles=False, addExclusion=False):
         """Delete the movie with the given ID
@@ -231,19 +231,19 @@ class RadarrAPIv1(RequestAPI):
         data = {"deleteFiles": delFiles, "addExclusion": addExclusion}
         path = f"/api/movie/{movieId}"
         res = self.request_del(path, data)
-        return res.json()
+        return res
 
     def get_system_status(self):
         """Returns the System Status as json"""
         path = "/api/system/status"
         res = self.request_get(path)
-        return res.json()
+        return res
 
     def get_queue(self):
         """Gets queue info (downloading/completed, ok/warning) as json"""
         path = "/api/queue"
         res = self.request_get(path)
-        return res.json()
+        return res
 
     # TODO: Test
     def del_queue(self, id, *args):
@@ -265,7 +265,7 @@ class RadarrAPIv1(RequestAPI):
             )
         path = "/api/queue/"
         res = self.request_del(path, data)
-        return res.json()
+        return res
 
     def get_history(self, page, **kwargs):
         """Gets history (grabs/failures/completed)
@@ -284,4 +284,4 @@ class RadarrAPIv1(RequestAPI):
             data.update({key: value})
         path = "/api/history/"
         res = self.request_get(path, **data)
-        return res.json()
+        return res

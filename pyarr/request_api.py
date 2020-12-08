@@ -47,7 +47,7 @@ class RequestAPI:
             request_url = "{}?{}".format(request_url, encoded_params)
 
         res = self.session.get(request_url, headers=headers, auth=self.auth)
-        return res
+        return res.json()
 
     def request_post(self, path, data):
         """Wrapper on the requests.post
@@ -62,7 +62,7 @@ class RequestAPI:
         headers = {"X-Api-Key": self.api_key}
         request_url = "{url}{path}".format(url=self.host_url, path=path)
         res = self.session.post(request_url, headers=headers, json=data, auth=self.auth)
-        return res
+        return res.json()
 
     def request_put(self, path, data):
         """Wrapper on the requests.put
@@ -77,7 +77,7 @@ class RequestAPI:
         headers = {"X-Api-Key": self.api_key}
         request_url = "{url}{path}".format(url=self.host_url, path=path)
         res = self.session.put(request_url, headers=headers, json=data, auth=self.auth)
-        return res
+        return res.json()
 
     def request_del(self, path, data):
         """Wrapper on the requests.delete
@@ -94,4 +94,4 @@ class RequestAPI:
         res = self.session.delete(
             request_url, headers=headers, json=data, auth=self.auth
         )
-        return res
+        return res.json()
