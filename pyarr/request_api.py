@@ -42,12 +42,9 @@ class RequestAPI:
         """
         headers = {"X-Api-Key": self.api_key}
         request_url = "{url}{path}".format(url=self.host_url, path=path)
-        try:
-            if len(kwargs) >= 1:
-                encoded_params = requests.utils.quote(kwargs)
-                request_url = "{}?{}".format(request_url, encoded_params)
-        except:
-            pass
+        if len(kwargs) >= 1:
+            encoded_params = requests.utils.quote(kwargs)
+            request_url = "{}?{}".format(request_url, encoded_params)
 
         res = self.session.get(request_url, headers=headers, auth=self.auth)
         return res

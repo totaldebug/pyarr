@@ -26,10 +26,12 @@ packages = [
 [tool.poetry.dependencies]
 python = "^3.8"
 requests = "^2.21.0"
+asyncio = "^3.4.3"
+aiohttp = "^3.7.3"
 
 [tool.poetry.dev-dependencies]
 black = {version = "^20.8b1", allow-prereleases = true}
-pep8 = "^1.7.1"
+flake8 = "^3.8.4"
 
 [tool.black]
 line-length = 88

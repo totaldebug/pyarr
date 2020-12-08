@@ -73,7 +73,9 @@ class RadarrAPIv1(RequestAPI):
         Kwargs:
             Required - name (string).
 
-            Options available: RefreshMovie, RescanMovie, MoviesSearch, DownloadedMoviesScan, RssSync, RenameFiles, RenameMovie, CutOffUnmetMoviesSearch, NetImportSync, missingMoviesSearch
+            Options available: RefreshMovie, RescanMovie, MoviesSearch,
+                DownloadedMoviesScan, RssSync, RenameFiles, RenameMovie,
+                CutOffUnmetMoviesSearch, NetImportSync, missingMoviesSearch
 
             Additional Parameters may be required or optional...
             See https://github.com/Radarr/Radarr/wiki/API:Command

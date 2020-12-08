@@ -21,7 +21,7 @@ class SonarrAPI(RequestAPI):
 
     def get_calendar(self, *args):
         """Retrieves info about when series were/will be downloaded.
-        If start and end are not provided, retrieves series airing today and tomorrow.
+        If no start and end, retrieves series airing today and tomorrow.
 
          args:
              start_date:
@@ -72,7 +72,9 @@ class SonarrAPI(RequestAPI):
         Kwargs:
             Required - name (string).
 
-            Options available: RefreshSeries, RescanSeries, EpisodeSearch, SeasonSearch, SeriesSearch, DownloadedEpisodesScan, RssSync, RenameFiles, RenameSeries, Backup, missingEpisodeSearch
+            Options available: RefreshSeries, RescanSeries, EpisodeSearch,
+                SeasonSearch, SeriesSearch, DownloadedEpisodesScan, RssSync,
+                RenameFiles, RenameSeries, Backup, missingEpisodeSearch
 
             Additional Parameters may be required or optional...
             See https://github.com/Sonarr/Sonarr/wiki/Command
@@ -204,7 +206,8 @@ class SonarrAPI(RequestAPI):
         return series_json
 
     def get_series(self, *args):
-        """Return all series in your collection or the series with the matching ID if one is found
+        """Return all series in your collection or
+        the series with the matching ID if one is found
         Args:
             Optional - seriesID
 
@@ -299,7 +302,8 @@ class SonarrAPI(RequestAPI):
 
     # TODO: requires Test
     def del_queue(self, id, *args):
-        """Deletes an item from the queue and download client. Optionally blacklist item after deletion.
+        """Deletes an item from the queue and download client.
+        Optionally blacklist item after deletion.
 
         Args:
             Required - id (int)
@@ -364,11 +368,11 @@ class SonarrAPI(RequestAPI):
         Kwargs;
             Required - None
             Optional - page (int) - Page number - Default: 1.
-            optional - pageSize (int) - How many records per page - Default: 10.
+            optional - pageSize (int) - Records per page - Default: 10.
             optional - sortKey (str) - What key to sort on - Default: 'time'.
-            optional - sortDir (str) - What direction to sort asc or desc - Default: desc.
-            optional - filterKey (str) - What key to filter on - Default: None.
-            optional - filterValue (str) - What to filter on (Warn, Info, Error, All) - Default: All.
+            optional - sortDir (str) - asc or desc - Default: desc.
+            optional - filterKey (str) - What key to filter - Default: None.
+            optional - filterValue (str) - Warn, Info, Error - Default: All.
 
         Returns:
             Json Array

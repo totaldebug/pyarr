@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-
 from datetime import datetime
-
 from .request_api import RequestAPI
 
 
@@ -20,7 +18,6 @@ class RadarrAPIv3(RequestAPI):
         super().__init__(host_url, api_key)
 
     # Movies
-    # TODO: GET Movie
     def get_movie(self, tmdbid=None):
         """get_movie returns all movies in collection.
 
@@ -31,14 +28,13 @@ class RadarrAPIv3(RequestAPI):
 
         """
         if tmdbid:
-            path = f"/api/v3/movie/{tmdbid[0]}"
+            path = f"/api/v3/movie?tmdbId={int(tmdbid)}"
+            print(path)
         else:
             path = "/api/v3/movie"
-
         res = self.request_get(path)
-        return res.json()
+        return res
 
-    # TODO: GET Movie Lookup
     def lookup_movie(self, term):
         """Searches for movie
 
@@ -58,8 +54,9 @@ class RadarrAPIv3(RequestAPI):
         """Returns the Root Folder"""
         path = "/api/v3/rootfolder"
         res = self.request_get(path)
-        return res.json()
+        return res
 
+    # quality
     def get_quality_profiles(self):
         """Query Radarr for quality profiles"""
         path = "/api/v3/qualityProfile"
@@ -174,6 +171,7 @@ class RadarrAPIv3(RequestAPI):
         path = f"/api/v3/movie/{movieId}"
         res = self.request_del(path)
         return res.json()
+
     # history
     # TODO: GET history
     def get_history(self, page, **kwargs):
@@ -316,7 +314,7 @@ class RadarrAPIv3(RequestAPI):
                 - MissingMoviesSearch - Triggers a search of all missing movies
                 - RefreshMonitoredDownloads - Triggers the scan of monitored downloads
                 - RefreshMovie - Trigger a refresh / scan of library
-                    - movieIds:int[] - Specify a list of ids (comma separated) for individual movies to refresh
+                    - movieIds:int[] - a list of ids (comma separated) for movies to refresh
 
             See https://radarr.video/docs/api/#/Command/post-command
         Returns:
@@ -336,14 +334,7 @@ class RadarrAPIv3(RequestAPI):
         Location: System > Updates
         """
         path = "/api/v3/update"
-        res = self.reuqest_get(path)
-        return res.json()
-
-    # quality
-    def get_quality_profiles(self):
-        """Query Radarr for quality profiles"""
-        path = "/api/v3/qualityProfile"
-        res = self.reuqest_get(path)
+        res = self.request_get(path)
         return res.json()
 
     # calendar
