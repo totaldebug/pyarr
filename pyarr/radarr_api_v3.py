@@ -80,9 +80,13 @@ class RadarrAPIv3(RequestAPI):
 
         """
         s_dict = self.lookup_movie(dbId)
+        print(s_dict)
+
+        if not s_dict:
+            raise Exception("Movie Doesn't Exist")
 
         movie_json = {
-            "title": s_dict["title"],
+            "title": s_dict[0]["title"],
             "path": rootDir + s_dict["title"],
             "qualityProfileId": qualityProfileId,
             "year": s_dict["year"],
@@ -96,20 +100,25 @@ class RadarrAPIv3(RequestAPI):
 
     # POST Movie
     def add_movie(
-        self, dbId, qualityProfileId, rootDir, monitored=True, searchForMovie=True
+        self, dbId, qualityProfileId, rootDir=None, monitored=True, searchForMovie=True
     ):
         """addMovie adds a new movie to collection
 
         Args:
-            Required - dbid <imdb or tmdb id>
+            Required - dbid tmdb id
             Required - qualityProfileId (int)
             Required - rootDir (string)
         Returns:
             json response
 
         """
+        if not rootDir:
+            rootDir = self.get_root()[0]["path"]
+
+        term = f"tmdb:{str(dbId)}"
+
         movie_json = self.construct_movie_json(
-            dbId, qualityProfileId, rootDir, monitored, searchForMovie
+            term, qualityProfileId, rootDir, monitored, searchForMovie
         )
 
         path = "/api/v3/movie"

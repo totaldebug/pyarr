@@ -53,30 +53,16 @@ Searches for new movies on trakt
 
 ## Parameters
 
-Required: None
+Required:
+  - `term` = Enter the Movie's Name
 
 Optional:
-- One of the following:
-  - `term` = Enter the Movie's Name, using `%20` to signify spaces, as in `term=Star%20Wars`
-  - `tmdbId` = `348350`
-  - `imdbId` = `tt3778644`
+
 
 ## Example
 
 ```python
-lookup_movie()
-```
-
-```python
-lookup_movie('Star%20Wars')
-```
-
-```python
-lookup_movie('348350')
-```
-
-```python
-lookup_movie('tt3778644')
+lookup_movie('Star Wars')
 ```
 
 ## Returns JsonArray
@@ -131,16 +117,17 @@ Adds a new movie to your collection
 ## Parameters
 
 Required:
-- dbid = Either, IMDB or TMDB id
+- dbid = TMDB id
 - qualityProfileId = Quailty Profle ID
 
 Optional:
-- None
-
+- rootDir = the root directory for the file (Defaults to primary dir)
+- monitored = Default: True
+- searchForMovie = Default: True
 ## Example
 
 ```python
-add_movie('tt3778644', 1)
+add_movie('348350', 1)
 ```
 
 ## Returns JsonArray
