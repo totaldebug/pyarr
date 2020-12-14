@@ -98,7 +98,6 @@ class RadarrAPIv3(RequestAPI):
         }
         return movie_json
 
-    # POST Movie
     def add_movie(
         self, dbId, qualityProfileId, rootDir=None, monitored=True, searchForMovie=True
     ):
@@ -125,7 +124,6 @@ class RadarrAPIv3(RequestAPI):
         res = self.request_post(path, data=movie_json)
         return res
 
-    # TODO: PUT Movie
     def update_movie(self, data):
         """Update an existing movie.
 
@@ -161,7 +159,6 @@ class RadarrAPIv3(RequestAPI):
     # TODO: POST Movie import
 
     # Movie Files
-    # TODO: GET movieFiles
     def get_movie_file(self, movieId):
         """Returns movie files"""
 
@@ -169,7 +166,6 @@ class RadarrAPIv3(RequestAPI):
         res = self.request_get(path)
         return res
 
-    # TODO: DELETE Movie Files
     def del_movie_file(self, movieId):
         """Allows for deletion of a moviefile by its database id.
         Args:
@@ -183,7 +179,6 @@ class RadarrAPIv3(RequestAPI):
         return res
 
     # history
-    # TODO: GET history
     def get_history(self, page=1, pageSize=20, sortKey='date', sortDirection='descending'):
         """Return a json object list of items in your history
 
@@ -199,7 +194,6 @@ class RadarrAPIv3(RequestAPI):
         res = self.request_get(path)
         return res
 
-    # TODO: GET History Movies
     def get_history_movie(self, movieId, eventType=None):
         """Return a json object list of items in your history
 
@@ -223,7 +217,6 @@ class RadarrAPIv3(RequestAPI):
     # TODO: DELETE Blacklist Bulk
 
     # queue
-    # GET
     def get_queue(self, page=1, pageSize=20, sortKey='timeLeft', sortDirection='ascending',includeUnknownMovieItems='true'):
         """Return a json object list of items in the queue"""
         path = f"/api/v3/queue?page={page}&pageSize={pageSize}&sortDirection={sortDirection}&sortKey={sortKey}&includeUnknownMovieItems={includeUnknownMovieItems}"
@@ -232,10 +225,41 @@ class RadarrAPIv3(RequestAPI):
         return res
 
     # indexer
-    # TODO: GET indexer
-    # TODO: GET Indexer by ID
-    # TODO: PUT Indexer by id
-    # TODO: DELETE Indexer by id
+    def get_indexer(self, id=None):
+        """Get all indexers or a single indexer by its database id
+
+        Args:
+            Optional - id (int)
+        Returns:
+            json response
+        """
+        if not id:
+            path = "/api/v3/indexer"
+        else:
+            path = f"/api/v3/indexer/{id}"
+
+        res = self.request_get(path)
+        return res
+
+    # TODO: look into this, documentation lacking
+    def put_indexer(self, id):
+        """Edit an indexer"""
+        path = f"/api/v3/indexer/{id}"
+        res = path.request_put(path)
+        return res
+
+    def del_indexer(self, id):
+        """Delete and indexer
+
+        Args:
+            Required - id (int)
+        Returns:
+            json response
+        """
+        path = f"/api/v3/indexer/{id}"
+        res = self.request_del(path)
+        return res
+
 
     # Download client
 
