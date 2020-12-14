@@ -184,41 +184,36 @@ class RadarrAPIv3(RequestAPI):
 
     # history
     # TODO: GET history
-    def get_history(self, page, **kwargs):
+    def get_history(self, page=1, pageSize=20, sortKey='date', sortDirection='descending'):
         """Return a json object list of items in your history
 
         Args:
-            Required - page (int) - 1-indexed (1 default)
-            Optional - sortKey (string) - movie.title or date
-            Optional - pageSize (int) - Default: 0
-            Optional - sortDir (string) - asc or desc - Default: asc
+            Required - page (int) - Default: 1
+            Required - pageSize (int) - Default: 20
+            Required - sortKey (string) - Default: date
+            Required - sortDir (string) - Default: descending
         Returns:
             json response
         """
-        data = {}
-        data.update({"page": kwargs.get("page", 1)})
-        for key, value in kwargs.items():
-            data.update({key: value})
-        path = "/api/v3/history/"
-        res = self.request_get(path, **data)
+        path = f"/api/v3/history?page={page}&pageSize={pageSize}&sortDirection={sortDirection}&sortKey={sortKey}"
+        res = self.request_get(path)
         return res
 
     # TODO: GET History Movies
-    def get_history_movie(self, page, movieId, eventType=None):
+    def get_history_movie(self, movieId, eventType=None):
         """Return a json object list of items in your history
 
         Args:
-            Required - movieId (Database id of movie)
-            Optional - eventType (History event type to retrieve)
+            Required - movieId (int) (Database id of movie)
+            Optional - eventType (int) (History event type to retrieve)
         Returns:
             json response
         """
-        data = {"modieId": movieId}
-        if eventType:
-            data.update({"eventType": eventType})
-
-        path = "/api/v3/history/movie"
-        res = self.request_get(path, data)
+        if not eventType:
+            path = f"/api/v3/history/movie?movieId={movieId}"
+        else:
+            path = f"/api/v3/history/movie?movieId={movieId}&eventType={eventType}"
+        res = self.request_get(path)
         return res
 
     # blacklist
