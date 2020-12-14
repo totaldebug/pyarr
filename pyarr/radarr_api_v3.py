@@ -87,12 +87,12 @@ class RadarrAPIv3(RequestAPI):
 
         movie_json = {
             "title": s_dict[0]["title"],
-            "path": rootDir + s_dict["title"],
+            "path": rootDir + s_dict[0]["title"],
             "qualityProfileId": qualityProfileId,
-            "year": s_dict["year"],
-            "tmdbId": s_dict["tmdbId"],
-            "images": s_dict["images"],
-            "titleSlug": s_dict["titleSlug"],
+            "year": s_dict[0]["year"],
+            "tmdbId": s_dict[0]["tmdbId"],
+            "images": s_dict[0]["images"],
+            "titleSlug": s_dict[0]["titleSlug"],
             "monitored": monitored,
             "addOptions": {"searchForMovie": searchForMovie},
         }
@@ -162,9 +162,10 @@ class RadarrAPIv3(RequestAPI):
 
     # Movie Files
     # TODO: GET movieFiles
-    def get_movie_file(self):
-        """Returns multiple movie files"""
-        path = "/api/v3/moviefile/"
+    def get_movie_file(self, movieId):
+        """Returns movie files"""
+
+        path = f"/api/v3/moviefile/{movieId}"
         res = self.request_get(path)
         return res
 
