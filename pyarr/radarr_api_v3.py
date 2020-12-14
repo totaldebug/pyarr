@@ -224,32 +224,11 @@ class RadarrAPIv3(RequestAPI):
 
     # queue
     # GET
-    def get_queue(self):
+    def get_queue(self, page=1, pageSize=20, sortKey='timeLeft', sortDirection='ascending',includeUnknownMovieItems='true'):
         """Return a json object list of items in the queue"""
-        path = "/api/v3/queue"
+        path = f"/api/v3/queue?page={page}&pageSize={pageSize}&sortDirection={sortDirection}&sortKey={sortKey}&includeUnknownMovieItems={includeUnknownMovieItems}"
+
         res = self.request_get(path)
-        return res
-
-    # TODO: DELETE Check still exists
-    def del_queue(self, id, blacklist=None):
-        """Deletes an item from the queue and download client. Optionally blacklist item after deletion.
-
-        Args:
-            Required - id (int)
-            Optional - blacklist (bool)
-        Returns:
-            json response
-        """
-        data = {}
-        data.update({"id": id})
-        if blacklist:
-            data.update(
-                {
-                    "blacklist": blacklist,
-                }
-            )
-        path = "/api/v3/queue/"
-        res = self.request_del(path, data)
         return res
 
     # indexer
@@ -343,7 +322,7 @@ class RadarrAPIv3(RequestAPI):
         return res
 
     # calendar
-    def get_calendar(self, unmonitored, start_date=None, end_date=None):
+    def get_calendar(self, unmonitored='true', start_date=None, end_date=None):
         """Get a list of movies based on calendar parameters.
         If start and end are not provided, retrieves movies airing today and tomorrow.
 
@@ -357,19 +336,19 @@ class RadarrAPIv3(RequestAPI):
              json response
 
         """
-        path = "/api/v3/calendar"
+
         data = {"unmonitored": unmonitored}
 
         if start_date and end_date:
             if isinstance(start_date, datetime):
                 startDate = start_date.strftime("%Y-%m-%d")
-                data.update({"start": startDate})
 
             if isinstance(end_date, datetime):
                 endDate = end_date.strftime("%Y-%m-%d")
-                data.update({"end": endDate})
-
-        res = self.request_get(path, **data)
+            path = f"/api/v3/calendar?unmonitored={unmonitored}&start_date={startDate}&end_date={endDate}"
+        else:
+            path = "/api/v3/calendar"
+        res = self.request_get(path)
         return res
 
     # custom filters
