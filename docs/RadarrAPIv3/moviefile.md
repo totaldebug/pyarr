@@ -1,7 +1,7 @@
 ---
 layout: default
 title: movieFile
-parent: RadarrAPIv1
+parent: RadarrAPIv3
 nav_order: 4
 ---
 
