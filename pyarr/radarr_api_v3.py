@@ -262,6 +262,23 @@ class RadarrAPIv3(RequestAPI):
         return res
 
     # Settings
+    def get_config_ui(self):
+        """Query Radarr for UI settings"""
+        path = "/api/v3/config/ui"
+        res = self.request_get(path)
+        return res
+
+    def get_config_host(self):
+        """Get General/Host settings for Radarr."""
+        path = "/api/v3/config/host"
+        res = self.request_get(path)
+        return res
+
+    def get_config_naming(self):
+        """Get Settings for movie file and folder naming."""
+        path = "/api/v3/config/naming"
+        res = self.request_get(path)
+        return res
 
     # metadata
 
