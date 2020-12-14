@@ -357,13 +357,13 @@ upd_movie(movie)
 
 ## Summary
 
-Delete the movie with the given ID
+Delete the movie with the given database ID
 
 ## Parameters
 
 Required:
 
-- `id (int)` Movie ID from Radarr
+- `id (int)` Movie ID from Radarr database
 
 Optional:
 

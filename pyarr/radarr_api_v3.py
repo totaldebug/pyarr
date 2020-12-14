@@ -280,6 +280,25 @@ class RadarrAPIv3(RequestAPI):
         res = self.request_get(path)
         return res
 
+    def put_config_ui(self, **Kwargs):
+        """Edit one or many UI Settings and save to the database"""
+        path = "/api/v3/config/ui"
+        res = sef.request_put(path, **data)
+        return res
+
+    def put_config_host(self, **Kwargs):
+        """Edit General/Host settings for Radarr."""
+        path = "/api/v3/config/host"
+        res = sef.request_put(path, **data)
+        return res
+
+    def put_config_naming(self, **Kwargs):
+        """Edit Settings for movie file and folder naming."""
+        path = "/api/v3/config/naming"
+        res = self.request_put(path, **data)
+        return res
+
+
     # metadata
 
     # system

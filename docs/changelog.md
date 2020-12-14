@@ -10,7 +10,7 @@ nav_order: 7
 - Functions changed to snake_case
 
 ### Radarr Changes
-- Radarr API Renamed to `RadarrApiv1`
+- Radarr API Renamed to `RadarrAPIv1`
 - Added the new Radarr API v3 `RadarrAPIv3`
 
 # v0.9.4
