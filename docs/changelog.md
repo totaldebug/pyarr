@@ -8,10 +8,16 @@ nav_order: 7
 
 - Moved fully to requests from urllib
 - Functions changed to snake_case
+- formatting with Black and flake8 for pep8 standards
+- Updated recommended-DockerFile to function better when developing
+- Changed PyArr to pyarr to meet pep8 standards
 
 ### Radarr Changes
 - Radarr API Renamed to `RadarrAPIv1`
 - Added the new Radarr API v3 `RadarrAPIv3`
+
+### Sonarr Changes
+- #59 Minor: 'is False' to 'not' (@ShadowJonathan)
 
 # v0.9.4
 
