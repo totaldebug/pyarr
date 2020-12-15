@@ -179,7 +179,9 @@ class RadarrAPIv3(RequestAPI):
         return res
 
     # history
-    def get_history(self, page=1, pageSize=20, sortKey='date', sortDirection='descending'):
+    def get_history(
+        self, page=1, pageSize=20, sortKey="date", sortDirection="descending"
+    ):
         """Return a json object list of items in your history
 
         Args:
@@ -217,7 +219,14 @@ class RadarrAPIv3(RequestAPI):
     # TODO: DELETE Blacklist Bulk
 
     # queue
-    def get_queue(self, page=1, pageSize=20, sortKey='timeLeft', sortDirection='ascending',includeUnknownMovieItems='true'):
+    def get_queue(
+        self,
+        page=1,
+        pageSize=20,
+        sortKey="timeLeft",
+        sortDirection="ascending",
+        includeUnknownMovieItems="true",
+    ):
         """Return a json object list of items in the queue"""
         path = f"/api/v3/queue?page={page}&pageSize={pageSize}&sortDirection={sortDirection}&sortKey={sortKey}&includeUnknownMovieItems={includeUnknownMovieItems}"
 
@@ -405,24 +414,23 @@ class RadarrAPIv3(RequestAPI):
         res = self.request_get(path)
         return res
 
-    def put_config_ui(self, **Kwargs):
+    def put_config_ui(self, data):
         """Edit one or many UI Settings and save to the database"""
         path = "/api/v3/config/ui"
-        res = sef.request_put(path, **data)
+        res = self.request_put(path, data)
         return res
 
-    def put_config_host(self, **Kwargs):
+    def put_config_host(self, data):
         """Edit General/Host settings for Radarr."""
         path = "/api/v3/config/host"
-        res = sef.request_put(path, **data)
+        res = self.request_put(path, data)
         return res
 
-    def put_config_naming(self, **Kwargs):
+    def put_config_naming(self, data):
         """Edit Settings for movie file and folder naming."""
         path = "/api/v3/config/naming"
-        res = self.request_put(path, **data)
+        res = self.request_put(path, data)
         return res
-
 
     # metadata
     def get_metadata(self):
@@ -488,7 +496,7 @@ class RadarrAPIv3(RequestAPI):
         return res
 
     # calendar
-    def get_calendar(self, unmonitored='true', start_date=None, end_date=None):
+    def get_calendar(self, unmonitored="true", start_date=None, end_date=None):
         """Get a list of movies based on calendar parameters.
         If start and end are not provided, retrieves movies airing today and tomorrow.
 
