@@ -285,7 +285,7 @@ class RadarrAPIv3(RequestAPI):
         return res
 
     def del_downloadclient(self, id):
-        """Delete and downloadclient
+        """Delete an downloadclient
 
         Args:
             Required - id (int)
@@ -297,6 +297,40 @@ class RadarrAPIv3(RequestAPI):
         return res
 
     # Import Lists
+    def get_importlist(self, id=None):
+        """Get all import lists or a single import list by its database id
+
+        Args:
+            Optional - id (int)
+        Returns:
+            json response
+        """
+        if not id:
+            path = "/api/v3/importlist"
+        else:
+            path = f"/api/v3/importlist/{id}"
+
+        res = self.request_get(path)
+        return res
+
+    # TODO: look into this, documentation lacking
+    def put_importlist(self, id):
+        """Edit an importlist"""
+        path = f"/api/v3/importlist/{id}"
+        res = path.request_put(path)
+        return res
+
+    def del_importlist(self, id):
+        """Delete an importlist
+
+        Args:
+            Required - id (int)
+        Returns:
+            json response
+        """
+        path = f"/api/v3/importlist/{id}"
+        res = self.request_del(path)
+        return res
 
     # Notification
 
