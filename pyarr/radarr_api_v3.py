@@ -425,6 +425,11 @@ class RadarrAPIv3(RequestAPI):
 
 
     # metadata
+    def get_metadata(self):
+        """Get all metadata consumer settings"""
+        path = "/api/v3/metadata"
+        res = self.request_get(path)
+        return res
 
     # system
     def get_system_status(self):
@@ -513,5 +518,15 @@ class RadarrAPIv3(RequestAPI):
         return res
 
     # custom filters
+    def get_custom_filter(self):
+        """Query Radarr for custom filters."""
+        path = "/api/v3/customfilter"
+        res = self.request_get(path)
+        return res
 
     # remote path mapping
+    def get_remote_path_mapping(self):
+        """Get a list of remote paths being mapped and used by Radarr"""
+        path = "/api/v3/remotePathMapping"
+        res = self.request_get(path)
+        return res
