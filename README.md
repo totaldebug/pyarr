@@ -7,7 +7,7 @@ Now supports Radarr v3 API
 
 Based on the origional wrapper from [SLiX69/Sonarr-API-Python-Wrapper](https://github.com/SLiX69/Sonarr-API-Python-Wrapper).
 
-See the full [documentation](https://docs.totaldebug.uk/PyArr/) for supported functions.
+See the full [documentation](https://docs.totaldebug.uk/pyarr/) for supported functions.
 
 ### Requirements
 
