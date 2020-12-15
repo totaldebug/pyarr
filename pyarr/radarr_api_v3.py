@@ -260,8 +260,41 @@ class RadarrAPIv3(RequestAPI):
         res = self.request_del(path)
         return res
 
-
     # Download client
+    def get_downloadclient(self, id=None):
+        """Get all download clients or a single download client by its database id
+
+        Args:
+            Optional - id (int)
+        Returns:
+            json response
+        """
+        if not id:
+            path = "/api/v3/downloadclient"
+        else:
+            path = f"/api/v3/downloadclient/{id}"
+
+        res = self.request_get(path)
+        return res
+
+    # TODO: look into this, documentation lacking
+    def put_downloadclient(self, id):
+        """Edit an downloadclient"""
+        path = f"/api/v3/downloadclient/{id}"
+        res = path.request_put(path)
+        return res
+
+    def del_downloadclient(self, id):
+        """Delete and downloadclient
+
+        Args:
+            Required - id (int)
+        Returns:
+            json response
+        """
+        path = f"/api/v3/downloadclient/{id}"
+        res = self.request_del(path)
+        return res
 
     # Import Lists
 

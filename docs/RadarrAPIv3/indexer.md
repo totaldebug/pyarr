@@ -1,6 +1,6 @@
 ---
 layout: default
-title: history
+title: indexer
 parent: RadarrAPIv3
 nav_order: 4
 ---
