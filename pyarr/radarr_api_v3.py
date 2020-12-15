@@ -333,6 +333,40 @@ class RadarrAPIv3(RequestAPI):
         return res
 
     # Notification
+    def get_notification(self, id=None):
+        """Get all notifications or a single notification by its database id
+
+        Args:
+            Optional - id (int)
+        Returns:
+            json response
+        """
+        if not id:
+            path = "/api/v3/notification"
+        else:
+            path = f"/api/v3/notification/{id}"
+
+        res = self.request_get(path)
+        return res
+
+    # TODO: look into this, documentation lacking
+    def put_notification(self, id):
+        """Edit a notification"""
+        path = f"/api/v3/notification/{id}"
+        res = path.request_put(path)
+        return res
+
+    def del_notification(self, id):
+        """Delete a notification
+
+        Args:
+            Required - id (int)
+        Returns:
+            json response
+        """
+        path = f"/api/v3/notification/{id}"
+        res = self.request_del(path)
+        return res
 
     # Tag
 
