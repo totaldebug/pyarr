@@ -510,9 +510,6 @@ class RadarrAPIv3(RequestAPI):
              json response
 
         """
-
-        data = {"unmonitored": unmonitored}
-
         if start_date and end_date:
             if isinstance(start_date, datetime):
                 startDate = start_date.strftime("%Y-%m-%d")
