@@ -25,7 +25,7 @@ jobs:
       - uses: actions/checkout@v2
       # Use this GitHub Action
       - name: Check package version
-        uses: dudo/tag_check@master
+        uses: marksie1988/tag_check@patch-1
         with:
           git_tag_prefix: v
   black:
