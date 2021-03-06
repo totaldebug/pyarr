@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyarr"
-version = "1.0.0"
+version = "1.0.1"
 description = "A Sonarr and Radarr API Wrapper"
 authors = ["Steven Marks <marksie1988@users.noreply.github.com>"]
 license = "MIT"
