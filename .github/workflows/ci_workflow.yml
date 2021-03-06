@@ -15,6 +15,7 @@ on:
 
 jobs:
   checkVersion:
+    if: github.event_name  == 'pull_request'
     name: Check version updated
     runs-on: ubuntu-latest
     env:
@@ -39,7 +40,7 @@ jobs:
   build-n-publish:
     name: Build and publish PyArr 🐍 distribution 📦 to PyPI
     if: startsWith(github.ref, 'refs/tags/')
-    needs: [checkVersion, black]
+    needs: [black]
     runs-on: ubuntu-latest
     steps:
       - name: Getting your configuration from GitHub
