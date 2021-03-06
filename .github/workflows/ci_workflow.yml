@@ -15,8 +15,6 @@ on:
 
 jobs:
   checkVersion:
-    if: github.event_name  == 'pull_request'
-
     name: Check version updated
     runs-on: ubuntu-latest
     env:
