@@ -181,7 +181,7 @@ class SonarrAPI(RequestAPI):
             JsonArray
 
         """
-        res = self.lookupSeries(tvdbId)
+        res = self.lookup_series(tvdbId)
         s_dict = res[0]
         if not monitored:
             for season in s_dict["seasons"]:
