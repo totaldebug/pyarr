@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 from .request_api import RequestAPI
+from os import path
 
 
 class RadarrAPIv3(RequestAPI):
@@ -87,7 +88,7 @@ class RadarrAPIv3(RequestAPI):
 
         movie_json = {
             "title": s_dict[0]["title"],
-            "path": rootDir + s_dict[0]["title"],
+            "rootFolderPath": rootDir,
             "qualityProfileId": qualityProfileId,
             "year": s_dict[0]["year"],
             "tmdbId": s_dict[0]["tmdbId"],
