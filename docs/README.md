@@ -1,9 +1,3 @@
----
-layout: default
-title: Home
-sort: 1
----
-
 # Python API Wrapper for Sonarr & Radarr
 
 This API Wrapper is written in Python for interaction between the Sonarr & Radarr APIs
