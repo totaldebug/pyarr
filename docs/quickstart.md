@@ -1,7 +1,7 @@
 ---
 layout: default
 title: 🚀 Quick Start With pyarr
-nav_order: 1
+sort: 2
 ---
 
 # 🚀 Quick Start With GitHub Pages

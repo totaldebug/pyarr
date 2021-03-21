@@ -1,10 +1,10 @@
 ---
 layout: default
-title: Index
-nav_exclude: true
+title: Home
+sort: 1
 ---
 
-# Python API Wrapper for Sonarr & Raydarr
+# Python API Wrapper for Sonarr & Radarr
 
 This API Wrapper is written in Python for interaction between the Sonarr & Radarr APIs
 
