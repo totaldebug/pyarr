@@ -70,7 +70,7 @@ class SonarrAPI(RequestAPI):
         path = "/api/command"
 
         data = kwargs
-        res = self.request_post(path, data)
+        res = self.request_post(path, data=data)
         return res
 
     def get_disk_space(self):
@@ -267,7 +267,7 @@ class SonarrAPI(RequestAPI):
         """
 
         path = "/api/series"
-        res = self.request_put(path, data)
+        res = self.request_put(path, data=data)
         return res
 
     def del_series(self, seriesId, delFiles=False):
@@ -275,7 +275,7 @@ class SonarrAPI(RequestAPI):
         # File deletion does not work
         data = {"deleteFiles": delFiles}
         path = f"/api/series/{seriesId}"
-        res = self.request_del(path, data)
+        res = self.request_del(path, data=data)
         return res
 
     def get_system_status(self):
@@ -314,7 +314,7 @@ class SonarrAPI(RequestAPI):
                 }
             )
         path = "/api/queue/"
-        res = self.request_del(path, data)
+        res = self.request_del(path, data=data)
         return res
 
     def get_wanted(self, **kwargs):
@@ -397,7 +397,7 @@ class SonarrAPI(RequestAPI):
                 json response
         """
         path = "/api/episode"
-        res = self.request_put(path, data)
+        res = self.request_put(path, data=data)
         return res
 
     # TODO: Test this
@@ -410,9 +410,9 @@ class SonarrAPI(RequestAPI):
         Returns:
             requests.models.Response: Response object form requests.
         """
-        data = {"seriesId": series_id}
+        params = {"seriesId": series_id}
         path = "/api/episodefile"
-        res = self.request_get(path, data)
+        res = self.request_get(path, params=params)
         return res
 
     # TODO: Test this

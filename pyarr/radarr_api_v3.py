@@ -647,7 +647,7 @@ class RadarrAPIv3(RequestAPI):
         """
         path = "/api/v3/command"
         data = {name: value}
-        res = self.request_post(path, data)
+        res = self.request_post(path, data=data)
         return res
 
     ## UPDATE
