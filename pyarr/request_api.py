@@ -19,7 +19,7 @@ class RequestAPI:
         self.auth = None
 
     def basic_auth(self, username, password):
-        """If you have basic authentication setup you will need to pass your pyli
+        """If you have basic authentication setup you will need to pass your
         username and passwords to the requests.auth.HTTPBASICAUTH() method.
 
         Args:
@@ -32,66 +32,73 @@ class RequestAPI:
         self.auth = requests.auth.HTTPBasicAuth(username, password)
         return self.auth
 
-    def request_get(self, path, **kwargs):
+    def request_get(self, path, params=None, data=None):
         """Wrapper on the session.get
-        Kwargs:
-            **kwargs: Any url attributes to add to the request.
+        Args:
+            path (str): Path to API. E.g. /api/manualimport
+            params (dict): URL Parameters to send with the request
+            data (dict): Payload to send with request.
 
         Returns:
             requests.models.Response: Response object form requests.
         """
         headers = {"X-Api-Key": self.api_key}
         request_url = "{url}{path}".format(url=self.host_url, path=path)
-        if len(kwargs) >= 1:
-            encoded_params = requests.utils.quote(str(kwargs))
-            request_url = "{}?{}".format(request_url, encoded_params)
-
-        res = self.session.get(request_url, headers=headers, auth=self.auth)
+        res = self.session.get(
+            request_url, headers=headers, params=params, json=data, auth=self.auth
+        )
         return res.json()
 
-    def request_post(self, path, data):
+    def request_post(self, path, params=None, data=None):
         """Wrapper on the requests.post
 
         Args:
             path (str): Path to API. E.g. /api/manualimport
-            data (dict): data payload to send with request.
+            params (dict): URL Parameters to send with the request
+            data (dict): Payload to send with request.
 
         Returns:
             requests.models.Response: Response object form requests.
         """
         headers = {"X-Api-Key": self.api_key}
         request_url = "{url}{path}".format(url=self.host_url, path=path)
-        res = self.session.post(request_url, headers=headers, json=data, auth=self.auth)
+        res = self.session.post(
+            request_url, headers=headers, params=params, json=data, auth=self.auth
+        )
         return res.json()
 
-    def request_put(self, path, data):
+    def request_put(self, path, params=None, data=None):
         """Wrapper on the requests.put
 
         Args:
             path (str): Path to API. E.g. /api/manualimport
-            data (dict): data payload to send with request.
+            params (dict): URL Parameters to send with the request
+            data (dict): Payload to send with request.
 
         Returns:
             requests.models.Response: Response object form requests.
         """
         headers = {"X-Api-Key": self.api_key}
         request_url = "{url}{path}".format(url=self.host_url, path=path)
-        res = self.session.put(request_url, headers=headers, json=data, auth=self.auth)
+        res = self.session.put(
+            request_url, headers=headers, params=params, json=data, auth=self.auth
+        )
         return res.json()
 
-    def request_del(self, path, data):
+    def request_del(self, path, params=None, data=None):
         """Wrapper on the requests.delete
 
         Args:
             path (str): Path to API. E.g. /api/manualimport
-            data (dict): data payload to send with request.
+            params (dict): URL Parameters to send with the request
+            data (dict): Payload to send with request.
 
         Returns:
-            res (Request Response Object)
+            requests.models.Response: Response object form requests.
         """
         headers = {"X-Api-Key": self.api_key}
         request_url = "{url}{path}".format(url=self.host_url, path=path)
         res = self.session.delete(
-            request_url, headers=headers, json=data, auth=self.auth
+            request_url, headers=headers, params=params, json=data, auth=self.auth
         )
         return res.json()
