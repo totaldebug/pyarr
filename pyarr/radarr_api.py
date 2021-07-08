@@ -89,7 +89,7 @@ class RadarrAPI(RequestAPI):
         return res
 
     # PUT /movie
-    def update_movie(self, data, move_files=False):
+    def upd_movie(self, data, move_files=False):
         """Update an existing movie.
 
         Args:
@@ -162,7 +162,7 @@ class RadarrAPI(RequestAPI):
         return res
 
     # PUT /movie/editor
-    def update_movies(self, data):
+    def upd_movies(self, data):
         """Edit multiple movie files.
 
         Args:
@@ -363,7 +363,7 @@ class RadarrAPI(RequestAPI):
         return res
 
     # PUT /indexer/{id}
-    def update_indexer(self, id_, data):
+    def upd_indexer(self, id_, data):
         """Edit an indexer.
 
         Args:
@@ -409,7 +409,7 @@ class RadarrAPI(RequestAPI):
         return res
 
     # PUT /downloadclient/{id}
-    def update_downloadclient(self, id_, data):
+    def upd_downloadclient(self, id_, data):
         """Edit an downloadclient.
 
         Args:
@@ -455,7 +455,7 @@ class RadarrAPI(RequestAPI):
         return res
 
     # PUT /importlist/{id}
-    def update_importlist(self, id_, data):
+    def upd_importlist(self, id_, data):
         """Edit an importlist.
 
         Args:
@@ -501,7 +501,7 @@ class RadarrAPI(RequestAPI):
         return res
 
     # PUT /notification/{id}
-    def update_notification(self, id_, data):
+    def upd_notification(self, id_, data):
         """Edit a notification.
 
         Args:
@@ -568,7 +568,7 @@ class RadarrAPI(RequestAPI):
         return res
 
     # PUT /config/ui
-    def update_config_ui(self, data):
+    def upd_config_ui(self, data):
         """Edit one or many UI Settings and save to the database.
 
         Args:
@@ -594,7 +594,7 @@ class RadarrAPI(RequestAPI):
         return res
 
     # PUT /config/host
-    def update_config_host(self, data):
+    def upd_config_host(self, data):
         """Edit General/Host settings for Radarr.
 
         Args:
@@ -620,7 +620,7 @@ class RadarrAPI(RequestAPI):
         return res
 
     # PUT /config/naming
-    def update_config_naming(self, data):
+    def upd_config_naming(self, data):
         """Edit Settings for movie file and folder naming.
 
         Args:
