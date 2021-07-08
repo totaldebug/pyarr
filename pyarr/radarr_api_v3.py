@@ -61,7 +61,7 @@ class RadarrAPIv3(RequestAPI):
 
     # POST /movie
     def add_movie(
-        self, dbId, qualityProfileId, rootDir=None, monitored=True, searchForMovie=True
+        self, dbId, qualityProfileId, rootDir, monitored=True, searchForMovie=True
     ):
         """addMovie adds a new movie to collection
 
@@ -69,6 +69,8 @@ class RadarrAPIv3(RequestAPI):
             Required - dbid tmdb id
             Required - qualityProfileId (int)
             Required - rootDir (string)
+            Optional - monitored (bool)
+            Optional - searchForMovie (bool)
         Returns:
             json response
 
