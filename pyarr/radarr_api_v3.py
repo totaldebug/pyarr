@@ -18,52 +18,6 @@ class RadarrAPIv3(RequestAPI):
         """
         super().__init__(host_url, api_key)
 
-    # Movies
-    def get_movie(self, tmdbid=None):
-        """get_movie returns all movies in collection.
-
-        Args:
-            Optional - tmdbid - TMDb id of the movie to get
-        Returns:
-            json response
-
-        """
-        if tmdbid:
-            path = f"/api/v3/movie?tmdbId={int(tmdbid)}"
-            print(path)
-        else:
-            path = "/api/v3/movie"
-        res = self.request_get(path)
-        return res
-
-    def lookup_movie(self, term):
-        """Searches for movie
-
-        Args:
-            Requried - term (uses tmdb for search results)
-        Returns:
-            json response
-
-        """
-        term = str(term)
-        term = term.replace(" ", "%20")
-        path = f"/api/v3/movie/lookup?term={term}"
-        res = self.request_get(path)
-        return res
-
-    def get_root(self):
-        """Returns the Root Folder"""
-        path = "/api/v3/rootfolder"
-        res = self.request_get(path)
-        return res
-
-    # quality
-    def get_quality_profiles(self):
-        """Query Radarr for quality profiles"""
-        path = "/api/v3/qualityProfile"
-        res = self.request_get(path)
-        return res
-
     def construct_movie_json(
         self, dbId, qualityProfileId, rootDir, monitored=True, searchForMovie=True
     ):
@@ -99,6 +53,27 @@ class RadarrAPIv3(RequestAPI):
         }
         return movie_json
 
+    ## MOVIE
+
+    # GET /movie/ and /movie/{id}
+    def get_movie(self, tmdbid=None):
+        """get_movie returns all movies in collection.
+
+        Args:
+            Optional - tmdbid - TMDb id of the movie to get
+        Returns:
+            json response
+
+        """
+        if tmdbid:
+            path = f"/api/v3/movie?tmdbId={int(tmdbid)}"
+            print(path)
+        else:
+            path = "/api/v3/movie"
+        res = self.request_get(path)
+        return res
+
+    # POST /movie
     def add_movie(
         self, dbId, qualityProfileId, rootDir=None, monitored=True, searchForMovie=True
     ):
@@ -125,6 +100,7 @@ class RadarrAPIv3(RequestAPI):
         res = self.request_post(path, data=movie_json)
         return res
 
+    # PUT /movie
     def update_movie(self, data):
         """Update an existing movie.
 
@@ -138,7 +114,7 @@ class RadarrAPIv3(RequestAPI):
         res = self.request_put(path, data)
         return res
 
-    # DELETE Movie
+    # DELETE /movie/{id}
     def del_movie(self, movieId, delFiles=False, addExclusion=False):
         """Delete a single movie by database id
         Args:
@@ -155,11 +131,31 @@ class RadarrAPIv3(RequestAPI):
         res = self.request_del(path, data)
         return res
 
-    # TODO: PUT Movie Editor
-    # TODO: DELETE Movie Editor
-    # TODO: POST Movie import
+    # GET /movie/lookup
+    def lookup_movie(self, term):
+        """Searches for movie
 
-    # Movie Files
+        Args:
+            Requried - term (uses tmdb for search results)
+        Returns:
+            json response
+
+        """
+        term = str(term)
+        term = term.replace(" ", "%20")
+        path = f"/api/v3/movie/lookup?term={term}"
+        res = self.request_get(path)
+        return res
+
+    # TODO: PUT /movie/editor
+    # TODO: DELETE /movie/editor
+    # TODO: POST /movie/import
+
+    ## MOVIEFILE
+
+    # TODO: GET /moviefile
+
+    # GET /moviefile/{id}
     def get_movie_file(self, movieId):
         """Returns movie files"""
 
@@ -167,6 +163,7 @@ class RadarrAPIv3(RequestAPI):
         res = self.request_get(path)
         return res
 
+    # DELETE /moviefile/{id}
     def del_movie_file(self, movieId):
         """Allows for deletion of a moviefile by its database id.
         Args:
@@ -179,7 +176,9 @@ class RadarrAPIv3(RequestAPI):
         res = self.request_del(path)
         return res
 
-    # history
+    ## HISTORY
+
+    # GET /history
     def get_history(
         self, page=1, pageSize=20, sortKey="date", sortDirection="descending"
     ):
@@ -197,6 +196,7 @@ class RadarrAPIv3(RequestAPI):
         res = self.request_get(path)
         return res
 
+    # GET /history/movie
     def get_history_movie(self, movieId, eventType=None):
         """Return a json object list of items in your history
 
@@ -213,13 +213,16 @@ class RadarrAPIv3(RequestAPI):
         res = self.request_get(path)
         return res
 
-    # blacklist
-    # TODO: GET blacklist
-    # TODO: DELETE blacklist
-    # TODO: GET blacklist movie
-    # TODO: DELETE Blacklist Bulk
+    ## BLACKLIST
 
-    # queue
+    # TODO: GET /blacklist
+    # TODO: DELETE /blacklist
+    # TODO: GET /blacklist/movie
+    # TODO: DELETE /blacklist/bulk
+
+    ## QUEUE
+
+    # GET /queue
     def get_queue(
         self,
         page=1,
@@ -234,7 +237,15 @@ class RadarrAPIv3(RequestAPI):
         res = self.request_get(path)
         return res
 
-    # indexer
+    # TODO: DELETE /queue/{id}
+    # TODO: DELETE /queue/bulk
+    # TODO: GET /queue/details
+    # TODO: GET /queue/status
+    # TODO: POST /queue/grab/{id}
+
+    ## INDEXER
+
+    # GET /indexer and /indexer/{id}
     def get_indexer(self, id=None):
         """Get all indexers or a single indexer by its database id
 
@@ -251,6 +262,7 @@ class RadarrAPIv3(RequestAPI):
         res = self.request_get(path)
         return res
 
+    # PUT /indexer/{id}
     # TODO: look into this, documentation lacking
     def put_indexer(self, id):
         """Edit an indexer"""
@@ -258,6 +270,7 @@ class RadarrAPIv3(RequestAPI):
         res = path.request_put(path)
         return res
 
+    # DELETE /indexer/{id}
     def del_indexer(self, id):
         """Delete and indexer
 
@@ -270,7 +283,9 @@ class RadarrAPIv3(RequestAPI):
         res = self.request_del(path)
         return res
 
-    # Download client
+    ## DOWNLOAD CLIENT
+
+    # GET /downloadclient and /downloadclient/{id}
     def get_downloadclient(self, id=None):
         """Get all download clients or a single download client by its database id
 
@@ -287,6 +302,7 @@ class RadarrAPIv3(RequestAPI):
         res = self.request_get(path)
         return res
 
+    # PUT /downloadclient/{id}
     # TODO: look into this, documentation lacking
     def put_downloadclient(self, id):
         """Edit an downloadclient"""
@@ -294,6 +310,7 @@ class RadarrAPIv3(RequestAPI):
         res = path.request_put(path)
         return res
 
+    # DELETE /downloadclient/{id}
     def del_downloadclient(self, id):
         """Delete an downloadclient
 
@@ -306,7 +323,9 @@ class RadarrAPIv3(RequestAPI):
         res = self.request_del(path)
         return res
 
-    # Import Lists
+    ## IMPORT LISTS
+
+    # GET /importlist and /importlist/{id}
     def get_importlist(self, id=None):
         """Get all import lists or a single import list by its database id
 
@@ -323,6 +342,7 @@ class RadarrAPIv3(RequestAPI):
         res = self.request_get(path)
         return res
 
+    # PUT /importlist/{id}
     # TODO: look into this, documentation lacking
     def put_importlist(self, id):
         """Edit an importlist"""
@@ -330,6 +350,7 @@ class RadarrAPIv3(RequestAPI):
         res = path.request_put(path)
         return res
 
+    # DELETE /importlist/{id}
     def del_importlist(self, id):
         """Delete an importlist
 
@@ -342,7 +363,9 @@ class RadarrAPIv3(RequestAPI):
         res = self.request_del(path)
         return res
 
-    # Notification
+    ## NOTIFICATION
+
+    # GET /notification and /notification/{id}
     def get_notification(self, id=None):
         """Get all notifications or a single notification by its database id
 
@@ -359,6 +382,7 @@ class RadarrAPIv3(RequestAPI):
         res = self.request_get(path)
         return res
 
+    # PUT /notification
     # TODO: look into this, documentation lacking
     def put_notification(self, id):
         """Edit a notification"""
@@ -366,6 +390,7 @@ class RadarrAPIv3(RequestAPI):
         res = path.request_put(path)
         return res
 
+    # DELETE /notification
     def del_notification(self, id):
         """Delete a notification
 
@@ -378,9 +403,19 @@ class RadarrAPIv3(RequestAPI):
         res = self.request_del(path)
         return res
 
-    # Tag
+    ## TAG
 
-    # diskspace
+    # TODO: GET /tag
+    # TODO: POST /tag
+    # TODO: GET /tag/detail
+    # TODO: GET /tag/detail/{id}
+    # TODO: GET /tag/{id}
+    # TODO: DELETE /tag/{id}
+    # TODO: PUT /tag/{id}
+
+    ## DISKSPACE
+
+    # GET /diskspace
     def get_disk_space(self):
         """Query Radarr for disk usage information
 
@@ -396,65 +431,80 @@ class RadarrAPIv3(RequestAPI):
         res = self.request_get(path)
         return res
 
-    # Settings
+    ## SETTINGS
+
+    # GET /config/ui
     def get_config_ui(self):
         """Query Radarr for UI settings"""
         path = "/api/v3/config/ui"
         res = self.request_get(path)
         return res
 
-    def get_config_host(self):
-        """Get General/Host settings for Radarr."""
-        path = "/api/v3/config/host"
-        res = self.request_get(path)
-        return res
-
-    def get_config_naming(self):
-        """Get Settings for movie file and folder naming."""
-        path = "/api/v3/config/naming"
-        res = self.request_get(path)
-        return res
-
+    # PUT /config/ui
     def put_config_ui(self, data):
         """Edit one or many UI Settings and save to the database"""
         path = "/api/v3/config/ui"
         res = self.request_put(path, data)
         return res
 
+    # GET /config/host
+    def get_config_host(self):
+        """Get General/Host settings for Radarr."""
+        path = "/api/v3/config/host"
+        res = self.request_get(path)
+        return res
+
+    # PUT /config/host
     def put_config_host(self, data):
         """Edit General/Host settings for Radarr."""
         path = "/api/v3/config/host"
         res = self.request_put(path, data)
         return res
 
+    # GET /config/naming
+    def get_config_naming(self):
+        """Get Settings for movie file and folder naming."""
+        path = "/api/v3/config/naming"
+        res = self.request_get(path)
+        return res
+
+    # PUT /config/naming
     def put_config_naming(self, data):
         """Edit Settings for movie file and folder naming."""
         path = "/api/v3/config/naming"
         res = self.request_put(path, data)
         return res
 
-    # metadata
+    ## METADATA
+
+    # GET /metadata
     def get_metadata(self):
         """Get all metadata consumer settings"""
         path = "/api/v3/metadata"
         res = self.request_get(path)
         return res
 
-    # system
+    ## SYSTEM
+
+    # GET /system/status
     def get_system_status(self):
         """Find out information such as OS, version, paths used, etc"""
         path = "/api/v3/system/status"
         res = self.request_get(path)
         return res
 
-    # health
+    ## HEALTH
+
+    # GET /health
     def get_health(self):
         """Query radarr for health information"""
         path = "/api/v3/health"
         res = self.request_get(path)
         return res
 
-    # command
+    ## COMMAND
+
+    # POST /command
     def post_command(self, **kwargs):
         """Performs any of the predetermined Radarr command routines.
 
@@ -486,7 +536,9 @@ class RadarrAPIv3(RequestAPI):
         res = self.request_post(path, data)
         return res
 
-    # update
+    ## UPDATE
+
+    # GET /update
     def get_update(self):
         """Returns a list of recent updates to Radarr
 
@@ -496,7 +548,18 @@ class RadarrAPIv3(RequestAPI):
         res = self.request_get(path)
         return res
 
-    # calendar
+    ## QUALITY PROFILE
+
+    # GET /qualityProfile
+    def get_quality_profiles(self):
+        """Query Radarr for quality profiles"""
+        path = "/api/v3/qualityProfile"
+        res = self.request_get(path)
+        return res
+
+    ## CALENDAR
+
+    # GET /calendar
     def get_calendar(self, unmonitored="true", start_date=None, end_date=None):
         """Get a list of movies based on calendar parameters.
         If start and end are not provided, retrieves movies airing today and tomorrow.
@@ -523,16 +586,29 @@ class RadarrAPIv3(RequestAPI):
         res = self.request_get(path)
         return res
 
-    # custom filters
+    ## CUSTOM FILTERS
+
+    # GET /customfilter
     def get_custom_filter(self):
         """Query Radarr for custom filters."""
         path = "/api/v3/customfilter"
         res = self.request_get(path)
         return res
 
-    # remote path mapping
+    ## REMOTE PATH MAPPING
+
+    # GET /remotePathMapping
     def get_remote_path_mapping(self):
         """Get a list of remote paths being mapped and used by Radarr"""
         path = "/api/v3/remotePathMapping"
+        res = self.request_get(path)
+        return res
+
+    ## ROOT FOLDER
+
+    # GET /rootfolder
+    def get_root(self):
+        """Returns the Root Folder"""
+        path = "/api/v3/rootfolder"
         res = self.request_get(path)
         return res
