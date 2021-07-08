@@ -125,15 +125,14 @@ class RadarrAPIv3(RequestAPI):
         """Searches for movie
 
         Args:
-            Requried - term (uses tmdb for search results)
+            [Required] term (str): Uses TMDB for search results
         Returns:
             json response
 
         """
-        term = str(term)
-        term = term.replace(" ", "%20")
-        path = f"/api/v3/movie/lookup?term={term}"
-        res = self.request_get(path)
+        params = {"term": term}
+        path = "/api/v3/movie/lookup"
+        res = self.request_get(path, params=params)
         return res
 
     # TODO: PUT /movie/editor
