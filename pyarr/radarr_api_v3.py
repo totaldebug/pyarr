@@ -104,10 +104,10 @@ class RadarrAPIv3(RequestAPI):
         return res
 
     # DELETE /movie/{id}
-    def del_movie(self, movieId, delFiles=False, addExclusion=False):
+    def del_movie(self, id_, delFiles=False, addExclusion=False):
         """Delete a single movie by database id
         Args:
-            [Required] movieId (int)
+            [Required] id_ (int)
             [Optional] delFiles (bool)
             [Optional] addExclusion (bool)
         Returns:
@@ -116,7 +116,7 @@ class RadarrAPIv3(RequestAPI):
         """
         # File deletion does not work
         data = {"deleteFiles": delFiles, "addExclusion": addExclusion}
-        path = f"/api/v3/movie/{movieId}"
+        path = f"/api/v3/movie/{id_}"
         res = self.request_del(path, data)
         return res
 
@@ -145,23 +145,23 @@ class RadarrAPIv3(RequestAPI):
     # TODO: GET /moviefile
 
     # GET /moviefile/{id}
-    def get_movie_file(self, movieId):
+    def get_movie_file(self, id_):
         """Returns movie files"""
 
-        path = f"/api/v3/moviefile/{movieId}"
+        path = f"/api/v3/moviefile/{id_}"
         res = self.request_get(path)
         return res
 
     # DELETE /moviefile/{id}
-    def del_movie_file(self, movieId):
+    def del_movie_file(self, id_):
         """Allows for deletion of a moviefile by its database id.
         Args:
-            [Required] movieId (int)
+            [Required] id_ (int)
         Returns:
             json response
 
         """
-        path = f"/api/v3/movie/{movieId}"
+        path = f"/api/v3/movie/{id_}"
         res = self.request_del(path)
         return res
 
@@ -186,19 +186,19 @@ class RadarrAPIv3(RequestAPI):
         return res
 
     # GET /history/movie
-    def get_history_movie(self, movieId, eventType=None):
+    def get_history_movie(self, id_, eventType=None):
         """Return a json object list of items in your history
 
         Args:
-            [Required] movieId (int) (Database id of movie)
+            [Required] id_ (int) (Database id of movie)
             [Optional] eventType (int) (History event type to retrieve)
         Returns:
             json response
         """
         if not eventType:
-            path = f"/api/v3/history/movie?movieId={movieId}"
+            path = f"/api/v3/history/movie?movieId={id_}"
         else:
-            path = f"/api/v3/history/movie?movieId={movieId}&eventType={eventType}"
+            path = f"/api/v3/history/movie?movieId={id_}&eventType={eventType}"
         res = self.request_get(path)
         return res
 
