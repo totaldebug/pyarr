@@ -282,7 +282,7 @@ class RadarrAPI(RequestAPI):
         return res
 
     # GET /history/movie
-    def get_history_movie(self, id_, event_type=None):
+    def get_movie_history(self, id_, event_type=None):
         """Return a json object list of items in your history.
 
         Args:
