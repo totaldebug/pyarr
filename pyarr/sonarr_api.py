@@ -114,16 +114,25 @@ class SonarrAPI(RequestAPI):
     def lookup_series(self, term):
         """Searches for new shows on tvdb
         Args:
-            [Required] term / tvdbId
+            [Required] term (str)
         Returns:
             json response
 
         """
-        term = str(term)
-        if term.isdigit():
-            term = f"tvdb:{term}"
-
         params = {"term": term}
+        path = "/api/series/lookup"
+        res = self.request_get(path, params=params)
+        return res
+
+    def lookup_series_by_tvdb_id(self, id_):
+        """Searches for new shows on tvdb
+        Args:
+            [Required] id_ (int): TVDB ID of a show
+        Returns:
+            json response
+
+        """
+        params = {"term": f"tvdb:{id_}"}
         path = "/api/series/lookup"
         res = self.request_get(path, params=params)
         return res
