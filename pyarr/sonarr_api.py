@@ -413,7 +413,7 @@ class SonarrAPI(RequestAPI):
         """
         data = {"seriesId": series_id}
         path = "/api/episodefile"
-        res = self.request_get(path, **data)
+        res = self.request_get(path, data)
         return res
 
     # TODO: Test this
