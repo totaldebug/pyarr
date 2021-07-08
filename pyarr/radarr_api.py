@@ -6,35 +6,35 @@ class RadarrAPI(RequestAPI):
     """API wrapper for Radarr endpoints."""
 
     def construct_movie_json(
-        self, dbId, qualityProfileId, rootDir, monitored=True, searchForMovie=True
+        self, db_id, quality_profile_id, root_dir, monitored=True, search_for_movie=True
     ):
         """Searches for movie on tmdb and returns Movie json to add.
 
         Args:
-            [Required] dbID (str): imdb or tmdb id
-            [Required] qualityProfileId (int)
-            [Required] rootDir (str)
+            [Required] db_id (str): imdb or tmdb id
+            [Required] quality_profile_id (int)
+            [Required] root_dir (str)
             [Optional] monitored (bool)
-            [Optional] searchForMovie (bool)
+            [Optional] search_for_movie (bool)
 
         Return:
             JsonArray
         """
-        s_dict = self.lookup_movie(dbId)
+        s_dict = self.lookup_movie(db_id)
 
         if not s_dict:
             raise Exception("Movie Doesn't Exist")
 
         movie_json = {
             "title": s_dict[0]["title"],
-            "rootFolderPath": rootDir,
-            "qualityProfileId": qualityProfileId,
+            "rootFolderPath": root_dir,
+            "qualityProfileId": quality_profile_id,
             "year": s_dict[0]["year"],
             "tmdbId": s_dict[0]["tmdbId"],
             "images": s_dict[0]["images"],
             "titleSlug": s_dict[0]["titleSlug"],
             "monitored": monitored,
-            "addOptions": {"searchForMovie": searchForMovie},
+            "addOptions": {"searchForMovie": search_for_movie},
         }
         return movie_json
 
@@ -56,32 +56,32 @@ class RadarrAPI(RequestAPI):
     # POST /movie
     def add_movie(
         self,
-        dbId,
-        qualityProfileId,
-        rootDir,
+        db_id,
+        quality_profile_id,
+        root_dir,
         monitored=True,
-        searchForMovie=True,
+        search_for_movie=True,
         tmdb=True,
     ):
         """addMovie adds a new movie to collection
 
         Args:
-            [Required] dbId (str)
-            [Required] qualityProfileId (int)
-            [Required] rootDir (str)
+            [Required] db_id (str)
+            [Required] quality_profile_id (int)
+            [Required] root_dir (str)
             [Optional] monitored (bool)
-            [Optional] searchForMovie (bool)
+            [Optional] search_for_movie (bool)
             [Optional] tmdb (bool): Set to false to use imdb IDs
         Returns:
             json response
         """
         if tmdb:
-            term = f"tmdb:{str(dbId)}"
+            term = f"tmdb:{str(db_id)}"
         else:
-            term = f"imdb:{str(dbId)}"
+            term = f"imdb:{str(db_id)}"
 
         movie_json = self.construct_movie_json(
-            term, qualityProfileId, rootDir, monitored, searchForMovie
+            term, quality_profile_id, root_dir, monitored, search_for_movie
         )
 
         path = "/api/v3/movie"
@@ -89,19 +89,19 @@ class RadarrAPI(RequestAPI):
         return res
 
     # PUT /movie
-    def update_movie(self, data, moveFiles=False):
+    def update_movie(self, data, move_files=False):
         """Update an existing movie.
 
         Args:
             [Required] data (dict): Dictionary containing an object obtained by get_movie()
         Kwargs:
-            [Optional] moveFiles (bool): Have radarr move files when updating
+            [Optional] move_files (bool): Have radarr move files when updating
         Returns:
             json response
         """
 
         path = "/api/movie"
-        params = {"moveFiles": moveFiles}
+        params = {"moveFiles": move_files}
         res = self.request_put(path, data=data, params=params)
         return res
 
@@ -119,17 +119,17 @@ class RadarrAPI(RequestAPI):
         return res
 
     # DELETE /movie/{id}
-    def del_movie(self, id_, delFiles=False, addExclusion=False):
+    def del_movie(self, id_, del_files=False, add_exclusion=False):
         """Delete a single movie by database id.
         Args:
             [Required] id_ (int)
-            [Optional] delFiles (bool)
-            [Optional] addExclusion (bool)
+            [Optional] del_files (bool)
+            [Optional] add_exclusion (bool)
         Returns:
             json response
         """
         # File deletion does not work
-        params = {"deleteFiles": delFiles, "addExclusion": addExclusion}
+        params = {"deleteFiles": del_files, "addExclusion": add_exclusion}
         path = f"/api/v3/movie/{id_}"
         res = self.request_del(path, params=params)
         return res
@@ -200,41 +200,41 @@ class RadarrAPI(RequestAPI):
 
     # GET /history
     def get_history(
-        self, page, pageSize=20, sortDirection="descending", sortKey="date"
+        self, page, page_size=20, sort_direction="descending", sort_key="date"
     ):
         """Return a json object list of items in your history
 
         Args:
             [Required] page (int)
-            [Optional] pageSize (int): Default: 20
-            [Optional] sortKey (str): Default: date
-            [Optional] sortDir (str): Default: descending
+            [Optional] page_size (int): Default: 20
+            [Optional] sort_direction (str): Default: descending
+            [Optional] sort_key (str): Default: date
         Returns:
             json response
         """
         params = {
             "page": page,
-            "pageSize": pageSize,
-            "sortDirection": sortDirection,
-            "sortKey": sortKey,
+            "pageSize": page_size,
+            "sortDirection": sort_direction,
+            "sortKey": sort_key,
         }
         path = "/api/v3/history"
         res = self.request_get(path, params=params)
         return res
 
     # GET /history/movie
-    def get_history_movie(self, id_, eventType=None):
+    def get_history_movie(self, id_, event_type=None):
         """Return a json object list of items in your history.
 
         Args:
             [Required] id_ (int): Database ID of movie
-            [Optional] eventType (int): History event type to retrieve
+            [Optional] event_type (int): History event type to retrieve
         Returns:
             json response
         """
         params = {"movieId": id_}
-        if eventType:
-            params["eventType"] = eventType
+        if event_type:
+            params["eventType"] = event_type
         path = "/api/v3/history/movie"
         res = self.request_get(path, params=params)
         return res
@@ -252,27 +252,27 @@ class RadarrAPI(RequestAPI):
     def get_queue(
         self,
         page,
-        pageSize=20,
-        sortDirection="ascending",
-        sortKey="timeLeft",
-        includeUnknownMovieItems=True,
+        page_size=20,
+        sort_direction="ascending",
+        sort_key="timeLeft",
+        include_unknown_movie_items=True,
     ):
         """Return a json object list of items in the queue.
         Args:
             [Required] page (int)
-            [Optional] pageSize (int): Default: 20
-            [Optional] sortKey (str): Default: timeLeft
-            [Optional] sortDir (str): Default: ascending
-            [Optional] includeUnknownMovieItems (bool): Default: True
+            [Optional] page_size (int): Default: 20
+            [Optional] sort_direction (str): Default: ascending
+            [Optional] sort_key (str): Default: timeLeft
+            [Optional] include_unknown_movie_items (bool): Default: True
         Returns:
             json response
         """
         params = {
             "page": page,
-            "pageSize": pageSize,
-            "sortDirection": sortDirection,
-            "sortKey": sortKey,
-            "includeUnknownMovieItems": includeUnknownMovieItems,
+            "pageSize": page_size,
+            "sortDirection": sort_direction,
+            "sortKey": sort_key,
+            "includeUnknownMovieItems": include_unknown_movie_items,
         }
         path = "/api/v3/queue"
         res = self.request_get(path, params=params)
