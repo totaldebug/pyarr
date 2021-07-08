@@ -232,160 +232,160 @@ class RadarrAPIv3(RequestAPI):
     ## INDEXER
 
     # GET /indexer and /indexer/{id}
-    def get_indexer(self, id=None):
+    def get_indexer(self, id_=None):
         """Get all indexers or a single indexer by its database id
 
         Args:
-            Optional - id (int)
+            Optional - id_ (int)
         Returns:
             json response
         """
-        if not id:
+        if not id_:
             path = "/api/v3/indexer"
         else:
-            path = f"/api/v3/indexer/{id}"
+            path = f"/api/v3/indexer/{id_}"
 
         res = self.request_get(path)
         return res
 
     # PUT /indexer/{id}
     # TODO: look into this, documentation lacking
-    def put_indexer(self, id):
+    def put_indexer(self, id_):
         """Edit an indexer"""
-        path = f"/api/v3/indexer/{id}"
+        path = f"/api/v3/indexer/{id_}"
         res = path.request_put(path)
         return res
 
     # DELETE /indexer/{id}
-    def del_indexer(self, id):
+    def del_indexer(self, id_):
         """Delete and indexer
 
         Args:
-            Required - id (int)
+            Required - id_ (int)
         Returns:
             json response
         """
-        path = f"/api/v3/indexer/{id}"
+        path = f"/api/v3/indexer/{id_}"
         res = self.request_del(path)
         return res
 
     ## DOWNLOAD CLIENT
 
     # GET /downloadclient and /downloadclient/{id}
-    def get_downloadclient(self, id=None):
+    def get_downloadclient(self, id_=None):
         """Get all download clients or a single download client by its database id
 
         Args:
-            Optional - id (int)
+            Optional - id_ (int)
         Returns:
             json response
         """
-        if not id:
+        if not id_:
             path = "/api/v3/downloadclient"
         else:
-            path = f"/api/v3/downloadclient/{id}"
+            path = f"/api/v3/downloadclient/{id_}"
 
         res = self.request_get(path)
         return res
 
     # PUT /downloadclient/{id}
     # TODO: look into this, documentation lacking
-    def put_downloadclient(self, id):
+    def put_downloadclient(self, id_):
         """Edit an downloadclient"""
-        path = f"/api/v3/downloadclient/{id}"
+        path = f"/api/v3/downloadclient/{id_}"
         res = path.request_put(path)
         return res
 
     # DELETE /downloadclient/{id}
-    def del_downloadclient(self, id):
+    def del_downloadclient(self, id_):
         """Delete an downloadclient
 
         Args:
-            Required - id (int)
+            Required - id_ (int)
         Returns:
             json response
         """
-        path = f"/api/v3/downloadclient/{id}"
+        path = f"/api/v3/downloadclient/{id_}"
         res = self.request_del(path)
         return res
 
     ## IMPORT LISTS
 
     # GET /importlist and /importlist/{id}
-    def get_importlist(self, id=None):
+    def get_importlist(self, id_=None):
         """Get all import lists or a single import list by its database id
 
         Args:
-            Optional - id (int)
+            Optional - id_ (int)
         Returns:
             json response
         """
-        if not id:
+        if not id_:
             path = "/api/v3/importlist"
         else:
-            path = f"/api/v3/importlist/{id}"
+            path = f"/api/v3/importlist/{id_}"
 
         res = self.request_get(path)
         return res
 
     # PUT /importlist/{id}
     # TODO: look into this, documentation lacking
-    def put_importlist(self, id):
+    def put_importlist(self, id_):
         """Edit an importlist"""
-        path = f"/api/v3/importlist/{id}"
+        path = f"/api/v3/importlist/{id_}"
         res = path.request_put(path)
         return res
 
     # DELETE /importlist/{id}
-    def del_importlist(self, id):
+    def del_importlist(self, id_):
         """Delete an importlist
 
         Args:
-            Required - id (int)
+            Required - id_ (int)
         Returns:
             json response
         """
-        path = f"/api/v3/importlist/{id}"
+        path = f"/api/v3/importlist/{id_}"
         res = self.request_del(path)
         return res
 
     ## NOTIFICATION
 
     # GET /notification and /notification/{id}
-    def get_notification(self, id=None):
+    def get_notification(self, id_=None):
         """Get all notifications or a single notification by its database id
 
         Args:
-            Optional - id (int)
+            Optional - id_ (int)
         Returns:
             json response
         """
-        if not id:
+        if not id_:
             path = "/api/v3/notification"
         else:
-            path = f"/api/v3/notification/{id}"
+            path = f"/api/v3/notification/{id_}"
 
         res = self.request_get(path)
         return res
 
-    # PUT /notification
+    # PUT /notification/{id}
     # TODO: look into this, documentation lacking
-    def put_notification(self, id):
+    def put_notification(self, id_):
         """Edit a notification"""
-        path = f"/api/v3/notification/{id}"
+        path = f"/api/v3/notification/{id_}"
         res = path.request_put(path)
         return res
 
-    # DELETE /notification
-    def del_notification(self, id):
+    # DELETE /notification/{id}
+    def del_notification(self, id_):
         """Delete a notification
 
         Args:
-            Required - id (int)
+            Required - id_ (int)
         Returns:
             json response
         """
-        path = f"/api/v3/notification/{id}"
+        path = f"/api/v3/notification/{id_}"
         res = self.request_del(path)
         return res
 
