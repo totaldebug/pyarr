@@ -23,7 +23,6 @@ class RadarrAPIv3(RequestAPI):
 
         """
         s_dict = self.lookup_movie(dbId)
-        print(s_dict)
 
         if not s_dict:
             raise Exception("Movie Doesn't Exist")
@@ -55,7 +54,6 @@ class RadarrAPIv3(RequestAPI):
         """
         if tmdbid:
             path = f"/api/v3/movie?tmdbId={int(tmdbid)}"
-            print(path)
         else:
             path = "/api/v3/movie"
         res = self.request_get(path)

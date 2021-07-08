@@ -42,8 +42,6 @@ class SonarrAPI(RequestAPI):
 
             endDate = datetime.strptime(end_date, "%Y-%m-%d").strftime("%Y-%m-%d")
             data.update({"end": endDate})
-        else:
-            print("no args")
 
         res = self.request_get(path, **data)
         return res
