@@ -120,7 +120,7 @@ class RadarrAPI(RequestAPI):
 
     # DELETE /movie/{id}
     def del_movie(self, id_, del_files=False, add_exclusion=False):
-        """Delete a single movie by database id.
+        """Delete a single movie by database ID.
         Args:
             [Required] id_ (int)
             [Optional] del_files (bool)
@@ -186,7 +186,7 @@ class RadarrAPI(RequestAPI):
 
     # DELETE /moviefile/{id}
     def del_movie_file(self, id_):
-        """Allows for deletion of a moviefile by its database id.
+        """Allows for deletion of a moviefile by its database ID.
         Args:
             [Required] id_ (int)
         Returns:
@@ -288,7 +288,7 @@ class RadarrAPI(RequestAPI):
 
     # GET /indexer and /indexer/{id}
     def get_indexer(self, id_=None):
-        """Get all indexers or a single indexer by its database id.
+        """Get all indexers or a single indexer by its database ID.
 
         Args:
             [Optional] id_ (int)
@@ -334,7 +334,7 @@ class RadarrAPI(RequestAPI):
 
     # GET /downloadclient and /downloadclient/{id}
     def get_downloadclient(self, id_=None):
-        """Get all download clients or a single download client by its database id.
+        """Get all download clients or a single download client by its database ID.
 
         Args:
             [Optional] id_ (int)
@@ -380,7 +380,7 @@ class RadarrAPI(RequestAPI):
 
     # GET /importlist and /importlist/{id}
     def get_importlist(self, id_=None):
-        """Get all import lists or a single import list by its database id.
+        """Get all import lists or a single import list by its database ID.
 
         Args:
             [Optional] id_ (int)
@@ -426,7 +426,7 @@ class RadarrAPI(RequestAPI):
 
     # GET /notification and /notification/{id}
     def get_notification(self, id_=None):
-        """Get all notifications or a single notification by its database id.
+        """Get all notifications or a single notification by its database ID.
 
         Args:
             [Optional] id_ (int)
