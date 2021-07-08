@@ -128,7 +128,6 @@ class RadarrAPI(RequestAPI):
         Returns:
             json response
         """
-        # File deletion does not work
         params = {"deleteFiles": del_files, "addExclusion": add_exclusion}
         path = f"/api/v3/movie/{id_}"
         res = self.request_del(path, params=params)
@@ -162,9 +161,44 @@ class RadarrAPI(RequestAPI):
         res = self.request_get(path, params=params)
         return res
 
-    # TODO: PUT /movie/editor
-    # TODO: DELETE /movie/editor
-    # TODO: POST /movie/import
+    # PUT /movie/editor
+    def update_movies(self, data):
+        """Edit multiple movie files.
+
+        Args:
+            [Required] data (dict)
+        Returns:
+            json response
+        """
+        path = "/api/v3/movie/editor"
+        res = self.request_put(path, data=data)
+        return res
+
+    # DELETE /movie/editor
+    def del_movies(self, data):
+        """Delete multiple movie files.
+
+        Args:
+            [Required] data (dict)
+        Returns:
+            json response
+        """
+        path = "/api/v3/movie/editor"
+        res = self.request_del(path, data=data)
+        return res
+
+    # POST /movie/import
+    def import_movies(self, data):
+        """Import mulitple movies.
+
+        Args:
+            [Required] data (dict)
+        Returns:
+            json response
+        """
+        path = "/api/v3/movie/import"
+        res = self.request_post(path, data=data)
+        return res
 
     ## MOVIEFILE
 
@@ -305,7 +339,7 @@ class RadarrAPI(RequestAPI):
 
     # PUT /indexer/{id}
     def update_indexer(self, id_, data):
-        """Edit an indexer
+        """Edit an indexer.
 
         Args:
             [Required] id_ (int)
@@ -319,7 +353,7 @@ class RadarrAPI(RequestAPI):
 
     # DELETE /indexer/{id}
     def del_indexer(self, id_):
-        """Delete and indexer
+        """Delete and indexer.
 
         Args:
             [Required] id_ (int)
@@ -365,7 +399,7 @@ class RadarrAPI(RequestAPI):
 
     # DELETE /downloadclient/{id}
     def del_downloadclient(self, id_):
-        """Delete an downloadclient
+        """Delete an downloadclient.
 
         Args:
             [Required] id_ (int)
