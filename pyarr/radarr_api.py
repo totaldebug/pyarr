@@ -786,7 +786,7 @@ class RadarrAPI(RequestAPI):
     ## ROOT FOLDER
 
     # GET /rootfolder
-    def get_root(self):
+    def get_root_folder(self):
         """Returns the Root Folder.
 
         Args:
