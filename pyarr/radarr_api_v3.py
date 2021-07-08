@@ -61,16 +61,17 @@ class RadarrAPIv3(RequestAPI):
 
     # POST /movie
     def add_movie(
-        self, dbId, qualityProfileId, rootDir, monitored=True, searchForMovie=True
+        self, dbId, qualityProfileId, rootDir, monitored=True, searchForMovie=True, tmdb=True
     ):
         """addMovie adds a new movie to collection
 
         Args:
-            Required - dbid tmdb id
+            Required - dbId (string)
             Required - qualityProfileId (int)
             Required - rootDir (string)
             Optional - monitored (bool)
             Optional - searchForMovie (bool)
+            Optional - tmdb (bool): Set to false to use imdb IDs
         Returns:
             json response
 
@@ -78,7 +79,10 @@ class RadarrAPIv3(RequestAPI):
         if not rootDir:
             rootDir = self.get_root()[0]["path"]
 
-        term = f"tmdb:{str(dbId)}"
+        if tmdb:
+            term = f"tmdb:{str(dbId)}"
+        else:
+            term = f"imdb:{str(dbId)}"
 
         movie_json = self.construct_movie_json(
             term, qualityProfileId, rootDir, monitored, searchForMovie
