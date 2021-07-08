@@ -18,7 +18,7 @@ class RadarrAPI(RequestAPI):
             [Optional] search_for_movie (bool)
 
         Return:
-            JsonArray
+            Movie JSON (dict)
         """
         s_dict = self.lookup_movie(db_id)
 
