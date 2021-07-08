@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 from .request_api import RequestAPI
-from os import path
 
 
 class RadarrAPIv3(RequestAPI):
