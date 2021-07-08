@@ -32,7 +32,7 @@ class RequestAPI:
         self.auth = requests.auth.HTTPBasicAuth(username, password)
         return self.auth
 
-    def request_get(self, path, params=None, data=None):
+    def request_get(self, path, params=None):
         """Wrapper on the session.get
         Args:
             path (str): Path to API. E.g. /api/manualimport
@@ -45,7 +45,7 @@ class RequestAPI:
         headers = {"X-Api-Key": self.api_key}
         request_url = "{url}{path}".format(url=self.host_url, path=path)
         res = self.session.get(
-            request_url, headers=headers, params=params, json=data, auth=self.auth
+            request_url, headers=headers, params=params, auth=self.auth
         )
         return res.json()
 
