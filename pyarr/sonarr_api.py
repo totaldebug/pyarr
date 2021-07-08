@@ -6,18 +6,6 @@ from .request_api import RequestAPI
 
 
 class SonarrAPI(RequestAPI):
-    def __init__(
-        self,
-        host_url: str,
-        api_key: str,
-    ):
-        """Constructor requires Host-URL and API-KEY
-
-        Args:
-            host_url (str): Host url to sonarr.
-            api_key: API key from Sonarr. You can find this
-        """
-        super().__init__(host_url, api_key)
 
     def get_calendar(self, *args):
         """Retrieves info about when series were/will be downloaded.
