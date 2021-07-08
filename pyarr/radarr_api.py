@@ -203,7 +203,7 @@ class RadarrAPI(RequestAPI):
     ## MOVIEFILE
 
     # GET /moviefile
-    def get_files(self, id_):
+    def get_movie_files_by_movie_id(self, id_):
         """Returns the movie files belonging to a specific movie based on database ID.
 
         Args:
