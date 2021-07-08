@@ -3,7 +3,6 @@ from .request_api import RequestAPI
 
 
 class RadarrAPIv3(RequestAPI):
-
     def construct_movie_json(
         self, dbId, qualityProfileId, rootDir, monitored=True, searchForMovie=True
     ):
@@ -54,7 +53,13 @@ class RadarrAPIv3(RequestAPI):
 
     # POST /movie
     def add_movie(
-        self, dbId, qualityProfileId, rootDir, monitored=True, searchForMovie=True, tmdb=True
+        self,
+        dbId,
+        qualityProfileId,
+        rootDir,
+        monitored=True,
+        searchForMovie=True,
+        tmdb=True,
     ):
         """addMovie adds a new movie to collection
 
@@ -82,7 +87,7 @@ class RadarrAPIv3(RequestAPI):
         return res
 
     # PUT /movie
-    def update_movie(self, data,  moveFiles=False):
+    def update_movie(self, data, moveFiles=False):
         """Update an existing movie.
 
         Args:
@@ -166,7 +171,7 @@ class RadarrAPIv3(RequestAPI):
     # GET /moviefile/{id}
     def get_movie_file(self, id_):
         """Returns movie file info.
-        
+
         Args:
             [Required] id_ (int)
         Returns:
@@ -205,7 +210,12 @@ class RadarrAPIv3(RequestAPI):
         Returns:
             json response
         """
-        params = {"page":page, "pageSize": pageSize, "sortDirection":sortDirection, "sortKey":sortKey}
+        params = {
+            "page": page,
+            "pageSize": pageSize,
+            "sortDirection": sortDirection,
+            "sortKey": sortKey,
+        }
         path = "/api/v3/history"
         res = self.request_get(path, params=params)
         return res
@@ -255,7 +265,13 @@ class RadarrAPIv3(RequestAPI):
         Returns:
             json response
         """
-        params = {"page":page, "pageSize": pageSize, "sortDirection":sortDirection, "sortKey":sortKey, "includeUnknownMovieItems": includeUnknownMovieItems}
+        params = {
+            "page": page,
+            "pageSize": pageSize,
+            "sortDirection": sortDirection,
+            "sortKey": sortKey,
+            "includeUnknownMovieItems": includeUnknownMovieItems,
+        }
         path = "/api/v3/queue"
         res = self.request_get(path, params=params)
         return res
@@ -288,7 +304,7 @@ class RadarrAPIv3(RequestAPI):
     # PUT /indexer/{id}
     def put_indexer(self, id_, data):
         """Edit an indexer
-        
+
         Args:
             [Required] id_ (int)
             [Required] data (dict)
@@ -334,7 +350,7 @@ class RadarrAPIv3(RequestAPI):
     # PUT /downloadclient/{id}
     def put_downloadclient(self, id_, data):
         """Edit an downloadclient.
-        
+
         Args:
             [Required] id_ (int)
             [Required] data (dict)
@@ -380,7 +396,7 @@ class RadarrAPIv3(RequestAPI):
     # PUT /importlist/{id}
     def put_importlist(self, id_, data):
         """Edit an importlist.
-        
+
         Args:
             [Required] id_ (int)
             [Required] data (dict)
@@ -426,7 +442,7 @@ class RadarrAPIv3(RequestAPI):
     # PUT /notification/{id}
     def put_notification(self, id_, data):
         """Edit a notification.
-        
+
         Args:
             [Required] id_ (int)
             [Required] data (dict)
@@ -480,7 +496,7 @@ class RadarrAPIv3(RequestAPI):
     # GET /config/ui
     def get_config_ui(self):
         """Query Radarr for UI settings
-        
+
         Args:
             None
         Returns:
@@ -493,7 +509,7 @@ class RadarrAPIv3(RequestAPI):
     # PUT /config/ui
     def put_config_ui(self, data):
         """Edit one or many UI Settings and save to the database.
-        
+
         Args:
             [Required] data (dict)
         Returns:
@@ -506,7 +522,7 @@ class RadarrAPIv3(RequestAPI):
     # GET /config/host
     def get_config_host(self):
         """Get General/Host settings for Radarr.
-        
+
         Args:
             None
         Returns:
@@ -519,7 +535,7 @@ class RadarrAPIv3(RequestAPI):
     # PUT /config/host
     def put_config_host(self, data):
         """Edit General/Host settings for Radarr.
-        
+
         Args:
             [Required] data (dict)
         Returns:
@@ -532,7 +548,7 @@ class RadarrAPIv3(RequestAPI):
     # GET /config/naming
     def get_config_naming(self):
         """Get Settings for movie file and folder naming.
-        
+
         Args:
             None
         Returns:
@@ -545,7 +561,7 @@ class RadarrAPIv3(RequestAPI):
     # PUT /config/naming
     def put_config_naming(self, data):
         """Edit Settings for movie file and folder naming.
-        
+
         Args:
             [Required] data (dict)
         Returns:
@@ -560,7 +576,7 @@ class RadarrAPIv3(RequestAPI):
     # GET /metadata
     def get_metadata(self):
         """Get all metadata consumer settings.
-        
+
         Args:
             None
         Returns:
@@ -575,7 +591,7 @@ class RadarrAPIv3(RequestAPI):
     # GET /system/status
     def get_system_status(self):
         """Find out information such as OS, version, paths used, etc.
-        
+
         Args:
             None
         Returns:
@@ -590,7 +606,7 @@ class RadarrAPIv3(RequestAPI):
     # GET /health
     def get_health(self):
         """Query radarr for health information.
-        
+
         Args:
             None
         Returns:
@@ -654,7 +670,7 @@ class RadarrAPIv3(RequestAPI):
     # GET /qualityProfile
     def get_quality_profiles(self):
         """Query Radarr for quality profiles.
-        
+
         Args:
             None
         Returns:
@@ -679,7 +695,11 @@ class RadarrAPIv3(RequestAPI):
         Returns:
             json response
         """
-        params = {"start": start_date.strftime("%Y-%m-%d"), "end":end_date.strftime("%Y-%m-%d"), "unmonitored":unmonitored }
+        params = {
+            "start": start_date.strftime("%Y-%m-%d"),
+            "end": end_date.strftime("%Y-%m-%d"),
+            "unmonitored": unmonitored,
+        }
         path = "/api/v3/calendar"
         res = self.request_get(path, params=params)
         return res
@@ -689,7 +709,7 @@ class RadarrAPIv3(RequestAPI):
     # GET /customfilter
     def get_custom_filter(self):
         """Query Radarr for custom filters.
-        
+
         Args:
             None
         Returns:
@@ -704,7 +724,7 @@ class RadarrAPIv3(RequestAPI):
     # GET /remotePathMapping
     def get_remote_path_mapping(self):
         """Get a list of remote paths being mapped and used by Radarr.
-        
+
         Args:
             None
         Returns:
@@ -719,7 +739,7 @@ class RadarrAPIv3(RequestAPI):
     # GET /rootfolder
     def get_root(self):
         """Returns the Root Folder.
-        
+
         Args:
             None
         Returns:

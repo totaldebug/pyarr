@@ -6,7 +6,6 @@ from .request_api import RequestAPI
 
 
 class SonarrAPI(RequestAPI):
-
     def get_calendar(self, *args):
         """Retrieves info about when series were/will be downloaded.
         If no start and end, retrieves series airing today and tomorrow.
