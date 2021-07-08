@@ -76,9 +76,6 @@ class RadarrAPIv3(RequestAPI):
             json response
 
         """
-        if not rootDir:
-            rootDir = self.get_root()[0]["path"]
-
         if tmdb:
             term = f"tmdb:{str(dbId)}"
         else:
