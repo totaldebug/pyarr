@@ -304,7 +304,7 @@ class RadarrAPI(RequestAPI):
         return res
 
     # PUT /indexer/{id}
-    def put_indexer(self, id_, data):
+    def update_indexer(self, id_, data):
         """Edit an indexer
 
         Args:
@@ -350,7 +350,7 @@ class RadarrAPI(RequestAPI):
         return res
 
     # PUT /downloadclient/{id}
-    def put_downloadclient(self, id_, data):
+    def update_downloadclient(self, id_, data):
         """Edit an downloadclient.
 
         Args:
@@ -396,7 +396,7 @@ class RadarrAPI(RequestAPI):
         return res
 
     # PUT /importlist/{id}
-    def put_importlist(self, id_, data):
+    def update_importlist(self, id_, data):
         """Edit an importlist.
 
         Args:
@@ -442,7 +442,7 @@ class RadarrAPI(RequestAPI):
         return res
 
     # PUT /notification/{id}
-    def put_notification(self, id_, data):
+    def update_notification(self, id_, data):
         """Edit a notification.
 
         Args:
@@ -509,7 +509,7 @@ class RadarrAPI(RequestAPI):
         return res
 
     # PUT /config/ui
-    def put_config_ui(self, data):
+    def update_config_ui(self, data):
         """Edit one or many UI Settings and save to the database.
 
         Args:
@@ -535,7 +535,7 @@ class RadarrAPI(RequestAPI):
         return res
 
     # PUT /config/host
-    def put_config_host(self, data):
+    def update_config_host(self, data):
         """Edit General/Host settings for Radarr.
 
         Args:
@@ -561,7 +561,7 @@ class RadarrAPI(RequestAPI):
         return res
 
     # PUT /config/naming
-    def put_config_naming(self, data):
+    def update_config_naming(self, data):
         """Edit Settings for movie file and folder naming.
 
         Args:
