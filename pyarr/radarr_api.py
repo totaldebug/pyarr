@@ -3,6 +3,8 @@ from .request_api import RequestAPI
 
 
 class RadarrAPI(RequestAPI):
+    """API wrapper for Radarr endpoints."""
+
     def construct_movie_json(
         self, dbId, qualityProfileId, rootDir, monitored=True, searchForMovie=True
     ):

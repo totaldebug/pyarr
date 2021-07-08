@@ -2,6 +2,8 @@ import requests
 
 
 class RequestAPI:
+    """Base class for API wrappers."""
+
     def __init__(
         self,
         host_url: str,
