@@ -14,7 +14,7 @@ class RadarrAPIv3(RequestAPI):
         Args:
             [Required] dbID (str): imdb or tmdb id
             [Required] qualityProfileId (int)
-            [Required] rootDir (string)
+            [Required] rootDir (str)
             [Optional] monitored (bool)
             [Optional] searchForMovie (bool)
 
@@ -66,9 +66,9 @@ class RadarrAPIv3(RequestAPI):
         """addMovie adds a new movie to collection
 
         Args:
-            [Required] dbId (string)
+            [Required] dbId (str)
             [Required] qualityProfileId (int)
-            [Required] rootDir (string)
+            [Required] rootDir (str)
             [Optional] monitored (bool)
             [Optional] searchForMovie (bool)
             [Optional] tmdb (bool): Set to false to use imdb IDs
@@ -176,8 +176,8 @@ class RadarrAPIv3(RequestAPI):
         Args:
             [Required] page (int) - Default: 1
             [Required] pageSize (int) - Default: 20
-            [Required] sortKey (string) - Default: date
-            [Required] sortDir (string) - Default: descending
+            [Required] sortKey (str) - Default: date
+            [Required] sortDir (str) - Default: descending
         Returns:
             json response
         """
@@ -498,7 +498,7 @@ class RadarrAPIv3(RequestAPI):
         """Performs any of the predetermined Radarr command routines.
 
         Kwargs:
-            [Required] name (string).
+            [Required] name (str).
 
             Options available:
                 - ApplicationUpdate - Trigger an update of Radarr

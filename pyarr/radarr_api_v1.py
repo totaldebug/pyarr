@@ -71,7 +71,7 @@ class RadarrAPIv1(RequestAPI):
         """Performs any of the predetermined Radarr command routines.
 
         Kwargs:
-            [Required] name (string).
+            [Required] name (str).
 
             Options available: RefreshMovie, RescanMovie, MoviesSearch,
                 DownloadedMoviesScan, RssSync, RenameFiles, RenameMovie,
@@ -172,7 +172,7 @@ class RadarrAPIv1(RequestAPI):
         Args:
             [Required] dbID, <imdb or tmdb id>
             [Required] qualityProfileId (int)
-            [Required] rootDir (string)
+            [Required] rootDir (str)
             [Optional] monitored (bool)
             [Optional] searchForMovie (bool)
 
@@ -204,7 +204,7 @@ class RadarrAPIv1(RequestAPI):
         Args:
             [Required] dbid <imdb or tmdb id>
             [Required] qualityProfileId (int)
-            [Required] rootDir (string)
+            [Required] rootDir (str)
         Returns:
             json response
 
@@ -272,9 +272,9 @@ class RadarrAPIv1(RequestAPI):
 
         Args:
             [Required] page (int) - 1-indexed (1 default)
-            [Optional] sortKey (string) - movie.title or date
+            [Optional] sortKey (str) - movie.title or date
             [Optional] pageSize (int) - Default: 0
-            [Optional] sortDir (string) - asc or desc - Default: asc
+            [Optional] sortDir (str) - asc or desc - Default: asc
         Returns:
             json response
         """

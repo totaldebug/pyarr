@@ -68,7 +68,7 @@ class SonarrAPI(RequestAPI):
         """Performs any of the predetermined Sonarr command routines.
 
         Kwargs:
-            [Required] name (string).
+            [Required] name (str).
 
             Options available: RefreshSeries, RescanSeries, EpisodeSearch,
                 SeasonSearch, SeriesSearch, DownloadedEpisodesScan, RssSync,
@@ -168,7 +168,7 @@ class SonarrAPI(RequestAPI):
         Args:
             [Required] tvdbID (int)
             [Required] qualityProfileId (int)
-            [Required] rootDir (string)
+            [Required] rootDir (str)
             [Optional] seasonFolder (bool)
             [Optional] monitored (bool)
             [Optional] ignoreEpisodesWithFiles (bool)
@@ -236,7 +236,7 @@ class SonarrAPI(RequestAPI):
         Args:
             [Required] tvdbID (int)
             [Required] qualityProfileId (int)
-            [Required] rootDir (string)
+            [Required] rootDir (str)
             [Optional] seasonFolder (bool)
             [Optional] monitored (bool)
             [Optional] ignoreEpisodesWithFiles (bool)
@@ -325,10 +325,10 @@ class SonarrAPI(RequestAPI):
         """Gets Wanted / Missing episodes
 
         Args:
-            [Required] sortKey (string) - series.title or airDateUtc (default)
+            [Required] sortKey (str) - series.title or airDateUtc (default)
             [Optional] page (int) - 1-indexed Default: 1
             [Optional] pageSize (int) - Default: 10
-            [Optional] sortDir (string) - asc or desc - Default: asc
+            [Optional] sortDir (str) - asc or desc - Default: asc
         Returns:
             json response
         """
@@ -344,10 +344,10 @@ class SonarrAPI(RequestAPI):
         """Gets history (grabs/failures/completed)
 
         Args:
-            [Required] sortKey (string) - series.title or date (default)
+            [Required] sortKey (str) - series.title or date (default)
             [Optional] page (int) - 1-indexed
             [Optional] pageSize (int) - Default: 0
-            [Optional] sortDir (string) - asc or desc - Default: asc
+            [Optional] sortDir (str) - asc or desc - Default: asc
             [Optional] episodeId (int) - Filters to a specific episode ID
         Returns:
             json response
