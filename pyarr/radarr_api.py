@@ -2,7 +2,7 @@
 from .request_api import RequestAPI
 
 
-class RadarrAPIv3(RequestAPI):
+class RadarrAPI(RequestAPI):
     def construct_movie_json(
         self, dbId, qualityProfileId, rootDir, monitored=True, searchForMovie=True
     ):
