@@ -169,11 +169,11 @@ class SonarrAPI(RequestAPI):
             [Required] tvdbID (int)
             [Required] qualityProfileId (int)
             [Required] rootDir (string)
-            [Optional] seasonFolder (boolean)
-            [Optional] monitored (boolean)
-            [Optional] ignoreEpisodesWithFiles (boolean)
-            [Optional] ignoreEpisodesWithoutFiles (boolean)
-            [Optional] searchForMissingEpisodes (boolean)
+            [Optional] seasonFolder (bool)
+            [Optional] monitored (bool)
+            [Optional] ignoreEpisodesWithFiles (bool)
+            [Optional] ignoreEpisodesWithoutFiles (bool)
+            [Optional] searchForMissingEpisodes (bool)
 
         Return:
             JsonArray
@@ -237,11 +237,11 @@ class SonarrAPI(RequestAPI):
             [Required] tvdbID (int)
             [Required] qualityProfileId (int)
             [Required] rootDir (string)
-            [Optional] seasonFolder (boolean)
-            [Optional] monitored (boolean)
-            [Optional] ignoreEpisodesWithFiles (boolean)
-            [Optional] ignoreEpisodesWithoutFiles (boolean)
-            [Optional] searchForMissingEpisodes (boolean)
+            [Optional] seasonFolder (bool)
+            [Optional] monitored (bool)
+            [Optional] ignoreEpisodesWithFiles (bool)
+            [Optional] ignoreEpisodesWithoutFiles (bool)
+            [Optional] searchForMissingEpisodes (bool)
         Returns:
             json response
 

@@ -12,11 +12,11 @@ class RadarrAPIv3(RequestAPI):
         """Searches for movie on tmdb and returns Movie json to add
 
         Args:
-            [Required] dbID, <imdb or tmdb id>
+            [Required] dbID (str): imdb or tmdb id
             [Required] qualityProfileId (int)
             [Required] rootDir (string)
-            [Optional] monitored (boolean)
-            [Optional] searchForMovie (boolean)
+            [Optional] monitored (bool)
+            [Optional] searchForMovie (bool)
 
         Return:
             JsonArray

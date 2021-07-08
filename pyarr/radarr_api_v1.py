@@ -173,8 +173,8 @@ class RadarrAPIv1(RequestAPI):
             [Required] dbID, <imdb or tmdb id>
             [Required] qualityProfileId (int)
             [Required] rootDir (string)
-            [Optional] monitored (boolean)
-            [Optional] searchForMovie (boolean)
+            [Optional] monitored (bool)
+            [Optional] searchForMovie (bool)
 
         Return:
             JsonArray
