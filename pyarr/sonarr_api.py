@@ -297,18 +297,18 @@ class SonarrAPI(RequestAPI):
         return res
 
     # TODO: requires Test
-    def del_queue(self, id, *args):
+    def del_queue(self, id_, *args):
         """Deletes an item from the queue and download client.
         Optionally blacklist item after deletion.
 
         Args:
-            [Required] id (int)
+            [Required] id_ (int)
             [Optional] blacklist (bool)
         Returns:
             json response
         """
         data = {}
-        data.update({"id": id})
+        data.update({"id": id_})
         if len(args) == 1:
             data.update(
                 {
