@@ -392,7 +392,7 @@ class RadarrAPI(RequestAPI):
     ## DOWNLOAD CLIENT
 
     # GET /downloadclient and /downloadclient/{id}
-    def get_downloadclient(self, id_=None):
+    def get_download_client(self, id_=None):
         """Get all download clients or a single download client by its database ID.
 
         Args:
@@ -409,7 +409,7 @@ class RadarrAPI(RequestAPI):
         return res
 
     # PUT /downloadclient/{id}
-    def upd_downloadclient(self, id_, data):
+    def upd_download_client(self, id_, data):
         """Edit an downloadclient.
 
         Args:
@@ -423,7 +423,7 @@ class RadarrAPI(RequestAPI):
         return res
 
     # DELETE /downloadclient/{id}
-    def del_downloadclient(self, id_):
+    def del_download_client(self, id_):
         """Delete an downloadclient.
 
         Args:
