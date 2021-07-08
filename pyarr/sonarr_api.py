@@ -441,7 +441,7 @@ class SonarrAPI(RequestAPI):
             requests.models.Response: Response object form requests.
         """
         path = "/api/episodefile/{}".format(episode_id)
-        res = self.request_del(path, data=None)
+        res = self.request_del(path)
         return res
 
     # TODO: Test this
