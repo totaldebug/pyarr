@@ -202,7 +202,33 @@ class RadarrAPI(RequestAPI):
 
     ## MOVIEFILE
 
-    # TODO: GET /moviefile
+    # GET /moviefile
+    def get_files(self, id_):
+        """Returns the movie files belonging to a specific movie based on database ID.
+
+        Args:
+            [Required] id_ (int)
+        Returns:
+            json response
+        """
+        params = {"movieid": id_}
+        path = "/api/v3/moviefile"
+        res = self.request_get(path, params=params)
+        return res
+
+    # GET /moviefile
+    def get_movie_files(self, moviefile_ids):
+        """Returns movie file info for multiple movie files.
+
+        Args:
+            [Required] moviefile_ids (array:int)
+        Returns:
+            json response
+        """
+        params = {"moviefileids": moviefile_ids}
+        path = "/api/v3/moviefile"
+        res = self.request_get(path, params=params)
+        return res
 
     # GET /moviefile/{id}
     def get_movie_file(self, id_):
@@ -213,7 +239,6 @@ class RadarrAPI(RequestAPI):
         Returns:
             json response
         """
-
         path = f"/api/v3/moviefile/{id_}"
         res = self.request_get(path)
         return res
