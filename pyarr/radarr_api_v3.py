@@ -135,6 +135,21 @@ class RadarrAPIv3(RequestAPI):
         res = self.request_get(path, params=params)
         return res
 
+    # GET /movie/lookup
+    def lookup_movie_by_tmdb_id(self, id_):
+        """Searches for movie
+
+        Args:
+            [Required] term (str): Uses TMDB for search results
+        Returns:
+            json response
+
+        """
+        params = {"term": f"tmdb:{id_}"}
+        path = "/api/v3/movie/lookup"
+        res = self.request_get(path, params=params)
+        return res
+
     # TODO: PUT /movie/editor
     # TODO: DELETE /movie/editor
     # TODO: POST /movie/import
