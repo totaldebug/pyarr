@@ -438,7 +438,7 @@ class RadarrAPI(RequestAPI):
     ## IMPORT LISTS
 
     # GET /importlist and /importlist/{id}
-    def get_importlist(self, id_=None):
+    def get_import_list(self, id_=None):
         """Get all import lists or a single import list by its database ID.
 
         Args:
@@ -455,7 +455,7 @@ class RadarrAPI(RequestAPI):
         return res
 
     # PUT /importlist/{id}
-    def upd_importlist(self, id_, data):
+    def upd_import_list(self, id_, data):
         """Edit an importlist.
 
         Args:
@@ -469,7 +469,7 @@ class RadarrAPI(RequestAPI):
         return res
 
     # DELETE /importlist/{id}
-    def del_importlist(self, id_):
+    def del_import_list(self, id_):
         """Delete an importlist.
 
         Args:
