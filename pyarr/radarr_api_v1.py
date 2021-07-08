@@ -54,7 +54,7 @@ class RadarrAPIv1(RequestAPI):
         started command, or all currently started commands.
 
         Args:
-            Optional - id (int) Unique ID of command
+            [Optional] id (int) Unique ID of command
         Returns:
             json response
 
@@ -71,7 +71,7 @@ class RadarrAPIv1(RequestAPI):
         """Performs any of the predetermined Radarr command routines.
 
         Kwargs:
-            Required - name (string).
+            [Required] name (string).
 
             Options available: RefreshMovie, RescanMovie, MoviesSearch,
                 DownloadedMoviesScan, RssSync, RenameFiles, RenameMovie,
@@ -106,7 +106,7 @@ class RadarrAPIv1(RequestAPI):
         """getMovie returns all movies in collection.
 
         Args:
-            Optional - id (int) ID of movie
+            [Optional] id (int) ID of movie
         Returns:
             json response
 
@@ -170,11 +170,11 @@ class RadarrAPIv1(RequestAPI):
         """Searches for movie on tmdb and returns Movie json to add
 
         Args:
-            Required - dbID, <imdb or tmdb id>
-            Required - qualityProfileId (int)
-            Required - rootDir (string)
-            Optional - monitored (boolean)
-            Optional - searchForMovie (boolean)
+            [Required] dbID, <imdb or tmdb id>
+            [Required] qualityProfileId (int)
+            [Required] rootDir (string)
+            [Optional] monitored (boolean)
+            [Optional] searchForMovie (boolean)
 
         Return:
             JsonArray
@@ -202,9 +202,9 @@ class RadarrAPIv1(RequestAPI):
         """addMovie adds a new movie to collection
 
         Args:
-            Required - dbid <imdb or tmdb id>
-            Required - qualityProfileId (int)
-            Required - rootDir (string)
+            [Required] dbid <imdb or tmdb id>
+            [Required] qualityProfileId (int)
+            [Required] rootDir (string)
         Returns:
             json response
 
@@ -220,9 +220,9 @@ class RadarrAPIv1(RequestAPI):
     def del_movie(self, movieId, delFiles=False, addExclusion=False):
         """Delete the movie with the given ID
         Args:
-            Required - movieId (int)
-            Optional - delFiles (bool)
-            Optional - addExclusion (bool)
+            [Required] movieId (int)
+            [Optional] delFiles (bool)
+            [Optional] addExclusion (bool)
         Returns:
             json response
 
@@ -250,8 +250,8 @@ class RadarrAPIv1(RequestAPI):
         """Deletes an item from the queue and download client. Optionally blacklist item after deletion.
 
         Args:
-            Required - id (int)
-            Optional - blacklist (bool)
+            [Required] id (int)
+            [Optional] blacklist (bool)
         Returns:
             json response
         """
@@ -271,10 +271,10 @@ class RadarrAPIv1(RequestAPI):
         """Gets history (grabs/failures/completed)
 
         Args:
-            Required - page (int) - 1-indexed (1 default)
-            Optional - sortKey (string) - movie.title or date
-            Optional - pageSize (int) - Default: 0
-            Optional - sortDir (string) - asc or desc - Default: asc
+            [Required] page (int) - 1-indexed (1 default)
+            [Optional] sortKey (string) - movie.title or date
+            [Optional] pageSize (int) - Default: 0
+            [Optional] sortDir (string) - asc or desc - Default: asc
         Returns:
             json response
         """

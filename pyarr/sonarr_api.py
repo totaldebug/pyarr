@@ -51,7 +51,7 @@ class SonarrAPI(RequestAPI):
         started command, or all currently started commands.
 
         Args:
-            Optional - id (int) Unique ID of command
+            [Optional] id (int) Unique ID of command
         Returns:
             json response
 
@@ -68,7 +68,7 @@ class SonarrAPI(RequestAPI):
         """Performs any of the predetermined Sonarr command routines.
 
         Kwargs:
-            Required - name (string).
+            [Required] name (string).
 
             Options available: RefreshSeries, RescanSeries, EpisodeSearch,
                 SeasonSearch, SeriesSearch, DownloadedEpisodesScan, RssSync,
@@ -166,14 +166,14 @@ class SonarrAPI(RequestAPI):
         """Searches for new shows on trakt and returns Series json to add
 
         Args:
-            Required - tvdbID (int)
-            Required - qualityProfileId (int)
-            Required - rootDir (string)
-            Optional - seasonFolder (boolean)
-            Optional - monitored (boolean)
-            Optional - ignoreEpisodesWithFiles (boolean)
-            Optional - ignoreEpisodesWithoutFiles (boolean)
-            Optional - searchForMissingEpisodes (boolean)
+            [Required] tvdbID (int)
+            [Required] qualityProfileId (int)
+            [Required] rootDir (string)
+            [Optional] seasonFolder (boolean)
+            [Optional] monitored (boolean)
+            [Optional] ignoreEpisodesWithFiles (boolean)
+            [Optional] ignoreEpisodesWithoutFiles (boolean)
+            [Optional] searchForMissingEpisodes (boolean)
 
         Return:
             JsonArray
@@ -207,7 +207,7 @@ class SonarrAPI(RequestAPI):
         """Return all series in your collection or
         the series with the matching ID if one is found
         Args:
-            Optional - seriesID
+            [Optional] seriesID
 
         Returns:
             Json Array
@@ -234,14 +234,14 @@ class SonarrAPI(RequestAPI):
         """Add a new series to your collection
 
         Args:
-            Required - tvdbID (int)
-            Required - qualityProfileId (int)
-            Required - rootDir (string)
-            Optional - seasonFolder (boolean)
-            Optional - monitored (boolean)
-            Optional - ignoreEpisodesWithFiles (boolean)
-            Optional - ignoreEpisodesWithoutFiles (boolean)
-            Optional - searchForMissingEpisodes (boolean)
+            [Required] tvdbID (int)
+            [Required] qualityProfileId (int)
+            [Required] rootDir (string)
+            [Optional] seasonFolder (boolean)
+            [Optional] monitored (boolean)
+            [Optional] ignoreEpisodesWithFiles (boolean)
+            [Optional] ignoreEpisodesWithoutFiles (boolean)
+            [Optional] searchForMissingEpisodes (boolean)
         Returns:
             json response
 
@@ -304,8 +304,8 @@ class SonarrAPI(RequestAPI):
         Optionally blacklist item after deletion.
 
         Args:
-            Required - id (int)
-            Optional - blacklist (bool)
+            [Required] id (int)
+            [Optional] blacklist (bool)
         Returns:
             json response
         """
@@ -325,10 +325,10 @@ class SonarrAPI(RequestAPI):
         """Gets Wanted / Missing episodes
 
         Args:
-            Required - sortKey (string) - series.title or airDateUtc (default)
-            Optional - page (int) - 1-indexed Default: 1
-            Optional - pageSize (int) - Default: 10
-            Optional - sortDir (string) - asc or desc - Default: asc
+            [Required] sortKey (string) - series.title or airDateUtc (default)
+            [Optional] page (int) - 1-indexed Default: 1
+            [Optional] pageSize (int) - Default: 10
+            [Optional] sortDir (string) - asc or desc - Default: asc
         Returns:
             json response
         """
@@ -344,11 +344,11 @@ class SonarrAPI(RequestAPI):
         """Gets history (grabs/failures/completed)
 
         Args:
-            Required - sortKey (string) - series.title or date (default)
-            Optional - page (int) - 1-indexed
-            Optional - pageSize (int) - Default: 0
-            Optional - sortDir (string) - asc or desc - Default: asc
-            Optional - episodeId (int) - Filters to a specific episode ID
+            [Required] sortKey (string) - series.title or date (default)
+            [Optional] page (int) - 1-indexed
+            [Optional] pageSize (int) - Default: 0
+            [Optional] sortDir (string) - asc or desc - Default: asc
+            [Optional] episodeId (int) - Filters to a specific episode ID
         Returns:
             json response
         """
@@ -363,14 +363,14 @@ class SonarrAPI(RequestAPI):
     def get_logs(self, **kwargs):
         """Gets Sonarr Logs
 
-        Kwargs;
-            Required - None
-            Optional - page (int) - Page number - Default: 1.
-            optional - pageSize (int) - Records per page - Default: 10.
-            optional - sortKey (str) - What key to sort on - Default: 'time'.
-            optional - sortDir (str) - asc or desc - Default: desc.
-            optional - filterKey (str) - What key to filter - Default: None.
-            optional - filterValue (str) - Warn, Info, Error - Default: All.
+        Kwargs:
+            [Required] None
+            [Optional] page (int) - Page number - Default: 1.
+            [Optional] pageSize (int) - Records per page - Default: 10.
+            [Optional] sortKey (str) - What key to sort on - Default: 'time'.
+            [Optional] sortDir (str) - asc or desc - Default: desc.
+            [Optional] filterKey (str) - What key to filter - Default: None.
+            [Optional] filterValue (str) - Warn, Info, Error - Default: All.
 
         Returns:
             Json Array

@@ -12,11 +12,11 @@ class RadarrAPIv3(RequestAPI):
         """Searches for movie on tmdb and returns Movie json to add
 
         Args:
-            Required - dbID, <imdb or tmdb id>
-            Required - qualityProfileId (int)
-            Required - rootDir (string)
-            Optional - monitored (boolean)
-            Optional - searchForMovie (boolean)
+            [Required] dbID, <imdb or tmdb id>
+            [Required] qualityProfileId (int)
+            [Required] rootDir (string)
+            [Optional] monitored (boolean)
+            [Optional] searchForMovie (boolean)
 
         Return:
             JsonArray
@@ -47,7 +47,7 @@ class RadarrAPIv3(RequestAPI):
         """get_movie returns all movies in collection.
 
         Args:
-            Optional - tmdbid - TMDb id of the movie to get
+            [Optional] tmdbid - TMDb id of the movie to get
         Returns:
             json response
 
@@ -66,12 +66,12 @@ class RadarrAPIv3(RequestAPI):
         """addMovie adds a new movie to collection
 
         Args:
-            Required - dbId (string)
-            Required - qualityProfileId (int)
-            Required - rootDir (string)
-            Optional - monitored (bool)
-            Optional - searchForMovie (bool)
-            Optional - tmdb (bool): Set to false to use imdb IDs
+            [Required] dbId (string)
+            [Required] qualityProfileId (int)
+            [Required] rootDir (string)
+            [Optional] monitored (bool)
+            [Optional] searchForMovie (bool)
+            [Optional] tmdb (bool): Set to false to use imdb IDs
         Returns:
             json response
 
@@ -107,9 +107,9 @@ class RadarrAPIv3(RequestAPI):
     def del_movie(self, movieId, delFiles=False, addExclusion=False):
         """Delete a single movie by database id
         Args:
-            Required - movieId (int)
-            Optional - delFiles (bool)
-            Optional - addExclusion (bool)
+            [Required] movieId (int)
+            [Optional] delFiles (bool)
+            [Optional] addExclusion (bool)
         Returns:
             json response
 
@@ -156,7 +156,7 @@ class RadarrAPIv3(RequestAPI):
     def del_movie_file(self, movieId):
         """Allows for deletion of a moviefile by its database id.
         Args:
-            Required - movieId (int)
+            [Required] movieId (int)
         Returns:
             json response
 
@@ -174,10 +174,10 @@ class RadarrAPIv3(RequestAPI):
         """Return a json object list of items in your history
 
         Args:
-            Required - page (int) - Default: 1
-            Required - pageSize (int) - Default: 20
-            Required - sortKey (string) - Default: date
-            Required - sortDir (string) - Default: descending
+            [Required] page (int) - Default: 1
+            [Required] pageSize (int) - Default: 20
+            [Required] sortKey (string) - Default: date
+            [Required] sortDir (string) - Default: descending
         Returns:
             json response
         """
@@ -190,8 +190,8 @@ class RadarrAPIv3(RequestAPI):
         """Return a json object list of items in your history
 
         Args:
-            Required - movieId (int) (Database id of movie)
-            Optional - eventType (int) (History event type to retrieve)
+            [Required] movieId (int) (Database id of movie)
+            [Optional] eventType (int) (History event type to retrieve)
         Returns:
             json response
         """
@@ -239,7 +239,7 @@ class RadarrAPIv3(RequestAPI):
         """Get all indexers or a single indexer by its database id
 
         Args:
-            Optional - id_ (int)
+            [Optional] id_ (int)
         Returns:
             json response
         """
@@ -264,7 +264,7 @@ class RadarrAPIv3(RequestAPI):
         """Delete and indexer
 
         Args:
-            Required - id_ (int)
+            [Required] id_ (int)
         Returns:
             json response
         """
@@ -279,7 +279,7 @@ class RadarrAPIv3(RequestAPI):
         """Get all download clients or a single download client by its database id
 
         Args:
-            Optional - id_ (int)
+            [Optional] id_ (int)
         Returns:
             json response
         """
@@ -304,7 +304,7 @@ class RadarrAPIv3(RequestAPI):
         """Delete an downloadclient
 
         Args:
-            Required - id_ (int)
+            [Required] id_ (int)
         Returns:
             json response
         """
@@ -319,7 +319,7 @@ class RadarrAPIv3(RequestAPI):
         """Get all import lists or a single import list by its database id
 
         Args:
-            Optional - id_ (int)
+            [Optional] id_ (int)
         Returns:
             json response
         """
@@ -344,7 +344,7 @@ class RadarrAPIv3(RequestAPI):
         """Delete an importlist
 
         Args:
-            Required - id_ (int)
+            [Required] id_ (int)
         Returns:
             json response
         """
@@ -359,7 +359,7 @@ class RadarrAPIv3(RequestAPI):
         """Get all notifications or a single notification by its database id
 
         Args:
-            Optional - id_ (int)
+            [Optional] id_ (int)
         Returns:
             json response
         """
@@ -384,7 +384,7 @@ class RadarrAPIv3(RequestAPI):
         """Delete a notification
 
         Args:
-            Required - id_ (int)
+            [Required] id_ (int)
         Returns:
             json response
         """
@@ -498,7 +498,7 @@ class RadarrAPIv3(RequestAPI):
         """Performs any of the predetermined Radarr command routines.
 
         Kwargs:
-            Required - name (string).
+            [Required] name (string).
 
             Options available:
                 - ApplicationUpdate - Trigger an update of Radarr
@@ -554,8 +554,8 @@ class RadarrAPIv3(RequestAPI):
         If start and end are not provided, retrieves movies airing today and tomorrow.
 
          args:
-            Required - unmonitored (bool)
-            Optional -
+            [Required] unmonitored (bool)
+            [Optional]
                 - start_date (datetime ISO 8601):
                 - end_date (datetime ISO 8601):
 
