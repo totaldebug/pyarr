@@ -680,34 +680,22 @@ class RadarrAPI(RequestAPI):
     ## COMMAND
 
     # POST /command
-    def post_command(self, name, value=None):
+    def post_command(self, name, **kwargs):
         """Performs any of the predetermined Radarr command routines.
 
+        Args:
+            [Required] name (dict).
         Kwargs:
-            [Required] name (str).
-            [Optional] value (str): If the command requires a value, specify it here.
-
-            Options available:
-                - ApplicationUpdate - Trigger an update of Radarr
-                - Backup - Trigger a backup routine
-                - CheckHealth - Trigger a system health check
-                - ClearBlacklist - Triggers the removal of all blacklisted movies
-                - CleanUpRecycleBin - Trigger a recycle bin cleanup check
-                - DeleteLogFiles - Triggers the removal of all Info/Debug/Trace log files
-                - DeleteUpdateLogFiles - Triggers the removal of all Update log files
-                - DownloadedMoviesScan - Triggers the scan of downloaded movies
-                - MissingMoviesSearch - Triggers a search of all missing movies
-                - RefreshMonitoredDownloads - Triggers the scan of monitored downloads
-                - RefreshMovie - Trigger a refresh / scan of library
-                    - movieIds:int[] - a list of ids (comma separated) for movies to refresh
-
-            See https://radarr.video/docs/api/#/Command/post-command
+            For command names and additional kwargs:
+            https://radarr.video/docs/api/#/Command/post-command
         Returns:
-        json response
-
+            json response
         """
+        data = {
+            **kwargs,
+            "name": name,
+        }
         path = "/api/v3/command"
-        data = {name: value}
         res = self.request_post(path, data=data)
         return res
 
