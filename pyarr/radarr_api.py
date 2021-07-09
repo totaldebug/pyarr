@@ -47,7 +47,7 @@ class RadarrAPI(RequestAPI):
         Args:
             [Optional] tmdbId (int)
         Returns:
-            json response
+            JSON Response
         """
         path = "/api/v3/movie"
         res = self.request_get(path, params=kwargs)
@@ -73,7 +73,7 @@ class RadarrAPI(RequestAPI):
             [Optional] search_for_movie (bool)
             [Optional] tmdb (bool) - Set to false to use imdb IDs
         Returns:
-            json response
+            JSON Response
         """
         if tmdb:
             term = f"tmdb:{str(db_id)}"
@@ -97,7 +97,7 @@ class RadarrAPI(RequestAPI):
         Kwargs:
             [Optional] move_files (bool) - Have radarr move files when updating
         Returns:
-            json response
+            JSON Response
         """
 
         path = "/api/movie"
@@ -112,7 +112,7 @@ class RadarrAPI(RequestAPI):
         Args:
             [Optional] id_ (int)
         Returns:
-            json response
+            JSON Response
         """
         path = f"/api/v3/movie/{id_}"
         res = self.request_get(path)
@@ -126,7 +126,7 @@ class RadarrAPI(RequestAPI):
             [Optional] del_files (bool)
             [Optional] add_exclusion (bool)
         Returns:
-            json response
+            JSON Response
         """
         params = {"deleteFiles": del_files, "addExclusion": add_exclusion}
         path = f"/api/v3/movie/{id_}"
@@ -140,7 +140,7 @@ class RadarrAPI(RequestAPI):
         Args:
             [Required] term (str) - Uses TMDB for search results
         Returns:
-            json response
+            JSON Response
         """
         params = {"term": term}
         path = "/api/v3/movie/lookup"
@@ -154,7 +154,7 @@ class RadarrAPI(RequestAPI):
         Args:
             [Required] term (str) - Uses TMDB for search results
         Returns:
-            json response
+            JSON Response
         """
         params = {"term": f"tmdb:{id_}"}
         path = "/api/v3/movie/lookup"
@@ -168,7 +168,7 @@ class RadarrAPI(RequestAPI):
         Args:
             [Required] data (dict)
         Returns:
-            json response
+            JSON Response
         """
         path = "/api/v3/movie/editor"
         res = self.request_put(path, data=data)
@@ -181,7 +181,7 @@ class RadarrAPI(RequestAPI):
         Args:
             [Required] data (dict)
         Returns:
-            json response
+            JSON Response
         """
         path = "/api/v3/movie/editor"
         res = self.request_del(path, data=data)
@@ -194,7 +194,7 @@ class RadarrAPI(RequestAPI):
         Args:
             [Required] data (dict)
         Returns:
-            json response
+            JSON Response
         """
         path = "/api/v3/movie/import"
         res = self.request_post(path, data=data)
@@ -209,7 +209,7 @@ class RadarrAPI(RequestAPI):
         Args:
             [Required] id_ (int)
         Returns:
-            json response
+            JSON Response
         """
         params = {"movieid": id_}
         path = "/api/v3/moviefile"
@@ -223,7 +223,7 @@ class RadarrAPI(RequestAPI):
         Args:
             [Required] moviefile_ids (array:int)
         Returns:
-            json response
+            JSON Response
         """
         params = {"moviefileids": moviefile_ids}
         path = "/api/v3/moviefile"
@@ -237,7 +237,7 @@ class RadarrAPI(RequestAPI):
         Args:
             [Required] id_ (int)
         Returns:
-            json response
+            JSON Response
         """
         path = f"/api/v3/moviefile/{id_}"
         res = self.request_get(path)
@@ -249,7 +249,7 @@ class RadarrAPI(RequestAPI):
         Args:
             [Required] id_ (int)
         Returns:
-            json response
+            JSON Response
         """
         path = f"/api/v3/movie/{id_}"
         res = self.request_del(path)
@@ -269,7 +269,7 @@ class RadarrAPI(RequestAPI):
             [Optional] sort_direction (str) - Default: descending
             [Optional] sort_key (str) - Default: date
         Returns:
-            json response
+            JSON Response
         """
         params = {
             "page": page,
@@ -289,7 +289,7 @@ class RadarrAPI(RequestAPI):
             [Required] id_ (int) - Database ID of movie
             [Optional] event_type (int) - History event type to retrieve
         Returns:
-            json response
+            JSON Response
         """
         params = {"movieId": id_}
         if event_type:
@@ -315,7 +315,7 @@ class RadarrAPI(RequestAPI):
             [Optional] sort_direction (str) - Default: descending
             [Optional] sort_key (str) - Default: date
         Returns:
-            json response
+            JSON Response
         """
         params = {
             "page": page,
@@ -333,7 +333,7 @@ class RadarrAPI(RequestAPI):
         Args:
             [Required] id_ (int)
         Returns:
-            json response
+            JSON Response
         """
         params = {"id": id_}
         path = "/api/v3/blacklist"
@@ -349,7 +349,7 @@ class RadarrAPI(RequestAPI):
         Args:
             [Required] id_ (int)
         Returns:
-            json response
+            JSON Response
         """
         params = {"movieId": id_}
         path = "/api/v3/blacklist/movie"
@@ -362,7 +362,7 @@ class RadarrAPI(RequestAPI):
         Args:
             [Required] data (dict)
         Returns:
-            json response
+            JSON Response
         """
         path = "/api/v3/blacklist/movie"
         res = self.request_del(path, data=data)
@@ -387,7 +387,7 @@ class RadarrAPI(RequestAPI):
             [Optional] sort_key (str) - Default: timeLeft
             [Optional] include_unknown_movie_items (bool) - Default: True
         Returns:
-            json response
+            JSON Response
         """
         params = {
             "page": page,
@@ -408,7 +408,7 @@ class RadarrAPI(RequestAPI):
             [Optional] remove_from_client (bool)
             [Optional] blacklist (bool)
         Returns:
-            json response
+            JSON Response
         """
         params = {"removeFromClient": remove_from_client, "blacklist": blacklist}
         path = f"/api/v3/queue/{id_}"
@@ -423,7 +423,7 @@ class RadarrAPI(RequestAPI):
             [Optional] remove_from_client (bool)
             [Optional] blacklist (bool)
         Returns:
-            json response
+            JSON Response
         """
         params = {"removeFromClient": remove_from_client, "blacklist": blacklist}
         path = "/api/v3/queue/bulk"
@@ -439,7 +439,7 @@ class RadarrAPI(RequestAPI):
         Args:
             [Optional] include_movie (bool) - Default: True
         Returns:
-            json response
+            JSON Response
         """
         params = {
             "includeMovie": include_movie,
@@ -454,7 +454,7 @@ class RadarrAPI(RequestAPI):
         Args:
             None
         Returns:
-            json response
+            JSON Response
         """
         path = "/api/v3/queue/status"
         res = self.request_get(path)
@@ -466,7 +466,7 @@ class RadarrAPI(RequestAPI):
         Args:
             [Required] id_ (int)
         Returns:
-            json response
+            JSON Response
         """
         path = f"/api/v3/queue/grab/{id_}"
         res = self.request_post(path)
@@ -481,7 +481,7 @@ class RadarrAPI(RequestAPI):
         Args:
             [Optional] id_ (int)
         Returns:
-            json response
+            JSON Response
         """
         if not id_:
             path = "/api/v3/indexer"
@@ -499,7 +499,7 @@ class RadarrAPI(RequestAPI):
             [Required] id_ (int)
             [Required] data (dict)
         Returns:
-            json response
+            JSON Response
         """
         path = f"/api/v3/indexer/{id_}"
         res = path.request_put(path, data=data)
@@ -512,7 +512,7 @@ class RadarrAPI(RequestAPI):
         Args:
             [Required] id_ (int)
         Returns:
-            json response
+            JSON Response
         """
         path = f"/api/v3/indexer/{id_}"
         res = self.request_del(path)
@@ -527,7 +527,7 @@ class RadarrAPI(RequestAPI):
         Args:
             [Optional] id_ (int)
         Returns:
-            json response
+            JSON Response
         """
         if not id_:
             path = "/api/v3/downloadclient"
@@ -545,7 +545,7 @@ class RadarrAPI(RequestAPI):
             [Required] id_ (int)
             [Required] data (dict)
         Returns:
-            json response
+            JSON Response
         """
         path = f"/api/v3/downloadclient/{id_}"
         res = path.request_put(path, data=data)
@@ -558,7 +558,7 @@ class RadarrAPI(RequestAPI):
         Args:
             [Required] id_ (int)
         Returns:
-            json response
+            JSON Response
         """
         path = f"/api/v3/downloadclient/{id_}"
         res = self.request_del(path)
@@ -573,7 +573,7 @@ class RadarrAPI(RequestAPI):
         Args:
             [Optional] id_ (int)
         Returns:
-            json response
+            JSON Response
         """
         if not id_:
             path = "/api/v3/importlist"
@@ -591,7 +591,7 @@ class RadarrAPI(RequestAPI):
             [Required] id_ (int)
             [Required] data (dict)
         Returns:
-            json response
+            JSON Response
         """
         path = f"/api/v3/importlist/{id_}"
         res = path.request_put(path, data=data)
@@ -604,7 +604,7 @@ class RadarrAPI(RequestAPI):
         Args:
             [Required] id_ (int)
         Returns:
-            json response
+            JSON Response
         """
         path = f"/api/v3/importlist/{id_}"
         res = self.request_del(path)
@@ -619,7 +619,7 @@ class RadarrAPI(RequestAPI):
         Args:
             [Optional] id_ (int)
         Returns:
-            json response
+            JSON Response
         """
         if not id_:
             path = "/api/v3/notification"
@@ -637,7 +637,7 @@ class RadarrAPI(RequestAPI):
             [Required] id_ (int)
             [Required] data (dict)
         Returns:
-            json response
+            JSON Response
         """
         path = f"/api/v3/notification/{id_}"
         res = path.request_put(path, data=data)
@@ -650,7 +650,7 @@ class RadarrAPI(RequestAPI):
         Args:
             [Required] id_ (int)
         Returns:
-            json response
+            JSON Response
         """
         path = f"/api/v3/notification/{id_}"
         res = self.request_del(path)
@@ -665,7 +665,7 @@ class RadarrAPI(RequestAPI):
         Args:
             [Optional] id_ (int)
         Returns:
-            json response
+            JSON Response
         """
         if not id_:
             path = "/api/v3/tag"
@@ -683,7 +683,7 @@ class RadarrAPI(RequestAPI):
             [Required] id_ (int)
             [Required] label (str)
         Returns:
-            json response
+            JSON Response
         """
         data = {"id": id_, "label": label}
         path = "/api/v3/tag"
@@ -698,7 +698,7 @@ class RadarrAPI(RequestAPI):
             [Required] id_ (int)
             [Required] label (str)
         Returns:
-            json response
+            JSON Response
         """
         data = {"id": id_, "label": label}
         path = f"/api/v3/tag/{id_}"
@@ -712,7 +712,7 @@ class RadarrAPI(RequestAPI):
         Args:
             [Required] id_ (int)
         Returns:
-            json response
+            JSON Response
         """
         path = f"/api/v3/tag/{id_}"
         res = self.request_del(path)
@@ -726,7 +726,7 @@ class RadarrAPI(RequestAPI):
         Args:
             [Optional] id_ (int)
         Returns:
-            json response
+            JSON Response
         """
         if not id_:
             path = "/api/v3/tag/detail"
@@ -745,7 +745,7 @@ class RadarrAPI(RequestAPI):
         Args:
             None
         Returns:
-            json response
+            JSON Response
         """
         path = "/api/v3/diskspace"
         res = self.request_get(path)
@@ -760,7 +760,7 @@ class RadarrAPI(RequestAPI):
         Args:
             None
         Returns:
-            json response
+            JSON Response
         """
         path = "/api/v3/config/ui"
         res = self.request_get(path)
@@ -773,7 +773,7 @@ class RadarrAPI(RequestAPI):
         Args:
             [Required] data (dict)
         Returns:
-            json response
+            JSON Response
         """
         path = "/api/v3/config/ui"
         res = self.request_put(path, data=data)
@@ -786,7 +786,7 @@ class RadarrAPI(RequestAPI):
         Args:
             None
         Returns:
-            json response
+            JSON Response
         """
         path = "/api/v3/config/host"
         res = self.request_get(path)
@@ -799,7 +799,7 @@ class RadarrAPI(RequestAPI):
         Args:
             [Required] data (dict)
         Returns:
-            json response
+            JSON Response
         """
         path = "/api/v3/config/host"
         res = self.request_put(path, data=data)
@@ -812,7 +812,7 @@ class RadarrAPI(RequestAPI):
         Args:
             None
         Returns:
-            json response
+            JSON Response
         """
         path = "/api/v3/config/naming"
         res = self.request_get(path)
@@ -825,7 +825,7 @@ class RadarrAPI(RequestAPI):
         Args:
             [Required] data (dict)
         Returns:
-            json response
+            JSON Response
         """
         path = "/api/v3/config/naming"
         res = self.request_put(path, data=data)
@@ -840,7 +840,7 @@ class RadarrAPI(RequestAPI):
         Args:
             None
         Returns:
-            json response
+            JSON Response
         """
         path = "/api/v3/metadata"
         res = self.request_get(path)
@@ -855,7 +855,7 @@ class RadarrAPI(RequestAPI):
         Args:
             None
         Returns:
-            json response
+            JSON Response
         """
         path = "/api/v3/system/status"
         res = self.request_get(path)
@@ -870,7 +870,7 @@ class RadarrAPI(RequestAPI):
         Args:
             None
         Returns:
-            json response
+            JSON Response
         """
         path = "/api/v3/health"
         res = self.request_get(path)
@@ -888,7 +888,7 @@ class RadarrAPI(RequestAPI):
             For command names and additional kwargs:
             https://radarr.video/docs/api/#/Command/post-command
         Returns:
-            json response
+            JSON Response
         """
         data = {
             **kwargs,
@@ -907,7 +907,7 @@ class RadarrAPI(RequestAPI):
         Args:
             None
         Returns:
-            json response
+            JSON Response
         """
         path = "/api/v3/update"
         res = self.request_get(path)
@@ -922,7 +922,7 @@ class RadarrAPI(RequestAPI):
         Args:
             None
         Returns:
-            json response
+            JSON Response
         """
         path = "/api/v3/qualityProfile"
         res = self.request_get(path)
@@ -939,9 +939,8 @@ class RadarrAPI(RequestAPI):
                 - start_date (datetime) - ISO 8601
                 - end_date (datetime) - ISO 8601
             [Optional] unmonitored (bool)
-
         Returns:
-            json response
+            JSON Response
         """
         params = {
             "start": start_date.strftime("%Y-%m-%d"),
@@ -961,7 +960,7 @@ class RadarrAPI(RequestAPI):
         Args:
             None
         Returns:
-            json response
+            JSON Response
         """
         path = "/api/v3/customfilter"
         res = self.request_get(path)
@@ -976,7 +975,7 @@ class RadarrAPI(RequestAPI):
         Args:
             None
         Returns:
-            json response
+            JSON Response
         """
         path = "/api/v3/remotePathMapping"
         res = self.request_get(path)
@@ -991,7 +990,7 @@ class RadarrAPI(RequestAPI):
         Args:
             None
         Returns:
-            json response
+            JSON Response
         """
         path = "/api/v3/rootfolder"
         res = self.request_get(path)

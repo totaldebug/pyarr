@@ -40,7 +40,6 @@ class RequestAPI:
             path (str) - Path to API. E.g. /api/manualimport
             params (dict) - URL Parameters to send with the request
             data (dict) - Payload to send with request.
-
         Returns:
             requests.models.Response: Response object form requests.
         """
@@ -58,7 +57,6 @@ class RequestAPI:
             path (str) - Path to API. E.g. /api/manualimport
             params (dict) - URL Parameters to send with the request
             data (dict) - Payload to send with request.
-
         Returns:
             requests.models.Response: Response object form requests.
         """
@@ -76,7 +74,6 @@ class RequestAPI:
             path (str) - Path to API. E.g. /api/manualimport
             params (dict) - URL Parameters to send with the request
             data (dict) - Payload to send with request.
-
         Returns:
             requests.models.Response: Response object form requests.
         """
@@ -94,7 +91,6 @@ class RequestAPI:
             path (str) - Path to API. E.g. /api/manualimport
             params (dict) - URL Parameters to send with the request
             data (dict) - Payload to send with request.
-
         Returns:
             requests.models.Response: Response object form requests.
         """
