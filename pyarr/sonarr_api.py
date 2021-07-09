@@ -109,6 +109,7 @@ class SonarrAPI(RequestAPI):
 
     def lookup_series(self, term):
         """Searches for new shows on tvdb
+
         Args:
             [Required] term (str)
         Returns:
@@ -121,6 +122,7 @@ class SonarrAPI(RequestAPI):
 
     def lookup_series_by_tvdb_id(self, id_):
         """Searches for new shows on tvdb
+
         Args:
             [Required] id_ (int) - TVDB ID of a show
         Returns:
@@ -132,13 +134,25 @@ class SonarrAPI(RequestAPI):
         return res
 
     def get_root(self):
-        """Returns the Root Folder"""
+        """Returns the Root Folder
+
+        Args:
+            None
+        Returns:
+            JSON Response
+        """
         path = "/api/rootfolder"
         res = self.request_get(path)
         return res
 
     def get_quality_profiles(self):
-        """Gets all quality profiles"""
+        """Gets all quality profiles
+
+        Args:
+            None
+        Returns:
+            JSON Response
+        """
         path = "/api/profile"
         res = self.request_get(path)
         return res
@@ -262,7 +276,14 @@ class SonarrAPI(RequestAPI):
         return res
 
     def del_series(self, seriesId, delFiles=False):
-        """Delete the series with the given ID"""
+        """Delete the series with the given ID
+
+        Args:
+            seriesId (int)
+            delFiles (bool)
+        Returns:
+            JSON Response
+        """
         # File deletion does not work
         data = {"deleteFiles": delFiles}
         path = f"/api/series/{seriesId}"
@@ -270,13 +291,20 @@ class SonarrAPI(RequestAPI):
         return res
 
     def get_system_status(self):
-        """Returns the System Status as json"""
+        """Returns the System Status as json
+
+        Args:
+            None
+        Returns:
+            JSON Response
+        """
         path = "/api/system/status"
         res = self.request_get(path)
         return res
 
     def get_queue(self):
         """Gets current downloading info
+
         Args:
             None
         Returns:
@@ -362,7 +390,13 @@ class SonarrAPI(RequestAPI):
         return res
 
     def get_backup(self):
-        """Returns the backups as json"""
+        """Returns the backups as json
+
+        Args:
+            None
+        Returns:
+            JSON Response
+        """
         path = "/api/system/backup"
         res = self.request_get(path)
         return res
