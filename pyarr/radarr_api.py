@@ -400,11 +400,77 @@ class RadarrAPI(RequestAPI):
         res = self.request_get(path, params=params)
         return res
 
-    # TODO: DELETE /queue/{id}
-    # TODO: DELETE /queue/bulk
-    # TODO: GET /queue/details
-    # TODO: GET /queue/status
-    # TODO: POST /queue/grab/{id}
+    # DELETE /queue/{id}
+    def del_queue(self, id_, remove_from_client=True, blacklist=True):
+        """Remove an item from the queue and optionally blacklist it.
+        Args:
+            [Required] id_ (int)
+            [Optional] remove_from_client (bool)
+            [Optional] blacklist (bool)
+        Returns:
+            json response
+        """
+        params = {"removeFromClient": remove_from_client, "blacklist": blacklist}
+        path = f"/api/v3/queue/{id_}"
+        res = self.request_del(path, params=params)
+        return res
+
+    # DELETE /queue/bulk
+    def del_queue_bulk(self, data, remove_from_client=True, blacklist=True):
+        """Remove multiple items from queue by their ids.
+        Args:
+            [Required] data (dict)
+            [Optional] remove_from_client (bool)
+            [Optional] blacklist (bool)
+        Returns:
+            json response
+        """
+        params = {"removeFromClient": remove_from_client, "blacklist": blacklist}
+        path = "/api/v3/queue/bulk"
+        res = self.request_del(path, params=params, data=data)
+        return res
+
+    # GET /queue/details
+    def get_queue_details(
+        self,
+        include_movie=True,
+    ):
+        """Get details of all items in queue.
+        Args:
+            [Optional] include_movie (bool): Default: True
+        Returns:
+            json response
+        """
+        params = {
+            "includeMovie": include_movie,
+        }
+        path = "/api/v3/queue/details"
+        res = self.request_get(path, params=params)
+        return res
+
+    # GET /queue/status
+    def get_queue_status(self):
+        """Stats on items in queue.
+        Args:
+            None
+        Returns:
+            json response
+        """
+        path = "/api/v3/queue/status"
+        res = self.request_get(path)
+        return res
+
+    # POST /queue/grab/{id}
+    def force_grab_queue_item(self, id_):
+        """Force grab pending queue item by ID.
+        Args:
+            [Required] id_ (int)
+        Returns:
+            json response
+        """
+        path = f"/api/v3/queue/grab/{id_}"
+        res = self.request_post(path)
+        return res
 
     ## INDEXER
 
