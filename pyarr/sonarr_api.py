@@ -449,7 +449,7 @@ class SonarrAPI(RequestAPI):
             requests.models.Response: Response object form requests.
         """
         path = f"/api/episodefile/{id_}"
-        res = self.request_put(path)
+        res = self.request_put(path, data=data)
         return res
 
     # TODO: Test this
