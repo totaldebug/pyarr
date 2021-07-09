@@ -575,15 +575,67 @@ class SonarrAPI(RequestAPI):
         res = self.request_get(path)
         return res
 
-    ## TAGS
+    ## TAG
 
-    # TODO: GET /tag and /tag/{id}
+    # GET /tag and /tag/{id}
+    def get_tag(self, id_=None):
+        """Get all tags in the database, or return a given tag and its label by the database id.
 
-    # TODO: POST /tag
+        Args:
+            [Optional] id_ (int)
+        Returns:
+            JSON Response
+        """
+        if not id_:
+            path = "/api/tag"
+        else:
+            path = f"/api/tag/{id_}"
 
-    # TODO: PUT /tag
+        res = self.request_get(path)
+        return res
 
-    # TODO: DELETE /tag/{id}
+    # POST /tag
+    def create_tag(self, id_, label):
+        """Create a new tag that can be assigned to a movie, list, delay profile, notification, or restriction.
+
+        Args:
+            [Required] id_ (int)
+            [Required] label (str)
+        Returns:
+            JSON Response
+        """
+        data = {"id": id_, "label": label}
+        path = "/api/tag"
+        res = self.request_post(path, data=data)
+        return res
+
+    # PUT /tag/{id}
+    def upd_tag(self, id_, label):
+        """Edit a Tag by its database id.
+
+        Args:
+            [Required] id_ (int)
+            [Required] label (str)
+        Returns:
+            JSON Response
+        """
+        data = {"id": id_, "label": label}
+        path = f"/api/tag/{id_}"
+        res = self.request_put(path, data=data)
+        return res
+
+    # DELETE /tag/{id}
+    def del_tag(self, id_):
+        """Delete a tag.
+
+        Args:
+            [Required] id_ (int)
+        Returns:
+            JSON Response
+        """
+        path = f"/api/tag/{id_}"
+        res = self.request_del(path)
+        return res
 
     ## LOG
 
