@@ -452,23 +452,29 @@ class SonarrAPI(RequestAPI):
         res = self.request_put(path, data=data)
         return res
 
-    # TODO: Test this
-    def push_release(self, **kwargs):
+    # POST /release/push
+    def push_release(self, title, download_url, protocol, publish_date):
         """Notifies Sonarr of a new release.
         title: release name
         downloadUrl: .torrent file URL
         protocol: usenet / torrent
         publishDate: ISO8601 date string
 
-        Kwargs:
-            title (str):
-            downloadUrl (str):
-            protocol (str):
-            publishDate (str):
+        Args:
+            [Required] title (str)
+            [Required] download_url (str)
+            [Required] protocol (str) - "Usenet" or "Torrent"
+            [Required] publish_date (str)
 
         Returns:
             requests.models.Response: Response object form requests.
         """
+        params = {
+            "title": title,
+            "downloadUrl": download_url,
+            "protocol": protocol,
+            "publishDate": publish_date,
+        }
         path = "/api/release/push"
-        res = self.request_post(path, data=kwargs)
+        res = self.request_post(path, params=params)
         return res
