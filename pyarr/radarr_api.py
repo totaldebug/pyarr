@@ -901,7 +901,7 @@ class RadarrAPI(RequestAPI):
     ## UPDATE
 
     # GET /update
-    def get_update(self):
+    def get_updates(self):
         """Returns a list of recent updates to Radarr.
 
         Args:
