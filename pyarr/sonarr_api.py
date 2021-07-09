@@ -6,155 +6,6 @@ from .request_api import RequestAPI
 class SonarrAPI(RequestAPI):
     """API wrapper for Sonarr endpoints."""
 
-    def get_calendar(self, *args):
-        """Retrieves info about when series were/will be downloaded.
-        If no start and end, retrieves series airing today and tomorrow.
-
-        Args:
-            start_date:
-            end_date:
-        Returns:
-            JSON Response
-        """
-        path = "/api/calendar"
-        data = {}
-        if args:
-            start_date = args[0]
-            end_date = args[1]
-
-            startDate = datetime.strptime(start_date, "%Y-%m-%d").strftime("%Y-%m-%d")
-            data.update({"start": startDate})
-
-            endDate = datetime.strptime(end_date, "%Y-%m-%d").strftime("%Y-%m-%d")
-            data.update({"end": endDate})
-
-        res = self.request_get(path, **data)
-        return res
-
-    def get_command(self, *args):
-        """Queries the status of a previously
-        started command, or all currently started commands.
-
-        Args:
-            [Optional] id (int) Unique ID of command
-        Returns:
-            JSON Response
-        """
-        if len(args) == 1:
-            path = f"/api/command/{args[0]}"
-        else:
-            path = "/api/command"
-
-        res = self.request_get(path)
-        return res
-
-    def set_command(self, **kwargs):
-        """Performs any of the predetermined Sonarr command routines.
-
-        Kwargs:
-            [Required] name (str).
-
-            Options available: RefreshSeries, RescanSeries, EpisodeSearch,
-                SeasonSearch, SeriesSearch, DownloadedEpisodesScan, RssSync,
-                RenameFiles, RenameSeries, Backup, missingEpisodeSearch
-
-            Additional Parameters may be required or optional...
-            See https://github.com/Sonarr/Sonarr/wiki/Command
-        Returns:
-            JSON Response
-        """
-        path = "/api/command"
-
-        data = kwargs
-        res = self.request_post(path, data=data)
-        return res
-
-    def get_disk_space(self):
-        """Retrieves info about the disk space on the server.
-
-        Args:
-            None
-        Returns:
-            JSON Response
-        """
-        path = "/api/diskspace"
-        res = self.request_get(path)
-        return res
-
-    def get_episodes_by_series_id(self, seriesId):
-        """Returns all episodes for the given series
-
-        Args:
-            seriesId (int):
-        Returns:
-            JSON Response
-        """
-        path = f"/api/episode?seriesId={seriesId}"
-        res = self.request_get(path)
-        return res
-
-    def get_episode_by_episode_id(self, episodeId):
-        """Returns the episode with the matching id
-
-        Args:
-            episode_id (int):
-        Returns:
-            JSON Response
-        """
-        path = f"/api/episode/{episodeId}"
-        res = self.request_get(path)
-        return res
-
-    def lookup_series(self, term):
-        """Searches for new shows on tvdb
-
-        Args:
-            [Required] term (str)
-        Returns:
-            JSON Response
-        """
-        params = {"term": term}
-        path = "/api/series/lookup"
-        res = self.request_get(path, params=params)
-        return res
-
-    def lookup_series_by_tvdb_id(self, id_):
-        """Searches for new shows on tvdb
-
-        Args:
-            [Required] id_ (int) - TVDB ID of a show
-        Returns:
-            JSON Response
-        """
-        params = {"term": f"tvdb:{id_}"}
-        path = "/api/series/lookup"
-        res = self.request_get(path, params=params)
-        return res
-
-    def get_root(self):
-        """Returns the Root Folder
-
-        Args:
-            None
-        Returns:
-            JSON Response
-        """
-        path = "/api/rootfolder"
-        res = self.request_get(path)
-        return res
-
-    def get_quality_profiles(self):
-        """Gets all quality profiles
-
-        Args:
-            None
-        Returns:
-            JSON Response
-        """
-        path = "/api/profile"
-        res = self.request_get(path)
-        return res
-
     def construct_series_json(
         self,
         tvdbId,
@@ -204,201 +55,120 @@ class SonarrAPI(RequestAPI):
         }
         return series_json
 
-    def get_series(self, *args):
-        """Return all series in your collection or
-        the series with the matching ID if one is found
+    ## CALENDAR
+
+    # GET /calendar
+    def get_calendar(self, *args):
+        """Retrieves info about when series were/will be downloaded.
+        If no start and end, retrieves series airing today and tomorrow.
 
         Args:
-            [Optional] seriesID
+            start_date:
+            end_date:
+        Returns:
+            JSON Response
+        """
+        path = "/api/calendar"
+        data = {}
+        if args:
+            start_date = args[0]
+            end_date = args[1]
+
+            startDate = datetime.strptime(start_date, "%Y-%m-%d").strftime("%Y-%m-%d")
+            data.update({"start": startDate})
+
+            endDate = datetime.strptime(end_date, "%Y-%m-%d").strftime("%Y-%m-%d")
+            data.update({"end": endDate})
+
+        res = self.request_get(path, **data)
+        return res
+
+    ## COMMAND
+
+    # GET /command
+    def get_command(self, *args):
+        """Queries the status of a previously
+        started command, or all currently started commands.
+
+        Args:
+            [Optional] id (int) Unique ID of command
         Returns:
             JSON Response
         """
         if len(args) == 1:
-            path = f"/api/series/{args[0]}"
+            path = f"/api/command/{args[0]}"
         else:
-            path = "/api/series"
+            path = "/api/command"
 
         res = self.request_get(path)
         return res
 
-    def add_series(
-        self,
-        tvdbId,
-        qualityProfileId,
-        rootDir,
-        seasonFolder=True,
-        monitored=True,
-        ignoreEpisodesWithFiles=False,
-        ignoreEpisodesWithoutFiles=False,
-        searchForMissingEpisodes=False,
-    ):
-        """Add a new series to your collection
-
-        Args:
-            [Required] tvdbID (int)
-            [Required] qualityProfileId (int)
-            [Required] rootDir (str)
-            [Optional] seasonFolder (bool)
-            [Optional] monitored (bool)
-            [Optional] ignoreEpisodesWithFiles (bool)
-            [Optional] ignoreEpisodesWithoutFiles (bool)
-            [Optional] searchForMissingEpisodes (bool)
-        Returns:
-            JSON Response
-        """
-        series_json = self.construct_series_json(
-            tvdbId,
-            qualityProfileId,
-            rootDir,
-            seasonFolder,
-            monitored,
-            ignoreEpisodesWithFiles,
-            ignoreEpisodesWithoutFiles,
-            searchForMissingEpisodes,
-        )
-
-        path = "/api/series"
-        res = self.request_post(path, data=series_json)
-        return res
-
-    def upd_series(self, data):
-        """Update an existing series.
-
-        Args:
-            data (dictionary containing an object obtained by getSeries())
-        Returns:
-            JSON Response
-        """
-        path = "/api/series"
-        res = self.request_put(path, data=data)
-        return res
-
-    def del_series(self, seriesId, delFiles=False):
-        """Delete the series with the given ID
-
-        Args:
-            seriesId (int)
-            delFiles (bool)
-        Returns:
-            JSON Response
-        """
-        # File deletion does not work
-        data = {"deleteFiles": delFiles}
-        path = f"/api/series/{seriesId}"
-        res = self.request_del(path, data=data)
-        return res
-
-    def get_system_status(self):
-        """Returns the System Status as json
-
-        Args:
-            None
-        Returns:
-            JSON Response
-        """
-        path = "/api/system/status"
-        res = self.request_get(path)
-        return res
-
-    def get_queue(self):
-        """Gets current downloading info
-
-        Args:
-            None
-        Returns:
-            JSON Response
-        """
-        path = "/api/queue"
-        res = self.request_get(path)
-        return res
-
-    def del_queue(self, id_, blacklist=True):
-        """Deletes an item from the queue and download client.
-        Optionally blacklist item after deletion.
-
-        Args:
-            [Required] id_ (int)
-            [Optional] blacklist (bool) - Default: True
-        Returns:
-            JSON Response
-        """
-        params = {"id": id_, "blacklist": blacklist}
-        path = "/api/queue/"
-        res = self.request_del(path, params=params)
-        return res
-
-    def get_wanted(self, **kwargs):
-        """Gets Wanted / Missing episodes
-
-        Args:
-            [Required] sortKey (str) - series.title or airDateUtc (default)
-            [Optional] page (int) - 1-indexed Default: 1
-            [Optional] pageSize (int) - Default: 10
-            [Optional] sortDir (str) - asc or desc - Default: asc
-        Returns:
-            JSON Response
-        """
-        data = {}
-        data.update({"sortKey": kwargs.get("sortKey", "airDateUtc")})
-        for key, value in kwargs.items():
-            data.update({key: value})
-        path = "/api/wanted/missing"
-        res = self.request_get(path, **data)
-        return res
-
-    def get_history(self, **kwargs):
-        """Gets history (grabs/failures/completed)
-
-        Args:
-            [Required] sortKey (str) - series.title or date (default)
-            [Optional] page (int) - 1-indexed
-            [Optional] pageSize (int) - Default: 0
-            [Optional] sortDir (str) - asc or desc - Default: asc
-            [Optional] episodeId (int) - Filters to a specific episode ID
-        Returns:
-            JSON Response
-        """
-        data = {}
-        data.update({"sortKey": kwargs.get("sortKey", "date")})
-        for key, value in kwargs.items():
-            data.update({key: value})
-        path = "/api/history"
-        res = self.request_get(path, **data)
-        return res
-
-    def get_logs(self, **kwargs):
-        """Gets Sonarr Logs
+    # POST /command
+    def set_command(self, **kwargs):
+        """Performs any of the predetermined Sonarr command routines.
 
         Kwargs:
-            [Required] None
-            [Optional] page (int) - Page number - Default: 1.
-            [Optional] pageSize (int) - Records per page - Default: 10.
-            [Optional] sortKey (str) - What key to sort on - Default: 'time'.
-            [Optional] sortDir (str) - asc or desc - Default: desc.
-            [Optional] filterKey (str) - What key to filter - Default: None.
-            [Optional] filterValue (str) - Warn, Info, Error - Default: All.
+            [Required] name (str).
+
+            Options available: RefreshSeries, RescanSeries, EpisodeSearch,
+                SeasonSearch, SeriesSearch, DownloadedEpisodesScan, RssSync,
+                RenameFiles, RenameSeries, Backup, missingEpisodeSearch
+
+            Additional Parameters may be required or optional...
+            See https://github.com/Sonarr/Sonarr/wiki/Command
         Returns:
             JSON Response
         """
-        data = {}
-        for key, value in kwargs.items():
-            data.update({key: value})
-        path = "/api/log"
-        res = self.request_get(path, **data)
+        path = "/api/command"
+
+        data = kwargs
+        res = self.request_post(path, data=data)
         return res
 
-    def get_backup(self):
-        """Returns the backups as json
+    ## DISKSPACE
+
+    # GET /diskspace
+    def get_disk_space(self):
+        """Retrieves info about the disk space on the server.
 
         Args:
             None
         Returns:
             JSON Response
         """
-        path = "/api/system/backup"
+        path = "/api/diskspace"
         res = self.request_get(path)
         return res
 
+    ## EPISODE
+
+    # GET /episode
+    def get_episodes_by_series_id(self, seriesId):
+        """Returns all episodes for the given series
+
+        Args:
+            seriesId (int):
+        Returns:
+            JSON Response
+        """
+        path = f"/api/episode?seriesId={seriesId}"
+        res = self.request_get(path)
+        return res
+
+    # GET /episode/{id}
+    def get_episode_by_episode_id(self, episodeId):
+        """Returns the episode with the matching id
+
+        Args:
+            episode_id (int):
+        Returns:
+            JSON Response
+        """
+        path = f"/api/episode/{episodeId}"
+        res = self.request_get(path)
+        return res
+
+    # PUT /episode
     def upd_episode(self, data):
         """Update the given episodes, currently only monitored is changed, all
         other modifications are ignored. All parameters (you should perform a
@@ -413,6 +183,8 @@ class SonarrAPI(RequestAPI):
         path = "/api/episode"
         res = self.request_put(path, data=data)
         return res
+
+    ## EPISODE FILE
 
     # GET /episodefile
     def get_episode_files_by_series_id(self, id_):
@@ -469,6 +241,107 @@ class SonarrAPI(RequestAPI):
         res = self.request_put(path, data=data)
         return res
 
+    ## HISTORY
+
+    # GET /history
+    def get_history(self, **kwargs):
+        """Gets history (grabs/failures/completed)
+
+        Args:
+            [Required] sortKey (str) - series.title or date (default)
+            [Optional] page (int) - 1-indexed
+            [Optional] pageSize (int) - Default: 0
+            [Optional] sortDir (str) - asc or desc - Default: asc
+            [Optional] episodeId (int) - Filters to a specific episode ID
+        Returns:
+            JSON Response
+        """
+        data = {}
+        data.update({"sortKey": kwargs.get("sortKey", "date")})
+        for key, value in kwargs.items():
+            data.update({key: value})
+        path = "/api/history"
+        res = self.request_get(path, **data)
+        return res
+
+    ## WANTED (MISSING)
+
+    # GET /wanted/missing
+    def get_wanted(self, **kwargs):
+        """Gets Wanted / Missing episodes
+
+        Args:
+            [Required] sortKey (str) - series.title or airDateUtc (default)
+            [Optional] page (int) - 1-indexed Default: 1
+            [Optional] pageSize (int) - Default: 10
+            [Optional] sortDir (str) - asc or desc - Default: asc
+        Returns:
+            JSON Response
+        """
+        data = {}
+        data.update({"sortKey": kwargs.get("sortKey", "airDateUtc")})
+        for key, value in kwargs.items():
+            data.update({key: value})
+        path = "/api/wanted/missing"
+        res = self.request_get(path, **data)
+        return res
+
+    ## QUEUE
+
+    # GET /queue
+    def get_queue(self):
+        """Gets current downloading info
+
+        Args:
+            None
+        Returns:
+            JSON Response
+        """
+        path = "/api/queue"
+        res = self.request_get(path)
+        return res
+
+    # DELETE /queue
+    def del_queue(self, id_, blacklist=True):
+        """Deletes an item from the queue and download client.
+        Optionally blacklist item after deletion.
+
+        Args:
+            [Required] id_ (int)
+            [Optional] blacklist (bool) - Default: True
+        Returns:
+            JSON Response
+        """
+        params = {"id": id_, "blacklist": blacklist}
+        path = "/api/queue/"
+        res = self.request_del(path, params=params)
+        return res
+
+    ## PARSE
+
+    # TODO: GET /parse
+
+    ## PROFILE
+
+    # GET /profile
+    def get_quality_profiles(self):
+        """Gets all quality profiles
+
+        Args:
+            None
+        Returns:
+            JSON Response
+        """
+        path = "/api/profile"
+        res = self.request_get(path)
+        return res
+
+    ## RELEASE
+
+    # TODO: GET /release
+
+    # TODO: POST /reease
+
     # POST /release/push
     def push_release(self, title, download_url, protocol, publish_date):
         """Notifies Sonarr of a new release.
@@ -493,4 +366,198 @@ class SonarrAPI(RequestAPI):
         }
         path = "/api/release/push"
         res = self.request_post(path, params=params)
+        return res
+
+    ## ROOT FOLDER
+
+    # GET /rootfolder
+    def get_root_folder(self):
+        """Returns the Root Folder
+
+        Args:
+            None
+        Returns:
+            JSON Response
+        """
+        path = "/api/rootfolder"
+        res = self.request_get(path)
+        return res
+
+    ## SERIES
+    # GET /series and /series/{id}
+    def get_series(self, *args):
+        """Return all series in your collection or
+        the series with the matching ID if one is found
+
+        Args:
+            [Optional] seriesID
+        Returns:
+            JSON Response
+        """
+        if len(args) == 1:
+            path = f"/api/series/{args[0]}"
+        else:
+            path = "/api/series"
+
+        res = self.request_get(path)
+        return res
+
+    # POST /series
+    def add_series(
+        self,
+        tvdbId,
+        qualityProfileId,
+        rootDir,
+        seasonFolder=True,
+        monitored=True,
+        ignoreEpisodesWithFiles=False,
+        ignoreEpisodesWithoutFiles=False,
+        searchForMissingEpisodes=False,
+    ):
+        """Add a new series to your collection
+
+        Args:
+            [Required] tvdbID (int)
+            [Required] qualityProfileId (int)
+            [Required] rootDir (str)
+            [Optional] seasonFolder (bool)
+            [Optional] monitored (bool)
+            [Optional] ignoreEpisodesWithFiles (bool)
+            [Optional] ignoreEpisodesWithoutFiles (bool)
+            [Optional] searchForMissingEpisodes (bool)
+        Returns:
+            JSON Response
+        """
+        series_json = self.construct_series_json(
+            tvdbId,
+            qualityProfileId,
+            rootDir,
+            seasonFolder,
+            monitored,
+            ignoreEpisodesWithFiles,
+            ignoreEpisodesWithoutFiles,
+            searchForMissingEpisodes,
+        )
+
+        path = "/api/series"
+        res = self.request_post(path, data=series_json)
+        return res
+
+    # PUT /series
+    def upd_series(self, data):
+        """Update an existing series.
+
+        Args:
+            data (dictionary containing an object obtained by getSeries())
+        Returns:
+            JSON Response
+        """
+        path = "/api/series"
+        res = self.request_put(path, data=data)
+        return res
+
+    # DELETE /series/{id}
+    def del_series(self, seriesId, delFiles=False):
+        """Delete the series with the given ID
+
+        Args:
+            seriesId (int)
+            delFiles (bool)
+        Returns:
+            JSON Response
+        """
+        # File deletion does not work
+        data = {"deleteFiles": delFiles}
+        path = f"/api/series/{seriesId}"
+        res = self.request_del(path, data=data)
+        return res
+
+    # GET /series/lookup
+    def lookup_series(self, term):
+        """Searches for new shows on tvdb
+
+        Args:
+            [Required] term (str)
+        Returns:
+            JSON Response
+        """
+        params = {"term": term}
+        path = "/api/series/lookup"
+        res = self.request_get(path, params=params)
+        return res
+
+    # GET /series/lookup
+    def lookup_series_by_tvdb_id(self, id_):
+        """Searches for new shows on tvdb
+
+        Args:
+            [Required] id_ (int) - TVDB ID of a show
+        Returns:
+            JSON Response
+        """
+        params = {"term": f"tvdb:{id_}"}
+        path = "/api/series/lookup"
+        res = self.request_get(path, params=params)
+        return res
+
+    ## SYSTEM
+
+    # GET /system/status
+    def get_system_status(self):
+        """Returns the System Status as json
+
+        Args:
+            None
+        Returns:
+            JSON Response
+        """
+        path = "/api/system/status"
+        res = self.request_get(path)
+        return res
+
+    # GET /system/backup
+    def get_backup(self):
+        """Returns the backups as json
+
+        Args:
+            None
+        Returns:
+            JSON Response
+        """
+        path = "/api/system/backup"
+        res = self.request_get(path)
+        return res
+
+    ## TAGS
+
+    # TODO: GET /tag and /tag/{id}
+
+    # TODO: POST /tag
+
+    # TODO: PUT /tag
+
+    # TODO: DELETE /tag/{id}
+
+    ## LOG
+
+    # GET /log
+    def get_logs(self, **kwargs):
+        """Gets Sonarr Logs
+
+        Kwargs:
+            [Required] None
+            [Optional] page (int) - Page number - Default: 1.
+            [Optional] pageSize (int) - Records per page - Default: 10.
+            [Optional] sortKey (str) - What key to sort on - Default: 'time'.
+            [Optional] sortDir (str) - asc or desc - Default: desc.
+            [Optional] filterKey (str) - What key to filter - Default: None.
+            [Optional] filterValue (str) - Warn, Info, Error - Default: All.
+        Returns:
+            JSON Response
+        """
+        data = {}
+        for key, value in kwargs.items():
+            data.update({key: value})
+        path = "/api/log"
+        res = self.request_get(path, **data)
         return res
