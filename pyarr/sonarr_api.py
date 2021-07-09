@@ -364,23 +364,44 @@ class SonarrAPI(RequestAPI):
 
     ## RELEASE
 
-    # TODO: GET /release
+    # GET /release
+    def get_releases(self, id_):
+        """Get a release with a specific episode ID.
 
-    # TODO: POST /reease
+        Args:
+            [Required] id_ (str)
+        Returns:
+            JSON Response
+        """
+        params = {"episodeId": id_}
+        path = "/api/release"
+        res = self.request_get(path, params=params)
+        return res
+
+    # POST /release
+    def download_release(self, guid, indexer_id):
+        """Sends a release with a specific episode ID to the download client.
+
+        Args:
+            [Required] guid (str)
+            [Required] indexerId (int)
+        Returns:
+            JSON Response
+        """
+        params = {"guid": guid, "indexerId": indexer_id}
+        path = "/api/release"
+        res = self.request_post(path, params=params)
+        return res
 
     # POST /release/push
     def push_release(self, title, download_url, protocol, publish_date):
         """Notifies Sonarr of a new release.
-        title: release name
-        downloadUrl: .torrent file URL
-        protocol: usenet / torrent
-        publishDate: ISO8601 date string
 
         Args:
-            [Required] title (str)
-            [Required] download_url (str)
+            [Required] title (str) - Release name
+            [Required] download_url (str) - .torrent file URL
             [Required] protocol (str) - "Usenet" or "Torrent"
-            [Required] publish_date (str)
+            [Required] publish_date (str) - ISO8601 date string
         Returns:
             JSON Response
         """
