@@ -12,7 +12,7 @@ class RequestAPI:
         """Constructor requires Host-URL and API-KEY
 
         Args:
-            host_url (str): Host url to sonarr.
+            host_url (str) - Host url to sonarr.
             api_key: API key from Sonarr. You can find this
         """
         self.host_url = host_url
@@ -25,8 +25,8 @@ class RequestAPI:
         username and passwords to the requests.auth.HTTPBASICAUTH() method.
 
         Args:
-            username (str): Username for the basic auth requests.
-            password (str): Password for the basic auth requests.
+            username (str) - Username for the basic auth requests.
+            password (str) - Password for the basic auth requests.
 
         Return:
             requests.auth.HTTPBASICAUTH
@@ -37,9 +37,9 @@ class RequestAPI:
     def request_get(self, path, params=None):
         """Wrapper on the session.get
         Args:
-            path (str): Path to API. E.g. /api/manualimport
-            params (dict): URL Parameters to send with the request
-            data (dict): Payload to send with request.
+            path (str) - Path to API. E.g. /api/manualimport
+            params (dict) - URL Parameters to send with the request
+            data (dict) - Payload to send with request.
 
         Returns:
             requests.models.Response: Response object form requests.
@@ -55,9 +55,9 @@ class RequestAPI:
         """Wrapper on the requests.post
 
         Args:
-            path (str): Path to API. E.g. /api/manualimport
-            params (dict): URL Parameters to send with the request
-            data (dict): Payload to send with request.
+            path (str) - Path to API. E.g. /api/manualimport
+            params (dict) - URL Parameters to send with the request
+            data (dict) - Payload to send with request.
 
         Returns:
             requests.models.Response: Response object form requests.
@@ -73,9 +73,9 @@ class RequestAPI:
         """Wrapper on the requests.put
 
         Args:
-            path (str): Path to API. E.g. /api/manualimport
-            params (dict): URL Parameters to send with the request
-            data (dict): Payload to send with request.
+            path (str) - Path to API. E.g. /api/manualimport
+            params (dict) - URL Parameters to send with the request
+            data (dict) - Payload to send with request.
 
         Returns:
             requests.models.Response: Response object form requests.
@@ -91,9 +91,9 @@ class RequestAPI:
         """Wrapper on the requests.delete
 
         Args:
-            path (str): Path to API. E.g. /api/manualimport
-            params (dict): URL Parameters to send with the request
-            data (dict): Payload to send with request.
+            path (str) - Path to API. E.g. /api/manualimport
+            params (dict) - URL Parameters to send with the request
+            data (dict) - Payload to send with request.
 
         Returns:
             requests.models.Response: Response object form requests.

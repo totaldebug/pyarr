@@ -128,7 +128,7 @@ class SonarrAPI(RequestAPI):
     def lookup_series_by_tvdb_id(self, id_):
         """Searches for new shows on tvdb
         Args:
-            [Required] id_ (int): TVDB ID of a show
+            [Required] id_ (int) - TVDB ID of a show
         Returns:
             json response
 
@@ -385,7 +385,7 @@ class SonarrAPI(RequestAPI):
         be editable in the future.
 
             Args:
-                data (dict): data payload
+                data (dict) - data payload
 
             Returns:
                 json response

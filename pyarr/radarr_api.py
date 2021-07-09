@@ -11,7 +11,7 @@ class RadarrAPI(RequestAPI):
         """Searches for movie on tmdb and returns Movie json to add.
 
         Args:
-            [Required] db_id (str): imdb or tmdb id
+            [Required] db_id (str) - imdb or tmdb id
             [Required] quality_profile_id (int)
             [Required] root_dir (str)
             [Optional] monitored (bool)
@@ -66,12 +66,12 @@ class RadarrAPI(RequestAPI):
         """addMovie adds a new movie to collection
 
         Args:
-            [Required] db_id (str): IMDB or TMDB ID
+            [Required] db_id (str) - IMDB or TMDB ID
             [Required] quality_profile_id (int)
             [Required] root_dir (str)
             [Optional] monitored (bool)
             [Optional] search_for_movie (bool)
-            [Optional] tmdb (bool): Set to false to use imdb IDs
+            [Optional] tmdb (bool) - Set to false to use imdb IDs
         Returns:
             json response
         """
@@ -93,9 +93,9 @@ class RadarrAPI(RequestAPI):
         """Update an existing movie.
 
         Args:
-            [Required] data (dict): Dictionary containing an object obtained by get_movie()
+            [Required] data (dict) - Dictionary containing an object obtained by get_movie()
         Kwargs:
-            [Optional] move_files (bool): Have radarr move files when updating
+            [Optional] move_files (bool) - Have radarr move files when updating
         Returns:
             json response
         """
@@ -138,7 +138,7 @@ class RadarrAPI(RequestAPI):
         """Searches for movie.
 
         Args:
-            [Required] term (str): Uses TMDB for search results
+            [Required] term (str) - Uses TMDB for search results
         Returns:
             json response
         """
@@ -152,7 +152,7 @@ class RadarrAPI(RequestAPI):
         """Searches for movie.
 
         Args:
-            [Required] term (str): Uses TMDB for search results
+            [Required] term (str) - Uses TMDB for search results
         Returns:
             json response
         """
@@ -265,9 +265,9 @@ class RadarrAPI(RequestAPI):
 
         Args:
             [Required] page (int)
-            [Optional] page_size (int): Default: 20
-            [Optional] sort_direction (str): Default: descending
-            [Optional] sort_key (str): Default: date
+            [Optional] page_size (int) - Default: 20
+            [Optional] sort_direction (str) - Default: descending
+            [Optional] sort_key (str) - Default: date
         Returns:
             json response
         """
@@ -286,8 +286,8 @@ class RadarrAPI(RequestAPI):
         """Return a json object list of items in your history.
 
         Args:
-            [Required] id_ (int): Database ID of movie
-            [Optional] event_type (int): History event type to retrieve
+            [Required] id_ (int) - Database ID of movie
+            [Optional] event_type (int) - History event type to retrieve
         Returns:
             json response
         """
@@ -311,9 +311,9 @@ class RadarrAPI(RequestAPI):
         """Returns blacklisted releases.
         Args:
             [Required] page (int)
-            [Optional] page_size (int): Default: 20
-            [Optional] sort_direction (str): Default: descending
-            [Optional] sort_key (str): Default: date
+            [Optional] page_size (int) - Default: 20
+            [Optional] sort_direction (str) - Default: descending
+            [Optional] sort_key (str) - Default: date
         Returns:
             json response
         """
@@ -382,10 +382,10 @@ class RadarrAPI(RequestAPI):
         """Return a json object list of items in the queue.
         Args:
             [Required] page (int)
-            [Optional] page_size (int): Default: 20
-            [Optional] sort_direction (str): Default: ascending
-            [Optional] sort_key (str): Default: timeLeft
-            [Optional] include_unknown_movie_items (bool): Default: True
+            [Optional] page_size (int) - Default: 20
+            [Optional] sort_direction (str) - Default: ascending
+            [Optional] sort_key (str) - Default: timeLeft
+            [Optional] include_unknown_movie_items (bool) - Default: True
         Returns:
             json response
         """
@@ -437,7 +437,7 @@ class RadarrAPI(RequestAPI):
     ):
         """Get details of all items in queue.
         Args:
-            [Optional] include_movie (bool): Default: True
+            [Optional] include_movie (bool) - Default: True
         Returns:
             json response
         """
@@ -936,8 +936,8 @@ class RadarrAPI(RequestAPI):
 
         Args:
             [Required]
-                - start_date (datetime): ISO 8601
-                - end_date (datetime): ISO 8601
+                - start_date (datetime) - ISO 8601
+                - end_date (datetime) - ISO 8601
             [Optional] unmonitored (bool)
 
         Returns:
