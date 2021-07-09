@@ -658,13 +658,83 @@ class RadarrAPI(RequestAPI):
 
     ## TAG
 
-    # TODO: GET /tag
-    # TODO: POST /tag
-    # TODO: GET /tag/detail
-    # TODO: GET /tag/detail/{id}
-    # TODO: GET /tag/{id}
-    # TODO: DELETE /tag/{id}
-    # TODO: PUT /tag/{id}
+    # GET /tag and /tag/{id}
+    def get_tag(self, id_=None):
+        """Get all tags in the database, or return a given tag and its label by the database id.
+
+        Args:
+            [Optional] id_ (int)
+        Returns:
+            json response
+        """
+        if not id_:
+            path = "/api/v3/tag"
+        else:
+            path = f"/api/v3/tag/{id_}"
+
+        res = self.request_get(path)
+        return res
+
+    # POST /tag
+    def create_tag(self, id_, label):
+        """Create a new tag that can be assigned to a movie, list, delay profile, notification, or restriction.
+
+        Args:
+            [Required] id_ (int)
+            [Required] label (str)
+        Returns:
+            json response
+        """
+        data = {"id": id_, "label": label}
+        path = "/api/v3/tag"
+        res = self.request_post(path, data=data)
+        return res
+
+    # PUT /tag/{id}
+    def upd_tag(self, id_, label):
+        """Edit a Tag by its database id.
+
+        Args:
+            [Required] id_ (int)
+            [Required] label (str)
+        Returns:
+            json response
+        """
+        data = {"id": id_, "label": label}
+        path = f"/api/v3/tag/{id_}"
+        res = self.request_put(path, data=data)
+        return res
+
+    # DELETE /tag/{id}
+    def del_tag(self, id_):
+        """Delete a tag.
+
+        Args:
+            [Required] id_ (int)
+        Returns:
+            json response
+        """
+        path = f"/api/v3/tag/{id_}"
+        res = self.request_del(path)
+        return res
+
+    # GET /tag/detail and /tag/detail/{id}
+    def get_tag_details(self, id_=None):
+        """Get a list of tag detail objects for all tags in the database,
+        or the id of all items in the database which use the specified tag ID.
+
+        Args:
+            [Optional] id_ (int)
+        Returns:
+            json response
+        """
+        if not id_:
+            path = "/api/v3/tag/detail"
+        else:
+            path = f"/api/v3/tag/detail/{id_}"
+
+        res = self.request_get(path)
+        return res
 
     ## DISKSPACE
 
