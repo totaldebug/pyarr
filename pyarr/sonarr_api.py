@@ -319,7 +319,33 @@ class SonarrAPI(RequestAPI):
 
     ## PARSE
 
-    # TODO: GET /parse
+    # GET /parse
+    def get_parsed_title(self, title):
+        """Returns the result of parsing a title.
+
+        Args:
+            title (str)
+        Returns:
+            JSON Response
+        """
+        params = {"title": title}
+        path = "/api/parse"
+        res = self.request_get(path, params=params)
+        return res
+
+    # GET /parse
+    def get_parsed_path(self, path):
+        """Returns the result of parsing a path.
+
+        Args:
+            path (str)
+        Returns:
+            JSON Response
+        """
+        params = {"path": path}
+        path_ = "/api/parse"
+        res = self.request_get(path_, params=params)
+        return res
 
     ## PROFILE
 
