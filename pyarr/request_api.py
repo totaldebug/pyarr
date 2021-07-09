@@ -13,7 +13,7 @@ class RequestAPI:
 
         Args:
             host_url (str) - Host url to sonarr.
-            api_key: API key from Sonarr. You can find this
+            api_key (str) - API key from Sonarr. You can find this
         """
         self.host_url = host_url
         self.api_key = api_key
