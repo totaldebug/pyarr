@@ -300,10 +300,73 @@ class RadarrAPI(RequestAPI):
 
     ## BLACKLIST
 
-    # TODO: GET /blacklist
-    # TODO: DELETE /blacklist
-    # TODO: GET /blacklist/movie
-    # TODO: DELETE /blacklist/bulk
+    # GET /blacklist
+    def get_blacklist(
+        self,
+        page,
+        page_size=20,
+        sort_direction="descending",
+        sort_key="date",
+    ):
+        """Returns blacklisted releases.
+        Args:
+            [Required] page (int)
+            [Optional] page_size (int): Default: 20
+            [Optional] sort_direction (str): Default: descending
+            [Optional] sort_key (str): Default: date
+        Returns:
+            json response
+        """
+        params = {
+            "page": page,
+            "pageSize": page_size,
+            "sortDirection": sort_direction,
+            "sortKey": sort_key,
+        }
+        path = "/api/v3/blacklist"
+        res = self.request_get(path, params=params)
+        return res
+
+    # DELETE /blacklist
+    def del_blacklist(self, id_):
+        """Removes a specific release (the id provided) from the blacklist.
+        Args:
+            [Required] id_ (int)
+        Returns:
+            json response
+        """
+        params = {"id": id_}
+        path = "/api/v3/blacklist"
+        res = self.request_del(path, params=params)
+        return res
+
+    # GET /blacklist/movie
+    def get_blacklist_by_movie_id(
+        self,
+        id_,
+    ):
+        """Retrieves blacklisted releases that are tied to a given movie in the database.
+        Args:
+            [Required] id_ (int)
+        Returns:
+            json response
+        """
+        params = {"movieId": id_}
+        path = "/api/v3/blacklist/movie"
+        res = self.request_get(path, params=params)
+        return res
+
+    # DELETE /blacklist/bulk
+    def del_blacklist_bulk(self, data):
+        """Delete blacklisted releases in bulk.
+        Args:
+            [Required] data (dict)
+        Returns:
+            json response
+        """
+        path = "/api/v3/blacklist/movie"
+        res = self.request_del(path, data=data)
+        return res
 
     ## QUEUE
 
