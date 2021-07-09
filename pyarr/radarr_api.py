@@ -66,7 +66,7 @@ class RadarrAPI(RequestAPI):
         """addMovie adds a new movie to collection
 
         Args:
-            [Required] db_id (str)
+            [Required] db_id (str): IMDB or TMDB ID
             [Required] quality_profile_id (int)
             [Required] root_dir (str)
             [Optional] monitored (bool)
