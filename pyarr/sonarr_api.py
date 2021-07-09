@@ -394,46 +394,62 @@ class SonarrAPI(RequestAPI):
         res = self.request_put(path, data=data)
         return res
 
-    # TODO: Test this
-    def get_episode_files_by_series_id(self, series_id):
-        """Returns all episode files for the given series
+    # GET /episodefile
+    def get_episode_files_by_series_id(self, id_):
+        """Returns all episode files for the given series.
 
         Args:
-            series_id (int):
+            [Required] id_ (int):
 
         Returns:
             requests.models.Response: Response object form requests.
         """
-        params = {"seriesId": series_id}
+        params = {"seriesId": id_}
         path = "/api/episodefile"
         res = self.request_get(path, params=params)
         return res
 
-    # TODO: Test this
-    def get_episode_file_by_episode_id(self, episode_id):
-        """Returns the episode file with the matching id
+    # GET /episodefile/{id}
+    def get_episode_file(self, id_):
+        """Returns the episode file with the matching ID.
 
         Kwargs:
-            episode_id (int):
+            [Required] id_ (int)
 
         Returns:
             requests.models.Response: Response object form requests.
         """
-        path = "/api/episodefile/{}".format(episode_id)
+        path = f"/api/episodefile/{id_}"
         res = self.request_get(path)
         return res
 
-    def del_episode_file_by_episode_id(self, episode_id):
-        """Delete the given episode file
+    # DELETE /episodefile/{id}
+    def del_episode_file(self, id_):
+        """Delete the given episode file.
 
         Kwargs:
-            episode_id (str):
+            [Required] id_ (str)
 
         Returns:
             requests.models.Response: Response object form requests.
         """
-        path = "/api/episodefile/{}".format(episode_id)
+        path = f"/api/episodefile/{id_}"
         res = self.request_del(path)
+        return res
+
+    # PUT /episodefile/{id}
+    def upd_episode_file_quality(self, id_, data):
+        """Updates the quality of the episode file and returns the episode file.
+
+        Kwargs:
+            [Required] id_ (str)
+            [Required] data (dict) - See Sonarr docs for formatting
+
+        Returns:
+            requests.models.Response: Response object form requests.
+        """
+        path = f"/api/episodefile/{id_}"
+        res = self.request_put(path)
         return res
 
     # TODO: Test this
