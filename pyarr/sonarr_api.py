@@ -29,7 +29,7 @@ class SonarrAPI(RequestAPI):
             [Optional] ignore_episodes_without_files (bool)
             [Optional] search_for_missing_episodes (bool)
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         res = self.lookup_series(tvdb_id)
         s_dict = res[0]
@@ -66,7 +66,7 @@ class SonarrAPI(RequestAPI):
             start_date (datetime) - ISO 8601
             end_date (datetime) - ISO 8601
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         path = "/api/calendar"
         params = {}
@@ -90,7 +90,7 @@ class SonarrAPI(RequestAPI):
         Args:
             [Optional] id (int) Unique ID of command
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         if len(args) == 1:
             path = f"/api/command/{args[0]}"
@@ -114,7 +114,7 @@ class SonarrAPI(RequestAPI):
             Additional Parameters may be required or optional...
             See https://github.com/Sonarr/Sonarr/wiki/Command
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         path = "/api/command"
 
@@ -131,7 +131,7 @@ class SonarrAPI(RequestAPI):
         Args:
             None
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         path = "/api/diskspace"
         res = self.request_get(path)
@@ -146,7 +146,7 @@ class SonarrAPI(RequestAPI):
         Args:
             id_ (int):
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         path = f"/api/episode?seriesId={id_}"
         res = self.request_get(path)
@@ -159,7 +159,7 @@ class SonarrAPI(RequestAPI):
         Args:
             id_ (int):
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         path = f"/api/episode/{id_}"
         res = self.request_get(path)
@@ -175,7 +175,7 @@ class SonarrAPI(RequestAPI):
         Args:
             data (dict) - data payload
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         path = "/api/episode"
         res = self.request_put(path, data=data)
@@ -190,7 +190,7 @@ class SonarrAPI(RequestAPI):
         Args:
             [Required] id_ (int):
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         params = {"seriesId": id_}
         path = "/api/episodefile"
@@ -204,7 +204,7 @@ class SonarrAPI(RequestAPI):
         Kwargs:
             [Required] id_ (int)
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         path = f"/api/episodefile/{id_}"
         res = self.request_get(path)
@@ -217,7 +217,7 @@ class SonarrAPI(RequestAPI):
         Kwargs:
             [Required] id_ (str)
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         path = f"/api/episodefile/{id_}"
         res = self.request_del(path)
@@ -232,7 +232,7 @@ class SonarrAPI(RequestAPI):
             [Required] data (dict) - See Sonarr docs for formatting
 
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         path = f"/api/episodefile/{id_}"
         res = self.request_put(path, data=data)
@@ -251,7 +251,7 @@ class SonarrAPI(RequestAPI):
             [Optional] sortDir (str) - asc or desc - Default: asc
             [Optional] episodeId (int) - Filters to a specific episode ID
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         data = {}
         data.update({"sortKey": kwargs.get("sortKey", "date")})
@@ -273,7 +273,7 @@ class SonarrAPI(RequestAPI):
             [Optional] pageSize (int) - Default: 10
             [Optional] sortDir (str) - asc or desc - Default: asc
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         data = {}
         data.update({"sortKey": kwargs.get("sortKey", "airDateUtc")})
@@ -292,7 +292,7 @@ class SonarrAPI(RequestAPI):
         Args:
             None
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         path = "/api/queue"
         res = self.request_get(path)
@@ -307,7 +307,7 @@ class SonarrAPI(RequestAPI):
             [Required] id_ (int)
             [Optional] blacklist (bool) - Default: True
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         params = {"id": id_, "blacklist": blacklist}
         path = "/api/queue/"
@@ -323,7 +323,7 @@ class SonarrAPI(RequestAPI):
         Args:
             title (str)
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         params = {"title": title}
         path = "/api/parse"
@@ -337,7 +337,7 @@ class SonarrAPI(RequestAPI):
         Args:
             path (str)
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         params = {"path": path}
         path_ = "/api/parse"
@@ -353,7 +353,7 @@ class SonarrAPI(RequestAPI):
         Args:
             None
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         path = "/api/profile"
         res = self.request_get(path)
@@ -368,7 +368,7 @@ class SonarrAPI(RequestAPI):
         Args:
             [Required] id_ (str)
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         params = {"episodeId": id_}
         path = "/api/release"
@@ -383,7 +383,7 @@ class SonarrAPI(RequestAPI):
             [Required] guid (str)
             [Required] indexerId (int)
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         params = {"guid": guid, "indexerId": indexer_id}
         path = "/api/release"
@@ -400,7 +400,7 @@ class SonarrAPI(RequestAPI):
             [Required] protocol (str) - "Usenet" or "Torrent"
             [Required] publish_date (str) - ISO8601 date string
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         params = {
             "title": title,
@@ -421,7 +421,7 @@ class SonarrAPI(RequestAPI):
         Args:
             None
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         path = "/api/rootfolder"
         res = self.request_get(path)
@@ -436,7 +436,7 @@ class SonarrAPI(RequestAPI):
         Args:
             [Optional] seriesID
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         if len(args) == 1:
             path = f"/api/series/{args[0]}"
@@ -470,7 +470,7 @@ class SonarrAPI(RequestAPI):
             [Optional] ignore_episodes_without_files (bool)
             [Optional] search_for_missing_episodes (bool)
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         series_json = self.construct_series_json(
             tvdb_id,
@@ -494,7 +494,7 @@ class SonarrAPI(RequestAPI):
         Args:
             data (dictionary containing an object obtained by getSeries())
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         path = "/api/series"
         res = self.request_put(path, data=data)
@@ -508,7 +508,7 @@ class SonarrAPI(RequestAPI):
             id_ (int)
             del_files (bool)
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         # File deletion does not work
         data = {"deleteFiles": del_files}
@@ -523,7 +523,7 @@ class SonarrAPI(RequestAPI):
         Args:
             [Required] term (str)
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         params = {"term": term}
         path = "/api/series/lookup"
@@ -537,7 +537,7 @@ class SonarrAPI(RequestAPI):
         Args:
             [Required] id_ (int) - TVDB ID of a show
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         params = {"term": f"tvdb:{id_}"}
         path = "/api/series/lookup"
@@ -553,7 +553,7 @@ class SonarrAPI(RequestAPI):
         Args:
             None
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         path = "/api/system/status"
         res = self.request_get(path)
@@ -566,7 +566,7 @@ class SonarrAPI(RequestAPI):
         Args:
             None
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         path = "/api/system/backup"
         res = self.request_get(path)
@@ -581,7 +581,7 @@ class SonarrAPI(RequestAPI):
         Args:
             [Optional] id_ (int)
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         if not id_:
             path = "/api/tag"
@@ -599,7 +599,7 @@ class SonarrAPI(RequestAPI):
             [Required] id_ (int)
             [Required] label (str)
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         data = {"id": id_, "label": label}
         path = "/api/tag"
@@ -614,7 +614,7 @@ class SonarrAPI(RequestAPI):
             [Required] id_ (int)
             [Required] label (str)
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         data = {"id": id_, "label": label}
         path = f"/api/tag/{id_}"
@@ -628,7 +628,7 @@ class SonarrAPI(RequestAPI):
         Args:
             [Required] id_ (int)
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         path = f"/api/tag/{id_}"
         res = self.request_del(path)
@@ -649,7 +649,7 @@ class SonarrAPI(RequestAPI):
             [Optional] filterKey (str) - What key to filter - Default: None.
             [Optional] filterValue (str) - Warn, Info, Error - Default: All.
         Returns:
-            JSON Response
+            JSON Response (dict)
         """
         data = {}
         for key, value in kwargs.items():
