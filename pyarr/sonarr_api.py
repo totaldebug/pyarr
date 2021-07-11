@@ -8,49 +8,49 @@ class SonarrAPI(RequestAPI):
 
     def construct_series_json(
         self,
-        tvdbId,
-        qualityProfileId,
-        rootDir,
-        seasonFolder=True,
+        tvdb_id,
+        quality_profile_id,
+        root_dir,
+        season_folder=True,
         monitored=True,
-        ignoreEpisodesWithFiles=False,
-        ignoreEpisodesWithoutFiles=False,
-        searchForMissingEpisodes=False,
+        ignore_episodes_with_files=False,
+        ignore_episodes_without_files=False,
+        search_for_missing_episodes=False,
     ):
         """Searches for new shows on trakt and returns Series json to add
 
         Args:
-            [Required] tvdbID (int)
-            [Required] qualityProfileId (int)
-            [Required] rootDir (str)
-            [Optional] seasonFolder (bool)
+            [Required] tvdb_id (int)
+            [Required] quality_profile_id (int)
+            [Required] root_dir (str)
+            [Optional] season_folder (bool)
             [Optional] monitored (bool)
-            [Optional] ignoreEpisodesWithFiles (bool)
-            [Optional] ignoreEpisodesWithoutFiles (bool)
-            [Optional] searchForMissingEpisodes (bool)
+            [Optional] ignore_episodes_with_files (bool)
+            [Optional] ignore_episodes_without_files (bool)
+            [Optional] search_for_missing_episodes (bool)
         Returns:
             JSON Response
         """
-        res = self.lookup_series(tvdbId)
+        res = self.lookup_series(tvdb_id)
         s_dict = res[0]
-        if not monitored:
+        if not monitored and s_dict.get("seasons"):
             for season in s_dict["seasons"]:
                 season["monitored"] = False
 
         series_json = {
             "title": s_dict["title"],
             "seasons": s_dict["seasons"],
-            "path": rootDir + s_dict["title"],
-            "qualityProfileId": qualityProfileId,
-            "seasonFolder": seasonFolder,
+            "path": root_dir + s_dict["title"],
+            "qualityProfileId": quality_profile_id,
+            "seasonFolder": season_folder,
             "monitored": monitored,
-            "tvdbId": tvdbId,
+            "tvdbId": tvdb_id,
             "images": s_dict["images"],
             "titleSlug": s_dict["titleSlug"],
             "addOptions": {
-                "ignoreEpisodesWithFiles": ignoreEpisodesWithFiles,
-                "ignoreEpisodesWithoutFiles": ignoreEpisodesWithoutFiles,
-                "searchForMissingEpisodes": searchForMissingEpisodes,
+                "ignoreEpisodesWithFiles": ignore_episodes_with_files,
+                "ignoreEpisodesWithoutFiles": ignore_episodes_without_files,
+                "searchForMissingEpisodes": search_for_missing_episodes,
             },
         }
         return series_json
@@ -58,29 +58,26 @@ class SonarrAPI(RequestAPI):
     ## CALENDAR
 
     # GET /calendar
-    def get_calendar(self, *args):
+    def get_calendar(self, start_date=None, end_date=None):
         """Retrieves info about when series were/will be downloaded.
         If no start and end, retrieves series airing today and tomorrow.
 
         Args:
-            start_date:
-            end_date:
+            start_date (datetime) - ISO 8601
+            end_date (datetime) - ISO 8601
         Returns:
             JSON Response
         """
         path = "/api/calendar"
-        data = {}
-        if args:
-            start_date = args[0]
-            end_date = args[1]
+        params = {}
+        if start_date:
+            params["start"] = datetime.strptime(start_date, "%Y-%m-%d").strftime(
+                "%Y-%m-%d"
+            )
+        if end_date:
+            params["end"] = datetime.strptime(end_date, "%Y-%m-%d").strftime("%Y-%m-%d")
 
-            startDate = datetime.strptime(start_date, "%Y-%m-%d").strftime("%Y-%m-%d")
-            data.update({"start": startDate})
-
-            endDate = datetime.strptime(end_date, "%Y-%m-%d").strftime("%Y-%m-%d")
-            data.update({"end": endDate})
-
-        res = self.request_get(path, **data)
+        res = self.request_get(path, params=params)
         return res
 
     ## COMMAND
@@ -143,28 +140,28 @@ class SonarrAPI(RequestAPI):
     ## EPISODE
 
     # GET /episode
-    def get_episodes_by_series_id(self, seriesId):
+    def get_episodes_by_series_id(self, id_):
         """Returns all episodes for the given series
 
         Args:
-            seriesId (int):
+            id_ (int):
         Returns:
             JSON Response
         """
-        path = f"/api/episode?seriesId={seriesId}"
+        path = f"/api/episode?seriesId={id_}"
         res = self.request_get(path)
         return res
 
     # GET /episode/{id}
-    def get_episode_by_episode_id(self, episodeId):
-        """Returns the episode with the matching id
+    def get_episode_by_episode_id(self, id_):
+        """Returns the episode with the matching ID.
 
         Args:
-            episode_id (int):
+            id_ (int):
         Returns:
             JSON Response
         """
-        path = f"/api/episode/{episodeId}"
+        path = f"/api/episode/{id_}"
         res = self.request_get(path)
         return res
 
@@ -452,38 +449,38 @@ class SonarrAPI(RequestAPI):
     # POST /series
     def add_series(
         self,
-        tvdbId,
-        qualityProfileId,
-        rootDir,
-        seasonFolder=True,
+        tvdb_id,
+        quality_profile_id,
+        root_dir,
+        season_folder=True,
         monitored=True,
-        ignoreEpisodesWithFiles=False,
-        ignoreEpisodesWithoutFiles=False,
-        searchForMissingEpisodes=False,
+        ignore_episodes_with_files=False,
+        ignore_episodes_without_files=False,
+        search_for_missing_episodes=False,
     ):
         """Add a new series to your collection
 
         Args:
-            [Required] tvdbID (int)
+            [Required] tvdb_id (int)
             [Required] qualityProfileId (int)
-            [Required] rootDir (str)
-            [Optional] seasonFolder (bool)
+            [Required] root_dir (str)
+            [Optional] season_folder (bool)
             [Optional] monitored (bool)
-            [Optional] ignoreEpisodesWithFiles (bool)
-            [Optional] ignoreEpisodesWithoutFiles (bool)
-            [Optional] searchForMissingEpisodes (bool)
+            [Optional] ignore_episodes_with_files (bool)
+            [Optional] ignore_episodes_without_files (bool)
+            [Optional] search_for_missing_episodes (bool)
         Returns:
             JSON Response
         """
         series_json = self.construct_series_json(
-            tvdbId,
-            qualityProfileId,
-            rootDir,
-            seasonFolder,
+            tvdb_id,
+            quality_profile_id,
+            root_dir,
+            season_folder,
             monitored,
-            ignoreEpisodesWithFiles,
-            ignoreEpisodesWithoutFiles,
-            searchForMissingEpisodes,
+            ignore_episodes_with_files,
+            ignore_episodes_without_files,
+            search_for_missing_episodes,
         )
 
         path = "/api/series"
@@ -504,18 +501,18 @@ class SonarrAPI(RequestAPI):
         return res
 
     # DELETE /series/{id}
-    def del_series(self, seriesId, delFiles=False):
+    def del_series(self, id_, del_files=False):
         """Delete the series with the given ID
 
         Args:
-            seriesId (int)
-            delFiles (bool)
+            id_ (int)
+            del_files (bool)
         Returns:
             JSON Response
         """
         # File deletion does not work
-        data = {"deleteFiles": delFiles}
-        path = f"/api/series/{seriesId}"
+        data = {"deleteFiles": del_files}
+        path = f"/api/series/{id_}"
         res = self.request_del(path, data=data)
         return res
 
