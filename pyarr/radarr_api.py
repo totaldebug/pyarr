@@ -40,16 +40,19 @@ class RadarrAPI(RequestAPI):
     ## MOVIE
 
     # GET /movie
-    def get_movie(self, **kwargs):
+    def get_movie(self, id_=None):
         """Returns all movies in the database, or returns a movie with a specific TMDB ID.
 
         Args:
-            [Optional] tmdbId (int)
+            [Optional] id_ (int)
         Returns:
             JSON Response (dict)
         """
+        params = {}
+        if id_:
+            params["tmdbId"] = id_
         path = "/api/v3/movie"
-        res = self.request_get(path, params=kwargs)
+        res = self.request_get(path, params=params)
         return res
 
     # POST /movie
