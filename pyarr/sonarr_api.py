@@ -63,8 +63,8 @@ class SonarrAPI(RequestAPI):
         If no start and end, retrieves series airing today and tomorrow.
 
         Args:
-            start_date (datetime) - ISO 8601
-            end_date (datetime) - ISO 8601
+            [Optional] start_date (datetime) - ISO 8601
+            [Optional] end_date (datetime) - ISO 8601
         Returns:
             JSON Response (dict)
         """
@@ -83,7 +83,7 @@ class SonarrAPI(RequestAPI):
     ## COMMAND
 
     # GET /command
-    def get_command(self, *args):
+    def get_command(self, id_=None):
         """Queries the status of a previously
         started command, or all currently started commands.
 
@@ -92,8 +92,8 @@ class SonarrAPI(RequestAPI):
         Returns:
             JSON Response (dict)
         """
-        if len(args) == 1:
-            path = f"/api/command/{args[0]}"
+        if id_:
+            path = f"/api/command/{id_}"
         else:
             path = "/api/command"
 
@@ -101,24 +101,22 @@ class SonarrAPI(RequestAPI):
         return res
 
     # POST /command
-    def set_command(self, **kwargs):
+    def set_command(self, name, **kwargs):
         """Performs any of the predetermined Sonarr command routines.
 
-        Kwargs:
+        Args:
             [Required] name (str).
-
-            Options available: RefreshSeries, RescanSeries, EpisodeSearch,
-                SeasonSearch, SeriesSearch, DownloadedEpisodesScan, RssSync,
-                RenameFiles, RenameSeries, Backup, missingEpisodeSearch
-
-            Additional Parameters may be required or optional...
+        Kwargs:
+            For command names and additional kwargs:
             See https://github.com/Sonarr/Sonarr/wiki/Command
         Returns:
             JSON Response (dict)
         """
         path = "/api/command"
-
-        data = kwargs
+        data = {
+            **kwargs,
+            "name": name,
+        }
         res = self.request_post(path, data=data)
         return res
 
@@ -144,12 +142,13 @@ class SonarrAPI(RequestAPI):
         """Returns all episodes for the given series
 
         Args:
-            id_ (int):
+            [Required] id_ (int):
         Returns:
             JSON Response (dict)
         """
-        path = f"/api/episode?seriesId={id_}"
-        res = self.request_get(path)
+        path = "/api/episode"
+        params = {"seriesId": id_}
+        res = self.request_get(path, params=params)
         return res
 
     # GET /episode/{id}
@@ -157,7 +156,7 @@ class SonarrAPI(RequestAPI):
         """Returns the episode with the matching ID.
 
         Args:
-            id_ (int):
+            [Required] id_ (int):
         Returns:
             JSON Response (dict)
         """
@@ -173,7 +172,7 @@ class SonarrAPI(RequestAPI):
         be editable in the future.
 
         Args:
-            data (dict) - data payload
+            [Required] data (dict) - data payload
         Returns:
             JSON Response (dict)
         """
@@ -192,8 +191,8 @@ class SonarrAPI(RequestAPI):
         Returns:
             JSON Response (dict)
         """
-        params = {"seriesId": id_}
         path = "/api/episodefile"
+        params = {"seriesId": id_}
         res = self.request_get(path, params=params)
         return res
 
@@ -241,46 +240,52 @@ class SonarrAPI(RequestAPI):
     ## HISTORY
 
     # GET /history
-    def get_history(self, **kwargs):
+    def get_history(self, sort_key, page=1, page_size=10, sort_dir="desc", id_=None):
         """Gets history (grabs/failures/completed)
 
         Args:
-            [Required] sortKey (str) - series.title or date (default)
-            [Optional] page (int) - 1-indexed
-            [Optional] pageSize (int) - Default: 0
-            [Optional] sortDir (str) - asc or desc - Default: asc
-            [Optional] episodeId (int) - Filters to a specific episode ID
+            [Required] sort_key (str) - series.title or date
+            [Optional] page (int) - Default: 1
+            [Optional] page_size (int) - Default: 10
+            [Optional] sort_dir (str) - asc or desc - Default: desc
+            [Optional] id_ (int) - Filters to a specific episode ID
         Returns:
             JSON Response (dict)
         """
-        data = {}
-        data.update({"sortKey": kwargs.get("sortKey", "date")})
-        for key, value in kwargs.items():
-            data.update({key: value})
         path = "/api/history"
-        res = self.request_get(path, **data)
+        params = {
+            "sortKey": sort_key,
+            "page": page,
+            "pageSize": page_size,
+            "sortDir": sort_dir,
+        }
+        if id_:
+            params["episodeId"] = id_
+        res = self.request_get(path, params=params)
         return res
 
     ## WANTED (MISSING)
 
     # GET /wanted/missing
-    def get_wanted(self, **kwargs):
+    def get_wanted(self, sort_key, page=1, page_size=10, sort_dir="asc"):
         """Gets Wanted / Missing episodes
 
         Args:
-            [Required] sortKey (str) - series.title or airDateUtc (default)
-            [Optional] page (int) - 1-indexed Default: 1
-            [Optional] pageSize (int) - Default: 10
-            [Optional] sortDir (str) - asc or desc - Default: asc
+            [Required] sort_key (str) - series.title or airDateUtc
+            [Optional] page (int) - Default: 1
+            [Optional] page_size (int) - Default: 10
+            [Optional] sort_dir (str) - asc or desc - Default: asc
         Returns:
             JSON Response (dict)
         """
-        data = {}
-        data.update({"sortKey": kwargs.get("sortKey", "airDateUtc")})
-        for key, value in kwargs.items():
-            data.update({key: value})
         path = "/api/wanted/missing"
-        res = self.request_get(path, **data)
+        params = {
+            "sortKey": sort_key,
+            "page": page,
+            "pageSize": page_size,
+            "sortDir": sort_dir,
+        }
+        res = self.request_get(path, params=params)
         return res
 
     ## QUEUE
@@ -321,7 +326,7 @@ class SonarrAPI(RequestAPI):
         """Returns the result of parsing a title.
 
         Args:
-            title (str)
+            [Required] title (str)
         Returns:
             JSON Response (dict)
         """
@@ -385,9 +390,9 @@ class SonarrAPI(RequestAPI):
         Returns:
             JSON Response (dict)
         """
-        params = {"guid": guid, "indexerId": indexer_id}
+        data = {"guid": guid, "indexerId": indexer_id}
         path = "/api/release"
-        res = self.request_post(path, params=params)
+        res = self.request_post(path, data=data)
         return res
 
     # POST /release/push
@@ -402,14 +407,14 @@ class SonarrAPI(RequestAPI):
         Returns:
             JSON Response (dict)
         """
-        params = {
+        data = {
             "title": title,
             "downloadUrl": download_url,
             "protocol": protocol,
             "publishDate": publish_date,
         }
         path = "/api/release/push"
-        res = self.request_post(path, params=params)
+        res = self.request_post(path, data=data)
         return res
 
     ## ROOT FOLDER
@@ -429,17 +434,17 @@ class SonarrAPI(RequestAPI):
 
     ## SERIES
     # GET /series and /series/{id}
-    def get_series(self, *args):
-        """Return all series in your collection or
-        the series with the matching ID if one is found
+    def get_series(self, id_):
+        """Return all series in your collection or the series
+        with the matching series ID if one is found.
 
         Args:
-            [Optional] seriesID
+            [Optional] id_
         Returns:
             JSON Response (dict)
         """
-        if len(args) == 1:
-            path = f"/api/series/{args[0]}"
+        if id_:
+            path = f"/api/series/{id_}"
         else:
             path = "/api/series"
 
@@ -492,7 +497,7 @@ class SonarrAPI(RequestAPI):
         """Update an existing series.
 
         Args:
-            data (dictionary containing an object obtained by getSeries())
+            [Required] data (dict) Contains an object obtained by getSeries()
         Returns:
             JSON Response (dict)
         """
@@ -506,7 +511,7 @@ class SonarrAPI(RequestAPI):
 
         Args:
             id_ (int)
-            del_files (bool)
+            del_files (bool) - Default: False
         Returns:
             JSON Response (dict)
         """
@@ -637,23 +642,36 @@ class SonarrAPI(RequestAPI):
     ## LOG
 
     # GET /log
-    def get_logs(self, **kwargs):
+    def get_logs(
+        self,
+        page=1,
+        page_size=10,
+        sort_key="time",
+        sort_dir="desc",
+        filter_key=None,
+        filter_value="All",
+    ):
         """Gets Sonarr Logs
 
         Kwargs:
             [Required] None
             [Optional] page (int) - Page number - Default: 1.
-            [Optional] pageSize (int) - Records per page - Default: 10.
-            [Optional] sortKey (str) - What key to sort on - Default: 'time'.
-            [Optional] sortDir (str) - asc or desc - Default: desc.
-            [Optional] filterKey (str) - What key to filter - Default: None.
-            [Optional] filterValue (str) - Warn, Info, Error - Default: All.
+            [Optional] page_size (int) - Records per page - Default: 10.
+            [Optional] sort_key (str) - What key to sort on - Default: 'time'.
+            [Optional] sort_dir (str) - asc or desc - Default: desc.
+            [Optional] filter_key (str) - What key to filter - Default: None.
+            [Optional] filter_value (str) - Warn, Info, Error - Default: All.
         Returns:
             JSON Response (dict)
         """
-        data = {}
-        for key, value in kwargs.items():
-            data.update({key: value})
         path = "/api/log"
-        res = self.request_get(path, **data)
+        params = {
+            "page": page,
+            "pageSize": page_size,
+            "sortKey": sort_key,
+            "sortDir": sort_dir,
+            "filterKey": filter_key,
+            "filterValue": filter_value,
+        }
+        res = self.request_get(path, params=params)
         return res
