@@ -96,7 +96,6 @@ class RadarrAPI(RequestAPI):
 
         Args:
             [Required] data (dict) - Dictionary containing an object obtained by get_movie()
-        Kwargs:
             [Optional] move_files (bool) - Have radarr move files when updating
         Returns:
             JSON Response (dict)

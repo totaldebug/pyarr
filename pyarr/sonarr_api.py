@@ -200,7 +200,7 @@ class SonarrAPI(RequestAPI):
     def get_episode_file(self, id_):
         """Returns the episode file with the matching ID.
 
-        Kwargs:
+        Args:
             [Required] id_ (int)
         Returns:
             JSON Response (dict)
@@ -213,7 +213,7 @@ class SonarrAPI(RequestAPI):
     def del_episode_file(self, id_):
         """Delete the given episode file.
 
-        Kwargs:
+        Args:
             [Required] id_ (str)
         Returns:
             JSON Response (dict)
@@ -226,7 +226,7 @@ class SonarrAPI(RequestAPI):
     def upd_episode_file_quality(self, id_, data):
         """Updates the quality of the episode file and returns the episode file.
 
-        Kwargs:
+        Args:
             [Required] id_ (str)
             [Required] data (dict) - See Sonarr docs for formatting
 
@@ -653,7 +653,7 @@ class SonarrAPI(RequestAPI):
     ):
         """Gets Sonarr Logs
 
-        Kwargs:
+        Args:
             [Required] None
             [Optional] page (int) - Page number - Default: 1.
             [Optional] page_size (int) - Records per page - Default: 10.
