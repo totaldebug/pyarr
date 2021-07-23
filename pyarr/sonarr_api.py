@@ -506,19 +506,19 @@ class SonarrAPI(RequestAPI):
         return res
 
     # DELETE /series/{id}
-    def del_series(self, id_, del_files=False):
+    def del_series(self, id_, delete_files=False):
         """Delete the series with the given ID
 
         Args:
             id_ (int)
-            del_files (bool) - Default: False
+            delete_files (bool) - Default: False
         Returns:
             JSON Response (dict)
         """
         # File deletion does not work
-        data = {"deleteFiles": del_files}
+        params = {"deleteFiles": delete_files}
         path = f"/api/series/{id_}"
-        res = self.request_del(path, data=data)
+        res = self.request_del(path, params=params)
         return res
 
     # GET /series/lookup
