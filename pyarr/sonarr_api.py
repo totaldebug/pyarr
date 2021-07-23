@@ -510,8 +510,8 @@ class SonarrAPI(RequestAPI):
         """Delete the series with the given ID
 
         Args:
-            id_ (int)
-            delete_files (bool) - Default: False
+            [Required] id_ (int)
+            [Optional] delete_files (bool) - Default: False
         Returns:
             JSON Response (dict)
         """
