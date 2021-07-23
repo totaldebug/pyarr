@@ -340,7 +340,7 @@ class SonarrAPI(RequestAPI):
         """Returns the result of parsing a path.
 
         Args:
-            path (str)
+            [Required] path (str)
         Returns:
             JSON Response (dict)
         """
