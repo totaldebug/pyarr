@@ -24,7 +24,7 @@ Making changes
    follow `semver <http://semver.org/>`.
 #. Re-generate API rst with sphinx
    ..code:: Python
-      sphinx-apidoc -o ./docs ./pyarr
+      sphinx-apidoc -o ./sphinx-docs ./pyarr
 #. Each change should have its own PR.
 #. All information should be filled out in the PR Template.
 #. Any PR that consists of multiple changes may be rejected.
