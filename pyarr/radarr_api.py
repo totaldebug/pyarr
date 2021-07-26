@@ -107,7 +107,7 @@ class RadarrAPI(RequestAPI):
         return res
 
     # GET /movie/{id}
-    def get_movie_by_id(self, id_):
+    def get_movie_by_movie_id(self, id_):
         """Get a movie by the database ID.
 
         Args:
