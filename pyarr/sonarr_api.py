@@ -434,7 +434,7 @@ class SonarrAPI(RequestAPI):
 
     ## SERIES
     # GET /series and /series/{id}
-    def get_series(self, id_):
+    def get_series(self, id_=None):
         """Return all series in your collection or the series
         with the matching series ID if one is found.
 
