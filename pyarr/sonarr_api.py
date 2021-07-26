@@ -240,11 +240,13 @@ class SonarrAPI(RequestAPI):
     ## HISTORY
 
     # GET /history
-    def get_history(self, sort_key, page=1, page_size=10, sort_dir="desc", id_=None):
+    def get_history(
+        self, sort_key="date", page=1, page_size=10, sort_dir="desc", id_=None
+    ):
         """Gets history (grabs/failures/completed)
 
         Args:
-            [Required] sort_key (str) - series.title or date
+            [Optional] sort_key (str) - series.title or date. Default: date
             [Optional] page (int) - Default: 1
             [Optional] page_size (int) - Default: 10
             [Optional] sort_dir (str) - asc or desc - Default: desc
