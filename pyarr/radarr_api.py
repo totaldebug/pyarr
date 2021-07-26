@@ -305,14 +305,14 @@ class RadarrAPI(RequestAPI):
     # GET /blacklist
     def get_blacklist(
         self,
-        page,
+        page=1,
         page_size=20,
         sort_direction="descending",
         sort_key="date",
     ):
         """Returns blacklisted releases.
         Args:
-            [Required] page (int)
+            [Optional] page (int) - Default: 1
             [Optional] page_size (int) - Default: 20
             [Optional] sort_direction (str) - Default: descending
             [Optional] sort_key (str) - Default: date
