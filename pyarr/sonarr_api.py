@@ -306,13 +306,13 @@ class SonarrAPI(RequestAPI):
         return res
 
     # DELETE /queue
-    def del_queue(self, id_, blacklist=True):
+    def del_queue(self, id_, blacklist=False):
         """Deletes an item from the queue and download client.
         Optionally blacklist item after deletion.
 
         Args:
             [Required] id_ (int)
-            [Optional] blacklist (bool) - Default: True
+            [Optional] blacklist (bool) - Default: False
         Returns:
             JSON Response (dict)
         """
