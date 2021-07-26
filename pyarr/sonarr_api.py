@@ -269,11 +269,11 @@ class SonarrAPI(RequestAPI):
     ## WANTED (MISSING)
 
     # GET /wanted/missing
-    def get_wanted(self, sort_key, page=1, page_size=10, sort_dir="asc"):
+    def get_wanted(self, sort_key="airDateUtc", page=1, page_size=10, sort_dir="asc"):
         """Gets Wanted / Missing episodes
 
         Args:
-            [Required] sort_key (str) - series.title or airDateUtc
+            [Optional] sort_key (str) - series.title or airDateUtc. Default: airDateUtc
             [Optional] page (int) - Default: 1
             [Optional] page_size (int) - Default: 10
             [Optional] sort_dir (str) - asc or desc - Default: asc
