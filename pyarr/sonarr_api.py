@@ -597,7 +597,7 @@ class SonarrAPI(RequestAPI):
         return res
 
     # POST /tag
-    def create_tag(self, id_, label):
+    def create_tag(self, label):
         """Create a new tag that can be assigned to a movie, list, delay profile, notification, or restriction.
 
         Args:
@@ -606,7 +606,7 @@ class SonarrAPI(RequestAPI):
         Returns:
             JSON Response (dict)
         """
-        data = {"id": id_, "label": label}
+        data = {"label": label}
         path = "/api/tag"
         res = self.request_post(path, data=data)
         return res
