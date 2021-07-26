@@ -260,12 +260,12 @@ class RadarrAPI(RequestAPI):
 
     # GET /history
     def get_history(
-        self, page, page_size=20, sort_direction="descending", sort_key="date"
+        self, page=1, page_size=20, sort_direction="descending", sort_key="date"
     ):
         """Return a json object list of items in your history
 
         Args:
-            [Required] page (int)
+            [Optional] page (int) - Default: 1
             [Optional] page_size (int) - Default: 20
             [Optional] sort_direction (str) - Default: descending
             [Optional] sort_key (str) - Default: date
