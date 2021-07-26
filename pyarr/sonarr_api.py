@@ -324,6 +324,7 @@ class SonarrAPI(RequestAPI):
     ## PARSE
 
     # GET /parse
+    # FIXME: Does not work as expected
     def get_parsed_title(self, title):
         """Returns the result of parsing a title.
 
@@ -338,7 +339,8 @@ class SonarrAPI(RequestAPI):
         return res
 
     # GET /parse
-    def get_parsed_path(self, path):
+    # FIXME: Does not work as expected
+    def get_parsed_path(self, file_path):
         """Returns the result of parsing a path.
 
         Args:
@@ -346,9 +348,9 @@ class SonarrAPI(RequestAPI):
         Returns:
             JSON Response (dict)
         """
-        params = {"path": path}
-        path_ = "/api/parse"
-        res = self.request_get(path_, params=params)
+        params = {"path": file_path}
+        path = "/api/parse"
+        res = self.request_get(path, params=params)
         return res
 
     ## PROFILE
