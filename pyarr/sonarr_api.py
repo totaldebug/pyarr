@@ -324,7 +324,6 @@ class SonarrAPI(RequestAPI):
     ## PARSE
 
     # GET /parse
-    # FIXME: Does not work as expected
     def get_parsed_title(self, title):
         """Returns the result of parsing a title.
 
@@ -339,7 +338,6 @@ class SonarrAPI(RequestAPI):
         return res
 
     # GET /parse
-    # FIXME: Does not work as expected
     def get_parsed_path(self, file_path):
         """Returns the result of parsing a path.
 
