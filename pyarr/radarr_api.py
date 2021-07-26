@@ -4,7 +4,7 @@ from .request_api import RequestAPI
 class RadarrAPI(RequestAPI):
     """API wrapper for Radarr endpoints."""
 
-    def construct_movie_json(
+    def _construct_movie_json(
         self, db_id, quality_profile_id, root_dir, monitored=True, search_for_movie=True
     ):
         """Searches for movie on tmdb and returns Movie json to add.
@@ -82,7 +82,7 @@ class RadarrAPI(RequestAPI):
         else:
             term = f"imdb:{str(db_id)}"
 
-        movie_json = self.construct_movie_json(
+        movie_json = self._construct_movie_json(
             term, quality_profile_id, root_dir, monitored, search_for_movie
         )
 

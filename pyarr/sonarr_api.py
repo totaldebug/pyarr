@@ -6,7 +6,7 @@ from .request_api import RequestAPI
 class SonarrAPI(RequestAPI):
     """API wrapper for Sonarr endpoints."""
 
-    def construct_series_json(
+    def _construct_series_json(
         self,
         tvdb_id,
         quality_profile_id,
@@ -481,7 +481,7 @@ class SonarrAPI(RequestAPI):
         Returns:
             JSON Response (dict)
         """
-        series_json = self.construct_series_json(
+        series_json = self._construct_series_json(
             tvdb_id,
             quality_profile_id,
             root_dir,
