@@ -375,7 +375,7 @@ class RadarrAPI(RequestAPI):
     # GET /queue
     def get_queue(
         self,
-        page,
+        page=1,
         page_size=20,
         sort_direction="ascending",
         sort_key="timeLeft",
@@ -383,7 +383,7 @@ class RadarrAPI(RequestAPI):
     ):
         """Return a json object list of items in the queue.
         Args:
-            [Required] page (int)
+            [Optional] page (int) - Default: 1
             [Optional] page_size (int) - Default: 20
             [Optional] sort_direction (str) - Default: ascending
             [Optional] sort_key (str) - Default: timeLeft
