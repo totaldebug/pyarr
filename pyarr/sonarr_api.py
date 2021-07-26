@@ -605,7 +605,6 @@ class SonarrAPI(RequestAPI):
         """Create a new tag that can be assigned to a movie, list, delay profile, notification, or restriction.
 
         Args:
-            [Required] id_ (int)
             [Required] label (str)
         Returns:
             JSON Response (dict)

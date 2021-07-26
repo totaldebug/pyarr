@@ -678,16 +678,15 @@ class RadarrAPI(RequestAPI):
         return res
 
     # POST /tag
-    def create_tag(self, id_, label):
+    def create_tag(self, label):
         """Create a new tag that can be assigned to a movie, list, delay profile, notification, or restriction.
 
         Args:
-            [Required] id_ (int)
             [Required] label (str)
         Returns:
             JSON Response (dict)
         """
-        data = {"id": id_, "label": label}
+        data = {"label": label}
         path = "/api/v3/tag"
         res = self.request_post(path, data=data)
         return res
