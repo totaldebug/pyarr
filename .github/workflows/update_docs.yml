@@ -20,5 +20,4 @@ jobs:
         uses: totaldebug/sphinx-publish-action@master
         with:
           sphinx_src: sphinx-docs
-          target_path: docs
           token: ${{ secrets.GITHUB_TOKEN }}
