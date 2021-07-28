@@ -40,7 +40,7 @@ About
    <tr>
    <td>
 
-**Pyarr* is a **high-quality** *Python API Wrapper* that provides access to
+**Pyarr** is a **high-quality** *Python API Wrapper* that provides access to
 both Radarr and Sonarr Rest APIs directry from Python.
 
 .. raw:: html
