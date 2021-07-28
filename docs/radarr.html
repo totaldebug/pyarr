@@ -1,0 +1,1400 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>RadarrAPI &mdash; pyarr  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="SonarrAPI" href="sonarr.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pyarr
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Overview</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installing.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="sonarr.html">SonarrAPI</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">RadarrAPI</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pyarr</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>RadarrAPI</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/radarr.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-pyarr.radarr_api">
+<span id="radarrapi"></span><h1>RadarrAPI<a class="headerlink" href="#module-pyarr.radarr_api" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pyarr.radarr_api.</span></span><span class="sig-name descname"><span class="pre">RadarrAPI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host_url</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_key</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI" title="Permalink to this definition">¶</a></dt>
+<dd><p>API wrapper for Radarr endpoints.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>RequestAPI</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code>) – provides connection to API endpoint</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.get_movie">
+<span class="sig-name descname"><span class="pre">get_movie</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.get_movie"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.get_movie" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all movies in the database, or returns a movie with a specific TMDB ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>int</em><em>, </em><em>optional</em>) – TMDB Id of Movies. Defaults to None.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of Movies from Radarr database</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.add_movie">
+<span class="sig-name descname"><span class="pre">add_movie</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quality_profile_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">monitored</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">search_for_movie</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmdb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.add_movie"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.add_movie" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a movie to the database</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>db_id</strong> (<em>str</em>) – IMDB or TMDB ID</p></li>
+<li><p><strong>quality_profile_id</strong> (<em>int</em>) – ID of the quality profile the movie will use</p></li>
+<li><p><strong>root_dir</strong> (<em>str</em>) – location of the root DIR</p></li>
+<li><p><strong>monitored</strong> (<em>bool</em><em>, </em><em>optional</em>) – should the movie be monitored. Defaults to True.</p></li>
+<li><p><strong>search_for_movie</strong> (<em>bool</em><em>, </em><em>optional</em>) – Should we search for the movie. Defaults to True.</p></li>
+<li><p><strong>tmdb</strong> (<em>bool</em><em>, </em><em>optional</em>) – Use IMDB IDs. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>200 Ok, 401 Unauthorized</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.upd_movie">
+<span class="sig-name descname"><span class="pre">upd_movie</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">move_files</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.upd_movie"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.upd_movie" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates a movie in the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>dict</em>) – Dictionary containing an object obtained from get_movie()</p></li>
+<li><p><strong>move_files</strong> (<em>bool</em><em>, </em><em>optional</em>) – Have radarr move files when updating. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>200 Ok, 401 Unauthorized</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.get_movie_by_movie_id">
+<span class="sig-name descname"><span class="pre">get_movie_by_movie_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.get_movie_by_movie_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.get_movie_by_movie_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a movie by the Radarr database ID</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>int</em>) – Database Id of movie to return</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Movie data if present in database</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.del_movie">
+<span class="sig-name descname"><span class="pre">del_movie</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">del_files</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_exclusion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.del_movie"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.del_movie" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete a single movie by database id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>int</em>) – Database Id of movie to delete.</p></li>
+<li><p><strong>del_files</strong> (<em>bool</em><em>, </em><em>optional</em>) – Delete movie files when deleting movies. Defaults to False.</p></li>
+<li><p><strong>add_exclusion</strong> (<em>bool</em><em>, </em><em>optional</em>) – Add deleted movies to List Exclusions. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>200 Ok, 401 Unauthorized</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.lookup_movie">
+<span class="sig-name descname"><span class="pre">lookup_movie</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">term</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.lookup_movie"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.lookup_movie" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search for a movie to add to the database (Uses TMDB for search results)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>term</strong> (<em>str</em>) – search term to use for lookup</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of movies found</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.lookup_movie_by_tmdb_id">
+<span class="sig-name descname"><span class="pre">lookup_movie_by_tmdb_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.lookup_movie_by_tmdb_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.lookup_movie_by_tmdb_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search for movie by TMDB ID</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>str</em>) – TMDB ID</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of movies found</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.upd_movies">
+<span class="sig-name descname"><span class="pre">upd_movies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.upd_movies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.upd_movies" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Updates operation allows to edit properties of multiple movies at once</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>dict</em>) – Updated movie information</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>200 Ok, 401 Unauthorized</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.del_movies">
+<span class="sig-name descname"><span class="pre">del_movies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.del_movies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.del_movies" title="Permalink to this definition">¶</a></dt>
+<dd><p>The delete operation allows mass deletion of movies (and optionally files)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>dict</em>) – <p>dictionary of movies to be deleted:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;movieIds&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="mi">0</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;deleteFIles&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s2">&quot;addImportExclusion&quot;</span><span class="p">:</span> <span class="n">true</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>200 Ok, 401 Unauthorized</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.import_movies">
+<span class="sig-name descname"><span class="pre">import_movies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.import_movies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.import_movies" title="Permalink to this definition">¶</a></dt>
+<dd><p>The movie import endpoint is used by the bulk import view in Radarr UI. It allows movies to be bulk added to the Radarr database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>dict</em>) – dictionary of all movies to be imported</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>200 Ok, 401 Unauthorized</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.get_movie_files_by_movie_id">
+<span class="sig-name descname"><span class="pre">get_movie_files_by_movie_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.get_movie_files_by_movie_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.get_movie_files_by_movie_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a movie file object by Movie database id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>int</em>) – Movie database id</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Movie file information if exists</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.get_movie_files">
+<span class="sig-name descname"><span class="pre">get_movie_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">moviefile_ids</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.get_movie_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.get_movie_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get movie file information for multiple movie files</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>moviefile_ids</strong> (<em>array</em>) – an array of movie file ids</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of movie files</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.get_movie_file">
+<span class="sig-name descname"><span class="pre">get_movie_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.get_movie_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.get_movie_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get movie file by database id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>int</em>) – movie file id</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>movie file information</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.del_movie_file">
+<span class="sig-name descname"><span class="pre">del_movie_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.del_movie_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.del_movie_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allows for deletion of a moviefile by its database id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>int</em>) – Movie file id</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>200 Ok, 401 Unauthorized</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.get_history">
+<span class="sig-name descname"><span class="pre">get_history</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">page</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">page_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_direction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'descending'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'date'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.get_history"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.get_history" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a json object list of items in your history</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>page</strong> (<em>int</em><em>, </em><em>optional</em>) – Page to be returned. Defaults to 1.</p></li>
+<li><p><strong>page_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of results per page. Defaults to 20.</p></li>
+<li><p><strong>sort_direction</strong> (<em>str</em><em>, </em><em>optional</em>) – Direction to sort items. Defaults to “descending”.</p></li>
+<li><p><strong>sort_key</strong> (<em>str</em><em>, </em><em>optional</em>) – Field to sort by. Defaults to “date”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Array</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.get_movie_history">
+<span class="sig-name descname"><span class="pre">get_movie_history</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.get_movie_history"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.get_movie_history" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get history for a given movie in database by its database id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>int</em>) – Database id of movie</p></li>
+<li><p><strong>event_type</strong> (<em>int</em><em>, </em><em>optional</em>) – History event type to retrieve. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Array</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.get_blacklist">
+<span class="sig-name descname"><span class="pre">get_blacklist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">page</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">page_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_direction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'descending'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'date'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.get_blacklist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.get_blacklist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns blacklisted releases.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>page</strong> (<em>int</em><em>, </em><em>optional</em>) – Page to be returned. Defaults to 1.</p></li>
+<li><p><strong>page_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of results per page. Defaults to 20.</p></li>
+<li><p><strong>sort_direction</strong> (<em>str</em><em>, </em><em>optional</em>) – Direction to sort items. Defaults to “descending”.</p></li>
+<li><p><strong>sort_key</strong> (<em>str</em><em>, </em><em>optional</em>) – Field to sort by. Defaults to “date”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Array</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.del_blacklist">
+<span class="sig-name descname"><span class="pre">del_blacklist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.del_blacklist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.del_blacklist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes a specific release (the id provided) from the blacklist</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>int</em>) – blacklist id from database</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Array</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.get_blacklist_by_movie_id">
+<span class="sig-name descname"><span class="pre">get_blacklist_by_movie_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.get_blacklist_by_movie_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.get_blacklist_by_movie_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves blacklisted releases that are tied to a given movie in the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>int</em>) – Movie id from Database</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Array</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.del_blacklist_bulk">
+<span class="sig-name descname"><span class="pre">del_blacklist_bulk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.del_blacklist_bulk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.del_blacklist_bulk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete blacklisted releases in bulk</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>dict</em>) – blacklists that should be deleted</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>200 Ok, 401 Unauthorized</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.get_queue">
+<span class="sig-name descname"><span class="pre">get_queue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">page</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">page_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_direction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ascending'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'timeLeft'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_unknown_movie_items</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.get_queue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.get_queue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a json object list of items in the queue</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>page</strong> (<em>int</em><em>, </em><em>optional</em>) – Page to be returned. Defaults to 1.</p></li>
+<li><p><strong>page_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of results per page. Defaults to 20.</p></li>
+<li><p><strong>sort_direction</strong> (<em>str</em><em>, </em><em>optional</em>) – Direction to sort items. Defaults to “ascending”.</p></li>
+<li><p><strong>sort_key</strong> (<em>str</em><em>, </em><em>optional</em>) – Field to sort by. Defaults to “timeLeft”.</p></li>
+<li><p><strong>include_unknown_movie_items</strong> (<em>bool</em><em>, </em><em>optional</em>) – Include unknown movie items. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Array</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.del_queue">
+<span class="sig-name descname"><span class="pre">del_queue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_from_client</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blacklist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.del_queue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.del_queue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove an item from the queue and optionally blacklist it</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>int</em>) – id of the item to be removed</p></li>
+<li><p><strong>remove_from_client</strong> (<em>bool</em><em>, </em><em>optional</em>) – Remove the item from the client. Defaults to True.</p></li>
+<li><p><strong>blacklist</strong> (<em>bool</em><em>, </em><em>optional</em>) – Add the item to the blacklist. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>200 Ok, 401 Unauthorized</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.del_queue_bulk">
+<span class="sig-name descname"><span class="pre">del_queue_bulk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_from_client</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blacklist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.del_queue_bulk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.del_queue_bulk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove multiple items from queue by their ids</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>dict</em>) – <p>Dictionary of IDs to be removed:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="s2">&quot;ids&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="mi">0</span>
+<span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</p></li>
+<li><p><strong>remove_from_client</strong> (<em>bool</em><em>, </em><em>optional</em>) – Remove the items from the client. Defaults to True.</p></li>
+<li><p><strong>blacklist</strong> (<em>bool</em><em>, </em><em>optional</em>) – Add the items to the blacklist. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>200 ok, 401 invalid api key</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.get_queue_details">
+<span class="sig-name descname"><span class="pre">get_queue_details</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">include_movie</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.get_queue_details"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.get_queue_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get details of all items in queue</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>include_movie</strong> (<em>bool</em><em>, </em><em>optional</em>) – Include movie object if linked. Defaults to True.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Array</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.get_queue_status">
+<span class="sig-name descname"><span class="pre">get_queue_status</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.get_queue_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.get_queue_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stats on items in queue</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Array</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.force_grab_queue_item">
+<span class="sig-name descname"><span class="pre">force_grab_queue_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.force_grab_queue_item"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.force_grab_queue_item" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a Radarr “force grab” on a pending queue item by its ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>int</em>) – queue item id from database.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>200 ok, 401 Invalid API Key</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.get_indexer">
+<span class="sig-name descname"><span class="pre">get_indexer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.get_indexer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.get_indexer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all indexers or a single indexer by its database id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>int</em><em>, </em><em>optional</em>) – indexer database id. Defaults to None.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Array</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.upd_indexer">
+<span class="sig-name descname"><span class="pre">upd_indexer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.upd_indexer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.upd_indexer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Edit an indexer</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>int</em>) – Database id of indexer</p></li>
+<li><p><strong>data</strong> (<em>dict</em>) – information to be changed within the indexer</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>200 ok, 401 Unauthorized</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.del_indexer">
+<span class="sig-name descname"><span class="pre">del_indexer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.del_indexer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.del_indexer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete indexer by database id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>int</em>) – DAtabase id of the indexer</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>200 Ok, 401 Unauthorized</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.get_download_client">
+<span class="sig-name descname"><span class="pre">get_download_client</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.get_download_client"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.get_download_client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of all the download clients or a single client by its database id added in Radarr</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>int</em><em>, </em><em>optional</em>) – Download client database id. Defaults to None.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Array</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.upd_download_client">
+<span class="sig-name descname"><span class="pre">upd_download_client</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.upd_download_client"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.upd_download_client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Edit a downloadclient by database id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>int</em>) – Download client database id</p></li>
+<li><p><strong>data</strong> (<em>dict</em>) – data to be updated within download client</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>200 Ok</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.del_download_client">
+<span class="sig-name descname"><span class="pre">del_download_client</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.del_download_client"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.del_download_client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete a download client by database id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>int</em>) – download client database id</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>200 Ok</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.get_import_list">
+<span class="sig-name descname"><span class="pre">get_import_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.get_import_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.get_import_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Query Radarr for all lists or a single list by its database id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>int</em><em>, </em><em>optional</em>) – Import list database id. Defaults to None.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Array</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.upd_import_list">
+<span class="sig-name descname"><span class="pre">upd_import_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.upd_import_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.upd_import_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Edit an importlist</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>int</em>) – Import list database id</p></li>
+<li><p><strong>data</strong> (<em>dict</em>) – data to be updated within the import list</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>200 Ok, 401 Unauthorized</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.del_import_list">
+<span class="sig-name descname"><span class="pre">del_import_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.del_import_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.del_import_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete an import list</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>int</em>) – Import list database id</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>200 ok, 401 Unauthorized</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.get_notification">
+<span class="sig-name descname"><span class="pre">get_notification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.get_notification"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.get_notification" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all notifications or a single notification by its database id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>int</em><em>, </em><em>optional</em>) – Notification database id. Defaults to None.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Array</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.upd_notification">
+<span class="sig-name descname"><span class="pre">upd_notification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.upd_notification"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.upd_notification" title="Permalink to this definition">¶</a></dt>
+<dd><p>Edit notification by database id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>int</em>) – Database id of notification</p></li>
+<li><p><strong>data</strong> (<em>dict</em>) – data that requires updating</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>200 Ok, 401 Unauthorized</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.del_notification">
+<span class="sig-name descname"><span class="pre">del_notification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.del_notification"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.del_notification" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete a notification by its database id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>int</em>) – Database id of notification</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>201 Ok, 401 Unauthorized</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.get_tag">
+<span class="sig-name descname"><span class="pre">get_tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.get_tag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.get_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all tags in the database or return a tag by database id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>int</em><em>, </em><em>optional</em>) – Database if of tag. Defaults to None.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Array</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.create_tag">
+<span class="sig-name descname"><span class="pre">create_tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.create_tag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.create_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new tag that can be assigned to a movie, list, delay profile, notification, or restriction</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>label</strong> (<em>str</em>) – Label of the tag.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>200 Ok, 401 Unauthorized</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.upd_tag">
+<span class="sig-name descname"><span class="pre">upd_tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.upd_tag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.upd_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Edit a tag by its database id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>int</em>) – Database id of tag</p></li>
+<li><p><strong>label</strong> (<em>str</em>) – new label of the tag</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>200 Ok, 401 Unauthorized</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.del_tag">
+<span class="sig-name descname"><span class="pre">del_tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.del_tag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.del_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete a tag</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>int</em>) – Database id of tag</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>200 Ok, 401 Unauthorized</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.get_tag_details">
+<span class="sig-name descname"><span class="pre">get_tag_details</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.get_tag_details"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.get_tag_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of tag detail objects for all tags in the database,
+or the id of all items in the database which use the specified tag ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>int</em><em>, </em><em>optional</em>) – Database id of tag. Defaults to None.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Array</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.get_disk_space">
+<span class="sig-name descname"><span class="pre">get_disk_space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.get_disk_space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.get_disk_space" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Query Radarr for disk usage information</dt><dd><p>System &gt; Status</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Array</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.get_config_ui">
+<span class="sig-name descname"><span class="pre">get_config_ui</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.get_config_ui"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.get_config_ui" title="Permalink to this definition">¶</a></dt>
+<dd><p>Query Radarr for UI settings</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Array</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.upd_config_ui">
+<span class="sig-name descname"><span class="pre">upd_config_ui</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.upd_config_ui"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.upd_config_ui" title="Permalink to this definition">¶</a></dt>
+<dd><p>Edit one or many UI settings and save to to the database</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>dict</em>) – data to be Updated</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>200 Ok, 401 Unauthorized</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.get_config_host">
+<span class="sig-name descname"><span class="pre">get_config_host</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.get_config_host"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.get_config_host" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get General/Host settings for Radarr.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Array</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.upd_config_host">
+<span class="sig-name descname"><span class="pre">upd_config_host</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.upd_config_host"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.upd_config_host" title="Permalink to this definition">¶</a></dt>
+<dd><p>Edit General/Host settings for Radarr.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>dict</em>) – data to bu updated</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>200 Ok, 401 Unauthorized</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.get_config_naming">
+<span class="sig-name descname"><span class="pre">get_config_naming</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.get_config_naming"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.get_config_naming" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get Settings for movie file and folder naming.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Array</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.upd_config_naming">
+<span class="sig-name descname"><span class="pre">upd_config_naming</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.upd_config_naming"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.upd_config_naming" title="Permalink to this definition">¶</a></dt>
+<dd><p>Edit Settings for movie file and folder naming.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>dict</em>) – data to be updated</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>200 Ok, 401 Unauthorized</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.get_metadata">
+<span class="sig-name descname"><span class="pre">get_metadata</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.get_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.get_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all metadata consumer settings</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Array</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.get_system_status">
+<span class="sig-name descname"><span class="pre">get_system_status</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.get_system_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.get_system_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find out information such as OS, version, paths used, etc</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Array</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.get_health">
+<span class="sig-name descname"><span class="pre">get_health</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.get_health"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.get_health" title="Permalink to this definition">¶</a></dt>
+<dd><p>Query radarr for health information</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Array</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.post_command">
+<span class="sig-name descname"><span class="pre">post_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.post_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.post_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs any of the predetermined Radarr command routines.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the command to be run
+For command names:
+<a class="reference external" href="https://radarr.video/docs/api/#/Command/post-command">https://radarr.video/docs/api/#/Command/post-command</a></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Array</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.get_updates">
+<span class="sig-name descname"><span class="pre">get_updates</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.get_updates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.get_updates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Will return a list of recent updated to Radarr</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Array</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.get_quality_profiles">
+<span class="sig-name descname"><span class="pre">get_quality_profiles</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.get_quality_profiles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.get_quality_profiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Query Radarr for quality profiles</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Array</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.get_calendar">
+<span class="sig-name descname"><span class="pre">get_calendar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unmonitored</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.get_calendar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.get_calendar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of movies based on calendar Parameters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_date</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">datetime</span></code>) – ISO 8601 start datetime</p></li>
+<li><p><strong>end_date</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">datetime</span></code>) – ISO 8601 end datetime</p></li>
+<li><p><strong>unmonitored</strong> (<em>bool</em><em>, </em><em>optional</em>) – Include unmonitored movies. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Array</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.get_custom_filter">
+<span class="sig-name descname"><span class="pre">get_custom_filter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.get_custom_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.get_custom_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Query Radarr for custom filters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Array</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.get_remote_path_mapping">
+<span class="sig-name descname"><span class="pre">get_remote_path_mapping</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.get_remote_path_mapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.get_remote_path_mapping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of remote paths being mapped and used by Radarr</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Array</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.get_root_folder">
+<span class="sig-name descname"><span class="pre">get_root_folder</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyarr/radarr_api.html#RadarrAPI.get_root_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.get_root_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Query Radarr for root folder information</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Array</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>JSON</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.basic_auth">
+<span class="sig-name descname"><span class="pre">basic_auth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.basic_auth" title="Permalink to this definition">¶</a></dt>
+<dd><p>If you have basic authentication setup you will need to pass your
+username and passwords to the requests.auth.HTTPBASICAUTH() method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>username</strong> (<em>str</em>) – Username for basic auth.</p></li>
+<li><p><strong>password</strong> (<em>str</em>) – Password for basic auth.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>HTTP Auth object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.request_del">
+<span class="sig-name descname"><span class="pre">request_del</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.request_del" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper on any delete requests</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – Path to API endpoint e.g. /api/manualimport</p></li>
+<li><p><strong>params</strong> (<em>dict</em><em>, </em><em>optional</em>) – URL Parameters to send with the request. Defaults to None.</p></li>
+<li><p><strong>data</strong> (<em>dict</em><em>, </em><em>optional</em>) – Payload to send with request. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Response object from requests</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.request_get">
+<span class="sig-name descname"><span class="pre">request_get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.request_get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper on any get requests</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – Path to API endpoint e.g. /api/manualimport</p></li>
+<li><p><strong>params</strong> (<em>dict</em><em>, </em><em>optional</em>) – URL Parameters to send with the request. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Response object from requests</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.request_post">
+<span class="sig-name descname"><span class="pre">request_post</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.request_post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper on any post requests</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – Path to API endpoint e.g. /api/manualimport</p></li>
+<li><p><strong>params</strong> (<em>dict</em><em>, </em><em>optional</em>) – URL Parameters to send with the request. Defaults to None.</p></li>
+<li><p><strong>data</strong> (<em>dict</em><em>, </em><em>optional</em>) – Payload to send with request. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Response object from requests</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyarr.radarr_api.RadarrAPI.request_put">
+<span class="sig-name descname"><span class="pre">request_put</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyarr.radarr_api.RadarrAPI.request_put" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper on any put requests</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – Path to API endpoint e.g. /api/manualimport</p></li>
+<li><p><strong>params</strong> (<em>dict</em><em>, </em><em>optional</em>) – URL Parameters to send with the request. Defaults to None.</p></li>
+<li><p><strong>data</strong> (<em>dict</em><em>, </em><em>optional</em>) – Payload to send with request. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Response object from requests</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="sonarr.html" class="btn btn-neutral float-left" title="SonarrAPI" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Steven Marks, TotalDebug.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
