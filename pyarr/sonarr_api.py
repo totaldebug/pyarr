@@ -233,6 +233,7 @@ class SonarrAPI(RequestAPI):
         Args:
             id_ (int): Database id for episode file
             data (dict): data with quality::
+
                 {
                     "quality": {
                         "quality": {
@@ -286,7 +287,7 @@ class SonarrAPI(RequestAPI):
 
     # GET /wanted/missing
     def get_wanted(self, sort_key="airDateUtc", page=1, page_size=10, sort_dir="asc"):
-        """Gets missing episode *episodes without files)
+        """Gets missing episode (episodes without files)
 
         Args:
             sort_key (str, optional): series.titke or airDateUtc. Defaults to "airDateUtc".

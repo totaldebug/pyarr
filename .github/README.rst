@@ -49,9 +49,9 @@ both Radarr and Sonarr Rest APIs directry from Python.
    </tr>
    </table>
 
-************
-Installation
-************
+*******
+Install
+*******
 
 This package is distributed on PyPI_ and can be installed with ``pip``:
 
@@ -112,9 +112,9 @@ Example Radarr API Usage:
     # Get and print TV Shows
     print(radarr.get_root_folder())
 
-************
-Contributing
-************
+**********
+Contribute
+**********
 
 Got **something interesting** you'd like to **share**? Learn about
 contributing in our `contributing guide`_.

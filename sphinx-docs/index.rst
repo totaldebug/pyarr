@@ -1,13 +1,8 @@
 .. include:: ../.github/README.rst
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Documentation
-
-   installing
-   pyarr
-   contributing
-
+Table of Contents
+----------------------------------------------------------
+.. include:: toc.rst
 
 Indices and tables
 ==================

@@ -249,7 +249,7 @@ class RadarrAPI(RequestAPI):
         """Get movie file information for multiple movie files
 
         Args:
-            moviefile_ids (:array:`int`): an array of movie file ids
+            moviefile_ids (array): an array of movie file ids
 
         Returns:
             JSON: List of movie files
@@ -467,11 +467,13 @@ class RadarrAPI(RequestAPI):
 
         Args:
             data (dict): Dictionary of IDs to be removed::
+
                 {
                 "ids": [
                     0
                 ]
                 }
+
             remove_from_client (bool, optional): Remove the items from the client. Defaults to True.
             blacklist (bool, optional): Add the items to the blacklist. Defaults to True.
 
