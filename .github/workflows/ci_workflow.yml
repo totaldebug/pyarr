@@ -46,13 +46,6 @@ jobs:
       - name: Getting your configuration from GitHub
         uses: actions/checkout@v2
 
-      #- name: Update documentation
-      #  uses: totaldebug/sphinx-publish-action@master
-      #  with:
-      #    sphinx_src: sphinx-docs
-      #    target_path: docs
-      #    token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Build Changelog
         id: github_release
         uses: mikepenz/release-changelog-builder-action@main
