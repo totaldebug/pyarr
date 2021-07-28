@@ -9,6 +9,8 @@ __pycache__
 
 # python
 *.pyc
+.venv
+venv
 
 # PyPi
 dist
