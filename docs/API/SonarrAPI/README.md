@@ -1,3 +1,0 @@
-# SonarrAPI
-
-source: `{{ page.path }}`

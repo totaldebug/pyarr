@@ -2,7 +2,11 @@ from .request_api import RequestAPI
 
 
 class RadarrAPI(RequestAPI):
-    """API wrapper for Radarr endpoints."""
+    """API wrapper for Radarr endpoints.
+
+    Args:
+        RequestAPI (:obj:`str`): provides connection to API endpoint
+    """
 
     def _construct_movie_json(
         self, db_id, quality_profile_id, root_dir, monitored=True, search_for_movie=True
@@ -10,14 +14,17 @@ class RadarrAPI(RequestAPI):
         """Searches for movie on tmdb and returns Movie json to add.
 
         Args:
-            [Required] db_id (str) - imdb or tmdb id
-            [Required] quality_profile_id (int)
-            [Required] root_dir (str)
-            [Optional] monitored (bool)
-            [Optional] search_for_movie (bool)
+            db_id (str): imdb or tmdb id
+            quality_profile_id (int): ID of the quality profile the movie will use
+            root_dir (str): location of the root DIR
+            monitored (bool, optional): should the movie be monitored. Defaults to True.
+            search_for_movie (bool, optional): Should we search for the movie. Defaults to True.
 
-        Return:
-            Movie JSON (dict)
+        Raises:
+            Exception: [description]
+
+        Returns:
+            JSON: Movie JSON for adding a movie to radarr
         """
         s_dict = self.lookup_movie(db_id)
 
@@ -44,9 +51,10 @@ class RadarrAPI(RequestAPI):
         """Returns all movies in the database, or returns a movie with a specific TMDB ID.
 
         Args:
-            [Optional] id_ (int)
+            id_ (int, optional): TMDB Id of Movies. Defaults to None.
+
         Returns:
-            JSON Response (dict)
+            JSON: List of Movies from Radarr database
         """
         params = {}
         if id_:
@@ -65,17 +73,18 @@ class RadarrAPI(RequestAPI):
         search_for_movie=True,
         tmdb=True,
     ):
-        """addMovie adds a new movie to collection
+        """Adds a movie to the database
 
         Args:
-            [Required] db_id (str) - IMDB or TMDB ID
-            [Required] quality_profile_id (int)
-            [Required] root_dir (str)
-            [Optional] monitored (bool)
-            [Optional] search_for_movie (bool)
-            [Optional] tmdb (bool) - Set to false to use imdb IDs
+            db_id (str): IMDB or TMDB ID
+            quality_profile_id (int): ID of the quality profile the movie will use
+            root_dir (str): location of the root DIR
+            monitored (bool, optional): should the movie be monitored. Defaults to True.
+            search_for_movie (bool, optional): Should we search for the movie. Defaults to True.
+            tmdb (bool, optional): Use IMDB IDs. Defaults to True.
+
         Returns:
-            JSON Response (dict)
+            JSON: 200 Ok, 401 Unauthorized
         """
         if tmdb:
             term = f"tmdb:{str(db_id)}"
@@ -92,13 +101,14 @@ class RadarrAPI(RequestAPI):
 
     # PUT /movie
     def upd_movie(self, data, move_files=False):
-        """Update an existing movie.
+        """Updates a movie in the database.
 
         Args:
-            [Required] data (dict) - Dictionary containing an object obtained by get_movie()
-            [Optional] move_files (bool) - Have radarr move files when updating
+            data (dict): Dictionary containing an object obtained from get_movie()
+            move_files (bool, optional): Have radarr move files when updating. Defaults to False.
+
         Returns:
-            JSON Response (dict)
+            JSON: 200 Ok, 401 Unauthorized
         """
 
         path = "/api/movie"
@@ -108,12 +118,13 @@ class RadarrAPI(RequestAPI):
 
     # GET /movie/{id}
     def get_movie_by_movie_id(self, id_):
-        """Get a movie by the database ID.
+        """Get a movie by the Radarr database ID
 
         Args:
-            [Optional] id_ (int)
+            id_ (int): Database Id of movie to return
+
         Returns:
-            JSON Response (dict)
+            JSON: Movie data if present in database
         """
         path = f"/api/v3/movie/{id_}"
         res = self.request_get(path)
@@ -121,13 +132,15 @@ class RadarrAPI(RequestAPI):
 
     # DELETE /movie/{id}
     def del_movie(self, id_, del_files=False, add_exclusion=False):
-        """Delete a single movie by database ID.
+        """Delete a single movie by database id.
+
         Args:
-            [Required] id_ (int)
-            [Optional] del_files (bool)
-            [Optional] add_exclusion (bool)
+            id_ (int): Database Id of movie to delete.
+            del_files (bool, optional): Delete movie files when deleting movies. Defaults to False.
+            add_exclusion (bool, optional): Add deleted movies to List Exclusions. Defaults to False.
+
         Returns:
-            JSON Response (dict)
+            JSON: 200 Ok, 401 Unauthorized
         """
         params = {"deleteFiles": del_files, "addExclusion": add_exclusion}
         path = f"/api/v3/movie/{id_}"
@@ -136,12 +149,13 @@ class RadarrAPI(RequestAPI):
 
     # GET /movie/lookup
     def lookup_movie(self, term):
-        """Searches for movie.
+        """Search for a movie to add to the database (Uses TMDB for search results)
 
         Args:
-            [Required] term (str) - Uses TMDB for search results
+            term (str): search term to use for lookup
+
         Returns:
-            JSON Response (dict)
+            JSON: List of movies found
         """
         params = {"term": term}
         path = "/api/v3/movie/lookup"
@@ -150,12 +164,13 @@ class RadarrAPI(RequestAPI):
 
     # GET /movie/lookup
     def lookup_movie_by_tmdb_id(self, id_):
-        """Searches for movie.
+        """Search for movie by TMDB ID
 
         Args:
-            [Required] term (str) - Uses TMDB for search results
+            id_ (str): TMDB ID
+
         Returns:
-            JSON Response (dict)
+            JSON: List of movies found
         """
         params = {"term": f"tmdb:{id_}"}
         path = "/api/v3/movie/lookup"
@@ -164,12 +179,13 @@ class RadarrAPI(RequestAPI):
 
     # PUT /movie/editor
     def upd_movies(self, data):
-        """Edit multiple movie files.
+        """The Updates operation allows to edit properties of multiple movies at once
 
         Args:
-            [Required] data (dict)
+            data (dict): Updated movie information
+
         Returns:
-            JSON Response (dict)
+            JSON: 200 Ok, 401 Unauthorized
         """
         path = "/api/v3/movie/editor"
         res = self.request_put(path, data=data)
@@ -177,12 +193,21 @@ class RadarrAPI(RequestAPI):
 
     # DELETE /movie/editor
     def del_movies(self, data):
-        """Delete multiple movie files.
+        """The delete operation allows mass deletion of movies (and optionally files)
 
         Args:
-            [Required] data (dict)
+            data (dict): dictionary of movies to be deleted::
+
+                {
+                    "movieIds": [
+                        0
+                    ],
+                    "deleteFIles": true,
+                    "addImportExclusion": true
+                }
+
         Returns:
-            JSON Response (dict)
+            JSON: 200 Ok, 401 Unauthorized
         """
         path = "/api/v3/movie/editor"
         res = self.request_del(path, data=data)
@@ -190,12 +215,13 @@ class RadarrAPI(RequestAPI):
 
     # POST /movie/import
     def import_movies(self, data):
-        """Import mulitple movies.
+        """The movie import endpoint is used by the bulk import view in Radarr UI. It allows movies to be bulk added to the Radarr database.
 
         Args:
-            [Required] data (dict)
+            data (dict): dictionary of all movies to be imported
+
         Returns:
-            JSON Response (dict)
+            JSON: 200 Ok, 401 Unauthorized
         """
         path = "/api/v3/movie/import"
         res = self.request_post(path, data=data)
@@ -205,12 +231,13 @@ class RadarrAPI(RequestAPI):
 
     # GET /moviefile
     def get_movie_files_by_movie_id(self, id_):
-        """Returns the movie files belonging to a specific movie based on database ID.
+        """Get a movie file object by Movie database id.
 
         Args:
-            [Required] id_ (int)
+            id_ (int): Movie database id
+
         Returns:
-            JSON Response (dict)
+            JSON: Movie file information if exists
         """
         params = {"movieid": id_}
         path = "/api/v3/moviefile"
@@ -219,12 +246,13 @@ class RadarrAPI(RequestAPI):
 
     # GET /moviefile
     def get_movie_files(self, moviefile_ids):
-        """Returns movie file info for multiple movie files.
+        """Get movie file information for multiple movie files
 
         Args:
-            [Required] moviefile_ids (array:int)
+            moviefile_ids (array): an array of movie file ids
+
         Returns:
-            JSON Response (dict)
+            JSON: List of movie files
         """
         params = {"moviefileids": moviefile_ids}
         path = "/api/v3/moviefile"
@@ -233,12 +261,13 @@ class RadarrAPI(RequestAPI):
 
     # GET /moviefile/{id}
     def get_movie_file(self, id_):
-        """Returns movie file info.
+        """Get movie file by database id
 
         Args:
-            [Required] id_ (int)
+            id_ (int): movie file id
+
         Returns:
-            JSON Response (dict)
+            JSON: movie file information
         """
         path = f"/api/v3/moviefile/{id_}"
         res = self.request_get(path)
@@ -246,11 +275,13 @@ class RadarrAPI(RequestAPI):
 
     # DELETE /moviefile/{id}
     def del_movie_file(self, id_):
-        """Allows for deletion of a moviefile by its database ID.
+        """Allows for deletion of a moviefile by its database id.
+
         Args:
-            [Required] id_ (int)
+            id_ (int): Movie file id
+
         Returns:
-            JSON Response (dict)
+            JSON: 200 Ok, 401 Unauthorized
         """
         path = f"/api/v3/movie/{id_}"
         res = self.request_del(path)
@@ -265,12 +296,13 @@ class RadarrAPI(RequestAPI):
         """Return a json object list of items in your history
 
         Args:
-            [Optional] page (int) - Default: 1
-            [Optional] page_size (int) - Default: 20
-            [Optional] sort_direction (str) - Default: descending
-            [Optional] sort_key (str) - Default: date
+            page (int, optional): Page to be returned. Defaults to 1.
+            page_size (int, optional): Number of results per page. Defaults to 20.
+            sort_direction (str, optional): Direction to sort items. Defaults to "descending".
+            sort_key (str, optional): Field to sort by. Defaults to "date".
+
         Returns:
-            JSON Response (dict)
+            JSON: Array
         """
         params = {
             "page": page,
@@ -284,13 +316,14 @@ class RadarrAPI(RequestAPI):
 
     # GET /history/movie
     def get_movie_history(self, id_, event_type=None):
-        """Return a json object list of items in your history.
+        """Get history for a given movie in database by its database id
 
         Args:
-            [Required] id_ (int) - Database ID of movie
-            [Optional] event_type (int) - History event type to retrieve
+            id_ (int): Database id of movie
+            event_type (int, optional): History event type to retrieve. Defaults to None.
+
         Returns:
-            JSON Response (dict)
+            JSON: Array
         """
         params = {"movieId": id_}
         if event_type:
@@ -310,13 +343,15 @@ class RadarrAPI(RequestAPI):
         sort_key="date",
     ):
         """Returns blacklisted releases.
+
         Args:
-            [Optional] page (int) - Default: 1
-            [Optional] page_size (int) - Default: 20
-            [Optional] sort_direction (str) - Default: descending
-            [Optional] sort_key (str) - Default: date
+            page (int, optional): Page to be returned. Defaults to 1.
+            page_size (int, optional): Number of results per page. Defaults to 20.
+            sort_direction (str, optional): Direction to sort items. Defaults to "descending".
+            sort_key (str, optional): Field to sort by. Defaults to "date".
+
         Returns:
-            JSON Response (dict)
+            JSON: Array
         """
         params = {
             "page": page,
@@ -330,11 +365,13 @@ class RadarrAPI(RequestAPI):
 
     # DELETE /blacklist
     def del_blacklist(self, id_):
-        """Removes a specific release (the id provided) from the blacklist.
+        """Removes a specific release (the id provided) from the blacklist
+
         Args:
-            [Required] id_ (int)
+            id_ (int): blacklist id from database
+
         Returns:
-            JSON Response (dict)
+            JSON: Array
         """
         params = {"id": id_}
         path = "/api/v3/blacklist"
@@ -347,10 +384,12 @@ class RadarrAPI(RequestAPI):
         id_,
     ):
         """Retrieves blacklisted releases that are tied to a given movie in the database.
+
         Args:
-            [Required] id_ (int)
+            id_ (int): Movie id from Database
+
         Returns:
-            JSON Response (dict)
+            JSON: Array
         """
         params = {"movieId": id_}
         path = "/api/v3/blacklist/movie"
@@ -359,13 +398,15 @@ class RadarrAPI(RequestAPI):
 
     # DELETE /blacklist/bulk
     def del_blacklist_bulk(self, data):
-        """Delete blacklisted releases in bulk.
+        """Delete blacklisted releases in bulk
+
         Args:
-            [Required] data (dict)
+            data (dict): blacklists that should be deleted
+
         Returns:
-            JSON Response (dict)
+            JSON: 200 Ok, 401 Unauthorized
         """
-        path = "/api/v3/blacklist/movie"
+        path = "/api/v3/blacklist/bulk"
         res = self.request_del(path, data=data)
         return res
 
@@ -380,15 +421,17 @@ class RadarrAPI(RequestAPI):
         sort_key="timeLeft",
         include_unknown_movie_items=True,
     ):
-        """Return a json object list of items in the queue.
+        """Return a json object list of items in the queue
+
         Args:
-            [Optional] page (int) - Default: 1
-            [Optional] page_size (int) - Default: 20
-            [Optional] sort_direction (str) - Default: ascending
-            [Optional] sort_key (str) - Default: timeLeft
-            [Optional] include_unknown_movie_items (bool) - Default: True
+            page (int, optional): Page to be returned. Defaults to 1.
+            page_size (int, optional): Number of results per page. Defaults to 20.
+            sort_direction (str, optional): Direction to sort items. Defaults to "ascending".
+            sort_key (str, optional): Field to sort by. Defaults to "timeLeft".
+            include_unknown_movie_items (bool, optional): Include unknown movie items. Defaults to True.
+
         Returns:
-            JSON Response (dict)
+            JSON: Array
         """
         params = {
             "page": page,
@@ -403,13 +446,15 @@ class RadarrAPI(RequestAPI):
 
     # DELETE /queue/{id}
     def del_queue(self, id_, remove_from_client=True, blacklist=True):
-        """Remove an item from the queue and optionally blacklist it.
+        """Remove an item from the queue and optionally blacklist it
+
         Args:
-            [Required] id_ (int)
-            [Optional] remove_from_client (bool)
-            [Optional] blacklist (bool)
+            id_ (int): id of the item to be removed
+            remove_from_client (bool, optional): Remove the item from the client. Defaults to True.
+            blacklist (bool, optional): Add the item to the blacklist. Defaults to True.
+
         Returns:
-            JSON Response (dict)
+            JSON: 200 Ok, 401 Unauthorized
         """
         params = {"removeFromClient": remove_from_client, "blacklist": blacklist}
         path = f"/api/v3/queue/{id_}"
@@ -418,13 +463,22 @@ class RadarrAPI(RequestAPI):
 
     # DELETE /queue/bulk
     def del_queue_bulk(self, data, remove_from_client=True, blacklist=True):
-        """Remove multiple items from queue by their ids.
+        """Remove multiple items from queue by their ids
+
         Args:
-            [Required] data (dict)
-            [Optional] remove_from_client (bool)
-            [Optional] blacklist (bool)
+            data (dict): Dictionary of IDs to be removed::
+
+                {
+                "ids": [
+                    0
+                ]
+                }
+
+            remove_from_client (bool, optional): Remove the items from the client. Defaults to True.
+            blacklist (bool, optional): Add the items to the blacklist. Defaults to True.
+
         Returns:
-            JSON Response (dict)
+            JSON: 200 ok, 401 invalid api key
         """
         params = {"removeFromClient": remove_from_client, "blacklist": blacklist}
         path = "/api/v3/queue/bulk"
@@ -436,11 +490,13 @@ class RadarrAPI(RequestAPI):
         self,
         include_movie=True,
     ):
-        """Get details of all items in queue.
+        """Get details of all items in queue
+
         Args:
-            [Optional] include_movie (bool) - Default: True
+            include_movie (bool, optional): Include movie object if linked. Defaults to True.
+
         Returns:
-            JSON Response (dict)
+            JSON: Array
         """
         params = {
             "includeMovie": include_movie,
@@ -451,11 +507,10 @@ class RadarrAPI(RequestAPI):
 
     # GET /queue/status
     def get_queue_status(self):
-        """Stats on items in queue.
-        Args:
-            None
+        """Stats on items in queue
+
         Returns:
-            JSON Response (dict)
+            JSON: Array
         """
         path = "/api/v3/queue/status"
         res = self.request_get(path)
@@ -463,11 +518,13 @@ class RadarrAPI(RequestAPI):
 
     # POST /queue/grab/{id}
     def force_grab_queue_item(self, id_):
-        """Force grab pending queue item by ID.
+        """Perform a Radarr "force grab" on a pending queue item by its ID.
+
         Args:
-            [Required] id_ (int)
+            id_ (int): queue item id from database.
+
         Returns:
-            JSON Response (dict)
+            JSON: 200 ok, 401 Invalid API Key
         """
         path = f"/api/v3/queue/grab/{id_}"
         res = self.request_post(path)
@@ -477,12 +534,13 @@ class RadarrAPI(RequestAPI):
 
     # GET /indexer and /indexer/{id}
     def get_indexer(self, id_=None):
-        """Get all indexers or a single indexer by its database ID.
+        """Get all indexers or a single indexer by its database id.
 
         Args:
-            [Optional] id_ (int)
+            id_ (int, optional): indexer database id. Defaults to None.
+
         Returns:
-            JSON Response (dict)
+            JSON: Array
         """
         if not id_:
             path = "/api/v3/indexer"
@@ -494,13 +552,14 @@ class RadarrAPI(RequestAPI):
 
     # PUT /indexer/{id}
     def upd_indexer(self, id_, data):
-        """Edit an indexer.
+        """Edit an indexer
 
         Args:
-            [Required] id_ (int)
-            [Required] data (dict)
+            id_ (int): Database id of indexer
+            data (dict): information to be changed within the indexer
+
         Returns:
-            JSON Response (dict)
+            JSON: 200 ok, 401 Unauthorized
         """
         path = f"/api/v3/indexer/{id_}"
         res = path.request_put(path, data=data)
@@ -508,12 +567,13 @@ class RadarrAPI(RequestAPI):
 
     # DELETE /indexer/{id}
     def del_indexer(self, id_):
-        """Delete and indexer.
+        """Delete indexer by database id
 
         Args:
-            [Required] id_ (int)
+            id_ (int): DAtabase id of the indexer
+
         Returns:
-            JSON Response (dict)
+            JSON: 200 Ok, 401 Unauthorized
         """
         path = f"/api/v3/indexer/{id_}"
         res = self.request_del(path)
@@ -523,12 +583,13 @@ class RadarrAPI(RequestAPI):
 
     # GET /downloadclient and /downloadclient/{id}
     def get_download_client(self, id_=None):
-        """Get all download clients or a single download client by its database ID.
+        """Get a list of all the download clients or a single client by its database id added in Radarr
 
         Args:
-            [Optional] id_ (int)
+            id_ (int, optional): Download client database id. Defaults to None.
+
         Returns:
-            JSON Response (dict)
+            JSON: Array
         """
         if not id_:
             path = "/api/v3/downloadclient"
@@ -540,13 +601,14 @@ class RadarrAPI(RequestAPI):
 
     # PUT /downloadclient/{id}
     def upd_download_client(self, id_, data):
-        """Edit an downloadclient.
+        """Edit a downloadclient by database id
 
         Args:
-            [Required] id_ (int)
-            [Required] data (dict)
+            id_ (int): Download client database id
+            data (dict): data to be updated within download client
+
         Returns:
-            JSON Response (dict)
+            JSON: 200 Ok
         """
         path = f"/api/v3/downloadclient/{id_}"
         res = path.request_put(path, data=data)
@@ -554,12 +616,13 @@ class RadarrAPI(RequestAPI):
 
     # DELETE /downloadclient/{id}
     def del_download_client(self, id_):
-        """Delete an downloadclient.
+        """Delete a download client by database id
 
         Args:
-            [Required] id_ (int)
+            id_ (int): download client database id
+
         Returns:
-            JSON Response (dict)
+            JSON: 200 Ok
         """
         path = f"/api/v3/downloadclient/{id_}"
         res = self.request_del(path)
@@ -569,12 +632,13 @@ class RadarrAPI(RequestAPI):
 
     # GET /importlist and /importlist/{id}
     def get_import_list(self, id_=None):
-        """Get all import lists or a single import list by its database ID.
+        """Query Radarr for all lists or a single list by its database id
 
         Args:
-            [Optional] id_ (int)
+            id_ (int, optional): Import list database id. Defaults to None.
+
         Returns:
-            JSON Response (dict)
+            JSON: Array
         """
         if not id_:
             path = "/api/v3/importlist"
@@ -586,13 +650,14 @@ class RadarrAPI(RequestAPI):
 
     # PUT /importlist/{id}
     def upd_import_list(self, id_, data):
-        """Edit an importlist.
+        """Edit an importlist
 
         Args:
-            [Required] id_ (int)
-            [Required] data (dict)
+            id_ (int): Import list database id
+            data (dict): data to be updated within the import list
+
         Returns:
-            JSON Response (dict)
+            JSON: 200 Ok, 401 Unauthorized
         """
         path = f"/api/v3/importlist/{id_}"
         res = path.request_put(path, data=data)
@@ -600,12 +665,13 @@ class RadarrAPI(RequestAPI):
 
     # DELETE /importlist/{id}
     def del_import_list(self, id_):
-        """Delete an importlist.
+        """Delete an import list
 
         Args:
-            [Required] id_ (int)
+            id_ (int): Import list database id
+
         Returns:
-            JSON Response (dict)
+            JSON: 200 ok, 401 Unauthorized
         """
         path = f"/api/v3/importlist/{id_}"
         res = self.request_del(path)
@@ -615,12 +681,13 @@ class RadarrAPI(RequestAPI):
 
     # GET /notification and /notification/{id}
     def get_notification(self, id_=None):
-        """Get all notifications or a single notification by its database ID.
+        """Get all notifications or a single notification by its database id
 
         Args:
-            [Optional] id_ (int)
+            id_ (int, optional): Notification database id. Defaults to None.
+
         Returns:
-            JSON Response (dict)
+            JSON: Array
         """
         if not id_:
             path = "/api/v3/notification"
@@ -632,13 +699,14 @@ class RadarrAPI(RequestAPI):
 
     # PUT /notification/{id}
     def upd_notification(self, id_, data):
-        """Edit a notification.
+        """Edit notification by database id
 
         Args:
-            [Required] id_ (int)
-            [Required] data (dict)
+            id_ (int): Database id of notification
+            data (dict): data that requires updating
+
         Returns:
-            JSON Response (dict)
+            JSON: 200 Ok, 401 Unauthorized
         """
         path = f"/api/v3/notification/{id_}"
         res = path.request_put(path, data=data)
@@ -646,12 +714,13 @@ class RadarrAPI(RequestAPI):
 
     # DELETE /notification/{id}
     def del_notification(self, id_):
-        """Delete a notification.
+        """Delete a notification by its database id
 
         Args:
-            [Required] id_ (int)
+            id_ (int): Database id of notification
+
         Returns:
-            JSON Response (dict)
+            JSON: 201 Ok, 401 Unauthorized
         """
         path = f"/api/v3/notification/{id_}"
         res = self.request_del(path)
@@ -661,12 +730,13 @@ class RadarrAPI(RequestAPI):
 
     # GET /tag and /tag/{id}
     def get_tag(self, id_=None):
-        """Get all tags in the database, or return a given tag and its label by the database id.
+        """Get all tags in the database or return a tag by database id.
 
         Args:
-            [Optional] id_ (int)
+            id_ (int, optional): Database if of tag. Defaults to None.
+
         Returns:
-            JSON Response (dict)
+            JSON: Array
         """
         if not id_:
             path = "/api/v3/tag"
@@ -678,27 +748,29 @@ class RadarrAPI(RequestAPI):
 
     # POST /tag
     def create_tag(self, label):
-        """Create a new tag that can be assigned to a movie, list, delay profile, notification, or restriction.
+        """Create a new tag that can be assigned to a movie, list, delay profile, notification, or restriction
 
         Args:
-            [Required] label (str)
+            label (str): Label of the tag.
+
         Returns:
-            JSON Response (dict)
+            JSON: 200 Ok, 401 Unauthorized
         """
-        data = {"label": label}
+        data = {"id": 0, "label": label}
         path = "/api/v3/tag"
         res = self.request_post(path, data=data)
         return res
 
     # PUT /tag/{id}
     def upd_tag(self, id_, label):
-        """Edit a Tag by its database id.
+        """Edit a tag by its database id
 
         Args:
-            [Required] id_ (int)
-            [Required] label (str)
+            id_ (int): Database id of tag
+            label (str): new label of the tag
+
         Returns:
-            JSON Response (dict)
+            JSON: 200 Ok, 401 Unauthorized
         """
         data = {"id": id_, "label": label}
         path = f"/api/v3/tag/{id_}"
@@ -707,12 +779,13 @@ class RadarrAPI(RequestAPI):
 
     # DELETE /tag/{id}
     def del_tag(self, id_):
-        """Delete a tag.
+        """Delete a tag
 
         Args:
-            [Required] id_ (int)
+            id_ (int): Database id of tag
+
         Returns:
-            JSON Response (dict)
+            JSON: 200 Ok, 401 Unauthorized
         """
         path = f"/api/v3/tag/{id_}"
         res = self.request_del(path)
@@ -724,9 +797,10 @@ class RadarrAPI(RequestAPI):
         or the id of all items in the database which use the specified tag ID.
 
         Args:
-            [Optional] id_ (int)
+            id_ (int, optional): Database id of tag. Defaults to None.
+
         Returns:
-            JSON Response (dict)
+            JSON: Array
         """
         if not id_:
             path = "/api/v3/tag/detail"
@@ -740,12 +814,11 @@ class RadarrAPI(RequestAPI):
 
     # GET /diskspace
     def get_disk_space(self):
-        """Query Radarr for disk usage information.
+        """Query Radarr for disk usage information
+            System > Status
 
-        Args:
-            None
         Returns:
-            JSON Response (dict)
+            JSON: Array
         """
         path = "/api/v3/diskspace"
         res = self.request_get(path)
@@ -757,10 +830,8 @@ class RadarrAPI(RequestAPI):
     def get_config_ui(self):
         """Query Radarr for UI settings
 
-        Args:
-            None
         Returns:
-            JSON Response (dict)
+            JSON: Array
         """
         path = "/api/v3/config/ui"
         res = self.request_get(path)
@@ -768,12 +839,13 @@ class RadarrAPI(RequestAPI):
 
     # PUT /config/ui
     def upd_config_ui(self, data):
-        """Edit one or many UI Settings and save to the database.
+        """Edit one or many UI settings and save to to the database
 
         Args:
-            [Required] data (dict)
+            data (dict): data to be Updated
+
         Returns:
-            JSON Response (dict)
+            JSON: 200 Ok, 401 Unauthorized
         """
         path = "/api/v3/config/ui"
         res = self.request_put(path, data=data)
@@ -783,10 +855,8 @@ class RadarrAPI(RequestAPI):
     def get_config_host(self):
         """Get General/Host settings for Radarr.
 
-        Args:
-            None
         Returns:
-            JSON Response (dict)
+            JSON: Array
         """
         path = "/api/v3/config/host"
         res = self.request_get(path)
@@ -797,9 +867,10 @@ class RadarrAPI(RequestAPI):
         """Edit General/Host settings for Radarr.
 
         Args:
-            [Required] data (dict)
+            data (dict): data to bu updated
+
         Returns:
-            JSON Response (dict)
+            JSON: 200 Ok, 401 Unauthorized
         """
         path = "/api/v3/config/host"
         res = self.request_put(path, data=data)
@@ -809,10 +880,8 @@ class RadarrAPI(RequestAPI):
     def get_config_naming(self):
         """Get Settings for movie file and folder naming.
 
-        Args:
-            None
         Returns:
-            JSON Response (dict)
+            JSON: Array
         """
         path = "/api/v3/config/naming"
         res = self.request_get(path)
@@ -823,9 +892,10 @@ class RadarrAPI(RequestAPI):
         """Edit Settings for movie file and folder naming.
 
         Args:
-            [Required] data (dict)
+            data (dict): data to be updated
+
         Returns:
-            JSON Response (dict)
+            JSON: 200 Ok, 401 Unauthorized
         """
         path = "/api/v3/config/naming"
         res = self.request_put(path, data=data)
@@ -835,12 +905,10 @@ class RadarrAPI(RequestAPI):
 
     # GET /metadata
     def get_metadata(self):
-        """Get all metadata consumer settings.
+        """Get all metadata consumer settings
 
-        Args:
-            None
         Returns:
-            JSON Response (dict)
+            JSON: Array
         """
         path = "/api/v3/metadata"
         res = self.request_get(path)
@@ -850,12 +918,10 @@ class RadarrAPI(RequestAPI):
 
     # GET /system/status
     def get_system_status(self):
-        """Find out information such as OS, version, paths used, etc.
+        """Find out information such as OS, version, paths used, etc
 
-        Args:
-            None
         Returns:
-            JSON Response (dict)
+            JSON: Array
         """
         path = "/api/v3/system/status"
         res = self.request_get(path)
@@ -865,12 +931,10 @@ class RadarrAPI(RequestAPI):
 
     # GET /health
     def get_health(self):
-        """Query radarr for health information.
+        """Query radarr for health information
 
-        Args:
-            None
         Returns:
-            JSON Response (dict)
+            JSON: Array
         """
         path = "/api/v3/health"
         res = self.request_get(path)
@@ -879,19 +943,18 @@ class RadarrAPI(RequestAPI):
     ## COMMAND
 
     # POST /command
-    def post_command(self, name, **kwargs):
+    def post_command(self, name):
         """Performs any of the predetermined Radarr command routines.
 
         Args:
-            [Required] name (dict).
-        Kwargs:
-            For command names and additional kwargs:
-            https://radarr.video/docs/api/#/Command/post-command
+            name (str): Name of the command to be run
+                For command names:
+                https://radarr.video/docs/api/#/Command/post-command
+
         Returns:
-            JSON Response (dict)
+            JSON: Array
         """
         data = {
-            **kwargs,
             "name": name,
         }
         path = "/api/v3/command"
@@ -902,12 +965,10 @@ class RadarrAPI(RequestAPI):
 
     # GET /update
     def get_updates(self):
-        """Returns a list of recent updates to Radarr.
+        """Will return a list of recent updated to Radarr
 
-        Args:
-            None
         Returns:
-            JSON Response (dict)
+            JSON: Array
         """
         path = "/api/v3/update"
         res = self.request_get(path)
@@ -917,12 +978,10 @@ class RadarrAPI(RequestAPI):
 
     # GET /qualityProfile
     def get_quality_profiles(self):
-        """Query Radarr for quality profiles.
+        """Query Radarr for quality profiles
 
-        Args:
-            None
         Returns:
-            JSON Response (dict)
+            JSON: Array
         """
         path = "/api/v3/qualityProfile"
         res = self.request_get(path)
@@ -932,15 +991,15 @@ class RadarrAPI(RequestAPI):
 
     # GET /calendar
     def get_calendar(self, start_date, end_date, unmonitored=True):
-        """Get a list of movies based on calendar parameters.
+        """Get a list of movies based on calendar Parameters
 
         Args:
-            [Required]
-                - start_date (datetime) - ISO 8601
-                - end_date (datetime) - ISO 8601
-            [Optional] unmonitored (bool)
+            start_date (:obj:`datetime`): ISO 8601 start datetime
+            end_date (:obj:`datetime`): ISO 8601 end datetime
+            unmonitored (bool, optional): Include unmonitored movies. Defaults to True.
+
         Returns:
-            JSON Response (dict)
+            JSON: Array
         """
         params = {
             "start": start_date.strftime("%Y-%m-%d"),
@@ -955,12 +1014,10 @@ class RadarrAPI(RequestAPI):
 
     # GET /customfilter
     def get_custom_filter(self):
-        """Query Radarr for custom filters.
+        """Query Radarr for custom filters
 
-        Args:
-            None
         Returns:
-            JSON Response (dict)
+            JSON: Array
         """
         path = "/api/v3/customfilter"
         res = self.request_get(path)
@@ -970,12 +1027,10 @@ class RadarrAPI(RequestAPI):
 
     # GET /remotePathMapping
     def get_remote_path_mapping(self):
-        """Get a list of remote paths being mapped and used by Radarr.
+        """Get a list of remote paths being mapped and used by Radarr
 
-        Args:
-            None
         Returns:
-            JSON Response (dict)
+            JSON: Array
         """
         path = "/api/v3/remotePathMapping"
         res = self.request_get(path)
@@ -985,12 +1040,10 @@ class RadarrAPI(RequestAPI):
 
     # GET /rootfolder
     def get_root_folder(self):
-        """Returns the Root Folder.
+        """Query Radarr for root folder information
 
-        Args:
-            None
         Returns:
-            JSON Response (dict)
+            JSON: Array
         """
         path = "/api/v3/rootfolder"
         res = self.request_get(path)

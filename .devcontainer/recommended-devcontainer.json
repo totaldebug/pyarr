@@ -5,16 +5,27 @@
     "extensions": [
         "github.vscode-pull-request-github",
         "ms-python.python",
+        "ms-python.vscode-pylance",
         "yzhang.markdown-all-in-one",
-        "tabnine.tabnine-vscode"
+        "tabnine.tabnine-vscode",
+        "rebornix.project-snippets",
+        "njpwerner.autodocstring"
     ],
     "settings": {
         "files.eol": "\n",
         "editor.tabSize": 4,
+        "terminal.integrated.profiles.linux": {
+            "zsh": {
+                "path": "/bin/zsh"
+            }
+        },
+        "terminal.integrated.defaultProfile.linux": "zsh",
         "terminal.integrated.shell.linux": "/bin/zsh",
         "editor.formatOnPaste": false,
         "editor.formatOnSave": true,
         "editor.formatOnType": true,
-        "files.trimTrailingWhitespace": true
+        "files.trimTrailingWhitespace": true,
+        "python.formatting.provider": "black",
+        "autoDocstring.docstringFormat": "google"
     }
 }

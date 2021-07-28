@@ -4,7 +4,7 @@ RUN apt update
 
 RUN apt upgrade  -y
 
-RUN apt install zsh -y
+RUN apt install zsh python3-sphinx -y
 
 RUN pip install --user poetry
 ENV PATH="${PATH}:/root/.local/bin"
