@@ -259,7 +259,6 @@ class RadarrAPI(RequestAPI):
     ## HISTORY
 
     # GET /history
-    # FIXME: JSONDecodeError when using this endpoint
     def get_history(
         self, page=1, page_size=20, sort_direction="descending", sort_key="date"
     ):
