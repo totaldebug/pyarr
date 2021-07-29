@@ -102,13 +102,18 @@ class SonarrAPI(RequestAPI):
         return res
 
     # POST /command
-    def set_command(self, name):
+    def set_command(self, name, **kwargs):
         """Performs any of the predetermined Sonarr command routines
+
+        Note:
+            For command names and additional kwargs:
+            See https://github.com/Sonarr/Sonarr/wiki/Command
 
         Args:
             name (str): command name that should be execured
-                For command names:
-                See https://github.com/Sonarr/Sonarr/wiki/Command
+            **kwargs: additional parameters for specific commands
+
+
 
         Returns:
             JSON: Array
@@ -116,6 +121,7 @@ class SonarrAPI(RequestAPI):
         path = "/api/command"
         data = {
             "name": name,
+            **kwargs,
         }
         res = self.request_post(path, data=data)
         return res
