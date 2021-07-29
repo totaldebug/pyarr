@@ -40,8 +40,8 @@ About
    <tr>
    <td>
 
-**Pyarr** is a **high-quality** *Python API Wrapper* that provides access to
-both Radarr and Sonarr Rest APIs directry from Python.
+**Pyarr** is a high quality **Python API Wrapper** that provides access to
+both Radarr and Sonarr REST APIs.
 
 .. raw:: html
 
@@ -135,7 +135,7 @@ Author
 Credits
 =======
 
--  `Archmonger <https://github.com/Archmonger>`__ Some excellent contribution and improvements
+-  `Archmonger <https://github.com/Archmonger>`__ Some excellent contribution and improvements.
 
 *******
 Support
@@ -153,7 +153,7 @@ Donate
 
 Please consider supporting this project by sponsoring, or just donating
 a little via `our sponsor
-page <https://github.com/sponsors/marksie1988>`__
+page <https://github.com/sponsors/marksie1988>`__.
 
 *******
 License
@@ -161,7 +161,7 @@ License
 
 |License: CC BY-NC-SA 4.0|
 
--  Copyright © `Total Debug <https://totaldebug.uk>`__.
+-  Copyright © `Total Debug <https://totaldebug.uk>`__
 
 .. |TotalDebug| image:: https://totaldebug.uk/assets/images/logo.png
    :target: https://linkedin.com/in/marksie1988
