@@ -499,7 +499,7 @@ class SonarrAPI(RequestAPI):
 
         Args:
             tvdb_id (int): TDDB Id
-            quality_profile_id (ont): Database id for quality profile
+            quality_profile_id (int): Database id for quality profile
             root_dir (str): Root folder location, full path will be created from this
             season_folder (bool, optional): Create a folder for each season. Defaults to True.
             monitored (bool, optional): Monitor this series. Defaults to True.
