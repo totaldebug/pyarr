@@ -943,19 +943,23 @@ class RadarrAPI(RequestAPI):
     ## COMMAND
 
     # POST /command
-    def post_command(self, name):
+    def post_command(self, name, **kwargs):
         """Performs any of the predetermined Radarr command routines.
+
+        Note:
+            For command names and kwargs:
+            See https://radarr.video/docs/api/#/Command/post-command
 
         Args:
             name (str): Name of the command to be run
-                For command names:
-                https://radarr.video/docs/api/#/Command/post-command
+            **kwargs: additional parameters for specific commands
 
         Returns:
             JSON: Array
         """
         data = {
             "name": name,
+            **kwargs,
         }
         path = "/api/v3/command"
         res = self.request_post(path, data=data)
