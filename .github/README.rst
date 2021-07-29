@@ -17,7 +17,7 @@ Pyarr: Sonarr and Radarr API Python Wrapper
 
    <p align="center">
 
-`About`_ • `Installation`_ • `Support`_ • `Full Documentation <https://docs.totaldebug.uk/pyarr>`_
+`About`_ • `Install`_ • `Contribute`_ • `Author`_ • `Support`_ • `Donate`_ • `Full Documentation <https://docs.totaldebug.uk/pyarr>`_
 
 .. raw:: html
 
