@@ -102,7 +102,7 @@ class SonarrAPI(RequestAPI):
         return res
 
     # POST /command
-    def set_command(self, name, **kwargs):
+    def post_command(self, name, **kwargs):
         """Performs any of the predetermined Sonarr command routines
 
         Note:
