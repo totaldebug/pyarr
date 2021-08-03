@@ -131,18 +131,18 @@ class RadarrAPI(RequestAPI):
         return res
 
     # DELETE /movie/{id}
-    def del_movie(self, id_, del_files=False, add_exclusion=False):
+    def del_movie(self, id_, delete_files=False, add_exclusion=False):
         """Delete a single movie by database id.
 
         Args:
             id_ (int): Database Id of movie to delete.
-            del_files (bool, optional): Delete movie files when deleting movies. Defaults to False.
+            delete_files (bool, optional): Delete movie files when deleting movies. Defaults to False.
             add_exclusion (bool, optional): Add deleted movies to List Exclusions. Defaults to False.
 
         Returns:
             JSON: 200 Ok, 401 Unauthorized
         """
-        params = {"deleteFiles": del_files, "addExclusion": add_exclusion}
+        params = {"deleteFiles": delete_files, "addExclusion": add_exclusion}
         path = f"/api/v3/movie/{id_}"
         res = self.request_del(path, params=params)
         return res
