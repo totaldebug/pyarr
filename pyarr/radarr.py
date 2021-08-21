@@ -1,12 +1,23 @@
-from .request_api import RequestAPI
+from .base import BaseAPI
 
 
-class RadarrAPI(RequestAPI):
+class RadarrAPI(BaseAPI):
     """API wrapper for Radarr endpoints.
 
     Args:
         RequestAPI (:obj:`str`): provides connection to API endpoint
     """
+
+    def __init__(self, host_url: str, api_key: str):
+        """Initialise Readarr API
+
+        Args:
+            host_url (str): URL for Readarr
+            api_key (str): API key for Readarr
+        """
+
+        ver_uri = "/v3"
+        super().__init__(host_url, api_key, ver_uri)
 
     def _construct_movie_json(
         self, db_id, quality_profile_id, root_dir, monitored=True, search_for_movie=True
@@ -901,45 +912,6 @@ class RadarrAPI(RequestAPI):
         res = self.request_put(path, data=data)
         return res
 
-    ## METADATA
-
-    # GET /metadata
-    def get_metadata(self):
-        """Get all metadata consumer settings
-
-        Returns:
-            JSON: Array
-        """
-        path = "/api/v3/metadata"
-        res = self.request_get(path)
-        return res
-
-    ## SYSTEM
-
-    # GET /system/status
-    def get_system_status(self):
-        """Find out information such as OS, version, paths used, etc
-
-        Returns:
-            JSON: Array
-        """
-        path = "/api/v3/system/status"
-        res = self.request_get(path)
-        return res
-
-    ## HEALTH
-
-    # GET /health
-    def get_health(self):
-        """Query radarr for health information
-
-        Returns:
-            JSON: Array
-        """
-        path = "/api/v3/health"
-        res = self.request_get(path)
-        return res
-
     ## COMMAND
 
     # POST /command
@@ -963,19 +935,6 @@ class RadarrAPI(RequestAPI):
         }
         path = "/api/v3/command"
         res = self.request_post(path, data=data)
-        return res
-
-    ## UPDATE
-
-    # GET /update
-    def get_updates(self):
-        """Will return a list of recent updated to Radarr
-
-        Returns:
-            JSON: Array
-        """
-        path = "/api/v3/update"
-        res = self.request_get(path)
         return res
 
     ## QUALITY PROFILE

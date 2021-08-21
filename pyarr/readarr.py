@@ -1,36 +1,23 @@
-from datetime import datetime
-
 from .request_api import RequestAPI
+from .base import BaseAPI
 
 
-class ReadarrAPI(RequestAPI):
+class ReadarrAPI(BaseAPI):
     """API wrapper for Readarr endpoints."""
 
-    # CALENDAR
-
-    # GET /calendar
-    def get_calendar(self, start_date=None, end_date=None):
-        """Gets upcoming releases by monitored Authors, if start/end are not
-        supplied episodes airing today and tomorrow will be returned
+    def __init__(self, host_url: str, api_key: str):
+        """Initialise Readarr API
 
         Args:
-            start_date (:obj:`datetime`, optional): ISO8601 start datetime. Defaults to None.
-            end_date (:obj:`datetime`, optional): ISO8601 end datetime. Defaults to None.
-
-        Returns:
-            JSON: Array
+            host_url (str): URL for Readarr
+            api_key (str): API key for Readarr
         """
-        path = "/api/calendar"
-        params = {}
-        if start_date:
-            params["start"] = datetime.strptime(start_date, "%Y-%m-%d").strftime(
-                "%Y-%m-%d"
-            )
-        if end_date:
-            params["end"] = datetime.strptime(end_date, "%Y-%m-%d").strftime("%Y-%m-%d")
 
-        res = self.request_get(path, params=params)
-        return res
+        ver_uri = "/v1"
+        super().__init__(host_url, api_key, ver_uri)
+
+    # CALENDAR
+    # Moved to base api
 
     ## COMMAND
 
@@ -327,19 +314,6 @@ class ReadarrAPI(RequestAPI):
         params = {"term": term}
         path = "/api/book/lookup"
         res = self.request_get(path, params=params)
-        return res
-
-    ## SYSTEM
-
-    # GET /system/status
-    def get_system_status(self):
-        """Returns system status
-
-        Returns:
-            JSON: Array
-        """
-        path = "/api/system/status"
-        res = self.request_get(path)
         return res
 
     # GET /system/task
