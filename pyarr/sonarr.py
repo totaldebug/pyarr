@@ -1,10 +1,21 @@
 from datetime import datetime
 
-from .request_api import RequestAPI
+from .base import BaseAPI
 
 
-class SonarrAPI(RequestAPI):
+class SonarrAPI(BaseAPI):
     """API wrapper for Sonarr endpoints."""
+
+    def __init__(self, host_url: str, api_key: str):
+        """Initialise Readarr API
+
+        Args:
+            host_url (str): URL for Readarr
+            api_key (str): API key for Readarr
+        """
+
+        ver_uri = "/v3"
+        super().__init__(host_url, api_key, ver_uri)
 
     def _construct_series_json(
         self,
@@ -58,28 +69,7 @@ class SonarrAPI(RequestAPI):
 
     ## CALENDAR
 
-    # GET /calendar
-    def get_calendar(self, start_date=None, end_date=None):
-        """Gets upcoming episodes, if start/end are not supplied episodes airing today and tomorrow will be returned
 
-        Args:
-            start_date (:obj:`datetime`, optional): ISO8601 start datetime. Defaults to None.
-            end_date (:obj:`datetime`, optional): ISO8601 end datetime. Defaults to None.
-
-        Returns:
-            JSON: Array
-        """
-        path = "/api/calendar"
-        params = {}
-        if start_date:
-            params["start"] = datetime.strptime(start_date, "%Y-%m-%d").strftime(
-                "%Y-%m-%d"
-            )
-        if end_date:
-            params["end"] = datetime.strptime(end_date, "%Y-%m-%d").strftime("%Y-%m-%d")
-
-        res = self.request_get(path, params=params)
-        return res
 
     ## COMMAND
 
@@ -594,16 +584,6 @@ class SonarrAPI(RequestAPI):
 
     ## SYSTEM
 
-    # GET /system/status
-    def get_system_status(self):
-        """Returns system status
-
-        Returns:
-            JSON: Array
-        """
-        path = "/api/system/status"
-        res = self.request_get(path)
-        return res
 
     # GET /system/backup
     def get_backup(self):

@@ -950,29 +950,6 @@ class RadarrAPI(BaseAPI):
         res = self.request_get(path)
         return res
 
-    ## CALENDAR
-
-    # GET /calendar
-    def get_calendar(self, start_date, end_date, unmonitored=True):
-        """Get a list of movies based on calendar Parameters
-
-        Args:
-            start_date (:obj:`datetime`): ISO 8601 start datetime
-            end_date (:obj:`datetime`): ISO 8601 end datetime
-            unmonitored (bool, optional): Include unmonitored movies. Defaults to True.
-
-        Returns:
-            JSON: Array
-        """
-        params = {
-            "start": start_date.strftime("%Y-%m-%d"),
-            "end": end_date.strftime("%Y-%m-%d"),
-            "unmonitored": unmonitored,
-        }
-        path = "/api/v3/calendar"
-        res = self.request_get(path, params=params)
-        return res
-
     ## CUSTOM FILTERS
 
     # GET /customfilter

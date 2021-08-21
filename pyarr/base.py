@@ -10,13 +10,14 @@ class BaseAPI(RequestAPI):
         self.ver_uri = ver_uri
         super().__init__(host_url, api_key)
 
-    def get_calendar(self, start_date=None, end_date=None):
+    def get_calendar(self, start_date=None, end_date=None, unmonitored=True):
         """Gets upcoming releases by monitored, if start/end are not
         supplied, today and tomorrow will be returned
 
         Args:
             start_date (:obj:`datetime`, optional): ISO8601 start datetime. Defaults to None.
             end_date (:obj:`datetime`, optional): ISO8601 end datetime. Defaults to None.
+            unmonitored (bool, optional): Include unmonitored movies. Defaults to True.
 
         Returns:
             JSON: Array
@@ -29,6 +30,7 @@ class BaseAPI(RequestAPI):
             )
         if end_date:
             params["end"] = datetime.strptime(end_date, "%Y-%m-%d").strftime("%Y-%m-%d")
+        params["unmonitored"] = unmonitored
 
         res = self.request_get(path, self.ver_uri, params=params)
         return res
