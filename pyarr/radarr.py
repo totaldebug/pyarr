@@ -70,8 +70,8 @@ class RadarrAPI(BaseAPI):
         params = {}
         if id_:
             params["tmdbId"] = id_
-        path = "/api/v3/movie"
-        res = self.request_get(path, params=params)
+        path = "movie"
+        res = self.request_get(path, self.ver_uri, params=params)
         return res
 
     # POST /movie
@@ -106,7 +106,7 @@ class RadarrAPI(BaseAPI):
             term, quality_profile_id, root_dir, monitored, search_for_movie
         )
 
-        path = "/api/v3/movie"
+        path = "movie"
         res = self.request_post(path, data=movie_json)
         return res
 
@@ -137,8 +137,8 @@ class RadarrAPI(BaseAPI):
         Returns:
             JSON: Movie data if present in database
         """
-        path = f"/api/v3/movie/{id_}"
-        res = self.request_get(path)
+        path = f"movie/{id_}"
+        res = self.request_get(path, self.ver_uri)
         return res
 
     # DELETE /movie/{id}
@@ -154,7 +154,7 @@ class RadarrAPI(BaseAPI):
             JSON: 200 Ok, 401 Unauthorized
         """
         params = {"deleteFiles": delete_files, "addExclusion": add_exclusion}
-        path = f"/api/v3/movie/{id_}"
+        path = f"movie/{id_}"
         res = self.request_del(path, params=params)
         return res
 
@@ -169,8 +169,8 @@ class RadarrAPI(BaseAPI):
             JSON: List of movies found
         """
         params = {"term": term}
-        path = "/api/v3/movie/lookup"
-        res = self.request_get(path, params=params)
+        path = "movie/lookup"
+        res = self.request_get(path, self.ver_uri, params=params)
         return res
 
     # GET /movie/lookup
@@ -184,8 +184,8 @@ class RadarrAPI(BaseAPI):
             JSON: List of movies found
         """
         params = {"term": f"tmdb:{id_}"}
-        path = "/api/v3/movie/lookup"
-        res = self.request_get(path, params=params)
+        path = "movie/lookup"
+        res = self.request_get(path, self.ver_uri, params=params)
         return res
 
     # PUT /movie/editor
@@ -198,7 +198,7 @@ class RadarrAPI(BaseAPI):
         Returns:
             JSON: 200 Ok, 401 Unauthorized
         """
-        path = "/api/v3/movie/editor"
+        path = "movie/editor"
         res = self.request_put(path, data=data)
         return res
 
@@ -220,7 +220,7 @@ class RadarrAPI(BaseAPI):
         Returns:
             JSON: 200 Ok, 401 Unauthorized
         """
-        path = "/api/v3/movie/editor"
+        path = "movie/editor"
         res = self.request_del(path, data=data)
         return res
 
@@ -234,7 +234,7 @@ class RadarrAPI(BaseAPI):
         Returns:
             JSON: 200 Ok, 401 Unauthorized
         """
-        path = "/api/v3/movie/import"
+        path = "movie/import"
         res = self.request_post(path, data=data)
         return res
 
@@ -251,8 +251,8 @@ class RadarrAPI(BaseAPI):
             JSON: Movie file information if exists
         """
         params = {"movieid": id_}
-        path = "/api/v3/moviefile"
-        res = self.request_get(path, params=params)
+        path = "moviefile"
+        res = self.request_get(path, self.ver_uri, params=params)
         return res
 
     # GET /moviefile
@@ -266,8 +266,8 @@ class RadarrAPI(BaseAPI):
             JSON: List of movie files
         """
         params = {"moviefileids": moviefile_ids}
-        path = "/api/v3/moviefile"
-        res = self.request_get(path, params=params)
+        path = "moviefile"
+        res = self.request_get(path, self.ver_uri, params=params)
         return res
 
     # GET /moviefile/{id}
@@ -280,8 +280,8 @@ class RadarrAPI(BaseAPI):
         Returns:
             JSON: movie file information
         """
-        path = f"/api/v3/moviefile/{id_}"
-        res = self.request_get(path)
+        path = f"moviefile/{id_}"
+        res = self.request_get(path, self.ver_uri)
         return res
 
     # DELETE /moviefile/{id}
@@ -294,7 +294,7 @@ class RadarrAPI(BaseAPI):
         Returns:
             JSON: 200 Ok, 401 Unauthorized
         """
-        path = f"/api/v3/movie/{id_}"
+        path = f"movie/{id_}"
         res = self.request_del(path)
         return res
 
@@ -321,8 +321,8 @@ class RadarrAPI(BaseAPI):
             "sortDirection": sort_direction,
             "sortKey": sort_key,
         }
-        path = "/api/v3/history"
-        res = self.request_get(path, params=params)
+        path = "history"
+        res = self.request_get(path, self.ver_uri, params=params)
         return res
 
     # GET /history/movie
@@ -339,8 +339,8 @@ class RadarrAPI(BaseAPI):
         params = {"movieId": id_}
         if event_type:
             params["eventType"] = event_type
-        path = "/api/v3/history/movie"
-        res = self.request_get(path, params=params)
+        path = "history/movie"
+        res = self.request_get(path, self.ver_uri, params=params)
         return res
 
     ## BLACKLIST
@@ -370,8 +370,8 @@ class RadarrAPI(BaseAPI):
             "sortDirection": sort_direction,
             "sortKey": sort_key,
         }
-        path = "/api/v3/blacklist"
-        res = self.request_get(path, params=params)
+        path = "blacklist"
+        res = self.request_get(path, self.ver_uri, params=params)
         return res
 
     # DELETE /blacklist
@@ -385,7 +385,7 @@ class RadarrAPI(BaseAPI):
             JSON: Array
         """
         params = {"id": id_}
-        path = "/api/v3/blacklist"
+        path = "blacklist"
         res = self.request_del(path, params=params)
         return res
 
@@ -403,8 +403,8 @@ class RadarrAPI(BaseAPI):
             JSON: Array
         """
         params = {"movieId": id_}
-        path = "/api/v3/blacklist/movie"
-        res = self.request_get(path, params=params)
+        path = "blacklist/movie"
+        res = self.request_get(path, self.ver_uri, params=params)
         return res
 
     # DELETE /blacklist/bulk
@@ -417,7 +417,7 @@ class RadarrAPI(BaseAPI):
         Returns:
             JSON: 200 Ok, 401 Unauthorized
         """
-        path = "/api/v3/blacklist/bulk"
+        path = "blacklist/bulk"
         res = self.request_del(path, data=data)
         return res
 
@@ -451,8 +451,8 @@ class RadarrAPI(BaseAPI):
             "sortKey": sort_key,
             "includeUnknownMovieItems": include_unknown_movie_items,
         }
-        path = "/api/v3/queue"
-        res = self.request_get(path, params=params)
+        path = "queue"
+        res = self.request_get(path, self.ver_uri, params=params)
         return res
 
     # DELETE /queue/{id}
@@ -468,7 +468,7 @@ class RadarrAPI(BaseAPI):
             JSON: 200 Ok, 401 Unauthorized
         """
         params = {"removeFromClient": remove_from_client, "blacklist": blacklist}
-        path = f"/api/v3/queue/{id_}"
+        path = f"queue/{id_}"
         res = self.request_del(path, params=params)
         return res
 
@@ -492,7 +492,7 @@ class RadarrAPI(BaseAPI):
             JSON: 200 ok, 401 invalid api key
         """
         params = {"removeFromClient": remove_from_client, "blacklist": blacklist}
-        path = "/api/v3/queue/bulk"
+        path = "queue/bulk"
         res = self.request_del(path, params=params, data=data)
         return res
 
@@ -512,8 +512,8 @@ class RadarrAPI(BaseAPI):
         params = {
             "includeMovie": include_movie,
         }
-        path = "/api/v3/queue/details"
-        res = self.request_get(path, params=params)
+        path = "queue/details"
+        res = self.request_get(path, self.ver_uri, params=params)
         return res
 
     # GET /queue/status
@@ -523,8 +523,8 @@ class RadarrAPI(BaseAPI):
         Returns:
             JSON: Array
         """
-        path = "/api/v3/queue/status"
-        res = self.request_get(path)
+        path = "queue/status"
+        res = self.request_get(path, self.ver_uri)
         return res
 
     # POST /queue/grab/{id}
@@ -537,7 +537,7 @@ class RadarrAPI(BaseAPI):
         Returns:
             JSON: 200 ok, 401 Invalid API Key
         """
-        path = f"/api/v3/queue/grab/{id_}"
+        path = f"queue/grab/{id_}"
         res = self.request_post(path)
         return res
 
@@ -554,11 +554,11 @@ class RadarrAPI(BaseAPI):
             JSON: Array
         """
         if not id_:
-            path = "/api/v3/indexer"
+            path = "indexer"
         else:
-            path = f"/api/v3/indexer/{id_}"
+            path = f"indexer/{id_}"
 
-        res = self.request_get(path)
+        res = self.request_get(path, self.ver_uri)
         return res
 
     # PUT /indexer/{id}
@@ -572,7 +572,7 @@ class RadarrAPI(BaseAPI):
         Returns:
             JSON: 200 ok, 401 Unauthorized
         """
-        path = f"/api/v3/indexer/{id_}"
+        path = f"indexer/{id_}"
         res = path.request_put(path, data=data)
         return res
 
@@ -586,7 +586,7 @@ class RadarrAPI(BaseAPI):
         Returns:
             JSON: 200 Ok, 401 Unauthorized
         """
-        path = f"/api/v3/indexer/{id_}"
+        path = f"indexer/{id_}"
         res = self.request_del(path)
         return res
 
@@ -603,11 +603,11 @@ class RadarrAPI(BaseAPI):
             JSON: Array
         """
         if not id_:
-            path = "/api/v3/downloadclient"
+            path = "downloadclient"
         else:
-            path = f"/api/v3/downloadclient/{id_}"
+            path = f"downloadclient/{id_}"
 
-        res = self.request_get(path)
+        res = self.request_get(path, self.ver_uri)
         return res
 
     # PUT /downloadclient/{id}
@@ -621,7 +621,7 @@ class RadarrAPI(BaseAPI):
         Returns:
             JSON: 200 Ok
         """
-        path = f"/api/v3/downloadclient/{id_}"
+        path = f"downloadclient/{id_}"
         res = path.request_put(path, data=data)
         return res
 
@@ -635,7 +635,7 @@ class RadarrAPI(BaseAPI):
         Returns:
             JSON: 200 Ok
         """
-        path = f"/api/v3/downloadclient/{id_}"
+        path = f"downloadclient/{id_}"
         res = self.request_del(path)
         return res
 
@@ -652,11 +652,11 @@ class RadarrAPI(BaseAPI):
             JSON: Array
         """
         if not id_:
-            path = "/api/v3/importlist"
+            path = "importlist"
         else:
-            path = f"/api/v3/importlist/{id_}"
+            path = f"importlist/{id_}"
 
-        res = self.request_get(path)
+        res = self.request_get(path, self.ver_uri)
         return res
 
     # PUT /importlist/{id}
@@ -670,7 +670,7 @@ class RadarrAPI(BaseAPI):
         Returns:
             JSON: 200 Ok, 401 Unauthorized
         """
-        path = f"/api/v3/importlist/{id_}"
+        path = f"importlist/{id_}"
         res = path.request_put(path, data=data)
         return res
 
@@ -684,7 +684,7 @@ class RadarrAPI(BaseAPI):
         Returns:
             JSON: 200 ok, 401 Unauthorized
         """
-        path = f"/api/v3/importlist/{id_}"
+        path = f"importlist/{id_}"
         res = self.request_del(path)
         return res
 
@@ -701,11 +701,11 @@ class RadarrAPI(BaseAPI):
             JSON: Array
         """
         if not id_:
-            path = "/api/v3/notification"
+            path = "notification"
         else:
-            path = f"/api/v3/notification/{id_}"
+            path = f"notification/{id_}"
 
-        res = self.request_get(path)
+        res = self.request_get(path, self.ver_uri)
         return res
 
     # PUT /notification/{id}
@@ -719,7 +719,7 @@ class RadarrAPI(BaseAPI):
         Returns:
             JSON: 200 Ok, 401 Unauthorized
         """
-        path = f"/api/v3/notification/{id_}"
+        path = f"notification/{id_}"
         res = path.request_put(path, data=data)
         return res
 
@@ -733,7 +733,7 @@ class RadarrAPI(BaseAPI):
         Returns:
             JSON: 201 Ok, 401 Unauthorized
         """
-        path = f"/api/v3/notification/{id_}"
+        path = f"notification/{id_}"
         res = self.request_del(path)
         return res
 
@@ -750,11 +750,11 @@ class RadarrAPI(BaseAPI):
             JSON: Array
         """
         if not id_:
-            path = "/api/v3/tag"
+            path = "tag"
         else:
-            path = f"/api/v3/tag/{id_}"
+            path = f"tag/{id_}"
 
-        res = self.request_get(path)
+        res = self.request_get(path, self.ver_uri)
         return res
 
     # POST /tag
@@ -768,7 +768,7 @@ class RadarrAPI(BaseAPI):
             JSON: 200 Ok, 401 Unauthorized
         """
         data = {"id": 0, "label": label}
-        path = "/api/v3/tag"
+        path = "tag"
         res = self.request_post(path, data=data)
         return res
 
@@ -784,7 +784,7 @@ class RadarrAPI(BaseAPI):
             JSON: 200 Ok, 401 Unauthorized
         """
         data = {"id": id_, "label": label}
-        path = f"/api/v3/tag/{id_}"
+        path = f"tag/{id_}"
         res = self.request_put(path, data=data)
         return res
 
@@ -798,7 +798,7 @@ class RadarrAPI(BaseAPI):
         Returns:
             JSON: 200 Ok, 401 Unauthorized
         """
-        path = f"/api/v3/tag/{id_}"
+        path = f"tag/{id_}"
         res = self.request_del(path)
         return res
 
@@ -814,11 +814,11 @@ class RadarrAPI(BaseAPI):
             JSON: Array
         """
         if not id_:
-            path = "/api/v3/tag/detail"
+            path = "tag/detail"
         else:
-            path = f"/api/v3/tag/detail/{id_}"
+            path = f"tag/detail/{id_}"
 
-        res = self.request_get(path)
+        res = self.request_get(path, self.ver_uri)
         return res
 
     ## SETTINGS
@@ -830,8 +830,8 @@ class RadarrAPI(BaseAPI):
         Returns:
             JSON: Array
         """
-        path = "/api/v3/config/ui"
-        res = self.request_get(path)
+        path = "config/ui"
+        res = self.request_get(path, self.ver_uri)
         return res
 
     # PUT /config/ui
@@ -844,7 +844,7 @@ class RadarrAPI(BaseAPI):
         Returns:
             JSON: 200 Ok, 401 Unauthorized
         """
-        path = "/api/v3/config/ui"
+        path = "config/ui"
         res = self.request_put(path, data=data)
         return res
 
@@ -855,8 +855,8 @@ class RadarrAPI(BaseAPI):
         Returns:
             JSON: Array
         """
-        path = "/api/v3/config/host"
-        res = self.request_get(path)
+        path = "config/host"
+        res = self.request_get(path, self.ver_uri)
         return res
 
     # PUT /config/host
@@ -869,7 +869,7 @@ class RadarrAPI(BaseAPI):
         Returns:
             JSON: 200 Ok, 401 Unauthorized
         """
-        path = "/api/v3/config/host"
+        path = "config/host"
         res = self.request_put(path, data=data)
         return res
 
@@ -880,8 +880,8 @@ class RadarrAPI(BaseAPI):
         Returns:
             JSON: Array
         """
-        path = "/api/v3/config/naming"
-        res = self.request_get(path)
+        path = "config/naming"
+        res = self.request_get(path, self.ver_uri, self.ver_uri)
         return res
 
     # PUT /config/naming
@@ -894,7 +894,7 @@ class RadarrAPI(BaseAPI):
         Returns:
             JSON: 200 Ok, 401 Unauthorized
         """
-        path = "/api/v3/config/naming"
+        path = "config/naming"
         res = self.request_put(path, data=data)
         return res
 
@@ -919,7 +919,7 @@ class RadarrAPI(BaseAPI):
             "name": name,
             **kwargs,
         }
-        path = "/api/v3/command"
+        path = "command"
         res = self.request_post(path, data=data)
         return res
 
@@ -932,8 +932,8 @@ class RadarrAPI(BaseAPI):
         Returns:
             JSON: Array
         """
-        path = "/api/v3/qualityProfile"
-        res = self.request_get(path)
+        path = "qualityProfile"
+        res = self.request_get(path, self.ver_uri)
         return res
 
     ## CUSTOM FILTERS
@@ -945,8 +945,8 @@ class RadarrAPI(BaseAPI):
         Returns:
             JSON: Array
         """
-        path = "/api/v3/customfilter"
-        res = self.request_get(path)
+        path = "customfilter"
+        res = self.request_get(path, self.ver_uri)
         return res
 
     ## REMOTE PATH MAPPING
@@ -958,7 +958,6 @@ class RadarrAPI(BaseAPI):
         Returns:
             JSON: Array
         """
-        path = "/api/v3/remotePathMapping"
-        res = self.request_get(path)
+        path = "remotePathMapping"
+        res = self.request_get(path, self.ver_uri)
         return res
-

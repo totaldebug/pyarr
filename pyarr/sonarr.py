@@ -82,9 +82,9 @@ class SonarrAPI(BaseAPI):
             JSON: Array
         """
         if id_:
-            path = f"/api/command/{id_}"
+            path = f"command/{id_}"
         else:
-            path = "/api/command"
+            path = "command"
 
         res = self.request_get(path)
         return res
@@ -106,7 +106,7 @@ class SonarrAPI(BaseAPI):
         Returns:
             JSON: Array
         """
-        path = "/api/command"
+        path = "command"
         data = {
             "name": name,
             **kwargs,
@@ -126,9 +126,9 @@ class SonarrAPI(BaseAPI):
         Returns:
             JSON: Array
         """
-        path = "/api/episode"
+        path = "episode"
         params = {"seriesId": id_}
-        res = self.request_get(path, params=params)
+        res = self.request_get(path, self.ver_uri, params=params)
         return res
 
     # GET /episode/{id}
@@ -141,7 +141,7 @@ class SonarrAPI(BaseAPI):
         Returns:
             JSON: Array
         """
-        path = f"/api/episode/{id_}"
+        path = f"episode/{id_}"
         res = self.request_get(path)
         return res
 
@@ -158,7 +158,7 @@ class SonarrAPI(BaseAPI):
         Returns:
             JSON: Array
         """
-        path = "/api/episode"
+        path = "episode"
         res = self.request_put(path, data=data)
         return res
 
@@ -174,9 +174,9 @@ class SonarrAPI(BaseAPI):
         Returns:
             JSON: Array
         """
-        path = "/api/episodefile"
+        path = "episodefile"
         params = {"seriesId": id_}
-        res = self.request_get(path, params=params)
+        res = self.request_get(path, self.ver_uri, params=params)
         return res
 
     # GET /episodefile/{id}
@@ -189,7 +189,7 @@ class SonarrAPI(BaseAPI):
         Returns:
             JSON: Array
         """
-        path = f"/api/episodefile/{id_}"
+        path = f"episodefile/{id_}"
         res = self.request_get(path)
         return res
 
@@ -203,7 +203,7 @@ class SonarrAPI(BaseAPI):
         Returns:
             JSON: {}
         """
-        path = f"/api/episodefile/{id_}"
+        path = f"episodefile/{id_}"
         res = self.request_del(path)
         return res
 
@@ -230,7 +230,7 @@ class SonarrAPI(BaseAPI):
         Returns:
             JSON: Array
         """
-        path = f"/api/episodefile/{id_}"
+        path = f"episodefile/{id_}"
         res = self.request_put(path, data=data)
         return res
 
@@ -252,7 +252,7 @@ class SonarrAPI(BaseAPI):
         Returns:
             JSON: Array
         """
-        path = "/api/history"
+        path = "history"
         params = {
             "sortKey": sort_key,
             "page": page,
@@ -261,7 +261,7 @@ class SonarrAPI(BaseAPI):
         }
         if id_:
             params["episodeId"] = id_
-        res = self.request_get(path, params=params)
+        res = self.request_get(path, self.ver_uri, params=params)
         return res
 
     ## WANTED (MISSING)
@@ -279,14 +279,14 @@ class SonarrAPI(BaseAPI):
         Returns:
             JSON: Array
         """
-        path = "/api/wanted/missing"
+        path = "wanted/missing"
         params = {
             "sortKey": sort_key,
             "page": page,
             "pageSize": page_size,
             "sortDir": sort_dir,
         }
-        res = self.request_get(path, params=params)
+        res = self.request_get(path, self.ver_uri, params=params)
         return res
 
     ## QUEUE
@@ -298,7 +298,7 @@ class SonarrAPI(BaseAPI):
         Returns:
             JSON: Array
         """
-        path = "/api/queue"
+        path = "queue"
         res = self.request_get(path)
         return res
 
@@ -314,7 +314,7 @@ class SonarrAPI(BaseAPI):
             JSON: {}
         """
         params = {"id": id_, "blacklist": blacklist}
-        path = "/api/queue/"
+        path = "queue/"
         res = self.request_del(path, params=params)
         return res
 
@@ -334,8 +334,8 @@ class SonarrAPI(BaseAPI):
             JSON: Array
         """
         params = {"title": title}
-        path = "/api/parse"
-        res = self.request_get(path, params=params)
+        path = "parse"
+        res = self.request_get(path, self.ver_uri, params=params)
         return res
 
     # GET /parse
@@ -352,8 +352,8 @@ class SonarrAPI(BaseAPI):
             JSON: Array
         """
         params = {"path": file_path}
-        path = "/api/parse"
-        res = self.request_get(path, params=params)
+        path = "parse"
+        res = self.request_get(path, self.ver_uri, params=params)
         return res
 
     ## PROFILE
@@ -365,7 +365,7 @@ class SonarrAPI(BaseAPI):
         Returns:
             JSON: Array
         """
-        path = "/api/profile"
+        path = "profile"
         res = self.request_get(path)
         return res
 
@@ -382,8 +382,8 @@ class SonarrAPI(BaseAPI):
             JSON: Array
         """
         params = {"episodeId": id_}
-        path = "/api/release"
-        res = self.request_get(path, params=params)
+        path = "release"
+        res = self.request_get(path, self.ver_uri, params=params)
         return res
 
     # POST /release
@@ -400,7 +400,7 @@ class SonarrAPI(BaseAPI):
             [type]: [description]
         """
         data = {"guid": guid, "indexerId": indexer_id}
-        path = "/api/release"
+        path = "release"
         res = self.request_post(path, data=data)
         return res
 
@@ -423,7 +423,7 @@ class SonarrAPI(BaseAPI):
             "protocol": protocol,
             "publishDate": publish_date,
         }
-        path = "/api/release/push"
+        path = "release/push"
         res = self.request_post(path, data=data)
         return res
 
@@ -440,9 +440,9 @@ class SonarrAPI(BaseAPI):
             JSON: Array
         """
         if id_:
-            path = f"/api/series/{id_}"
+            path = f"series/{id_}"
         else:
-            path = "/api/series"
+            path = "series"
 
         res = self.request_get(path)
         return res
@@ -489,7 +489,7 @@ class SonarrAPI(BaseAPI):
             search_for_missing_episodes,
         )
 
-        path = "/api/series"
+        path = "series"
         res = self.request_post(path, data=series_json)
         return res
 
@@ -503,7 +503,7 @@ class SonarrAPI(BaseAPI):
         Returns:
             JSON: Array
         """
-        path = "/api/series"
+        path = "series"
         res = self.request_put(path, data=data)
         return res
 
@@ -520,7 +520,7 @@ class SonarrAPI(BaseAPI):
         """
         # File deletion does not work
         params = {"deleteFiles": delete_files}
-        path = f"/api/series/{id_}"
+        path = f"series/{id_}"
         res = self.request_del(path, params=params)
         return res
 
@@ -535,8 +535,8 @@ class SonarrAPI(BaseAPI):
             JSON: Array
         """
         params = {"term": term}
-        path = "/api/series/lookup"
-        res = self.request_get(path, params=params)
+        path = "series/lookup"
+        res = self.request_get(path, self.ver_uri, params=params)
         return res
 
     # GET /series/lookup
@@ -550,8 +550,8 @@ class SonarrAPI(BaseAPI):
             JSON: Array
         """
         params = {"term": f"tvdb:{id_}"}
-        path = "/api/series/lookup"
-        res = self.request_get(path, params=params)
+        path = "series/lookup"
+        res = self.request_get(path, self.ver_uri, params=params)
         return res
 
     ## TAG
@@ -567,9 +567,9 @@ class SonarrAPI(BaseAPI):
             JSON: Array
         """
         if not id_:
-            path = "/api/tag"
+            path = "tag"
         else:
-            path = f"/api/tag/{id_}"
+            path = f"tag/{id_}"
 
         res = self.request_get(path)
         return res
@@ -585,7 +585,7 @@ class SonarrAPI(BaseAPI):
             JSON: Array
         """
         data = {"label": label}
-        path = "/api/tag"
+        path = "tag"
         res = self.request_post(path, data=data)
         return res
 
@@ -604,7 +604,7 @@ class SonarrAPI(BaseAPI):
             JSON: Array
         """
         data = {"id": id_, "label": label}
-        path = f"/api/tag/{id_}"
+        path = f"tag/{id_}"
         res = self.request_put(path, data=data)
         return res
 
@@ -618,6 +618,6 @@ class SonarrAPI(BaseAPI):
         Returns:
             JSON: {}
         """
-        path = f"/api/tag/{id_}"
+        path = f"tag/{id_}"
         res = self.request_del(path)
         return res

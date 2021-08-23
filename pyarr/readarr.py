@@ -240,7 +240,7 @@ class ReadarrAPI(BaseAPI):
     ):
         pass
 
-        # path = "/api/book"
+        # path = "book"
         # res = self.request_post(path, data=book_json)
         # return res
 
@@ -248,7 +248,7 @@ class ReadarrAPI(BaseAPI):
     def upd_book(self):
         pass
 
-        # path = "/api/book"
+        # path = "book"
         # res = self.request_put(path, data=data)
         # return res
 
