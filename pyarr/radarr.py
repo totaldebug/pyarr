@@ -821,20 +821,6 @@ class RadarrAPI(BaseAPI):
         res = self.request_get(path)
         return res
 
-    ## DISKSPACE
-
-    # GET /diskspace
-    def get_disk_space(self):
-        """Query Radarr for disk usage information
-            System > Status
-
-        Returns:
-            JSON: Array
-        """
-        path = "/api/v3/diskspace"
-        res = self.request_get(path)
-        return res
-
     ## SETTINGS
 
     # GET /config/ui
@@ -976,15 +962,3 @@ class RadarrAPI(BaseAPI):
         res = self.request_get(path)
         return res
 
-    ## ROOT FOLDER
-
-    # GET /rootfolder
-    def get_root_folder(self):
-        """Query Radarr for root folder information
-
-        Returns:
-            JSON: Array
-        """
-        path = "/api/v3/rootfolder"
-        res = self.request_get(path)
-        return res

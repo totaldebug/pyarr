@@ -34,7 +34,7 @@ class RequestAPI:
         self.auth = requests.auth.HTTPBasicAuth(username, password)
         return self.auth
 
-    def request_get(self, path, ver_uri, params=None):
+    def request_get(self, path, ver_uri="", params=None):
         """Wrapper on any get requests
 
         Args:

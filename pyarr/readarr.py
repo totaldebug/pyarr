@@ -32,11 +32,11 @@ class ReadarrAPI(BaseAPI):
             JSON: Array
         """
         if id_:
-            path = f"/api/command/{id_}"
+            path = f"command/{id_}"
         else:
-            path = "/api/command"
+            path = "command"
 
-        res = self.request_get(path)
+        res = self.request_get(path, self.ver_uri)
         return res
 
     # POST /command
@@ -54,25 +54,12 @@ class ReadarrAPI(BaseAPI):
         Returns:
             JSON: Array
         """
-        path = "/api/command"
+        path = "command"
         data = {
             "name": name,
             **kwargs,
         }
-        res = self.request_post(path, data=data)
-        return res
-
-    ## DISKSPACE
-
-    # GET /diskspace
-    def get_disk_space(self):
-        """Gets information about Diskspace
-
-        Returns:
-            JSON: Array
-        """
-        path = "/api/diskspace"
-        res = self.request_get(path)
+        res = self.request_post(path, self.ver_uri, data=data)
         return res
 
     ## HISTORY
@@ -93,7 +80,7 @@ class ReadarrAPI(BaseAPI):
         Returns:
             JSON: Array
         """
-        path = "/api/history"
+        path = "history"
         params = {
             "sortKey": sort_key,
             "page": page,
@@ -102,7 +89,7 @@ class ReadarrAPI(BaseAPI):
         }
         if id_:
             params["episodeId"] = id_
-        res = self.request_get(path, params=params)
+        res = self.request_get(path, self.ver_uri, params=params)
         return res
 
     ## WANTED (MISSING)
@@ -120,7 +107,7 @@ class ReadarrAPI(BaseAPI):
         Returns:
             JSON: Array
         """
-        path = "/api/wanted/missing"
+        path = f"{self.ver_uri}/wanted/missing"
         params = {
             "sortKey": sort_key,
             "page": page,
@@ -154,7 +141,7 @@ class ReadarrAPI(BaseAPI):
             JSON: Array
         """
 
-        path = "/api/queue"
+        path = f"{self.ver_uri}/queue"
         params = {
             "sortKey": sort_key,
             "page": page,
@@ -177,8 +164,8 @@ class ReadarrAPI(BaseAPI):
             JSON: {}
         """
         params = {"id": id_, "blacklist": blacklist}
-        path = "/api/queue/"
-        res = self.request_del(path, params=params)
+        path = "queue/"
+        res = self.request_del(path, self.ver_uri, params=params)
         return res
 
     ## PROFILE
@@ -190,8 +177,8 @@ class ReadarrAPI(BaseAPI):
         Returns:
             JSON: Array
         """
-        path = "/api/qualityprofile"
-        res = self.request_get(path)
+        path = "qualityprofile"
+        res = self.request_get(path, self.ver_uri)
         return res
 
     # GET /metadataprofile
@@ -201,8 +188,8 @@ class ReadarrAPI(BaseAPI):
         Returns:
             JSON: Array
         """
-        path = "/api/metadataprofile"
-        res = self.request_get(path)
+        path = "metadataprofile"
+        res = self.request_get(path, self.ver_uri)
         return res
 
     # GET /delayprofile
@@ -212,8 +199,8 @@ class ReadarrAPI(BaseAPI):
         Returns:
             JSON: Array
         """
-        path = "/api/delayprofile"
-        res = self.request_get(path)
+        path = "/delayprofile"
+        res = self.request_get(path, self.ver_uri)
         return res
 
     # GET /releaseprofile
@@ -223,21 +210,8 @@ class ReadarrAPI(BaseAPI):
         Returns:
             JSON: Array
         """
-        path = "/api/releaseprofile"
-        res = self.request_get(path)
-        return res
-
-    ## ROOT FOLDER
-
-    # GET /rootfolder
-    def get_root_folder(self):
-        """Gets root folder
-
-        Returns:
-            JSON: Array
-        """
-        path = "/api/rootFolder"
-        res = self.request_get(path)
+        path = "releaseprofile"
+        res = self.request_get(path, self.ver_uri)
         return res
 
     ## BOOKS
@@ -253,11 +227,11 @@ class ReadarrAPI(BaseAPI):
             JSON: Array
         """
         if id_:
-            path = f"/api/book/{id_}"
+            path = f"book/{id_}"
         else:
-            path = "/api/book"
+            path = "book"
 
-        res = self.request_get(path)
+        res = self.request_get(path, self.ver_uri)
         return res
 
     # POST /book
@@ -294,8 +268,8 @@ class ReadarrAPI(BaseAPI):
             "deleteFiles": delete_files,
             "addImportListExclusion": import_list_exclusion,
         }
-        path = f"/api/book/{id_}"
-        res = self.request_del(path, params=params)
+        path = f"book/{id_}"
+        res = self.request_del(path, self.ver_uri, params=params)
         return res
 
     # GET /book/lookup
@@ -312,8 +286,8 @@ class ReadarrAPI(BaseAPI):
             JSON: Array
         """
         params = {"term": term}
-        path = "/api/book/lookup"
-        res = self.request_get(path, params=params)
+        path = "book/lookup"
+        res = self.request_get(path, self.ver_uri, params=params)
         return res
 
     # GET /system/task
@@ -327,21 +301,10 @@ class ReadarrAPI(BaseAPI):
             JSON: Array
         """
         if id_:
-            path = f"/api/system/task{id_}"
+            path = f"system/task/{id_}"
         else:
-            path = "/api/system/task"
-        res = self.request_get(path)
-        return res
-
-    # GET /system/backup
-    def get_backup(self):
-        """Returns the list of available backups
-
-        Returns:
-            JSON: Array
-        """
-        path = "/api/system/backup"
-        res = self.request_get(path)
+            path = "system/task"
+        res = self.request_get(path, self.ver_uri)
         return res
 
     ## TAG
@@ -357,11 +320,11 @@ class ReadarrAPI(BaseAPI):
             JSON: Array
         """
         if not id_:
-            path = "/api/tag"
+            path = "tag"
         else:
-            path = f"/api/tag/{id_}"
+            path = f"tag/{id_}"
 
-        res = self.request_get(path)
+        res = self.request_get(path, self.ver_uri)
         return res
 
     # GET /tag and /tag/{id}
@@ -375,11 +338,11 @@ class ReadarrAPI(BaseAPI):
             JSON: Array
         """
         if not id_:
-            path = "/api/tag/detail"
+            path = "tag/detail"
         else:
-            path = f"/api/tag/detail/{id_}"
+            path = f"tag/detail/{id_}"
 
-        res = self.request_get(path)
+        res = self.request_get(path, self.ver_uri)
         return res
 
     # POST /tag
@@ -393,8 +356,8 @@ class ReadarrAPI(BaseAPI):
             JSON: Array
         """
         data = {"label": label}
-        path = "/api/tag"
-        res = self.request_post(path, data=data)
+        path = "tag"
+        res = self.request_post(path, self.ver_uri, data=data)
         return res
 
     # PUT /tag/{id}
@@ -412,8 +375,8 @@ class ReadarrAPI(BaseAPI):
             JSON: Array
         """
         data = {"id": id_, "label": label}
-        path = f"/api/tag/{id_}"
-        res = self.request_put(path, data=data)
+        path = f"tag/{id_}"
+        res = self.request_put(path, self.ver_uri, data=data)
         return res
 
     # DELETE /tag/{id}
@@ -426,40 +389,11 @@ class ReadarrAPI(BaseAPI):
         Returns:
             JSON: {}
         """
-        path = f"/api/tag/{id_}"
-        res = self.request_del(path)
+        path = f"tag/{id_}"
+        res = self.request_del(path, self.ver_uri)
         return res
 
     ## LOG
-
-    # GET /log
-    def get_logs(
-        self,
-        page=1,
-        page_size=10,
-        sort_key="time",
-        sort_dir="desc",
-    ):
-        """Gets logs
-
-        Args:
-            page (int, optional): Specifiy page to return. Defaults to 1.
-            page_size (int, optional): Number of items per page. Defaults to 10.
-            sort_key (str, optional): Field to sort by. Defaults to "time".
-            sort_dir (str, optional): Direction to sort. Defaults to "desc".
-
-        Returns:
-            JSON: Array
-        """
-        path = "/api/log"
-        params = {
-            "page": page,
-            "pageSize": page_size,
-            "sortKey": sort_key,
-            "sortDir": sort_dir,
-        }
-        res = self.request_get(path, params=params)
-        return res
 
     # GET /log/file
     def get_log_file(self):
@@ -468,6 +402,6 @@ class ReadarrAPI(BaseAPI):
         Returns:
             JSON: Array
         """
-        path = "/api/log/file"
-        res = self.request_get(path)
+        path = "log/file"
+        res = self.request_get(path, self.ver_uri)
         return res

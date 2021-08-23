@@ -69,8 +69,6 @@ class SonarrAPI(BaseAPI):
 
     ## CALENDAR
 
-
-
     ## COMMAND
 
     # GET /command
@@ -114,19 +112,6 @@ class SonarrAPI(BaseAPI):
             **kwargs,
         }
         res = self.request_post(path, data=data)
-        return res
-
-    ## DISKSPACE
-
-    # GET /diskspace
-    def get_disk_space(self):
-        """Gets information about Diskspace
-
-        Returns:
-            JSON: Array
-        """
-        path = "/api/diskspace"
-        res = self.request_get(path)
         return res
 
     ## EPISODE
@@ -442,19 +427,6 @@ class SonarrAPI(BaseAPI):
         res = self.request_post(path, data=data)
         return res
 
-    ## ROOT FOLDER
-
-    # GET /rootfolder
-    def get_root_folder(self):
-        """Gets root folder
-
-        Returns:
-            JSON: Array
-        """
-        path = "/api/rootfolder"
-        res = self.request_get(path)
-        return res
-
     ## SERIES
     # GET /series and /series/{id}
     def get_series(self, id_=None):
@@ -582,20 +554,6 @@ class SonarrAPI(BaseAPI):
         res = self.request_get(path, params=params)
         return res
 
-    ## SYSTEM
-
-
-    # GET /system/backup
-    def get_backup(self):
-        """Returns the list of available backups
-
-        Returns:
-            JSON: Array
-        """
-        path = "/api/system/backup"
-        res = self.request_get(path)
-        return res
-
     ## TAG
 
     # GET /tag and /tag/{id}
@@ -662,41 +620,4 @@ class SonarrAPI(BaseAPI):
         """
         path = f"/api/tag/{id_}"
         res = self.request_del(path)
-        return res
-
-    ## LOG
-
-    # GET /log
-    def get_logs(
-        self,
-        page=1,
-        page_size=10,
-        sort_key="time",
-        sort_dir="desc",
-        filter_key=None,
-        filter_value="All",
-    ):
-        """Gets sonarr logs
-
-        Args:
-            page (int, optional): Specifiy page to return. Defaults to 1.
-            page_size (int, optional): Number of items per page. Defaults to 10.
-            sort_key (str, optional): Field to sort by. Defaults to "time".
-            sort_dir (str, optional): Direction to sort. Defaults to "desc".
-            filter_key (str, optional): Key to filter by. Defaults to None.
-            filter_value (str, optional): Value of the filter. Defaults to "All".
-
-        Returns:
-            JSON: Array
-        """
-        path = "/api/log"
-        params = {
-            "page": page,
-            "pageSize": page_size,
-            "sortKey": sort_key,
-            "sortDir": sort_dir,
-            "filterKey": filter_key,
-            "filterValue": filter_value,
-        }
-        res = self.request_get(path, params=params)
         return res
