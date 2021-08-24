@@ -32,22 +32,21 @@ class SonarrAPI(RequestAPI):
         Returns:
             JSON: Array
         """
-        res = self.lookup_series(tvdb_id)
-        s_dict = res[0]
-        if not monitored and s_dict.get("seasons"):
-            for season in s_dict["seasons"]:
+        series = self.lookup_series_by_tvdb_id(tvdb_id)[0]
+        if not monitored and series.get("seasons"):
+            for season in series["seasons"]:
                 season["monitored"] = False
 
         series_json = {
-            "title": s_dict["title"],
-            "seasons": s_dict["seasons"],
-            "path": root_dir + s_dict["title"],
+            "title": series["title"],
+            "seasons": series["seasons"],
+            "path": root_dir + series["title"],
             "qualityProfileId": quality_profile_id,
             "seasonFolder": season_folder,
             "monitored": monitored,
             "tvdbId": tvdb_id,
-            "images": s_dict["images"],
-            "titleSlug": s_dict["titleSlug"],
+            "images": series["images"],
+            "titleSlug": series["titleSlug"],
             "addOptions": {
                 "ignoreEpisodesWithFiles": ignore_episodes_with_files,
                 "ignoreEpisodesWithoutFiles": ignore_episodes_without_files,
