@@ -25,7 +25,7 @@ class RadarrAPI(RequestAPI):
             root_dir (str): location of the root DIR
             monitored (bool, optional): should the movie be monitored. Defaults to True.
             search_for_movie (bool, optional): Should we search for the movie. Defaults to True.
-            tmdb (bool, optional): Use IMDB IDs. Defaults to True.
+            tmdb (bool, optional): Use TMDB IDs. Set to False to use IMDB. Defaults to True.
 
         Raises:
             Exception: [description]
@@ -91,7 +91,7 @@ class RadarrAPI(RequestAPI):
             root_dir (str): location of the root DIR
             monitored (bool, optional): should the movie be monitored. Defaults to True.
             search_for_movie (bool, optional): Should we search for the movie. Defaults to True.
-            tmdb (bool, optional): Use IMDB IDs. Defaults to True.
+            tmdb (bool, optional): Use TMDB IDs. Set to False to use IMDB. Defaults to True.
 
         Returns:
             JSON: 200 Ok, 401 Unauthorized
