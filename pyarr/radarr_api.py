@@ -9,7 +9,13 @@ class RadarrAPI(RequestAPI):
     """
 
     def _construct_movie_json(
-        self, db_id, quality_profile_id, root_dir, monitored=True, search_for_movie=True
+        self,
+        db_id,
+        quality_profile_id,
+        root_dir,
+        monitored=True,
+        search_for_movie=True,
+        tmdb=True,
     ):
         """Searches for movie on tmdb and returns Movie json to add.
 
@@ -19,6 +25,7 @@ class RadarrAPI(RequestAPI):
             root_dir (str): location of the root DIR
             monitored (bool, optional): should the movie be monitored. Defaults to True.
             search_for_movie (bool, optional): Should we search for the movie. Defaults to True.
+            tmdb (bool, optional): Use IMDB IDs. Defaults to True.
 
         Raises:
             Exception: [description]
@@ -26,19 +33,22 @@ class RadarrAPI(RequestAPI):
         Returns:
             JSON: Movie JSON for adding a movie to radarr
         """
-        s_dict = self.lookup_movie(db_id)
+        if tmdb:
+            movie = self.lookup_movie_by_tmdb_id(db_id)[0]
+        else:
+            movie = self.lookup_movie_by_imdb_id(db_id)[0]
 
-        if not s_dict:
+        if not movie:
             raise Exception("Movie Doesn't Exist")
 
         movie_json = {
-            "title": s_dict[0]["title"],
+            "title": movie["title"],
             "rootFolderPath": root_dir,
             "qualityProfileId": quality_profile_id,
-            "year": s_dict[0]["year"],
-            "tmdbId": s_dict[0]["tmdbId"],
-            "images": s_dict[0]["images"],
-            "titleSlug": s_dict[0]["titleSlug"],
+            "year": movie["year"],
+            "tmdbId": movie["tmdbId"],
+            "images": movie["images"],
+            "titleSlug": movie["titleSlug"],
             "monitored": monitored,
             "addOptions": {"searchForMovie": search_for_movie},
         }
@@ -86,13 +96,8 @@ class RadarrAPI(RequestAPI):
         Returns:
             JSON: 200 Ok, 401 Unauthorized
         """
-        if tmdb:
-            term = f"tmdb:{str(db_id)}"
-        else:
-            term = f"imdb:{str(db_id)}"
-
         movie_json = self._construct_movie_json(
-            term, quality_profile_id, root_dir, monitored, search_for_movie
+            db_id, quality_profile_id, root_dir, monitored, search_for_movie, tmdb
         )
 
         path = "/api/v3/movie"
