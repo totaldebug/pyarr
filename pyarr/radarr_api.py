@@ -177,6 +177,22 @@ class RadarrAPI(RequestAPI):
         res = self.request_get(path, params=params)
         return res
 
+
+    # GET /movie/lookup
+    def lookup_movie_by_imdb_id(self, id_):
+        """Search for movie by IMDB ID
+
+        Args:
+            id_ (str): IMDB ID
+
+        Returns:
+            JSON: List of movies found
+        """
+        params = {"term": f"imdb:{id_}"}
+        path = "/api/v3/movie/lookup"
+        res = self.request_get(path, params=params)
+        return res
+
     # PUT /movie/editor
     def upd_movies(self, data):
         """The Updates operation allows to edit properties of multiple movies at once
