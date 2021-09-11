@@ -40,7 +40,7 @@ class SonarrAPI(RequestAPI):
         series_json = {
             "title": series["title"],
             "seasons": series["seasons"],
-            "path": root_dir + series["title"],
+            "rootFolderPath": root_dir,
             "qualityProfileId": quality_profile_id,
             "seasonFolder": season_folder,
             "monitored": monitored,
