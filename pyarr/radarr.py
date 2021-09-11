@@ -298,33 +298,6 @@ class RadarrAPI(BaseAPI):
         res = self.request_del(path)
         return res
 
-    ## HISTORY
-
-    # GET /history
-    def get_history(
-        self, page=1, page_size=20, sort_direction="descending", sort_key="date"
-    ):
-        """Return a json object list of items in your history
-
-        Args:
-            page (int, optional): Page to be returned. Defaults to 1.
-            page_size (int, optional): Number of results per page. Defaults to 20.
-            sort_direction (str, optional): Direction to sort items. Defaults to "descending".
-            sort_key (str, optional): Field to sort by. Defaults to "date".
-
-        Returns:
-            JSON: Array
-        """
-        params = {
-            "page": page,
-            "pageSize": page_size,
-            "sortDirection": sort_direction,
-            "sortKey": sort_key,
-        }
-        path = "history"
-        res = self.request_get(path, self.ver_uri, params=params)
-        return res
-
     # GET /history/movie
     def get_movie_history(self, id_, event_type=None):
         """Get history for a given movie in database by its database id
@@ -345,50 +318,6 @@ class RadarrAPI(BaseAPI):
 
     ## BLACKLIST
 
-    # GET /blacklist
-    def get_blacklist(
-        self,
-        page=1,
-        page_size=20,
-        sort_direction="descending",
-        sort_key="date",
-    ):
-        """Returns blacklisted releases.
-
-        Args:
-            page (int, optional): Page to be returned. Defaults to 1.
-            page_size (int, optional): Number of results per page. Defaults to 20.
-            sort_direction (str, optional): Direction to sort items. Defaults to "descending".
-            sort_key (str, optional): Field to sort by. Defaults to "date".
-
-        Returns:
-            JSON: Array
-        """
-        params = {
-            "page": page,
-            "pageSize": page_size,
-            "sortDirection": sort_direction,
-            "sortKey": sort_key,
-        }
-        path = "blacklist"
-        res = self.request_get(path, self.ver_uri, params=params)
-        return res
-
-    # DELETE /blacklist
-    def del_blacklist(self, id_):
-        """Removes a specific release (the id provided) from the blacklist
-
-        Args:
-            id_ (int): blacklist id from database
-
-        Returns:
-            JSON: Array
-        """
-        params = {"id": id_}
-        path = "blacklist"
-        res = self.request_del(path, params=params)
-        return res
-
     # GET /blacklist/movie
     def get_blacklist_by_movie_id(
         self,
@@ -407,19 +336,6 @@ class RadarrAPI(BaseAPI):
         res = self.request_get(path, self.ver_uri, params=params)
         return res
 
-    # DELETE /blacklist/bulk
-    def del_blacklist_bulk(self, data):
-        """Delete blacklisted releases in bulk
-
-        Args:
-            data (dict): blacklists that should be deleted
-
-        Returns:
-            JSON: 200 Ok, 401 Unauthorized
-        """
-        path = "blacklist/bulk"
-        res = self.request_del(path, data=data)
-        return res
 
     ## QUEUE
 

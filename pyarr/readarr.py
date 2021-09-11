@@ -62,36 +62,6 @@ class ReadarrAPI(BaseAPI):
         res = self.request_post(path, self.ver_uri, data=data)
         return res
 
-    ## HISTORY
-
-    # GET /history
-    def get_history(
-        self, sort_key="date", page=1, page_size=10, sort_dir="desc", id_=None
-    ):
-        """Gets history (grabs/failures/completed)
-
-        Args:
-            sort_key (str, optional): series.title or date. Defaults to "date".
-            page (int, optional): Page number to return. Defaults to 1.
-            page_size (int, optional): Number of items per page. Defaults to 10.
-            sort_dir (str, optional): Direction to sort the items. Defaults to "desc".
-            id_ (int, optional): Filter to a specific episode ID. Defaults to None.
-
-        Returns:
-            JSON: Array
-        """
-        path = "history"
-        params = {
-            "sortKey": sort_key,
-            "page": page,
-            "pageSize": page_size,
-            "sortDir": sort_dir,
-        }
-        if id_:
-            params["episodeId"] = id_
-        res = self.request_get(path, self.ver_uri, params=params)
-        return res
-
     ## WANTED (MISSING)
 
     # GET /wanted/missing

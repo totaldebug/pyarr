@@ -139,3 +139,85 @@ class BaseAPI(RequestAPI):
         path = "system/backup"
         res = self.request_get(path, self.ver_uri)
         return res
+
+    def get_history(
+        self, sort_key="date", page=1, page_size=10, sort_dir="desc", id_=None
+    ):
+        """Gets history (grabs/failures/completed)
+
+        Args:
+            sort_key (str, optional): series.title or date. Defaults to "date".
+            page (int, optional): Page number to return. Defaults to 1.
+            page_size (int, optional): Number of items per page. Defaults to 10.
+            sort_dir (str, optional): Direction to sort the items. Defaults to "desc".
+            id_ (int, optional): Filter to a specific episode ID. Defaults to None.
+
+        Returns:
+            JSON: Array
+        """
+        path = "history"
+        params = {
+            "sortKey": sort_key,
+            "page": page,
+            "pageSize": page_size,
+            "sortDir": sort_dir,
+        }
+        if id_:
+            params["episodeId"] = id_
+        res = self.request_get(path, self.ver_uri, params=params)
+        return res
+
+    def get_blacklist(
+        self,
+        page=1,
+        page_size=20,
+        sort_direction="descending",
+        sort_key="date",
+    ):
+        """Returns blacklisted releases.
+
+        Args:
+            page (int, optional): Page to be returned. Defaults to 1.
+            page_size (int, optional): Number of results per page. Defaults to 20.
+            sort_direction (str, optional): Direction to sort items. Defaults to "descending".
+            sort_key (str, optional): Field to sort by. Defaults to "date".
+
+        Returns:
+            JSON: Array
+        """
+        params = {
+            "page": page,
+            "pageSize": page_size,
+            "sortDirection": sort_direction,
+            "sortKey": sort_key,
+        }
+        path = "blacklist"
+        res = self.request_get(path, self.ver_uri, params=params)
+        return res
+
+    def del_blacklist(self, id_):
+        """Removes a specific release (the id provided) from the blacklist
+
+        Args:
+            id_ (int): blacklist id from database
+
+        Returns:
+            JSON: Array
+        """
+        params = {"id": id_}
+        path = "blacklist"
+        res = self.request_del(path, self.ver_uri, params=params)
+        return res
+
+    def del_blacklist_bulk(self, data):
+        """Delete blacklisted releases in bulk
+
+        Args:
+            data (dict): blacklists that should be deleted
+
+        Returns:
+            JSON: 200 Ok, 401 Unauthorized
+        """
+        path = "blacklist/bulk"
+        res = self.request_del(path, self.ver_uri, data=data)
+        return res
