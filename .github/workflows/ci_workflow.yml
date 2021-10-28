@@ -28,7 +28,7 @@ jobs:
             .py
             pyproject.toml
       - name: Check package version
-        if: steps.changed-files-specific.outputs.any_changed == 'true'
+        if: steps.changed-files.outputs.any_changed == 'true'
         uses: dudo/tag_check@v1.1.1
         with:
           git_tag_prefix: v
