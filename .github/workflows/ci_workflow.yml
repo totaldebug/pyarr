@@ -27,6 +27,10 @@ jobs:
           files: |
             .py
             pyproject.toml
+      - name: Run step if any of the listed files above change
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          echo "One or more files has changed."
       - name: Check package version
         if: steps.changed-files.outputs.any_changed == 'true'
         uses: dudo/tag_check@v1.1.1
