@@ -383,3 +383,12 @@ class BaseAPI(RequestAPI):
         """
         path = f"notification/{id_}"
         return self.request_del(path, self.ver_uri)
+
+    def get_remote_path_mapping(self):
+        """Get a list of remote paths being mapped and used
+
+        Returns:
+            JSON: Array
+        """
+        path = "remotePathMapping"
+        return self.request_get(path, self.ver_uri)

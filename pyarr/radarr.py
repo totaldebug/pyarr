@@ -668,15 +668,3 @@ class RadarrAPI(BaseAPI):
         """
         path = "customfilter"
         return self.request_get(path, self.ver_uri)
-
-    ## REMOTE PATH MAPPING
-
-    # GET /remotePathMapping
-    def get_remote_path_mapping(self):
-        """Get a list of remote paths being mapped and used by Radarr
-
-        Returns:
-            JSON: Array
-        """
-        path = "remotePathMapping"
-        return self.request_get(path, self.ver_uri)
