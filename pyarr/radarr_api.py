@@ -303,7 +303,7 @@ class RadarrAPI(RequestAPI):
         Returns:
             JSON: 200 Ok, 401 Unauthorized
         """
-        path = f"/api/v3/movie/{id_}"
+        path = f"/api/v3/moviefile/{id_}"
         res = self.request_del(path)
         return res
 
