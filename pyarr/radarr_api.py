@@ -582,7 +582,7 @@ class RadarrAPI(RequestAPI):
             JSON: 200 ok, 401 Unauthorized
         """
         path = f"/api/v3/indexer/{id_}"
-        res = path.request_put(path, data=data)
+        res = self.request_put(path, data=data)
         return res
 
     # DELETE /indexer/{id}
@@ -631,7 +631,7 @@ class RadarrAPI(RequestAPI):
             JSON: 200 Ok
         """
         path = f"/api/v3/downloadclient/{id_}"
-        res = path.request_put(path, data=data)
+        res = self.request_put(path, data=data)
         return res
 
     # DELETE /downloadclient/{id}
@@ -680,7 +680,7 @@ class RadarrAPI(RequestAPI):
             JSON: 200 Ok, 401 Unauthorized
         """
         path = f"/api/v3/importlist/{id_}"
-        res = path.request_put(path, data=data)
+        res = self.request_put(path, data=data)
         return res
 
     # DELETE /importlist/{id}
@@ -729,7 +729,7 @@ class RadarrAPI(RequestAPI):
             JSON: 200 Ok, 401 Unauthorized
         """
         path = f"/api/v3/notification/{id_}"
-        res = path.request_put(path, data=data)
+        res = self.request_put(path, data=data)
         return res
 
     # DELETE /notification/{id}
