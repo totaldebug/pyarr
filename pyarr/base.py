@@ -306,7 +306,7 @@ class BaseAPI(RequestAPI):
         return self.request_put(path, data=data)
 
     def get_config_host(self):
-        """Get General/Host settings for Radarr.
+        """Get General/Host settings.
 
         Returns:
             JSON: Array
@@ -315,7 +315,7 @@ class BaseAPI(RequestAPI):
         return self.request_get(path, self.ver_uri)
 
     def upd_config_host(self, data):
-        """Edit General/Host settings for Radarr.
+        """Edit General/Host settings.
 
         Args:
             data (dict): data to bu updated
@@ -324,4 +324,25 @@ class BaseAPI(RequestAPI):
             JSON: 200 Ok, 401 Unauthorized
         """
         path = "config/host"
+        return self.request_put(path, data=data)
+
+    def get_config_naming(self):
+        """Get Settings for file and folder naming.
+
+        Returns:
+            JSON: Array
+        """
+        path = "config/naming"
+        return self.request_get(path, self.ver_uri, self.ver_uri)
+
+    def upd_config_naming(self, data):
+        """Edit Settings for file and folder naming.
+
+        Args:
+            data (dict): data to be updated
+
+        Returns:
+            JSON: 200 Ok, 401 Unauthorized
+        """
+        path = "config/naming"
         return self.request_put(path, data=data)

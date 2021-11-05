@@ -675,30 +675,6 @@ class RadarrAPI(BaseAPI):
         path = "tag/detail" if not id_ else f"tag/detail/{id_}"
         return self.request_get(path, self.ver_uri)
 
-    ## SETTINGS
-    # GET /config/naming
-    def get_config_naming(self):
-        """Get Settings for movie file and folder naming.
-
-        Returns:
-            JSON: Array
-        """
-        path = "config/naming"
-        return self.request_get(path, self.ver_uri, self.ver_uri)
-
-    # PUT /config/naming
-    def upd_config_naming(self, data):
-        """Edit Settings for movie file and folder naming.
-
-        Args:
-            data (dict): data to be updated
-
-        Returns:
-            JSON: 200 Ok, 401 Unauthorized
-        """
-        path = "config/naming"
-        return self.request_put(path, data=data)
-
     ## COMMAND
 
     # POST /command
