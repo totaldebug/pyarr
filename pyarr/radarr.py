@@ -786,18 +786,6 @@ class RadarrAPI(BaseAPI):
         path = "command"
         return self.request_post(path, data=data)
 
-    ## QUALITY PROFILE
-
-    # GET /qualityProfile
-    def get_quality_profiles(self):
-        """Query Radarr for quality profiles
-
-        Returns:
-            JSON: Array
-        """
-        path = "qualityProfile"
-        return self.request_get(path, self.ver_uri)
-
     ## CUSTOM FILTERS
 
     # GET /customfilter

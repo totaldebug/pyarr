@@ -302,18 +302,6 @@ class SonarrAPI(BaseAPI):
         path = "parse"
         return self.request_get(path, self.ver_uri, params=params)
 
-    ## PROFILE
-
-    # GET /profile
-    def get_quality_profiles(self):
-        """Gets all quality profiles
-
-        Returns:
-            JSON: Array
-        """
-        path = "profile"
-        return self.request_get(path)
-
     ## RELEASE
 
     # GET /release
