@@ -116,7 +116,7 @@ class RadarrAPI(RequestAPI):
             JSON: 200 Ok, 401 Unauthorized
         """
 
-        path = "/api/movie"
+        path = "/api/v3/movie"
         params = {"moveFiles": move_files}
         res = self.request_put(path, data=data, params=params)
         return res
