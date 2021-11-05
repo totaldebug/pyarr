@@ -371,22 +371,6 @@ class RadarrAPI(BaseAPI):
         path = "queue"
         return self.request_get(path, self.ver_uri, params=params)
 
-    # DELETE /queue/{id}
-    def del_queue(self, id_, remove_from_client=True, blacklist=True):
-        """Remove an item from the queue and optionally blacklist it
-
-        Args:
-            id_ (int): id of the item to be removed
-            remove_from_client (bool, optional): Remove the item from the client. Defaults to True.
-            blacklist (bool, optional): Add the item to the blacklist. Defaults to True.
-
-        Returns:
-            JSON: 200 Ok, 401 Unauthorized
-        """
-        params = {"removeFromClient": remove_from_client, "blacklist": blacklist}
-        path = f"queue/{id_}"
-        return self.request_del(path, params=params)
-
     # DELETE /queue/bulk
     def del_queue_bulk(self, data, remove_from_client=True, blacklist=True):
         """Remove multiple items from queue by their ids

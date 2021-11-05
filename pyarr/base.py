@@ -256,3 +256,30 @@ class BaseAPI(RequestAPI):
         params = {"id": id_}
         path = "indexer"
         return self.request_del(path, self.ver_uri, params=params)
+
+    def del_queue(self, id_, remove_from_client=True, blacklist=True):
+        """Remove an item from the queue and optionally blacklist it
+
+        Args:
+            id_ (int): id of the item to be removed
+            remove_from_client (bool, optional): Remove the item from the client. Defaults to True.
+            blacklist (bool, optional): Add the item to the blacklist. Defaults to True.
+
+        Returns:
+            JSON: 200 Ok, 401 Unauthorized
+        """
+        params = {"removeFromClient": remove_from_client, "blacklist": blacklist}
+        path = f"queue/{id_}"
+        return self.request_del(path, params=params)
+
+    def get_task(self, id_=None):
+        """Return a list of tasks, or specify a task ID to return single task
+
+        Args:
+            id_ (int): ID for task
+
+        Returns:
+            JSON: Array
+        """
+        path = f"system/task/{id_}" if id_ else "system/task"
+        return self.request_get(path, self.ver_uri)

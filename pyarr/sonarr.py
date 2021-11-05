@@ -215,9 +215,6 @@ class SonarrAPI(BaseAPI):
         path = f"episodefile/{id_}"
         return self.request_put(path, data=data)
 
-    ## WANTED (MISSING)
-
-    # GET /wanted/missing
     def get_wanted(self, sort_key="airDateUtc", page=1, page_size=10, sort_dir="asc"):
         """Gets missing episode (episodes without files)
 
@@ -250,21 +247,6 @@ class SonarrAPI(BaseAPI):
         """
         path = "queue"
         return self.request_get(path)
-
-    # DELETE /queue
-    def del_queue(self, id_, blacklist=False):
-        """Deletes an item from the queue and download client. Optionally blacklist item after deletion.
-
-        Args:
-            id_ (int): Database id of queue item
-            blacklist (bool, optional): Blacklist item after deletion. Defaults to False.
-
-        Returns:
-            JSON: {}
-        """
-        params = {"id": id_, "blacklist": blacklist}
-        path = "queue/"
-        return self.request_del(path, params=params)
 
     ## PARSE
 

@@ -32,3 +32,4 @@ Via Git or Download
 
     from pyarr import SonarrAPI
     from pyarr import RadarrAPI
+    from pyarr import ReadarrAPI

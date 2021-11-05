@@ -70,14 +70,14 @@ class ReadarrAPI(BaseAPI):
         Returns:
             JSON: Array
         """
-        path = f"{self.ver_uri}/wanted/missing"
+        path = "wanted/missing"
         params = {
             "sortKey": sort_key,
             "page": page,
             "pageSize": page_size,
             "sortDir": sort_dir,
         }
-        return self.request_get(path, params=params)
+        return self.request_get(path, self.ver_uri, params=params)
 
     ## QUEUE
 
@@ -88,57 +88,36 @@ class ReadarrAPI(BaseAPI):
         page_size=10,
         sort_dir="ascending",
         sort_key="timeleft",
-        unknown_authors=None,
+        unknown_authors=False,
+        include_author=False,
+        include_book=False,
     ):
         """Get current download information
 
         Args:
-            page (int, optional): Page number to return. Defaults to 1.
-            page_size (int, optional): Number of items per page. Defaults to 10.
-            sort_dir (str, optional): Direction to sort the items. Defaults to "ascending".
-            sort_key (str, optional): series.titke or airDateUtc. Defaults to "timeleft".
-            unknown_authors (bool, optional): Include unknown authors in search. Defaults to false.
+            page (int, optional): page number. Defaults to 1.
+            page_size (int, optional): number of results per page_size. Defaults to 10.
+            sort_dir (str, optional): direction to sort. Defaults to "ascending".
+            sort_key (str, optional): field to sort by. Defaults to "timeleft".
+            unknown_authors (bool, optional): Include items with an unknown author. Defaults to False.
+            include_author (bool, optional): Include the author. Defaults to False.
+            include_book (bool, optional): Include the book. Defaults to False.
 
         Returns:
             JSON: Array
         """
 
-        path = f"{self.ver_uri}/queue"
+        path = "queue"
         params = {
             "sortKey": sort_key,
             "page": page,
             "pageSize": page_size,
             "sortDirection": sort_dir,
             "includeUnknownAuthorItems": unknown_authors,
+            "includeAuthor": include_author,
+            "includeBook": include_book,
         }
-        return self.request_get(path, params=params)
-
-    # DELETE /queue
-    def del_queue(self, id_, blacklist=False):
-        """Deletes an item from the queue and download client. Optionally blacklist item after deletion.
-
-        Args:
-            id_ (int): Database id of queue item
-            blacklist (bool, optional): Blacklist item after deletion. Defaults to False.
-
-        Returns:
-            JSON: {}
-        """
-        params = {"id": id_, "blacklist": blacklist}
-        path = "queue/"
-        return self.request_del(path, self.ver_uri, params=params)
-
-    ## PROFILE
-
-    # GET /qualityprofile
-    def get_quality_profiles(self):
-        """Gets all quality profiles
-
-        Returns:
-            JSON: Array
-        """
-        path = "qualityprofile"
-        return self.request_get(path, self.ver_uri)
+        return self.request_get(path, self.ver_uri, params=params)
 
     # GET /metadataprofile
     def get_metadata_profiles(self):
@@ -238,19 +217,6 @@ class ReadarrAPI(BaseAPI):
         params = {"term": term}
         path = "book/lookup"
         return self.request_get(path, self.ver_uri, params=params)
-
-    # GET /system/task
-    def get_task(self, id_=None):
-        """Return a list of tasks, or specify a task ID to return single task
-
-        Args:
-            id_ (int): ID for task
-
-        Returns:
-            JSON: Array
-        """
-        path = f"system/task/{id_}" if id_ else "system/task"
-        return self.request_get(path, self.ver_uri)
 
     ## TAG
 
