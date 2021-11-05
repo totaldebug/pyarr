@@ -158,14 +158,14 @@ class BaseAPI(RequestAPI):
             params["episodeId"] = id_
         return self.request_get(path, self.ver_uri, params=params)
 
-    def get_blacklist(
+    def get_blocklist(
         self,
         page=1,
         page_size=20,
         sort_direction="descending",
         sort_key="date",
     ):
-        """Returns blacklisted releases.
+        """Returns blocked releases.
 
         Args:
             page (int, optional): Page to be returned. Defaults to 1.
@@ -182,30 +182,30 @@ class BaseAPI(RequestAPI):
             "sortDirection": sort_direction,
             "sortKey": sort_key,
         }
-        path = "blacklist"
+        path = "blocklist"
         return self.request_get(path, self.ver_uri, params=params)
 
-    def del_blacklist(self, id_):
-        """Removes a specific release (the id provided) from the blacklist
+    def del_blocklist(self, id_):
+        """Removes a specific release (the id provided) from the blocklist
 
         Args:
-            id_ (int): blacklist id from database
+            id_ (int): blocklist id from database
 
         Returns:
             JSON: Array
         """
         params = {"id": id_}
-        path = "blacklist"
+        path = "blocklist"
         return self.request_del(path, self.ver_uri, params=params)
 
-    def del_blacklist_bulk(self, data):
-        """Delete blacklisted releases in bulk
+    def del_blocklist_bulk(self, data):
+        """Delete blocked releases in bulk
 
         Args:
-            data (dict): blacklists that should be deleted
+            data (dict): blocklists that should be deleted
 
         Returns:
             JSON: 200 Ok, 401 Unauthorized
         """
-        path = "blacklist/bulk"
+        path = "blocklist/bulk"
         return self.request_del(path, self.ver_uri, data=data)

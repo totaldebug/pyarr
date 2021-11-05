@@ -12,7 +12,4 @@ ENV PATH="${PATH}:/root/.local/bin"
 RUN wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O - | zsh || true
 RUN poetry completions zsh > ~/.zfunc/_poetry
 
-RUN poetry install
-RUN poetry run pre-commit install -t pre-commit
-
 CMD ["zsh"]

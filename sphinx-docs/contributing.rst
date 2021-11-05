@@ -29,7 +29,20 @@ Updating PyArr module
 Style & formatting
 ==================
 
+It is highly recommended to use vsCode devcontainer as this automatically adds the
+required formatting checks on pre-commit, this will allow for resolution of issues
+prior to the pull request being submitted.
+
+If you are not using devcontainer please register the pre-commit-config:
+
+.. code:: bash
+   poetry run pre-commit install
+
+A few guidelines for approval:
+
 - Must follow PEP8 / Black formatting. (devcontainer is setup to reformat on save)
+- We recommend using `sourcery <https://sourcery.ai/>`_ to ensure code is most
+  efficient, this will be checked when the pull reuqest is opened.
 - All functions must use google docstring format, the devcontainer has an
    `autodocstring <https://marketplace.visualstudio.com/items?itemName=njpwerner.autodocstring>`_
    plugin which will auto fill.

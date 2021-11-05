@@ -28,5 +28,6 @@
         "files.trimTrailingWhitespace": true,
         "python.formatting.provider": "black",
         "autoDocstring.docstringFormat": "google"
-    }
+    },
+    "postCreateCommand": "poetry install && poetry run pre-commit install -t pre-commit"
 }
