@@ -562,48 +562,6 @@ class RadarrAPI(BaseAPI):
         path = f"importlist/{id_}"
         return self.request_del(path)
 
-    ## NOTIFICATION
-
-    # GET /notification and /notification/{id}
-    def get_notification(self, id_=None):
-        """Get all notifications or a single notification by its database id
-
-        Args:
-            id_ (int, optional): Notification database id. Defaults to None.
-
-        Returns:
-            JSON: Array
-        """
-        path = "notification" if not id_ else f"notification/{id_}"
-        return self.request_get(path, self.ver_uri)
-
-    # PUT /notification/{id}
-    def upd_notification(self, id_, data):
-        """Edit notification by database id
-
-        Args:
-            id_ (int): Database id of notification
-            data (dict): data that requires updating
-
-        Returns:
-            JSON: 200 Ok, 401 Unauthorized
-        """
-        path = f"notification/{id_}"
-        return self.request_put(path, data=data)
-
-    # DELETE /notification/{id}
-    def del_notification(self, id_):
-        """Delete a notification by its database id
-
-        Args:
-            id_ (int): Database id of notification
-
-        Returns:
-            JSON: 201 Ok, 401 Unauthorized
-        """
-        path = f"notification/{id_}"
-        return self.request_del(path)
-
     ## TAG
 
     # GET /tag and /tag/{id}

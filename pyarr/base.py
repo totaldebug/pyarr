@@ -270,7 +270,7 @@ class BaseAPI(RequestAPI):
         """
         params = {"removeFromClient": remove_from_client, "blacklist": blacklist}
         path = f"queue/{id_}"
-        return self.request_del(path, params=params)
+        return self.request_del(path, self.ver_uri, params=params)
 
     def get_task(self, id_=None):
         """Return a list of tasks, or specify a task ID to return single task
@@ -303,7 +303,7 @@ class BaseAPI(RequestAPI):
             JSON: 200 Ok, 401 Unauthorized
         """
         path = "config/ui"
-        return self.request_put(path, data=data)
+        return self.request_put(path, self.ver_uri, data=data)
 
     def get_config_host(self):
         """Get General/Host settings.
@@ -324,7 +324,7 @@ class BaseAPI(RequestAPI):
             JSON: 200 Ok, 401 Unauthorized
         """
         path = "config/host"
-        return self.request_put(path, data=data)
+        return self.request_put(path, self.ver_uri, data=data)
 
     def get_config_naming(self):
         """Get Settings for file and folder naming.
@@ -345,4 +345,41 @@ class BaseAPI(RequestAPI):
             JSON: 200 Ok, 401 Unauthorized
         """
         path = "config/naming"
-        return self.request_put(path, data=data)
+        return self.request_put(path, self.ver_uri, data=data)
+
+    def get_notification(self, id_=None):
+        """Get all notifications or a single notification by its database id
+
+        Args:
+            id_ (int, optional): Notification database id. Defaults to None.
+
+        Returns:
+            JSON: Array
+        """
+        path = "notification" if not id_ else f"notification/{id_}"
+        return self.request_get(path, self.ver_uri)
+
+    def upd_notification(self, id_, data):
+        """Edit notification by database id
+
+        Args:
+            id_ (int): Database id of notification
+            data (dict): data that requires updating
+
+        Returns:
+            JSON: 200 Ok, 401 Unauthorized
+        """
+        path = f"notification/{id_}"
+        return self.request_put(path, self.ver_uri, data=data)
+
+    def del_notification(self, id_):
+        """Delete a notification by its database id
+
+        Args:
+            id_ (int): Database id of notification
+
+        Returns:
+            JSON: 201 Ok, 401 Unauthorized
+        """
+        path = f"notification/{id_}"
+        return self.request_del(path, self.ver_uri)
