@@ -72,13 +72,26 @@ class BaseAPI(RequestAPI):
         return self.request_get(path, self.ver_uri)
 
     def get_root_folder(self):
-        """Query root folder information
+        """Get list of root folders
 
         Returns:
             JSON: Array
         """
         path = "rootfolder"
         return self.request_get(path, self.ver_uri)
+
+    def del_root_folder(self, id_):
+        """Delete root folder with specified id
+
+        Args:
+            _id (int): Root folder id from database
+
+        Returns:
+            JSON: Array
+        """
+        params = {"id": id_}
+        path = "rootfolder"
+        return self.request_del(path, self.ver_uri, params=params)
 
     def get_logs(
         self,
