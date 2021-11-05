@@ -676,53 +676,6 @@ class RadarrAPI(BaseAPI):
         return self.request_get(path, self.ver_uri)
 
     ## SETTINGS
-
-    # GET /config/ui
-    def get_config_ui(self):
-        """Query Radarr for UI settings
-
-        Returns:
-            JSON: Array
-        """
-        path = "config/ui"
-        return self.request_get(path, self.ver_uri)
-
-    # PUT /config/ui
-    def upd_config_ui(self, data):
-        """Edit one or many UI settings and save to to the database
-
-        Args:
-            data (dict): data to be Updated
-
-        Returns:
-            JSON: 200 Ok, 401 Unauthorized
-        """
-        path = "config/ui"
-        return self.request_put(path, data=data)
-
-    # GET /config/host
-    def get_config_host(self):
-        """Get General/Host settings for Radarr.
-
-        Returns:
-            JSON: Array
-        """
-        path = "config/host"
-        return self.request_get(path, self.ver_uri)
-
-    # PUT /config/host
-    def upd_config_host(self, data):
-        """Edit General/Host settings for Radarr.
-
-        Args:
-            data (dict): data to bu updated
-
-        Returns:
-            JSON: 200 Ok, 401 Unauthorized
-        """
-        path = "config/host"
-        return self.request_put(path, data=data)
-
     # GET /config/naming
     def get_config_naming(self):
         """Get Settings for movie file and folder naming.

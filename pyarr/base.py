@@ -283,3 +283,45 @@ class BaseAPI(RequestAPI):
         """
         path = f"system/task/{id_}" if id_ else "system/task"
         return self.request_get(path, self.ver_uri)
+
+    def get_config_ui(self):
+        """Query Radarr for UI settings
+
+        Returns:
+            JSON: Array
+        """
+        path = "config/ui"
+        return self.request_get(path, self.ver_uri)
+
+    def upd_config_ui(self, data):
+        """Edit one or many UI settings and save to to the database
+
+        Args:
+            data (dict): data to be Updated
+
+        Returns:
+            JSON: 200 Ok, 401 Unauthorized
+        """
+        path = "config/ui"
+        return self.request_put(path, data=data)
+
+    def get_config_host(self):
+        """Get General/Host settings for Radarr.
+
+        Returns:
+            JSON: Array
+        """
+        path = "config/host"
+        return self.request_get(path, self.ver_uri)
+
+    def upd_config_host(self, data):
+        """Edit General/Host settings for Radarr.
+
+        Args:
+            data (dict): data to bu updated
+
+        Returns:
+            JSON: 200 Ok, 401 Unauthorized
+        """
+        path = "config/host"
+        return self.request_put(path, data=data)
