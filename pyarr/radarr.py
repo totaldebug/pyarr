@@ -478,48 +478,6 @@ class RadarrAPI(BaseAPI):
         path = f"indexer/{id_}"
         return self.request_del(path)
 
-    ## DOWNLOAD CLIENT
-
-    # GET /downloadclient and /downloadclient/{id}
-    def get_download_client(self, id_=None):
-        """Get a list of all the download clients or a single client by its database id added in Radarr
-
-        Args:
-            id_ (int, optional): Download client database id. Defaults to None.
-
-        Returns:
-            JSON: Array
-        """
-        path = "downloadclient" if not id_ else f"downloadclient/{id_}"
-        return self.request_get(path, self.ver_uri)
-
-    # PUT /downloadclient/{id}
-    def upd_download_client(self, id_, data):
-        """Edit a downloadclient by database id
-
-        Args:
-            id_ (int): Download client database id
-            data (dict): data to be updated within download client
-
-        Returns:
-            JSON: 200 Ok
-        """
-        path = f"downloadclient/{id_}"
-        return self.request_put(path, data=data)
-
-    # DELETE /downloadclient/{id}
-    def del_download_client(self, id_):
-        """Delete a download client by database id
-
-        Args:
-            id_ (int): download client database id
-
-        Returns:
-            JSON: 200 Ok
-        """
-        path = f"downloadclient/{id_}"
-        return self.request_del(path)
-
     ## IMPORT LISTS
 
     # GET /importlist and /importlist/{id}
