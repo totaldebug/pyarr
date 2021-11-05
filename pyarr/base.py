@@ -231,3 +231,15 @@ class BaseAPI(RequestAPI):
         """
         path = "profile"
         return self.request_get(path, self.ver_uri)
+
+    def get_indexer(self, id_=None):
+        """Get all indexers or specific by id_
+
+        Args:
+            id_ (int, optional): database if of indexer to return. Defaults to 1None.
+
+        Returns:
+            JSON: Array
+        """
+        path = "indexer" if not id_ else f"indexer/{id_}"
+        return self.request_get(path, self.ver_uri)
