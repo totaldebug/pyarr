@@ -1,4 +1,3 @@
-from .request_api import RequestAPI
 from .base import BaseAPI
 
 
@@ -31,13 +30,8 @@ class ReadarrAPI(BaseAPI):
         Returns:
             JSON: Array
         """
-        if id_:
-            path = f"command/{id_}"
-        else:
-            path = "command"
-
-        res = self.request_get(path, self.ver_uri)
-        return res
+        path = f"command/{id_}" if id_ else "command"
+        return self.request_get(path, self.ver_uri)
 
     # POST /command
     def post_command(self, name, **kwargs):
@@ -59,8 +53,7 @@ class ReadarrAPI(BaseAPI):
             "name": name,
             **kwargs,
         }
-        res = self.request_post(path, self.ver_uri, data=data)
-        return res
+        return self.request_post(path, self.ver_uri, data=data)
 
     ## WANTED (MISSING)
 
@@ -84,8 +77,7 @@ class ReadarrAPI(BaseAPI):
             "pageSize": page_size,
             "sortDir": sort_dir,
         }
-        res = self.request_get(path, params=params)
-        return res
+        return self.request_get(path, params=params)
 
     ## QUEUE
 
@@ -119,8 +111,7 @@ class ReadarrAPI(BaseAPI):
             "sortDirection": sort_dir,
             "includeUnknownAuthorItems": unknown_authors,
         }
-        res = self.request_get(path, params=params)
-        return res
+        return self.request_get(path, params=params)
 
     # DELETE /queue
     def del_queue(self, id_, blacklist=False):
@@ -135,8 +126,7 @@ class ReadarrAPI(BaseAPI):
         """
         params = {"id": id_, "blacklist": blacklist}
         path = "queue/"
-        res = self.request_del(path, self.ver_uri, params=params)
-        return res
+        return self.request_del(path, self.ver_uri, params=params)
 
     ## PROFILE
 
@@ -148,8 +138,7 @@ class ReadarrAPI(BaseAPI):
             JSON: Array
         """
         path = "qualityprofile"
-        res = self.request_get(path, self.ver_uri)
-        return res
+        return self.request_get(path, self.ver_uri)
 
     # GET /metadataprofile
     def get_metadata_profiles(self):
@@ -159,8 +148,7 @@ class ReadarrAPI(BaseAPI):
             JSON: Array
         """
         path = "metadataprofile"
-        res = self.request_get(path, self.ver_uri)
-        return res
+        return self.request_get(path, self.ver_uri)
 
     # GET /delayprofile
     def get_delay_profiles(self):
@@ -170,8 +158,7 @@ class ReadarrAPI(BaseAPI):
             JSON: Array
         """
         path = "/delayprofile"
-        res = self.request_get(path, self.ver_uri)
-        return res
+        return self.request_get(path, self.ver_uri)
 
     # GET /releaseprofile
     def get_release_profiles(self):
@@ -181,8 +168,7 @@ class ReadarrAPI(BaseAPI):
             JSON: Array
         """
         path = "releaseprofile"
-        res = self.request_get(path, self.ver_uri)
-        return res
+        return self.request_get(path, self.ver_uri)
 
     ## BOOKS
     # GET /book and /book/{id}
@@ -196,13 +182,8 @@ class ReadarrAPI(BaseAPI):
         Returns:
             JSON: Array
         """
-        if id_:
-            path = f"book/{id_}"
-        else:
-            path = "book"
-
-        res = self.request_get(path, self.ver_uri)
-        return res
+        path = f"book/{id_}" if id_ else "book"
+        return self.request_get(path, self.ver_uri)
 
     # POST /book
     def add_book(
@@ -239,8 +220,7 @@ class ReadarrAPI(BaseAPI):
             "addImportListExclusion": import_list_exclusion,
         }
         path = f"book/{id_}"
-        res = self.request_del(path, self.ver_uri, params=params)
-        return res
+        return self.request_del(path, self.ver_uri, params=params)
 
     # GET /book/lookup
     def lookup_book(self, term):
@@ -257,8 +237,7 @@ class ReadarrAPI(BaseAPI):
         """
         params = {"term": term}
         path = "book/lookup"
-        res = self.request_get(path, self.ver_uri, params=params)
-        return res
+        return self.request_get(path, self.ver_uri, params=params)
 
     # GET /system/task
     def get_task(self, id_=None):
@@ -270,12 +249,8 @@ class ReadarrAPI(BaseAPI):
         Returns:
             JSON: Array
         """
-        if id_:
-            path = f"system/task/{id_}"
-        else:
-            path = "system/task"
-        res = self.request_get(path, self.ver_uri)
-        return res
+        path = f"system/task/{id_}" if id_ else "system/task"
+        return self.request_get(path, self.ver_uri)
 
     ## TAG
 
@@ -289,13 +264,8 @@ class ReadarrAPI(BaseAPI):
         Returns:
             JSON: Array
         """
-        if not id_:
-            path = "tag"
-        else:
-            path = f"tag/{id_}"
-
-        res = self.request_get(path, self.ver_uri)
-        return res
+        path = "tag" if not id_ else f"tag/{id_}"
+        return self.request_get(path, self.ver_uri)
 
     # GET /tag and /tag/{id}
     def get_tag_detail(self, id_=None):
@@ -307,13 +277,8 @@ class ReadarrAPI(BaseAPI):
         Returns:
             JSON: Array
         """
-        if not id_:
-            path = "tag/detail"
-        else:
-            path = f"tag/detail/{id_}"
-
-        res = self.request_get(path, self.ver_uri)
-        return res
+        path = "tag/detail" if not id_ else f"tag/detail/{id_}"
+        return self.request_get(path, self.ver_uri)
 
     # POST /tag
     def create_tag(self, label):
@@ -327,8 +292,7 @@ class ReadarrAPI(BaseAPI):
         """
         data = {"label": label}
         path = "tag"
-        res = self.request_post(path, self.ver_uri, data=data)
-        return res
+        return self.request_post(path, self.ver_uri, data=data)
 
     # PUT /tag/{id}
     def upd_tag(self, id_, label):
@@ -346,8 +310,7 @@ class ReadarrAPI(BaseAPI):
         """
         data = {"id": id_, "label": label}
         path = f"tag/{id_}"
-        res = self.request_put(path, self.ver_uri, data=data)
-        return res
+        return self.request_put(path, self.ver_uri, data=data)
 
     # DELETE /tag/{id}
     def del_tag(self, id_):
@@ -360,8 +323,7 @@ class ReadarrAPI(BaseAPI):
             JSON: {}
         """
         path = f"tag/{id_}"
-        res = self.request_del(path, self.ver_uri)
-        return res
+        return self.request_del(path, self.ver_uri)
 
     ## LOG
 
@@ -373,5 +335,4 @@ class ReadarrAPI(BaseAPI):
             JSON: Array
         """
         path = "log/file"
-        res = self.request_get(path, self.ver_uri)
-        return res
+        return self.request_get(path, self.ver_uri)

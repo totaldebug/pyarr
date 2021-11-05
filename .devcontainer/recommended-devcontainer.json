@@ -9,7 +9,8 @@
         "yzhang.markdown-all-in-one",
         "tabnine.tabnine-vscode",
         "rebornix.project-snippets",
-        "njpwerner.autodocstring"
+        "njpwerner.autodocstring",
+        "sourcery.sourcery"
     ],
     "settings": {
         "files.eol": "\n",

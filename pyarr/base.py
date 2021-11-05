@@ -1,4 +1,5 @@
 from datetime import datetime
+
 from .request_api import RequestAPI
 
 
@@ -32,8 +33,7 @@ class BaseAPI(RequestAPI):
             params["end"] = datetime.strptime(end_date, "%Y-%m-%d").strftime("%Y-%m-%d")
         params["unmonitored"] = unmonitored
 
-        res = self.request_get(path, self.ver_uri, params=params)
-        return res
+        return self.request_get(path, self.ver_uri, params=params)
 
     def get_system_status(self):
         """Returns system status
@@ -42,8 +42,7 @@ class BaseAPI(RequestAPI):
             JSON: Array
         """
         path = "system/status"
-        res = self.request_get(path, self.ver_uri)
-        return res
+        return self.request_get(path, self.ver_uri)
 
     def get_health(self):
         """Query radarr for health information
@@ -52,8 +51,7 @@ class BaseAPI(RequestAPI):
             JSON: Array
         """
         path = "health"
-        res = self.request_get(path, self.ver_uri)
-        return res
+        return self.request_get(path, self.ver_uri)
 
     def get_metadata(self):
         """Get all metadata consumer settings
@@ -62,8 +60,7 @@ class BaseAPI(RequestAPI):
             JSON: Array
         """
         path = "metadata"
-        res = self.request_get(path, self.ver_uri)
-        return res
+        return self.request_get(path, self.ver_uri)
 
     def get_updates(self):
         """Will return a list of recent updated to Radarr
@@ -72,8 +69,7 @@ class BaseAPI(RequestAPI):
             JSON: Array
         """
         path = "update"
-        res = self.request_get(path, self.ver_uri)
-        return res
+        return self.request_get(path, self.ver_uri)
 
     def get_root_folder(self):
         """Query root folder information
@@ -82,8 +78,7 @@ class BaseAPI(RequestAPI):
             JSON: Array
         """
         path = "rootfolder"
-        res = self.request_get(path, self.ver_uri)
-        return res
+        return self.request_get(path, self.ver_uri)
 
     def get_logs(
         self,
@@ -116,8 +111,7 @@ class BaseAPI(RequestAPI):
             "filterKey": filter_key,
             "filterValue": filter_value,
         }
-        res = self.request_get(path, self.ver_uri, params=params)
-        return res
+        return self.request_get(path, self.ver_uri, params=params)
 
     def get_disk_space(self):
         """Query disk usage information
@@ -127,8 +121,7 @@ class BaseAPI(RequestAPI):
             JSON: Array
         """
         path = "diskspace"
-        res = self.request_get(path, self.ver_uri)
-        return res
+        return self.request_get(path, self.ver_uri)
 
     def get_backup(self):
         """Returns the list of available backups
@@ -137,8 +130,7 @@ class BaseAPI(RequestAPI):
             JSON: Array
         """
         path = "system/backup"
-        res = self.request_get(path, self.ver_uri)
-        return res
+        return self.request_get(path, self.ver_uri)
 
     def get_history(
         self, sort_key="date", page=1, page_size=10, sort_dir="desc", id_=None
@@ -164,8 +156,7 @@ class BaseAPI(RequestAPI):
         }
         if id_:
             params["episodeId"] = id_
-        res = self.request_get(path, self.ver_uri, params=params)
-        return res
+        return self.request_get(path, self.ver_uri, params=params)
 
     def get_blacklist(
         self,
@@ -192,8 +183,7 @@ class BaseAPI(RequestAPI):
             "sortKey": sort_key,
         }
         path = "blacklist"
-        res = self.request_get(path, self.ver_uri, params=params)
-        return res
+        return self.request_get(path, self.ver_uri, params=params)
 
     def del_blacklist(self, id_):
         """Removes a specific release (the id provided) from the blacklist
@@ -206,8 +196,7 @@ class BaseAPI(RequestAPI):
         """
         params = {"id": id_}
         path = "blacklist"
-        res = self.request_del(path, self.ver_uri, params=params)
-        return res
+        return self.request_del(path, self.ver_uri, params=params)
 
     def del_blacklist_bulk(self, data):
         """Delete blacklisted releases in bulk
@@ -219,5 +208,4 @@ class BaseAPI(RequestAPI):
             JSON: 200 Ok, 401 Unauthorized
         """
         path = "blacklist/bulk"
-        res = self.request_del(path, self.ver_uri, data=data)
-        return res
+        return self.request_del(path, self.ver_uri, data=data)
