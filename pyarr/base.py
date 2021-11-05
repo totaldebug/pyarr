@@ -392,3 +392,69 @@ class BaseAPI(RequestAPI):
         """
         path = "remotePathMapping"
         return self.request_get(path, self.ver_uri)
+
+    def get_tag(self, id_=None):
+        """Returns all tags or specific tag by database id
+
+        Args:
+            id_ (int, optional): Database id for tag. Defaults to None.
+
+        Returns:
+            JSON: Array
+        """
+        path = "tag" if not id_ else f"tag/{id_}"
+        return self.request_get(path, self.ver_uri)
+
+    def get_tag_detail(self, id_=None):
+        """Returns all tags or specific tag by database id with detailed information
+
+        Args:
+            id_ (int, optional): Database id for tag. Defaults to None.
+
+        Returns:
+            JSON: Array
+        """
+        path = "tag/detail" if not id_ else f"tag/detail/{id_}"
+        return self.request_get(path, self.ver_uri)
+
+    def create_tag(self, label):
+        """Adds a new tag
+
+        Args:
+            label (str): Tag name / label
+
+        Returns:
+            JSON: Array
+        """
+        data = {"label": label}
+        path = "tag"
+        return self.request_post(path, self.ver_uri, data=data)
+
+    def upd_tag(self, id_, label):
+        """Update an existing tag
+
+        Note:
+            You should perform a get_tag() and submit the full body with changes
+
+        Args:
+            id_ (int): Database id of tag
+            label (str): tag name / label
+
+        Returns:
+            JSON: Array
+        """
+        data = {"id": id_, "label": label}
+        path = f"tag/{id_}"
+        return self.request_put(path, self.ver_uri, data=data)
+
+    def del_tag(self, id_):
+        """Delete the tag with the given ID
+
+        Args:
+            id_ (int): Database id of tag
+
+        Returns:
+            JSON: {}
+        """
+        path = f"tag/{id_}"
+        return self.request_del(path, self.ver_uri)
