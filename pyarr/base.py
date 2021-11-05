@@ -243,3 +243,16 @@ class BaseAPI(RequestAPI):
         """
         path = "indexer" if not id_ else f"indexer/{id_}"
         return self.request_get(path, self.ver_uri)
+
+    def del_indexer(self, id_):
+        """Removes a specific indexer from the blocklist
+
+        Args:
+            id_ (int): indexer id from database
+
+        Returns:
+            JSON: Array
+        """
+        params = {"id": id_}
+        path = "indexer"
+        return self.request_del(path, self.ver_uri, params=params)
