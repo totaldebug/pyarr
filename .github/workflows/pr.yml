@@ -1,0 +1,54 @@
+name: pr
+
+on:
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+jobs:
+  checkVersion:
+    if: github.event_name  == 'pull_request'
+    name: Check version updated
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Check if Python files changed
+        id: changed-files
+        uses: tj-actions/changed-files@v9
+        with:
+          files: |
+            .py
+            pyproject.toml
+      - name: Run step if any of the listed files above change
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          echo "One or more files has changed."
+      - name: Check package version
+        if: steps.changed-files.outputs.any_changed == 'true'
+        uses: dudo/tag_check@v1.1.1
+        with:
+          git_tag_prefix: v
+  code-quality:
+    name: Check code quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Getting your configuration from GitHub
+        uses: actions/checkout@v1
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+      - name: Run image
+        uses: abatilo/actions-poetry@v2.0.0
+      - name: Install dependencies with Poetry
+        run: poetry install
+      - name: Check imports
+        run: poetry run isort --diff
+      - name: Check Black formatting
+        run: poetry run black --check
+      - name: Check flake8 formatting
+        run: poetry run flake8
+      - name: Check static type
+        run: poetry run mypy
