@@ -478,7 +478,6 @@ class RadarrAPI(BaseAPI):
         path = f"indexer/{id_}"
         return self.request_del(path)
 
-
     ## COMMAND
 
     # POST /command

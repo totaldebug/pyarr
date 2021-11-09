@@ -218,6 +218,19 @@ class ReadarrAPI(BaseAPI):
         path = "book/lookup"
         return self.request_get(path, self.ver_uri, params=params)
 
+    def lookup_author(self, term):
+        """Searches for new authors using a term
+
+        Args:
+            term (str): search term
+
+        Returns:
+            JSON: Array
+        """
+        params = {"term": term}
+        path = "author/lookup"
+        return self.request_get(path, self.ver_uri, params=params)
+
     ## LOG
 
     # GET /log/file
