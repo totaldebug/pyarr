@@ -495,3 +495,40 @@ class BaseAPI(RequestAPI):
         """
         path = f"downloadclient/{id_}"
         return self.request_del(path)
+
+    def get_import_list(self, id_=None):
+        """Query for all lists or a single list by its database id
+
+        Args:
+            id_ (int, optional): Import list database id. Defaults to None.
+
+        Returns:
+            JSON: Array
+        """
+        path = "importlist" if not id_ else f"importlist/{id_}"
+        return self.request_get(path, self.ver_uri)
+
+    def upd_import_list(self, id_, data):
+        """Edit an importlist
+
+        Args:
+            id_ (int): Import list database id
+            data (dict): data to be updated within the import list
+
+        Returns:
+            JSON: 200 Ok, 401 Unauthorized
+        """
+        path = f"importlist/{id_}"
+        return self.request_put(path, data=data)
+
+    def del_import_list(self, id_):
+        """Delete an import list
+
+        Args:
+            id_ (int): Import list database id
+
+        Returns:
+            JSON: 200 ok, 401 Unauthorized
+        """
+        path = f"importlist/{id_}"
+        return self.request_del(path)
