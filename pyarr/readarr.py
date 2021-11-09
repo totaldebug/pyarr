@@ -201,7 +201,6 @@ class ReadarrAPI(BaseAPI):
         path = f"book/{id_}"
         return self.request_del(path, self.ver_uri, params=params)
 
-    # GET /book/lookup
     def lookup_book(self, term):
         """Searches for new books using a term, goodreads ID, isbn or asin.
 
@@ -230,6 +229,24 @@ class ReadarrAPI(BaseAPI):
         params = {"term": term}
         path = "author/lookup"
         return self.request_get(path, self.ver_uri, params=params)
+
+    def del_author(self, id_, delete_files=False, import_list_exclusion=True):
+        """Delete the author with the given id
+
+        Args:
+            id_ (int): Database id for author
+            delete_files (bool, optional): If true author folder and files will be deleted. Defaults to False.
+            import_list_exclusion (bool, optional): Add an exclusion so author doesn't get re-added. Defaults to True.
+
+        Returns:
+            JSON: Array
+        """
+        params = {
+            "deleteFiles": delete_files,
+            "addImportListExclusion": import_list_exclusion,
+        }
+        path = f"author/{id_}"
+        return self.request_del(path, self.ver_uri, params=params)
 
     ## LOG
 
