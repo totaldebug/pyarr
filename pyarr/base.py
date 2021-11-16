@@ -72,7 +72,7 @@ class BaseAPI(RequestAPI):
         return self.request_get(path, self.ver_uri)
 
     def get_root_folder(self):
-        """Get list of root folders
+        """Get list of root folders, free space and any unmappedFolders
 
         Returns:
             JSON: Array

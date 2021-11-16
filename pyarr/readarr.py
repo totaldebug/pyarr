@@ -15,12 +15,56 @@ class ReadarrAPI(BaseAPI):
         ver_uri = "/v1"
         super().__init__(host_url, api_key, ver_uri)
 
-    # CALENDAR
-    # Moved to base api
+    def _construct_book_json(
+        self,
+        db_id,
+        book_id_type,
+        root_dir,
+        quality_profile_id=1,
+        metadata_profile_id=0,
+        monitored=True,
+        search_for_new_book=False,
+        author_monitor="all",
+        author_search_for_missing_books=False,
+    ):
+        """Constructs the JSON required to add a new book to Readarr
 
-    ## COMMAND
+        Args:
+            db_id (int): goodreads, isbn, asin ID
+            book_id_type (str): goodreads / isbn / asin
+            root_dir (str): root directory for books
+            quality_profile_id (int, optional): quality profile id. Defaults to 1.
+            metadata_profile_id (int, optional): metadata profile id. Defaults to 0.
+            monitored (bool, optional): should the book be monitored. Defaults to True.
+            search_for_new_book (bool, optional): shour a search for the new book happen. Defaults to False.
+            author_monitor (str, optional): monitor the author. Defaults to "all".
+            author_search_for_missing_books (bool, optional): search for other missing books by the author. Defaults to False.
 
-    # GET /command
+        Raises:
+            ValueError: error raised if book_id_type is incorrect
+
+        Returns:
+            JSON: Array
+        """
+        book_id_types = ["goodreads", "isbn", "asin"]
+        if book_id_type not in book_id_types:
+            raise ValueError(f"Invalid book id type. Expected one of: {book_id_types}")
+
+        book = self.lookup_book(book_id_type + ":" + str(db_id))[0]
+
+        book["author"]["metadataProfileId"] = metadata_profile_id
+        book["author"]["qualityProfileId"] = quality_profile_id
+        book["author"]["rootFolderPath"] = root_dir
+        book["author"]["addOptions"] = {
+            "monitor": author_monitor,
+            "searchForMissingBooks": author_search_for_missing_books,
+        }
+        book["monitored"] = monitored
+        book["author"]["manualAdd"] = True
+        book["addOptions"] = {"searchForNewBook": search_for_new_book}
+
+        return book
+
     def get_command(self, id_=None):
         """Queries the status of a previously started command, or all currently started commands.
 
@@ -165,14 +209,55 @@ class ReadarrAPI(BaseAPI):
         return self.request_get(path, self.ver_uri)
 
     # POST /book
+
     def add_book(
         self,
+        db_id,
+        book_id_type,
+        root_dir,
+        quality_profile_id=1,
+        metadata_profile_id=0,
+        monitored=True,
+        search_for_new_book=False,
+        author_monitor="all",
+        author_search_for_missing_books=False,
     ):
-        pass
+        """Adds a new book and  its associated author (if not already added)
 
-        # path = "book"
-        # res = self.request_post(path, data=book_json)
-        # return res
+        Args:
+            db_id (int): goodreads, isbn, asin ID for the book
+            book_id_type (str): goodreads / isbn / asin
+            root_dir (str): Directory for book to be stored
+            quality_profile_id (int, optional): quality profile id. Defaults to 1.
+            metadata_profile_id (int, optional): metadata profile id. Defaults to 0.
+            monitored (bool, optional): should the book be monitored. Defaults to True.
+            search_for_new_book (bool, optional): search for the book to download now. Defaults to False.
+            author_monitor (str, optional): monitor the author for new books. Defaults to "all".
+            author_search_for_missing_books (bool, optional): search for missing books from this author. Defaults to False.
+
+        Raises:
+            ValueError: error raised if book_id_type is incorrect
+
+        Returns:
+            JSON: Array
+        """
+        book_id_types = ["goodreads", "isbn", "asin"]
+        if book_id_type not in book_id_types:
+            raise ValueError(f"Invalid book id type. Expected one of: {book_id_types}")
+
+        book_json = self._construct_book_json(
+            db_id,
+            book_id_type,
+            root_dir,
+            quality_profile_id,
+            metadata_profile_id,
+            monitored,
+            search_for_new_book,
+            author_monitor,
+            author_search_for_missing_books,
+        )
+        path = "book"
+        return self.request_post(path, self.ver_uri, data=book_json)
 
     # PUT /book
     def upd_book(self):
@@ -206,9 +291,9 @@ class ReadarrAPI(BaseAPI):
 
         Args:
             term (str): search term
-                goodreads:656
-                isbn:067003469X
-                asin:B00JCDK5ME
+            goodreads:656
+            isbn:067003469X
+            asin:B00JCDK5ME
 
         Returns:
             JSON: Array
