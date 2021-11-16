@@ -20,6 +20,10 @@ class RequestAPI:
         self.session = requests.Session()
         self.auth = None
 
+    def _request_url(self, path, ver_uri):
+        request_url = f"{self.host_url}/api{ver_uri}/{path}"
+        return request_url
+
     def basic_auth(self, username, password):
         """If you have basic authentication setup you will need to pass your
         username and passwords to the requests.auth.HTTPBASICAUTH() method.
@@ -45,9 +49,11 @@ class RequestAPI:
             Object: Response object from requests
         """
         headers = {"X-Api-Key": self.api_key}
-        request_url = f"{self.host_url}/api{ver_uri}/{path}"
         res = self.session.get(
-            request_url, headers=headers, params=params, auth=self.auth
+            self._request_url(path, ver_uri),
+            headers=headers,
+            params=params,
+            auth=self.auth,
         )
         return res.json()
 
@@ -63,9 +69,12 @@ class RequestAPI:
             Object: Response object from requests
         """
         headers = {"X-Api-Key": self.api_key}
-        request_url = f"{self.host_url}/api{ver_uri}/{path}"
         res = self.session.post(
-            request_url, headers=headers, params=params, json=data, auth=self.auth
+            self._request_url(path, ver_uri),
+            headers=headers,
+            params=params,
+            json=data,
+            auth=self.auth,
         )
         return res.json()
 
@@ -81,9 +90,12 @@ class RequestAPI:
             Object: Response object from requests
         """
         headers = {"X-Api-Key": self.api_key}
-        request_url = f"{self.host_url}/api{ver_uri}/{path}"
         res = self.session.put(
-            request_url, headers=headers, params=params, json=data, auth=self.auth
+            self._request_url(path, ver_uri),
+            headers=headers,
+            params=params,
+            json=data,
+            auth=self.auth,
         )
         return res.json()
 
@@ -99,8 +111,11 @@ class RequestAPI:
             Object: Response object from requests
         """
         headers = {"X-Api-Key": self.api_key}
-        request_url = f"{self.host_url}/api{ver_uri}/{path}"
         res = self.session.delete(
-            request_url, headers=headers, params=params, json=data, auth=self.auth
+            self._request_url(path, ver_uri),
+            headers=headers,
+            params=params,
+            json=data,
+            auth=self.auth,
         )
         return res.json()
