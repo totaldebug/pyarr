@@ -21,8 +21,7 @@ class RequestAPI:
         self.auth = None
 
     def _request_url(self, path, ver_uri):
-        request_url = f"{self.host_url}/api{ver_uri}/{path}"
-        return request_url
+        return f"{self.host_url}/api{ver_uri}/{path}"
 
     def basic_auth(self, username, password):
         """If you have basic authentication setup you will need to pass your
