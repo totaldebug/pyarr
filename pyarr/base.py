@@ -541,3 +541,15 @@ class BaseAPI(RequestAPI):
         """
         path = "config/mediamanagement"
         return self.request_get(path, self.ver_uri)
+
+    def get_quality_definition(self, id_=None):
+        """Gets all quality definitions or specific one by ID
+
+        Args:
+            id_ (int, optional): Import list database id. Defaults to None.
+
+        Returns:
+            JSON: Array
+        """
+        path = "qualitydefinition" if not id_ else f"qualitydefinition/{id_}"
+        return self.request_get(path, self.ver_uri)
