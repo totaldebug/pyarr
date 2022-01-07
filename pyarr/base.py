@@ -471,6 +471,15 @@ class BaseAPI(RequestAPI):
         path = "downloadclient" if not id_ else f"downloadclient/{id_}"
         return self.request_get(path, self.ver_uri)
 
+    def get_download_client_schema(self):
+        """Get a list of all the supported download clients
+
+        Returns:
+            JSON: Array
+        """
+        path = "downloadclient/schema"
+        return self.request_get(path, self.ver_uri)
+
     def upd_download_client(self, id_, data):
         """Edit a downloadclient by database id
 
