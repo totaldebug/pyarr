@@ -482,7 +482,7 @@ class BaseAPI(RequestAPI):
             JSON: 200 Ok
         """
         path = f"downloadclient/{id_}"
-        return self.request_put(path, data=data)
+        return self.request_put(path, self.ver_uri, data=data)
 
     def del_download_client(self, id_):
         """Delete a download client by database id
@@ -494,7 +494,7 @@ class BaseAPI(RequestAPI):
             JSON: 200 Ok
         """
         path = f"downloadclient/{id_}"
-        return self.request_del(path)
+        return self.request_del(path, self.ver_uri)
 
     def get_import_list(self, id_=None):
         """Query for all lists or a single list by its database id
@@ -519,7 +519,7 @@ class BaseAPI(RequestAPI):
             JSON: 200 Ok, 401 Unauthorized
         """
         path = f"importlist/{id_}"
-        return self.request_put(path, data=data)
+        return self.request_put(path, self.ver_uri, data=data)
 
     def del_import_list(self, id_):
         """Delete an import list
@@ -531,4 +531,13 @@ class BaseAPI(RequestAPI):
             JSON: 200 ok, 401 Unauthorized
         """
         path = f"importlist/{id_}"
-        return self.request_del(path)
+        return self.request_del(path, self.ver_uri)
+
+    def get_media_management(self):
+        """Get media managemnet configuration
+
+        Returns:
+            JSON: Array
+        """
+        path = "config/mediamanagement"
+        return self.request_get(path, self.ver_uri)
