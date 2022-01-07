@@ -472,3 +472,33 @@ class ReadarrAPI(BaseAPI):
         """
         path = "config/metadataProvider"
         return self.request_get(path, self.ver_uri)
+
+    def get_cutoff(
+        self,
+        sort_key="releaseDate",
+        page=1,
+        page_size=10,
+        sort_dir="descending",
+        monitored=True,
+    ):
+        """Get wanted cutoff information
+
+        Args:
+            sort_key (str, optional): field to sort by. Defaults to "releaseDate".
+            page (int, optional): page number. Defaults to 1.
+            page_size (int, optional): number of results per page_size. Defaults to 10.
+            sort_dir (str, optional): direction to sort. Defaults to "descending".
+            monitored (bool, optional): search for monitored only. Defaults to True.
+
+        Returns:
+            JSON: Array
+        """
+        path = "wanted/cutoff"
+        params = {
+            "sortKey": sort_key,
+            "page": page,
+            "pageSize": page_size,
+            "sortDir": sort_dir,
+            "monitored": monitored,
+        }
+        return self.request_get(path, self.ver_uri, params=params)
