@@ -502,3 +502,19 @@ class ReadarrAPI(BaseAPI):
             "monitored": monitored,
         }
         return self.request_get(path, self.ver_uri, params=params)
+
+
+def upd_book(self, data):
+    """Update the given book, currently only monitored is changed, all other modifications are ignored.
+
+    Note:
+        To be used in conjunction with get_book()
+
+    Args:
+        data (dict): All parameters to update book
+
+    Returns:
+        JSON: Array
+    """
+    path = "book"
+    return self.request_put(path, self.ver_uri, data=data)

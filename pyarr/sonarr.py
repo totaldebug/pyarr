@@ -76,7 +76,7 @@ class SonarrAPI(BaseAPI):
             JSON: Array
         """
         path = f"command/{id_}" if id_ else "command"
-        return self.request_get(path)
+        return self.request_get(path, self.ver_uri)
 
     # POST /command
     def post_command(self, name, **kwargs):
@@ -100,7 +100,7 @@ class SonarrAPI(BaseAPI):
             "name": name,
             **kwargs,
         }
-        return self.request_post(path, data=data)
+        return self.request_post(path, self.ver_uri, data=data)
 
     ## EPISODE
 
@@ -129,7 +129,7 @@ class SonarrAPI(BaseAPI):
             JSON: Array
         """
         path = f"episode/{id_}"
-        return self.request_get(path)
+        return self.request_get(path, self.ver_uri)
 
     # PUT /episode
     def upd_episode(self, data):
@@ -145,7 +145,7 @@ class SonarrAPI(BaseAPI):
             JSON: Array
         """
         path = "episode"
-        return self.request_put(path, data=data)
+        return self.request_put(path, self.ver_uri, data=data)
 
     ## EPISODE FILE
 
@@ -174,7 +174,7 @@ class SonarrAPI(BaseAPI):
             JSON: Array
         """
         path = f"episodefile/{id_}"
-        return self.request_get(path)
+        return self.request_get(path, self.ver_uri)
 
     # DELETE /episodefile/{id}
     def del_episode_file(self, id_):
@@ -187,7 +187,7 @@ class SonarrAPI(BaseAPI):
             JSON: {}
         """
         path = f"episodefile/{id_}"
-        return self.request_del(path)
+        return self.request_del(path, self.ver_uri)
 
     # PUT /episodefile/{id}
     def upd_episode_file_quality(self, id_, data):
@@ -213,7 +213,7 @@ class SonarrAPI(BaseAPI):
             JSON: Array
         """
         path = f"episodefile/{id_}"
-        return self.request_put(path, data=data)
+        return self.request_put(path, self.ver_uri, data=data)
 
     def get_wanted(self, sort_key="airDateUtc", page=1, page_size=10, sort_dir="asc"):
         """Gets missing episode (episodes without files)
@@ -246,7 +246,7 @@ class SonarrAPI(BaseAPI):
             JSON: Array
         """
         path = "queue"
-        return self.request_get(path)
+        return self.request_get(path, self.ver_uri)
 
     ## PARSE
 
@@ -315,7 +315,7 @@ class SonarrAPI(BaseAPI):
         """
         data = {"guid": guid, "indexerId": indexer_id}
         path = "release"
-        return self.request_post(path, data=data)
+        return self.request_post(path, self.ver_uri, data=data)
 
     # POST /release/push
     def push_release(self, title, download_url, protocol, publish_date):
@@ -337,7 +337,7 @@ class SonarrAPI(BaseAPI):
             "publishDate": publish_date,
         }
         path = "release/push"
-        return self.request_post(path, data=data)
+        return self.request_post(path, self.ver_uri, data=data)
 
     ## SERIES
     # GET /series and /series/{id}
@@ -352,7 +352,7 @@ class SonarrAPI(BaseAPI):
             JSON: Array
         """
         path = f"series/{id_}" if id_ else "series"
-        return self.request_get(path)
+        return self.request_get(path, self.ver_uri)
 
     # POST /series
     def add_series(
@@ -397,7 +397,7 @@ class SonarrAPI(BaseAPI):
         )
 
         path = "series"
-        return self.request_post(path, data=series_json)
+        return self.request_post(path, self.ver_uri, data=series_json)
 
     # PUT /series
     def upd_series(self, data):
@@ -410,7 +410,7 @@ class SonarrAPI(BaseAPI):
             JSON: Array
         """
         path = "series"
-        return self.request_put(path, data=data)
+        return self.request_put(path, self.ver_uri, data=data)
 
     # DELETE /series/{id}
     def del_series(self, id_, delete_files=False):
@@ -426,7 +426,7 @@ class SonarrAPI(BaseAPI):
         # File deletion does not work
         params = {"deleteFiles": delete_files}
         path = f"series/{id_}"
-        return self.request_del(path, params=params)
+        return self.request_del(path, self.ver_uri, params=params)
 
     # GET /series/lookup
     def lookup_series(self, term):
