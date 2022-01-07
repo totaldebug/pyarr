@@ -223,29 +223,46 @@ class BaseAPI(RequestAPI):
         path = "blocklist/bulk"
         return self.request_del(path, self.ver_uri, data=data)
 
-    def get_quality_profiles(self):
-        """Gets all quality profiles
+    def get_quality_profile(self, id_=None):
+        """Gets all quality profiles or specific one with id_
+
+        Args:
+            id_ (int): quality profile id from database
 
         Returns:
             JSON: Array
         """
-        path = "profile"
+        path = "qualityprofile" if not id_ else f"qualityprofile/{id_}"
         return self.request_get(path, self.ver_uri)
 
-    def upd_quality_profiles(self, data):
+    def upd_quality_profile(self, id_, data):
         """Update the quality profile data.
 
         Note:
-            To be used in conjunction with get_quality_profiles()
+            To be used in conjunction with get_quality_profile()
 
         Args:
+            id_ (int): Profile ID to Update
             data (dict): All parameters to update
 
         Returns:
             JSON: Array
         """
-        path = "profile"
+        path = f"qualityprofile/{id_}"
         return self.request_put(path, self.ver_uri, data=data)
+
+    def del_quality_profile(self, id_):
+        """Removes a specific quality profile from the blocklist
+
+        Args:
+            id_ (int): quality profile id from database
+
+        Returns:
+            JSON: Array
+        """
+        params = {"id": id_}
+        path = "qualityprofile"
+        return self.request_del(path, self.ver_uri, params=params)
 
     def get_indexer(self, id_=None):
         """Get all indexers or specific by id_

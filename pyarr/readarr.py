@@ -519,33 +519,35 @@ class ReadarrAPI(BaseAPI):
         return self.request_get(path, self.ver_uri, params=params)
 
 
-def upd_book(self, data):
+def upd_book(self, id_, data):
     """Update the given book, currently only monitored is changed, all other modifications are ignored.
 
     Note:
         To be used in conjunction with get_book()
 
     Args:
+        id_ (int): Book database ID to update
         data (dict): All parameters to update book
 
     Returns:
         JSON: Array
     """
-    path = "book"
+    path = f"book/{id_}"
     return self.request_put(path, self.ver_uri, data=data)
 
 
-def upd_author(self, data):
+def upd_author(self, id_, data):
     """Update the given author, currently only monitored is changed, all other modifications are ignored.
 
     Note:
         To be used in conjunction with get_author()
 
     Args:
+        id_ (int): Author database ID to update
         data (dict): All parameters to update author
 
     Returns:
         JSON: Array
     """
-    path = "author"
+    path = f"author/{id_}"
     return self.request_put(path, self.ver_uri, data=data)
