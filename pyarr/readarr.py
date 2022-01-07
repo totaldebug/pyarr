@@ -481,7 +481,7 @@ class ReadarrAPI(BaseAPI):
         sort_dir="descending",
         monitored=True,
     ):
-        """Get wanted cutoff information
+        """Get wanted cutoff unmet information
 
         Args:
             sort_key (str, optional): field to sort by. Defaults to "releaseDate".
