@@ -65,6 +65,43 @@ class ReadarrAPI(BaseAPI):
 
         return book
 
+    def _construct_author_json(
+        self,
+        term,
+        root_dir,
+        quality_profile_id=1,
+        metadata_profile_id=1,
+        monitored=True,
+        author_monitor="none",
+        search_for_missing_books=False,
+    ):
+        """Constructs the JSON required to add a new book to Readarr
+
+        Args:
+            search_term (str)
+            root_dir (str): root directory for books
+            quality_profile_id (int, optional): quality profile id. Defaults to 1.
+            metadata_profile_id (int, optional): metadata profile id. Defaults to 0.
+            monitored (bool, optional): should the book be monitored. Defaults to True.
+            author_monitor (str, optional): monitor the author. Defaults to "none".
+            search_for_missing_books (bool, optional): search for other missing books by the author. Defaults to False.
+
+        Returns:
+            JSON: Array
+        """
+        author = self.lookup_author(term)[0]
+
+        author["metadataProfileId"] = metadata_profile_id
+        author["qualityProfileId"] = quality_profile_id
+        author["rootFolderPath"] = root_dir
+        author["addOptions"] = {
+            "monitor": author_monitor,
+            "searchForMissingBooks": search_for_missing_books,
+        }
+        author["monitored"] = monitored
+
+        return author
+
     def get_command(self, id_=None):
         """Queries the status of a previously started command, or all currently started commands.
 
@@ -302,11 +339,48 @@ class ReadarrAPI(BaseAPI):
         path = "book/lookup"
         return self.request_get(path, self.ver_uri, params=params)
 
+    def add_author(
+        self,
+        search_term,
+        root_dir,
+        quality_profile_id=1,
+        metadata_profile_id=1,
+        monitored=True,
+        author_monitor="none",
+        author_search_for_missing_books=False,
+    ):
+        """Adds an authorbased on search term, must be author name or book by goodreads / isbn / asin ID
+
+        Args:
+            search_term (str): Author name or Author book by ID
+            root_dir (str): Directory for book to be stored
+            quality_profile_id (int, optional): Quality profile id. Defaults to 1.
+            metadata_profile_id (int, optional): Metadata profile id. Defaults to 0.
+            monitored (bool, optional): should the author be monitored. Defaults to True.
+            author_monitor (str, optional): What level  should the author be monitored. Defaults to "none".
+            author_search_for_missing_books (bool, optional): search for any missing books by the author. Defaults to False.
+
+        Returns:
+            JSON: Array
+        """
+        author_json = self._construct_author_json(
+            search_term,
+            root_dir,
+            quality_profile_id,
+            metadata_profile_id,
+            monitored,
+            author_monitor,
+            author_search_for_missing_books,
+        )
+
+        path = "author"
+        return self.request_post(path, self.ver_uri, data=author_json)
+
     def lookup_author(self, term):
         """Searches for new authors using a term
 
         Args:
-            term (str): search term
+            term (str): Author name or book
 
         Returns:
             JSON: Array

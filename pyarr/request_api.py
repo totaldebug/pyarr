@@ -1,5 +1,13 @@
 import requests
 
+from .exceptions import (
+    PyarrAccessRestricted,
+    PyarrBadGateway,
+    PyarrConnectionError,
+    PyarrResourceNotFound,
+    PyarrUnauthorizedError,
+)
+
 
 class RequestAPI:
     """Base class for API Wrappers"""
@@ -48,13 +56,18 @@ class RequestAPI:
             Object: Response object from requests
         """
         headers = {"X-Api-Key": self.api_key}
-        res = self.session.get(
-            self._request_url(path, ver_uri),
-            headers=headers,
-            params=params,
-            auth=self.auth,
-        )
-        return res.json()
+        try:
+            res = self.session.get(
+                self._request_url(path, ver_uri),
+                headers=headers,
+                params=params,
+                auth=self.auth,
+            )
+        except requests.Timeout as exception:
+            raise PyarrConnectionError(
+                "Timeout occurred while connecting to API"
+            ) from exception
+        return self._check_status_codes(res)
 
     def request_post(self, path, ver_uri="", params=None, data=None):
         """Wrapper on any post requests
@@ -68,14 +81,19 @@ class RequestAPI:
             Object: Response object from requests
         """
         headers = {"X-Api-Key": self.api_key}
-        res = self.session.post(
-            self._request_url(path, ver_uri),
-            headers=headers,
-            params=params,
-            json=data,
-            auth=self.auth,
-        )
-        return res.json()
+        try:
+            res = self.session.post(
+                self._request_url(path, ver_uri),
+                headers=headers,
+                params=params,
+                json=data,
+                auth=self.auth,
+            )
+        except requests.Timeout as exception:
+            raise PyarrConnectionError(
+                "Timeout occurred while connecting to API"
+            ) from exception
+        return self._check_status_codes(res)
 
     def request_put(self, path, ver_uri="", params=None, data=None):
         """Wrapper on any put requests
@@ -89,14 +107,19 @@ class RequestAPI:
             Object: Response object from requests
         """
         headers = {"X-Api-Key": self.api_key}
-        res = self.session.put(
-            self._request_url(path, ver_uri),
-            headers=headers,
-            params=params,
-            json=data,
-            auth=self.auth,
-        )
-        return res.json()
+        try:
+            res = self.session.put(
+                self._request_url(path, ver_uri),
+                headers=headers,
+                params=params,
+                json=data,
+                auth=self.auth,
+            )
+        except requests.Timeout as exception:
+            raise PyarrConnectionError(
+                "Timeout occurred while connecting to API"
+            ) from exception
+        return self._check_status_codes(res)
 
     def request_del(self, path, ver_uri="", params=None, data=None):
         """Wrapper on any delete requests
@@ -110,11 +133,35 @@ class RequestAPI:
             Object: Response object from requests
         """
         headers = {"X-Api-Key": self.api_key}
-        res = self.session.delete(
-            self._request_url(path, ver_uri),
-            headers=headers,
-            params=params,
-            json=data,
-            auth=self.auth,
-        )
-        return res.json()
+        try:
+            res = self.session.delete(
+                self._request_url(path, ver_uri),
+                headers=headers,
+                params=params,
+                json=data,
+                auth=self.auth,
+            )
+        except requests.Timeout as exception:
+            raise PyarrConnectionError(
+                "Timeout occurred while connecting to API"
+            ) from exception
+        return self._check_status_codes(res)
+
+    # TODO Rename this here and in `request_get`, `request_post`, `request_put` and `request_del`
+    def _check_status_codes(self, res):
+        if res.status_code == 401:
+            raise PyarrUnauthorizedError(
+                "Unauthorized. Please ensure valid API Key is used.", {}
+            )
+        if res.status_code == 403:
+            raise PyarrAccessRestricted(
+                "Access restricted. Please ensure API Key has correct permissions", {}
+            )
+        if res.status_code == 404:
+            raise PyarrResourceNotFound("Resource not found")
+        if res.status_code == 502:
+            raise PyarrBadGateway("Bad Gateway. Check your server is accessible")
+        content_type = res.headers.get("Content-Type", "")
+        if "application/json" in content_type:
+            return res.json()
+        return res
