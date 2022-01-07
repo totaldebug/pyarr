@@ -147,8 +147,21 @@ class RequestAPI:
             ) from exception
         return self._check_status_codes(res)
 
-    # TODO Rename this here and in `request_get`, `request_post`, `request_put` and `request_del`
     def _check_status_codes(self, res):
+        """Check the response status code and error or return results
+
+        Args:
+            res (str): JSON or Text response from API Call
+
+        Raises:
+            PyarrUnauthorizedError: Invalid API Key
+            PyarrAccessRestricted: Invalid Permissions
+            PyarrResourceNotFound: Incorrect Resource
+            PyarrBadGateway: Bad Gateway
+
+        Returns:
+            JSON: Array
+        """
         if res.status_code == 401:
             raise PyarrUnauthorizedError(
                 "Unauthorized. Please ensure valid API Key is used.", {}
