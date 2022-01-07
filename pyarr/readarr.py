@@ -473,6 +473,21 @@ class ReadarrAPI(BaseAPI):
         path = "config/metadataProvider"
         return self.request_get(path, self.ver_uri)
 
+    def upd_metadata_provider(self, data):
+        """Update the metadata provider data.
+
+        Note:
+            To be used in conjunction with get_metadata_provider()
+
+        Args:
+            data (dict): All parameters to update
+
+        Returns:
+            JSON: Array
+        """
+        path = "config/metadataProvider"
+        return self.request_put(path, self.ver_uri, data=data)
+
     def get_cutoff(
         self,
         sort_key="releaseDate",
