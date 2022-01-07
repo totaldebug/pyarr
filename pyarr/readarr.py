@@ -463,3 +463,12 @@ class ReadarrAPI(BaseAPI):
         }
         path = "rootFolder"
         return self.request_post(path, self.ver_uri, data=folder_json)
+
+    def get_metadata_provider(self):
+        """Get metadata provider from settings/metadata
+
+        Returns:
+            JSON: Array
+        """
+        path = "config/metadataProvider"
+        return self.request_get(path, self.ver_uri)
