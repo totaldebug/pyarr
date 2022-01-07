@@ -244,6 +244,22 @@ class BaseAPI(RequestAPI):
         path = "indexer" if not id_ else f"indexer/{id_}"
         return self.request_get(path, self.ver_uri)
 
+    def upd_indexer(self, id_, data):
+        """Edit a Indexer by database id
+
+        Note:
+            To be used in conjunction with get_indexer()
+
+        Args:
+            id_ (int): Indexer database id
+            data (dict): data to be updated within Indexer
+
+        Returns:
+            JSON: Array
+        """
+        path = f"indexer/{id_}"
+        return self.request_put(path, self.ver_uri, data=data)
+
     def del_indexer(self, id_):
         """Removes a specific indexer from the blocklist
 
