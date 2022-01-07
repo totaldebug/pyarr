@@ -418,3 +418,48 @@ class ReadarrAPI(BaseAPI):
         """
         path = "log/file"
         return self.request_get(path, self.ver_uri)
+
+    def add_root_folder(
+        self,
+        name: str,
+        dir: str,
+        isCalibreLib: bool = False,
+        calibreHost: str = "localhost",
+        calibrePort: int = 8080,
+        useSsl: bool = False,
+        outputProfile: str = "default",
+        defaultTags: list = [],
+        defaultQualityProfileId: int = 1,
+        defaultMetadataProfileId: int = 1,
+    ):
+        """Add a new root directory to the Readarr Server
+
+        Args:
+            name (str): Friendly Name for folder
+            dir (str): Directory to use e.g. /books/
+            isCalibreLib (bool, optional): Use Calibre Content Server. Defaults to False.
+            calibreHost (str, optional): Calibre Content Server address. Defaults to "localhost".
+            calibrePort (int, optional): Calibre Content Server port. Defaults to "8080".
+            useSsl (bool, optional): Calibre Content Server SSL. Defaults to False.
+            outputProfile (str, optional): Books to monitor. Defaults to "default".
+            defaultTags (list, optional): List of tags to apply. Defaults to [].
+            defaultQualityProfileId (int, optional): Quality Profile to use. Defaults to 1.
+            defaultMetadataProfileId (int, optional): Metadata Profile to use. Defaults to 1.
+
+        Returns:
+            JSON: Array
+        """
+        folder_json = {
+            "isCalibreLibrary": isCalibreLib,
+            "host": calibreHost,
+            "port": calibrePort,
+            "useSsl": useSsl,
+            "outputProfile": outputProfile,
+            "defaultTags": defaultTags,
+            "defaultQualityProfileId": defaultQualityProfileId,
+            "defaultMetadataProfileId": defaultMetadataProfileId,
+            "name": name,
+            "path": dir,
+        }
+        path = "rootFolder"
+        return self.request_post(path, self.ver_uri, data=folder_json)
