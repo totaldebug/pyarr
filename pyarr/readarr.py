@@ -518,3 +518,19 @@ def upd_book(self, data):
     """
     path = "book"
     return self.request_put(path, self.ver_uri, data=data)
+
+
+def upd_author(self, data):
+    """Update the given author, currently only monitored is changed, all other modifications are ignored.
+
+    Note:
+        To be used in conjunction with get_author()
+
+    Args:
+        data (dict): All parameters to update author
+
+    Returns:
+        JSON: Array
+    """
+    path = "author"
+    return self.request_put(path, self.ver_uri, data=data)
