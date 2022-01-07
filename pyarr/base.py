@@ -578,3 +578,18 @@ class BaseAPI(RequestAPI):
         """
         path = "qualitydefinition" if not id_ else f"qualitydefinition/{id_}"
         return self.request_get(path, self.ver_uri)
+
+    def upd_quality_definition(self, data):
+        """Update the quality definitions.
+
+        Note:
+            To be used in conjunction with get_quality_definition()
+
+        Args:
+            data (dict): All parameters to update
+
+        Returns:
+            JSON: Array
+        """
+        path = "qualitydefinition"
+        return self.request_put(path, self.ver_uri, data=data)
