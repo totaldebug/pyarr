@@ -232,6 +232,21 @@ class BaseAPI(RequestAPI):
         path = "profile"
         return self.request_get(path, self.ver_uri)
 
+    def upd_quality_profiles(self, data):
+        """Update the quality profile data.
+
+        Note:
+            To be used in conjunction with get_quality_profiles()
+
+        Args:
+            data (dict): All parameters to update
+
+        Returns:
+            JSON: Array
+        """
+        path = "profile"
+        return self.request_put(path, self.ver_uri, data=data)
+
     def get_indexer(self, id_=None):
         """Get all indexers or specific by id_
 
