@@ -331,14 +331,6 @@ class ReadarrAPI(BaseArrAPI):
         path = "book"
         return self.request_post(path, self.ver_uri, data=book_json)
 
-    # PUT /book
-    def upd_book(self):
-        pass
-
-        # path = "book"
-        # res = self.request_put(path, data=data)
-        # return res
-
     # DELETE /book/{id}
     def del_book(self, id_, delete_files=False, import_list_exclusion=True):
         """Delete the book with the given id

@@ -15,7 +15,7 @@ class SonarrAPI(BaseArrAPI):
         ver_uri = "/v3"
         super().__init__(host_url, api_key, ver_uri)
 
-    def _construct_series_json(
+    def _series_json(
         self,
         tvdb_id,
         quality_profile_id,
@@ -385,7 +385,7 @@ class SonarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        series_json = self._construct_series_json(
+        series_json = self._series_json(
             tvdb_id,
             quality_profile_id,
             root_dir,
