@@ -1,7 +1,7 @@
-from .base import BaseAPI
+from .base import BaseArrAPI
 
 
-class SonarrAPI(BaseAPI):
+class SonarrAPI(BaseArrAPI):
     """API wrapper for Sonarr endpoints."""
 
     def __init__(self, host_url: str, api_key: str):

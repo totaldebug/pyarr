@@ -1,10 +1,10 @@
 from datetime import datetime
 
-from .request_api import RequestAPI
+from .request_handler import RequestHandler
 
 
-class BaseAPI(RequestAPI):
-    """Base functions in all Arr api's"""
+class BaseArrAPI(RequestHandler):
+    """Base functions in all Arr API's"""
 
     def __init__(self, host_url, api_key, ver_uri="/"):
 

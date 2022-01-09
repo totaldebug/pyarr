@@ -9,7 +9,7 @@ from .exceptions import (
 )
 
 
-class RequestAPI:
+class RequestHandler:
     """Base class for API Wrappers"""
 
     def __init__(
@@ -67,7 +67,7 @@ class RequestAPI:
             raise PyarrConnectionError(
                 "Timeout occurred while connecting to API"
             ) from exception
-        return self._check_status_codes(res)
+        return self._process_response(res)
 
     def request_post(self, path, ver_uri="", params=None, data=None):
         """Wrapper on any post requests
@@ -93,7 +93,7 @@ class RequestAPI:
             raise PyarrConnectionError(
                 "Timeout occurred while connecting to API"
             ) from exception
-        return self._check_status_codes(res)
+        return self._process_response(res)
 
     def request_put(self, path, ver_uri="", params=None, data=None):
         """Wrapper on any put requests
@@ -119,7 +119,7 @@ class RequestAPI:
             raise PyarrConnectionError(
                 "Timeout occurred while connecting to API"
             ) from exception
-        return self._check_status_codes(res)
+        return self._process_response(res)
 
     def request_del(self, path, ver_uri="", params=None, data=None):
         """Wrapper on any delete requests
@@ -145,9 +145,9 @@ class RequestAPI:
             raise PyarrConnectionError(
                 "Timeout occurred while connecting to API"
             ) from exception
-        return self._check_status_codes(res)
+        return self._process_response(res)
 
-    def _check_status_codes(self, res):
+    def _process_response(self, res):
         """Check the response status code and error or return results
 
         Args:

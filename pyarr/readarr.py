@@ -1,7 +1,7 @@
-from .base import BaseAPI
+from .base import BaseArrAPI
 
 
-class ReadarrAPI(BaseAPI):
+class ReadarrAPI(BaseArrAPI):
     """API wrapper for Readarr endpoints."""
 
     def __init__(self, host_url: str, api_key: str):
@@ -15,7 +15,7 @@ class ReadarrAPI(BaseAPI):
         ver_uri = "/v1"
         super().__init__(host_url, api_key, ver_uri)
 
-    def _construct_book_json(
+    def _book_json(
         self,
         db_id,
         book_id_type,
@@ -282,7 +282,7 @@ class ReadarrAPI(BaseAPI):
         if book_id_type not in book_id_types:
             raise ValueError(f"Invalid book id type. Expected one of: {book_id_types}")
 
-        book_json = self._construct_book_json(
+        book_json = self._book_json(
             db_id,
             book_id_type,
             root_dir,

@@ -1,7 +1,7 @@
-from .base import BaseAPI
+from .base import BaseArrAPI
 
 
-class RadarrAPI(BaseAPI):
+class RadarrAPI(BaseArrAPI):
     """API wrapper for Radarr endpoints.
 
     Args:
@@ -19,7 +19,7 @@ class RadarrAPI(BaseAPI):
         ver_uri = "/v3"
         super().__init__(host_url, api_key, ver_uri)
 
-    def _construct_movie_json(
+    def _movie_json(
         self,
         db_id,
         quality_profile_id,
@@ -105,7 +105,7 @@ class RadarrAPI(BaseAPI):
         Returns:
             JSON: 200 Ok, 401 Unauthorized
         """
-        movie_json = self._construct_movie_json(
+        movie_json = self._movie_json(
             db_id, quality_profile_id, root_dir, monitored, search_for_movie, tmdb
         )
 
