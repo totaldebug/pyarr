@@ -32,3 +32,9 @@ class PyarrBadGateway(PyarrError):
     """Pyarr bad gateway exception"""
 
     pass
+
+
+class PyarrMissingProfile(PyarrError):
+    """Pyarr missing profile"""
+
+    pass

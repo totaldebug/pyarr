@@ -1,3 +1,5 @@
+from pyarr.exceptions import PyarrMissingProfile
+
 from .base import BaseArrAPI
 
 
@@ -20,8 +22,8 @@ class ReadarrAPI(BaseArrAPI):
         db_id,
         book_id_type,
         root_dir,
-        quality_profile_id=1,
-        metadata_profile_id=0,
+        quality_profile_id=None,
+        metadata_profile_id=None,
         monitored=True,
         search_for_new_book=False,
         author_monitor="all",
@@ -49,7 +51,20 @@ class ReadarrAPI(BaseArrAPI):
         book_id_types = ["goodreads", "isbn", "asin"]
         if book_id_type not in book_id_types:
             raise ValueError(f"Invalid book id type. Expected one of: {book_id_types}")
-
+        if quality_profile_id is None:
+            try:
+                quality_profile_id = self.get_quality_profile()[0]["id"]
+            except IndexError as exception:
+                raise PyarrMissingProfile(
+                    "There is no Quality Profile setup"
+                ) from exception
+        if metadata_profile_id is None:
+            try:
+                metadata_profile_id = self.get_metadata_profile()[0]["id"]
+            except IndexError as exception:
+                raise PyarrMissingProfile(
+                    "There is no Metadata Profile setup"
+                ) from exception
         book = self.lookup_book(book_id_type + ":" + str(db_id))[0]
 
         book["author"]["metadataProfileId"] = metadata_profile_id
@@ -65,12 +80,12 @@ class ReadarrAPI(BaseArrAPI):
 
         return book
 
-    def _construct_author_json(
+    def _author_json(
         self,
         term,
         root_dir,
-        quality_profile_id=1,
-        metadata_profile_id=1,
+        quality_profile_id=None,
+        metadata_profile_id=None,
         monitored=True,
         author_monitor="none",
         search_for_missing_books=False,
@@ -89,6 +104,21 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
+        if quality_profile_id is None:
+            try:
+                quality_profile_id = self.get_quality_profile()[0]["id"]
+            except IndexError as exception:
+                raise PyarrMissingProfile(
+                    "There is no Quality Profile setup"
+                ) from exception
+        if metadata_profile_id is None:
+            try:
+                metadata_profile_id = self.get_metadata_profile()[0]["id"]
+            except IndexError as exception:
+                raise PyarrMissingProfile(
+                    "There is no Metadata Profile setup"
+                ) from exception
+
         author = self.lookup_author(term)[0]
 
         author["metadataProfileId"] = metadata_profile_id
@@ -201,16 +231,20 @@ class ReadarrAPI(BaseArrAPI):
         return self.request_get(path, self.ver_uri, params=params)
 
     # GET /metadataprofile
-    def get_metadata_profiles(self):
-        """Gets all metadata profiles
+    def get_metadata_profile(self, id_=None):
+        """Gets all metadata profiles or specific one with id_
+
+        Args:
+            id_ (int): metadata profile id from database
 
         Returns:
             JSON: Array
         """
-        path = "metadataprofile"
+        path = "metadataprofile" if not id_ else f"metadataprofile/{id_}"
         return self.request_get(path, self.ver_uri)
 
     # GET /delayprofile
+    # TODO: check if this can use ID to get specific profile
     def get_delay_profiles(self):
         """Gets all delay profiles
 
@@ -221,6 +255,7 @@ class ReadarrAPI(BaseArrAPI):
         return self.request_get(path, self.ver_uri)
 
     # GET /releaseprofile
+    # TODO: check if this can use ID to get specific profile
     def get_release_profiles(self):
         """Gets all release profiles
 
@@ -252,8 +287,8 @@ class ReadarrAPI(BaseArrAPI):
         db_id,
         book_id_type,
         root_dir,
-        quality_profile_id=1,
-        metadata_profile_id=0,
+        quality_profile_id=None,
+        metadata_profile_id=None,
         monitored=True,
         search_for_new_book=False,
         author_monitor="all",
@@ -343,8 +378,8 @@ class ReadarrAPI(BaseArrAPI):
         self,
         search_term,
         root_dir,
-        quality_profile_id=1,
-        metadata_profile_id=1,
+        quality_profile_id=None,
+        metadata_profile_id=None,
         monitored=True,
         author_monitor="none",
         author_search_for_missing_books=False,
@@ -363,7 +398,7 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        author_json = self._construct_author_json(
+        author_json = self._author_json(
             search_term,
             root_dir,
             quality_profile_id,
