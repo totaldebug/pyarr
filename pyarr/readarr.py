@@ -132,6 +132,9 @@ class ReadarrAPI(BaseArrAPI):
 
         return author
 
+    # COMMAND
+
+    # GET /command/:id
     def get_command(self, id_=None):
         """Queries the status of a previously started command, or all currently started commands.
 
@@ -190,6 +193,37 @@ class ReadarrAPI(BaseArrAPI):
         }
         return self.request_get(path, self.ver_uri, params=params)
 
+    # GET /wanted/cutoff
+    def get_cutoff(
+        self,
+        sort_key="releaseDate",
+        page=1,
+        page_size=10,
+        sort_dir="descending",
+        monitored=True,
+    ):
+        """Get wanted items where the cutoff is unmet
+
+        Args:
+            sort_key (str, optional): field to sort by. Defaults to "releaseDate".
+            page (int, optional): page number. Defaults to 1.
+            page_size (int, optional): number of results per page_size. Defaults to 10.
+            sort_dir (str, optional): direction to sort. Defaults to "descending".
+            monitored (bool, optional): search for monitored only. Defaults to True.
+
+        Returns:
+            JSON: Array
+        """
+        path = "wanted/cutoff"
+        params = {
+            "sortKey": sort_key,
+            "page": page,
+            "pageSize": page_size,
+            "sortDir": sort_dir,
+            "monitored": monitored,
+        }
+        return self.request_get(path, self.ver_uri, params=params)
+
     ## QUEUE
 
     # GET /queue
@@ -230,7 +264,7 @@ class ReadarrAPI(BaseArrAPI):
         }
         return self.request_get(path, self.ver_uri, params=params)
 
-    # GET /metadataprofile
+    # GET /metadataprofile/{id}
     def get_metadata_profile(self, id_=None):
         """Gets all metadata profiles or specific one with id_
 
@@ -243,29 +277,34 @@ class ReadarrAPI(BaseArrAPI):
         path = "metadataprofile" if not id_ else f"metadataprofile/{id_}"
         return self.request_get(path, self.ver_uri)
 
-    # GET /delayprofile
-    # TODO: check if this can use ID to get specific profile
-    def get_delay_profiles(self):
-        """Gets all delay profiles
+    # GET /delayprofile/{id}
+    def get_delay_profile(self, id_):
+        """Gets all delay profiles or specific one with id_
+
+        Args:
+            id_ (int): metadata profile id from database
 
         Returns:
             JSON: Array
         """
-        path = "/delayprofile"
+        path = "delayprofile" if not id_ else f"delayprofile/{id_}"
         return self.request_get(path, self.ver_uri)
 
-    # GET /releaseprofile
-    # TODO: check if this can use ID to get specific profile
-    def get_release_profiles(self):
-        """Gets all release profiles
+    # GET /releaseprofile/{id}
+    def get_release_profile(self, id_=None):
+        """Gets all release profiles or specific one with id_
+
+        Args:
+            id_ (int): release profile id from database
 
         Returns:
             JSON: Array
         """
-        path = "releaseprofile"
+        path = "releaseprofile" if not id_ else f"releaseprofile/{id_}"
         return self.request_get(path, self.ver_uri)
 
     ## BOOKS
+
     # GET /book and /book/{id}
     def get_book(self, id_=None):
         """Returns all books in your collection or the book with the matching
@@ -280,8 +319,24 @@ class ReadarrAPI(BaseArrAPI):
         path = f"book/{id_}" if id_ else "book"
         return self.request_get(path, self.ver_uri)
 
-    # POST /book
+    # GET /book/lookup
+    def lookup_book(self, term):
+        """Searches for new books using a term, goodreads ID, isbn or asin.
 
+        Args:
+            term (str): search term
+            goodreads:656
+            isbn:067003469X
+            asin:B00JCDK5ME
+
+        Returns:
+            JSON: Array
+        """
+        params = {"term": term}
+        path = "book/lookup"
+        return self.request_get(path, self.ver_uri, params=params)
+
+    # POST /book
     def add_book(
         self,
         db_id,
@@ -331,6 +386,23 @@ class ReadarrAPI(BaseArrAPI):
         path = "book"
         return self.request_post(path, self.ver_uri, data=book_json)
 
+    # PUT /book/{id}
+    def upd_book(self, id_, data):
+        """Update the given book, currently only monitored is changed, all other modifications are ignored.
+
+        Note:
+            To be used in conjunction with get_book()
+
+        Args:
+            id_ (int): Book database ID to update
+            data (dict): All parameters to update book
+
+        Returns:
+            JSON: Array
+        """
+        path = f"book/{id_}"
+        return self.request_put(path, self.ver_uri, data=data)
+
     # DELETE /book/{id}
     def del_book(self, id_, delete_files=False, import_list_exclusion=True):
         """Delete the book with the given id
@@ -350,22 +422,36 @@ class ReadarrAPI(BaseArrAPI):
         path = f"book/{id_}"
         return self.request_del(path, self.ver_uri, params=params)
 
-    def lookup_book(self, term):
-        """Searches for new books using a term, goodreads ID, isbn or asin.
+    # AUTHOR
+
+    # GET /author and /author/{id}
+    def get_author(self, id_=None):
+        """Returns all authors in your collection or the author with the matching ID if one is found.
 
         Args:
-            term (str): search term
-            goodreads:656
-            isbn:067003469X
-            asin:B00JCDK5ME
+            id_ (int, optional): Database id for author. Defaults to None.
+
+        Returns:
+            JSON: Array
+        """
+        path = f"author/{id_}" if id_ else "author"
+        return self.request_get(path, self.ver_uri)
+
+    # GET /author/lookup/
+    def lookup_author(self, term):
+        """Searches for new authors using a term
+
+        Args:
+            term (str): Author name or book
 
         Returns:
             JSON: Array
         """
         params = {"term": term}
-        path = "book/lookup"
+        path = "author/lookup"
         return self.request_get(path, self.ver_uri, params=params)
 
+    # POST /author/
     def add_author(
         self,
         search_term,
@@ -403,19 +489,24 @@ class ReadarrAPI(BaseArrAPI):
         path = "author"
         return self.request_post(path, self.ver_uri, data=author_json)
 
-    def lookup_author(self, term):
-        """Searches for new authors using a term
+    # PUT /author/{id}
+    def upd_author(self, id_, data):
+        """Update the given author, currently only monitored is changed, all other modifications are ignored.
+
+        Note:
+            To be used in conjunction with get_author()
 
         Args:
-            term (str): Author name or book
+            id_ (int): Author database ID to update
+            data (dict): All parameters to update author
 
         Returns:
             JSON: Array
         """
-        params = {"term": term}
-        path = "author/lookup"
-        return self.request_get(path, self.ver_uri, params=params)
+        path = f"author/{id_}"
+        return self.request_put(path, self.ver_uri, data=data)
 
+    # DELETE /author/{id}
     def del_author(self, id_, delete_files=False, import_list_exclusion=True):
         """Delete the author with the given id
 
@@ -446,6 +537,9 @@ class ReadarrAPI(BaseArrAPI):
         path = "log/file"
         return self.request_get(path, self.ver_uri)
 
+    # CONFIG
+
+    # POST /rootFolder/
     def add_root_folder(
         self,
         name: str,
@@ -491,6 +585,7 @@ class ReadarrAPI(BaseArrAPI):
         path = "rootFolder"
         return self.request_post(path, self.ver_uri, data=folder_json)
 
+    # GET /config/metadataProvider
     def get_metadata_provider(self):
         """Get metadata provider from settings/metadata
 
@@ -500,6 +595,7 @@ class ReadarrAPI(BaseArrAPI):
         path = "config/metadataProvider"
         return self.request_get(path, self.ver_uri)
 
+    # PUT /config/metadataProvider
     def upd_metadata_provider(self, data):
         """Update the metadata provider data.
 
@@ -514,67 +610,3 @@ class ReadarrAPI(BaseArrAPI):
         """
         path = "config/metadataProvider"
         return self.request_put(path, self.ver_uri, data=data)
-
-    def get_cutoff(
-        self,
-        sort_key="releaseDate",
-        page=1,
-        page_size=10,
-        sort_dir="descending",
-        monitored=True,
-    ):
-        """Get wanted cutoff unmet information
-
-        Args:
-            sort_key (str, optional): field to sort by. Defaults to "releaseDate".
-            page (int, optional): page number. Defaults to 1.
-            page_size (int, optional): number of results per page_size. Defaults to 10.
-            sort_dir (str, optional): direction to sort. Defaults to "descending".
-            monitored (bool, optional): search for monitored only. Defaults to True.
-
-        Returns:
-            JSON: Array
-        """
-        path = "wanted/cutoff"
-        params = {
-            "sortKey": sort_key,
-            "page": page,
-            "pageSize": page_size,
-            "sortDir": sort_dir,
-            "monitored": monitored,
-        }
-        return self.request_get(path, self.ver_uri, params=params)
-
-
-def upd_book(self, id_, data):
-    """Update the given book, currently only monitored is changed, all other modifications are ignored.
-
-    Note:
-        To be used in conjunction with get_book()
-
-    Args:
-        id_ (int): Book database ID to update
-        data (dict): All parameters to update book
-
-    Returns:
-        JSON: Array
-    """
-    path = f"book/{id_}"
-    return self.request_put(path, self.ver_uri, data=data)
-
-
-def upd_author(self, id_, data):
-    """Update the given author, currently only monitored is changed, all other modifications are ignored.
-
-    Note:
-        To be used in conjunction with get_author()
-
-    Args:
-        id_ (int): Author database ID to update
-        data (dict): All parameters to update author
-
-    Returns:
-        JSON: Array
-    """
-    path = f"author/{id_}"
-    return self.request_put(path, self.ver_uri, data=data)
