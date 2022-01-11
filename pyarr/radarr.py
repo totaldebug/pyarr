@@ -67,7 +67,7 @@ class RadarrAPI(BaseArrAPI):
     ## MOVIE
 
     # GET /movie
-    def get_movie(self, id_=None):
+    def get_movie(self, id_=None):  # sourcery skip: class-extract-method
         """Returns all movies in the database, or returns a movie with a specific TMDB ID.
 
         Args:

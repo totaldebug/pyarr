@@ -29,6 +29,15 @@ class RequestHandler:
         self.auth = None
 
     def _request_url(self, path, ver_uri):
+        """Builds the URL for the request to use.
+
+        Args:
+            path (str): Destination for specific call
+            ver_uri (str): API Version number
+
+        Returns:
+            str: string URL for API endpoint
+        """
         return f"{self.host_url}/api{ver_uri}/{path}"
 
     def basic_auth(self, username, password):

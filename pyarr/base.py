@@ -91,7 +91,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_get(path, self.ver_uri)
 
     # DELETE /rootfolder
-    def del_root_folder(self, id_):
+    def del_root_folder(self, id_):  # sourcery skip: class-extract-method
         """Delete root folder with specified id
 
         Args:

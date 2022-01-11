@@ -1,5 +1,5 @@
 RadarrAPI
 ----------------------------------------
-.. automodule:: pyarr.radarr_api
+.. automodule:: pyarr.radarr
     :members:
     :inherited-members:

@@ -1,5 +1,5 @@
 SonarrAPI
 ----------------------------------------
-.. automodule:: pyarr.sonarr_api
+.. automodule:: pyarr.sonarr
     :members:
     :inherited-members:
