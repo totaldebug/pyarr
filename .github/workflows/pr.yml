@@ -45,12 +45,12 @@ jobs:
       - name: Install dependencies with Poetry
         run: poetry install
       - name: 📦 Check imports
-        run: poetry run isort --diff
+        run: poetry run isort --diff .
       - name: 🏴 Check Black formatting
-        run: poetry run black --check
+        run: poetry run black --check .
       - name: ❄️ Check flake8 formatting
-        run: poetry run flake8
+        run: poetry run flake8 .
       - name: Check static type
-        run: poetry run mypy
+        run: poetry run mypy .
       - name: Check docstrings
-        run: poetry run interrogate
+        run: poetry run interrogate .
