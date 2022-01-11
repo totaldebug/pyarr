@@ -22,15 +22,15 @@ jobs:
       - name: Install dependencies with Poetry
         run: poetry install
       - name: 📦 Check imports
-        run: poetry run isort --diff .
+        run: poetry run isort --diff pyarr
       - name: 🏴 Check Black formatting
-        run: poetry run black --check .
+        run: poetry run black --check pyarr
       - name: ❄️ Check flake8 formatting
-        run: poetry run flake8 .
+        run: poetry run flake8 pyarr
       - name: Check static type
-        run: poetry run mypy .
+        run: poetry run mypy pyarr
       - name: Check docstrings
-        run: poetry run interrogate .
+        run: poetry run interrogate pyarr
 
   build-n-publish:
     name: Create release and publish 🐍 distribution 📦 to PyPI
