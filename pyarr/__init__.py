@@ -1,5 +1,6 @@
-from .radarr_api import RadarrAPI
-from .request_api import RequestAPI
-from .sonarr_api import SonarrAPI
+from .radarr import RadarrAPI
+from .readarr import ReadarrAPI
+from .request_handler import RequestHandler
+from .sonarr import SonarrAPI
 
-__all__ = ["SonarrAPI", "RadarrAPI", "RequestAPI"]
+__all__ = ["SonarrAPI", "RadarrAPI", "RequestHandler", "ReadarrAPI"]

@@ -1,12 +1,21 @@
-from datetime import datetime
-
-from .request_api import RequestAPI
+from .base import BaseArrAPI
 
 
-class SonarrAPI(RequestAPI):
+class SonarrAPI(BaseArrAPI):
     """API wrapper for Sonarr endpoints."""
 
-    def _construct_series_json(
+    def __init__(self, host_url: str, api_key: str):
+        """Initialise Readarr API
+
+        Args:
+            host_url (str): URL for Readarr
+            api_key (str): API key for Readarr
+        """
+
+        ver_uri = "/v3"
+        super().__init__(host_url, api_key, ver_uri)
+
+    def _series_json(
         self,
         tvdb_id,
         quality_profile_id,
@@ -54,30 +63,6 @@ class SonarrAPI(RequestAPI):
             },
         }
 
-    ## CALENDAR
-
-    # GET /calendar
-    def get_calendar(self, start_date=None, end_date=None):
-        """Gets upcoming episodes, if start/end are not supplied episodes airing today and tomorrow will be returned
-
-        Args:
-            start_date (:obj:`datetime`, optional): ISO8601 start datetime. Defaults to None.
-            end_date (:obj:`datetime`, optional): ISO8601 end datetime. Defaults to None.
-
-        Returns:
-            JSON: Array
-        """
-        path = "/api/calendar"
-        params = {}
-        if start_date:
-            params["start"] = datetime.strptime(start_date, "%Y-%m-%d").strftime(
-                "%Y-%m-%d"
-            )
-        if end_date:
-            params["end"] = datetime.strptime(end_date, "%Y-%m-%d").strftime("%Y-%m-%d")
-
-        return self.request_get(path, params=params)
-
     ## COMMAND
 
     # GET /command
@@ -90,8 +75,8 @@ class SonarrAPI(RequestAPI):
         Returns:
             JSON: Array
         """
-        path = f"/api/command/{id_}" if id_ else "/api/command"
-        return self.request_get(path)
+        path = f"command/{id_}" if id_ else "command"
+        return self.request_get(path, self.ver_uri)
 
     # POST /command
     def post_command(self, name, **kwargs):
@@ -110,24 +95,12 @@ class SonarrAPI(RequestAPI):
         Returns:
             JSON: Array
         """
-        path = "/api/command"
+        path = "command"
         data = {
             "name": name,
             **kwargs,
         }
-        return self.request_post(path, data=data)
-
-    ## DISKSPACE
-
-    # GET /diskspace
-    def get_disk_space(self):
-        """Gets information about Diskspace
-
-        Returns:
-            JSON: Array
-        """
-        path = "/api/diskspace"
-        return self.request_get(path)
+        return self.request_post(path, self.ver_uri, data=data)
 
     ## EPISODE
 
@@ -141,9 +114,9 @@ class SonarrAPI(RequestAPI):
         Returns:
             JSON: Array
         """
-        path = "/api/episode"
+        path = "episode"
         params = {"seriesId": id_}
-        return self.request_get(path, params=params)
+        return self.request_get(path, self.ver_uri, params=params)
 
     # GET /episode/{id}
     def get_episode_by_episode_id(self, id_):
@@ -155,8 +128,8 @@ class SonarrAPI(RequestAPI):
         Returns:
             JSON: Array
         """
-        path = f"/api/episode/{id_}"
-        return self.request_get(path)
+        path = f"episode/{id_}"
+        return self.request_get(path, self.ver_uri)
 
     # PUT /episode
     def upd_episode(self, data):
@@ -171,8 +144,8 @@ class SonarrAPI(RequestAPI):
         Returns:
             JSON: Array
         """
-        path = "/api/episode"
-        return self.request_put(path, data=data)
+        path = "episode"
+        return self.request_put(path, self.ver_uri, data=data)
 
     ## EPISODE FILE
 
@@ -186,9 +159,9 @@ class SonarrAPI(RequestAPI):
         Returns:
             JSON: Array
         """
-        path = "/api/episodefile"
+        path = "episodefile"
         params = {"seriesId": id_}
-        return self.request_get(path, params=params)
+        return self.request_get(path, self.ver_uri, params=params)
 
     # GET /episodefile/{id}
     def get_episode_file(self, id_):
@@ -200,8 +173,8 @@ class SonarrAPI(RequestAPI):
         Returns:
             JSON: Array
         """
-        path = f"/api/episodefile/{id_}"
-        return self.request_get(path)
+        path = f"episodefile/{id_}"
+        return self.request_get(path, self.ver_uri)
 
     # DELETE /episodefile/{id}
     def del_episode_file(self, id_):
@@ -213,8 +186,8 @@ class SonarrAPI(RequestAPI):
         Returns:
             JSON: {}
         """
-        path = f"/api/episodefile/{id_}"
-        return self.request_del(path)
+        path = f"episodefile/{id_}"
+        return self.request_del(path, self.ver_uri)
 
     # PUT /episodefile/{id}
     def upd_episode_file_quality(self, id_, data):
@@ -239,41 +212,9 @@ class SonarrAPI(RequestAPI):
         Returns:
             JSON: Array
         """
-        path = f"/api/episodefile/{id_}"
-        return self.request_put(path, data=data)
+        path = f"episodefile/{id_}"
+        return self.request_put(path, self.ver_uri, data=data)
 
-    ## HISTORY
-
-    # GET /history
-    def get_history(
-        self, sort_key="date", page=1, page_size=10, sort_dir="desc", id_=None
-    ):
-        """Gets history (grabs/failures/completed)
-
-        Args:
-            sort_key (str, optional): series.title or date. Defaults to "date".
-            page (int, optional): Page number to return. Defaults to 1.
-            page_size (int, optional): Number of items per page. Defaults to 10.
-            sort_dir (str, optional): Direction to sort the items. Defaults to "desc".
-            id_ (int, optional): Filter to a specific episode ID. Defaults to None.
-
-        Returns:
-            JSON: Array
-        """
-        path = "/api/history"
-        params = {
-            "sortKey": sort_key,
-            "page": page,
-            "pageSize": page_size,
-            "sortDir": sort_dir,
-        }
-        if id_:
-            params["episodeId"] = id_
-        return self.request_get(path, params=params)
-
-    ## WANTED (MISSING)
-
-    # GET /wanted/missing
     def get_wanted(self, sort_key="airDateUtc", page=1, page_size=10, sort_dir="asc"):
         """Gets missing episode (episodes without files)
 
@@ -286,14 +227,14 @@ class SonarrAPI(RequestAPI):
         Returns:
             JSON: Array
         """
-        path = "/api/wanted/missing"
+        path = "wanted/missing"
         params = {
             "sortKey": sort_key,
             "page": page,
             "pageSize": page_size,
             "sortDir": sort_dir,
         }
-        return self.request_get(path, params=params)
+        return self.request_get(path, self.ver_uri, params=params)
 
     ## QUEUE
 
@@ -304,23 +245,8 @@ class SonarrAPI(RequestAPI):
         Returns:
             JSON: Array
         """
-        path = "/api/queue"
-        return self.request_get(path)
-
-    # DELETE /queue
-    def del_queue(self, id_, blacklist=False):
-        """Deletes an item from the queue and download client. Optionally blacklist item after deletion.
-
-        Args:
-            id_ (int): Database id of queue item
-            blacklist (bool, optional): Blacklist item after deletion. Defaults to False.
-
-        Returns:
-            JSON: {}
-        """
-        params = {"id": id_, "blacklist": blacklist}
-        path = "/api/queue/"
-        return self.request_del(path, params=params)
+        path = "queue"
+        return self.request_get(path, self.ver_uri)
 
     ## PARSE
 
@@ -338,8 +264,8 @@ class SonarrAPI(RequestAPI):
             JSON: Array
         """
         params = {"title": title}
-        path = "/api/parse"
-        return self.request_get(path, params=params)
+        path = "parse"
+        return self.request_get(path, self.ver_uri, params=params)
 
     # GET /parse
     def get_parsed_path(self, file_path):
@@ -355,20 +281,8 @@ class SonarrAPI(RequestAPI):
             JSON: Array
         """
         params = {"path": file_path}
-        path = "/api/parse"
-        return self.request_get(path, params=params)
-
-    ## PROFILE
-
-    # GET /profile
-    def get_quality_profiles(self):
-        """Gets all quality profiles
-
-        Returns:
-            JSON: Array
-        """
-        path = "/api/profile"
-        return self.request_get(path)
+        path = "parse"
+        return self.request_get(path, self.ver_uri, params=params)
 
     ## RELEASE
 
@@ -383,8 +297,8 @@ class SonarrAPI(RequestAPI):
             JSON: Array
         """
         params = {"episodeId": id_}
-        path = "/api/release"
-        return self.request_get(path, params=params)
+        path = "release"
+        return self.request_get(path, self.ver_uri, params=params)
 
     # POST /release
     def download_release(self, guid, indexer_id):
@@ -400,8 +314,8 @@ class SonarrAPI(RequestAPI):
             [type]: [description]
         """
         data = {"guid": guid, "indexerId": indexer_id}
-        path = "/api/release"
-        return self.request_post(path, data=data)
+        path = "release"
+        return self.request_post(path, self.ver_uri, data=data)
 
     # POST /release/push
     def push_release(self, title, download_url, protocol, publish_date):
@@ -422,20 +336,8 @@ class SonarrAPI(RequestAPI):
             "protocol": protocol,
             "publishDate": publish_date,
         }
-        path = "/api/release/push"
-        return self.request_post(path, data=data)
-
-    ## ROOT FOLDER
-
-    # GET /rootfolder
-    def get_root_folder(self):
-        """Gets root folder
-
-        Returns:
-            JSON: Array
-        """
-        path = "/api/rootfolder"
-        return self.request_get(path)
+        path = "release/push"
+        return self.request_post(path, self.ver_uri, data=data)
 
     ## SERIES
     # GET /series and /series/{id}
@@ -449,8 +351,8 @@ class SonarrAPI(RequestAPI):
         Returns:
             JSON: Array
         """
-        path = f"/api/series/{id_}" if id_ else "/api/series"
-        return self.request_get(path)
+        path = f"series/{id_}" if id_ else "series"
+        return self.request_get(path, self.ver_uri)
 
     # POST /series
     def add_series(
@@ -483,7 +385,7 @@ class SonarrAPI(RequestAPI):
         Returns:
             JSON: Array
         """
-        series_json = self._construct_series_json(
+        series_json = self._series_json(
             tvdb_id,
             quality_profile_id,
             root_dir,
@@ -494,8 +396,8 @@ class SonarrAPI(RequestAPI):
             search_for_missing_episodes,
         )
 
-        path = "/api/series"
-        return self.request_post(path, data=series_json)
+        path = "series"
+        return self.request_post(path, self.ver_uri, data=series_json)
 
     # PUT /series
     def upd_series(self, data):
@@ -507,8 +409,8 @@ class SonarrAPI(RequestAPI):
         Returns:
             JSON: Array
         """
-        path = "/api/series"
-        return self.request_put(path, data=data)
+        path = "series"
+        return self.request_put(path, self.ver_uri, data=data)
 
     # DELETE /series/{id}
     def del_series(self, id_, delete_files=False):
@@ -523,8 +425,8 @@ class SonarrAPI(RequestAPI):
         """
         # File deletion does not work
         params = {"deleteFiles": delete_files}
-        path = f"/api/series/{id_}"
-        return self.request_del(path, params=params)
+        path = f"series/{id_}"
+        return self.request_del(path, self.ver_uri, params=params)
 
     # GET /series/lookup
     def lookup_series(self, term):
@@ -537,8 +439,8 @@ class SonarrAPI(RequestAPI):
             JSON: Array
         """
         params = {"term": term}
-        path = "/api/series/lookup"
-        return self.request_get(path, params=params)
+        path = "series/lookup"
+        return self.request_get(path, self.ver_uri, params=params)
 
     # GET /series/lookup
     def lookup_series_by_tvdb_id(self, id_):
@@ -551,123 +453,5 @@ class SonarrAPI(RequestAPI):
             JSON: Array
         """
         params = {"term": f"tvdb:{id_}"}
-        path = "/api/series/lookup"
-        return self.request_get(path, params=params)
-
-    ## SYSTEM
-
-    # GET /system/status
-    def get_system_status(self):
-        """Returns system status
-
-        Returns:
-            JSON: Array
-        """
-        path = "/api/system/status"
-        return self.request_get(path)
-
-    # GET /system/backup
-    def get_backup(self):
-        """Returns the list of available backups
-
-        Returns:
-            JSON: Array
-        """
-        path = "/api/system/backup"
-        return self.request_get(path)
-
-    ## TAG
-
-    # GET /tag and /tag/{id}
-    def get_tag(self, id_=None):
-        """Returns all tags or specific tag by database id
-
-        Args:
-            id_ (int, optional): Database id for tag. Defaults to None.
-
-        Returns:
-            JSON: Array
-        """
-        path = "/api/tag" if not id_ else f"/api/tag/{id_}"
-        return self.request_get(path)
-
-    # POST /tag
-    def create_tag(self, label):
-        """Adds a new tag
-
-        Args:
-            label (str): Tag name / label
-
-        Returns:
-            JSON: Array
-        """
-        data = {"label": label}
-        path = "/api/tag"
-        return self.request_post(path, data=data)
-
-    # PUT /tag/{id}
-    def upd_tag(self, id_, label):
-        """Update an existing tag
-
-        Note:
-            You should perform a get_tag() and submit the full body with changes
-
-        Args:
-            id_ (int): Database id of tag
-            label (str): tag name / label
-
-        Returns:
-            JSON: Array
-        """
-        data = {"id": id_, "label": label}
-        path = f"/api/tag/{id_}"
-        return self.request_put(path, data=data)
-
-    # DELETE /tag/{id}
-    def del_tag(self, id_):
-        """Delete the tag with the given ID
-
-        Args:
-            id_ (int): Database id of tag
-
-        Returns:
-            JSON: {}
-        """
-        path = f"/api/tag/{id_}"
-        return self.request_del(path)
-
-    ## LOG
-
-    # GET /log
-    def get_logs(
-        self,
-        page=1,
-        page_size=10,
-        sort_key="time",
-        sort_dir="desc",
-        filter_key=None,
-        filter_value="All",
-    ):
-        """Gets sonarr logs
-
-        Args:
-            page (int, optional): Specifiy page to return. Defaults to 1.
-            page_size (int, optional): Number of items per page. Defaults to 10.
-            sort_key (str, optional): Field to sort by. Defaults to "time".
-            sort_dir (str, optional): Direction to sort. Defaults to "desc".
-            filter_key (str, optional): Key to filter by. Defaults to None.
-            filter_value (str, optional): Value of the filter. Defaults to "All".
-
-        Returns:
-            JSON: Array
-        """
-        path = "/api/log"
-        params = {
-            "page": page,
-            "pageSize": page_size,
-            "sortKey": sort_key,
-            "sortDir": sort_dir,
-            "filterKey": filter_key,
-            "filterValue": filter_value,
-        }
-        return self.request_get(path, params=params)
+        path = "series/lookup"
+        return self.request_get(path, self.ver_uri, params=params)

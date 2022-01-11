@@ -12,3 +12,4 @@
 
    sonarr
    radarr
+   readarr

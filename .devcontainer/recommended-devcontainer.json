@@ -9,7 +9,8 @@
         "yzhang.markdown-all-in-one",
         "tabnine.tabnine-vscode",
         "rebornix.project-snippets",
-        "njpwerner.autodocstring"
+        "njpwerner.autodocstring",
+        "sourcery.sourcery"
     ],
     "settings": {
         "files.eol": "\n",
@@ -27,5 +28,6 @@
         "files.trimTrailingWhitespace": true,
         "python.formatting.provider": "black",
         "autoDocstring.docstringFormat": "google"
-    }
+    },
+    "postCreateCommand": "poetry install && poetry run pre-commit install -t pre-commit -t commit-msg"
 }
