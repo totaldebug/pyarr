@@ -34,7 +34,6 @@ jobs:
 
   build-n-publish:
     name: Create release and publish 🐍 distribution 📦 to PyPI
-    name: Create Release
     if: startsWith(github.ref, 'refs/tags/')
     needs: [code-quality]
     runs-on: ubuntu-latest
