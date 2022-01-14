@@ -1,4 +1,7 @@
 from datetime import datetime
+from typing import Any
+
+from requests import Response
 
 from .request_handler import RequestHandler
 
@@ -14,7 +17,9 @@ class BaseArrAPI(RequestHandler):
     # CALENDAR
 
     # GET /calendar/
-    def get_calendar(self, start_date=None, end_date=None, unmonitored=True):
+    def get_calendar(
+        self, start_date=None, end_date=None, unmonitored=True
+    ) -> list[dict] | Any:
         """Gets upcoming releases by monitored, if start/end are not
         supplied, today and tomorrow will be returned
 
@@ -41,7 +46,7 @@ class BaseArrAPI(RequestHandler):
     # SYSTEM
 
     # GET /system/status
-    def get_system_status(self):
+    def get_system_status(self) -> list[dict] | Any:
         """Returns system status
 
         Returns:
@@ -51,7 +56,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_get(path, self.ver_uri)
 
     # GET /health
-    def get_health(self):
+    def get_health(self) -> list[dict] | Any:
         """Query radarr for health information
 
         Returns:
@@ -61,7 +66,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_get(path, self.ver_uri)
 
     # GET /metadata
-    def get_metadata(self):
+    def get_metadata(self) -> list[dict] | Any:
         """Get all metadata consumer settings
 
         Returns:
@@ -71,7 +76,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_get(path, self.ver_uri)
 
     # GET /update
-    def get_update(self):
+    def get_update(self) -> list[dict] | Any:
         """Will return a list of recent updated to Radarr
 
         Returns:
@@ -81,7 +86,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_get(path, self.ver_uri)
 
     # GET /rootfolder
-    def get_root_folder(self):
+    def get_root_folder(self) -> list[dict] | Any:
         """Get list of root folders, free space and any unmappedFolders
 
         Returns:
@@ -91,7 +96,9 @@ class BaseArrAPI(RequestHandler):
         return self.request_get(path, self.ver_uri)
 
     # DELETE /rootfolder
-    def del_root_folder(self, id_):  # sourcery skip: class-extract-method
+    def del_root_folder(
+        self, id_
+    ) -> list[dict] | Any:  # sourcery skip: class-extract-method
         """Delete root folder with specified id
 
         Args:
@@ -105,7 +112,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_del(path, self.ver_uri, params=params)
 
     # GET /diskspace
-    def get_disk_space(self):
+    def get_disk_space(self) -> list[dict] | Any:
         """Query disk usage information
             System > Status
 
@@ -116,7 +123,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_get(path, self.ver_uri)
 
     # GET /system/backup
-    def get_backup(self):
+    def get_backup(self) -> list[dict] | Any:
         """Returns the list of available backups
 
         Returns:
@@ -136,7 +143,7 @@ class BaseArrAPI(RequestHandler):
         sort_dir="desc",
         filter_key=None,
         filter_value="All",
-    ):
+    ) -> list[dict] | Any:
         """Gets logs
 
         Args:
@@ -164,7 +171,7 @@ class BaseArrAPI(RequestHandler):
     # GET /history
     def get_history(
         self, sort_key="date", page=1, page_size=10, sort_dir="desc", id_=None
-    ):
+    ) -> list[dict] | Any:
         """Gets history (grabs/failures/completed)
 
         Args:
@@ -197,7 +204,7 @@ class BaseArrAPI(RequestHandler):
         page_size=20,
         sort_direction="descending",
         sort_key="date",
-    ):
+    ) -> list[dict] | Any:
         """Returns blocked releases.
 
         Args:
@@ -219,7 +226,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_get(path, self.ver_uri, params=params)
 
     # DELETE /blocklist
-    def del_blocklist(self, id_):
+    def del_blocklist(self, id_) -> list[dict] | Any:
         """Removes a specific release (the id provided) from the blocklist
 
         Args:
@@ -233,7 +240,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_del(path, self.ver_uri, params=params)
 
     # DELETE /blocklist/bulk
-    def del_blocklist_bulk(self, data):
+    def del_blocklist_bulk(self, data) -> Response | Any:
         """Delete blocked releases in bulk
 
         Args:
@@ -248,7 +255,7 @@ class BaseArrAPI(RequestHandler):
     # PROFILES
 
     # GET /qualityprofile/{id}
-    def get_quality_profile(self, id_=None):
+    def get_quality_profile(self, id_=None) -> list[dict] | Any:
         """Gets all quality profiles or specific one with id_
 
         Args:
@@ -261,7 +268,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_get(path, self.ver_uri)
 
     # PUT /qualityprofile/{id}
-    def upd_quality_profile(self, id_, data):
+    def upd_quality_profile(self, id_, data) -> list[dict] | Any:
         """Update the quality profile data.
 
         Note:
@@ -278,7 +285,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_put(path, self.ver_uri, data=data)
 
     # DELETE /qualityprofile
-    def del_quality_profile(self, id_):
+    def del_quality_profile(self, id_) -> list[dict] | Any:
         """Removes a specific quality profile from the blocklist
 
         Args:
@@ -292,7 +299,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_del(path, self.ver_uri, params=params)
 
     # GET /qualitydefinition/{id}
-    def get_quality_definition(self, id_=None):
+    def get_quality_definition(self, id_=None) -> list[dict] | Any:
         """Gets all quality definitions or specific one by ID
 
         Args:
@@ -305,7 +312,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_get(path, self.ver_uri)
 
     # PUT /qualitydefinition/{id}
-    def upd_quality_definition(self, id_, data):
+    def upd_quality_definition(self, id_, data) -> list[dict] | Any:
         """Update the quality definitions.
 
         Note:
@@ -318,13 +325,13 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = f"qualitydefinition/{id}"
+        path = f"qualitydefinition/{id_}"
         return self.request_put(path, self.ver_uri, data=data)
 
     # INDEXER
 
     # GET /indexer/{id}
-    def get_indexer(self, id_=None):
+    def get_indexer(self, id_=None) -> list[dict] | Any:
         """Get all indexers or specific by id_
 
         Args:
@@ -337,7 +344,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_get(path, self.ver_uri)
 
     # PUT /indexer/{id}
-    def upd_indexer(self, id_, data):
+    def upd_indexer(self, id_, data) -> list[dict] | Any:
         """Edit a Indexer by database id
 
         Note:
@@ -354,7 +361,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_put(path, self.ver_uri, data=data)
 
     # DELETE /indexer
-    def del_indexer(self, id_):
+    def del_indexer(self, id_) -> list[dict] | Any:
         """Removes a specific indexer from the blocklist
 
         Args:
@@ -370,7 +377,9 @@ class BaseArrAPI(RequestHandler):
     # QUEUE
 
     # DELETE /queue/{id}
-    def del_queue(self, id_, remove_from_client=True, blacklist=True):
+    def del_queue(
+        self, id_, remove_from_client=True, blacklist=True
+    ) -> list[dict] | Any:
         """Remove an item from the queue and optionally blacklist it
 
         Args:
@@ -386,7 +395,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_del(path, self.ver_uri, params=params)
 
     # GET /system/task/{id}
-    def get_task(self, id_=None):
+    def get_task(self, id_=None) -> list[dict] | Any:
         """Return a list of tasks, or specify a task ID to return single task
 
         Args:
@@ -399,7 +408,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_get(path, self.ver_uri)
 
     # GET /remotePathMapping
-    def get_remote_path_mapping(self):
+    def get_remote_path_mapping(self) -> list[dict] | Any:
         """Get a list of remote paths being mapped and used
 
         Returns:
@@ -411,7 +420,7 @@ class BaseArrAPI(RequestHandler):
     # CONFIG
 
     # GET /config/ui
-    def get_config_ui(self):
+    def get_config_ui(self) -> list[dict] | Any:
         """Query Radarr for UI settings
 
         Returns:
@@ -421,7 +430,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_get(path, self.ver_uri)
 
     # PUT /config/ui
-    def upd_config_ui(self, data):
+    def upd_config_ui(self, data) -> Response | Any:
         """Edit one or many UI settings and save to to the database
 
         Args:
@@ -434,7 +443,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_put(path, self.ver_uri, data=data)
 
     # GET /config/host
-    def get_config_host(self):
+    def get_config_host(self) -> list[dict] | Any:
         """Get General/Host settings.
 
         Returns:
@@ -444,11 +453,11 @@ class BaseArrAPI(RequestHandler):
         return self.request_get(path, self.ver_uri)
 
     # PUT /config/host
-    def upd_config_host(self, data):
+    def upd_config_host(self, data) -> Response | Any:
         """Edit General/Host settings.
 
         Args:
-            data (dict): data to bu updated
+            data (dict): data to be updated
 
         Returns:
             JSON: 200 Ok, 401 Unauthorized
@@ -457,7 +466,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_put(path, self.ver_uri, data=data)
 
     # GET /config/naming
-    def get_config_naming(self):
+    def get_config_naming(self) -> list[dict] | Any:
         """Get Settings for file and folder naming.
 
         Returns:
@@ -467,7 +476,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_get(path, self.ver_uri, self.ver_uri)
 
     # PUT /config/naming
-    def upd_config_naming(self, data):
+    def upd_config_naming(self, data) -> Response | Any:
         """Edit Settings for file and folder naming.
 
         Args:
@@ -480,7 +489,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_put(path, self.ver_uri, data=data)
 
     # GET /config/mediamanagement
-    def get_media_management(self):
+    def get_media_management(self) -> list[dict] | Any:
         """Get media managemnet configuration
 
         Returns:
@@ -492,7 +501,7 @@ class BaseArrAPI(RequestHandler):
     # NOTIFICATIONS
 
     # GET /notification/{id}
-    def get_notification(self, id_=None):
+    def get_notification(self, id_=None) -> list[dict] | Any:
         """Get all notifications or a single notification by its database id
 
         Args:
@@ -505,7 +514,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_get(path, self.ver_uri)
 
     # GET /notification/schema
-    def get_notification_schema(self):
+    def get_notification_schema(self) -> list[dict] | Any:
         """Get possible notification connections
 
         Returns:
@@ -515,7 +524,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_get(path, self.ver_uri)
 
     # PUT /notification/{id}
-    def upd_notification(self, id_, data):
+    def upd_notification(self, id_, data) -> Response | Any:
         """Edit notification by database id
 
         Args:
@@ -529,7 +538,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_put(path, self.ver_uri, data=data)
 
     # DELETE /notification/{id}
-    def del_notification(self, id_):
+    def del_notification(self, id_) -> Response | Any:
         """Delete a notification by its database id
 
         Args:
@@ -544,7 +553,7 @@ class BaseArrAPI(RequestHandler):
     # TAGS
 
     # GET /tag/{id}
-    def get_tag(self, id_=None):
+    def get_tag(self, id_=None) -> list[dict] | Any:
         """Returns all tags or specific tag by database id
 
         Args:
@@ -557,7 +566,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_get(path, self.ver_uri)
 
     # GET /tag/detail/{id}
-    def get_tag_detail(self, id_=None):
+    def get_tag_detail(self, id_=None) -> list[dict] | Any:
         """Returns all tags or specific tag by database id with detailed information
 
         Args:
@@ -570,7 +579,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_get(path, self.ver_uri)
 
     # POST /tag
-    def create_tag(self, label):
+    def create_tag(self, label) -> list[dict] | Any:
         """Adds a new tag
 
         Args:
@@ -584,7 +593,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_post(path, self.ver_uri, data=data)
 
     # PUT /tag/{id}
-    def upd_tag(self, id_, label):
+    def upd_tag(self, id_, label) -> list[dict] | Any:
         """Update an existing tag
 
         Note:
@@ -602,7 +611,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_put(path, self.ver_uri, data=data)
 
     # DELETE /tag/{id}
-    def del_tag(self, id_):
+    def del_tag(self, id_) -> dict | Any:
         """Delete the tag with the given ID
 
         Args:
@@ -617,7 +626,7 @@ class BaseArrAPI(RequestHandler):
     # DOWNLOAD CLIENT
 
     # GET /downloadclient/{id}
-    def get_download_client(self, id_=None):
+    def get_download_client(self, id_=None) -> list[dict] | Any:
         """Get a list of all the download clients or a single client by its database id
 
         Args:
@@ -630,7 +639,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_get(path, self.ver_uri)
 
     # GET /downloadclient/schema
-    def get_download_client_schema(self):
+    def get_download_client_schema(self) -> list[dict] | Any:
         """Get a list of all the supported download clients
 
         Returns:
@@ -640,7 +649,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_get(path, self.ver_uri)
 
     # PUT /downloadclient/{id}
-    def upd_download_client(self, id_, data):
+    def upd_download_client(self, id_, data) -> Response | Any:
         """Edit a downloadclient by database id
 
         Args:
@@ -654,7 +663,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_put(path, self.ver_uri, data=data)
 
     # DELETE /downloadclient/{id}
-    def del_download_client(self, id_):
+    def del_download_client(self, id_) -> Response | Any:
         """Delete a download client by database id
 
         Args:
@@ -669,7 +678,7 @@ class BaseArrAPI(RequestHandler):
     # IMPORT LIST
 
     # GET /importlist
-    def get_import_list(self, id_=None):
+    def get_import_list(self, id_=None) -> list[dict] | Any:
         """Query for all lists or a single list by its database id
 
         Args:
@@ -682,7 +691,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_get(path, self.ver_uri)
 
     # PUT /importlist/{id}
-    def upd_import_list(self, id_, data):
+    def upd_import_list(self, id_, data) -> Response | Any:
         """Edit an importlist
 
         Args:
@@ -696,14 +705,14 @@ class BaseArrAPI(RequestHandler):
         return self.request_put(path, self.ver_uri, data=data)
 
     # DELETE /importlist/{id}
-    def del_import_list(self, id_):
+    def del_import_list(self, id_) -> Response | Any:
         """Delete an import list
 
         Args:
             id_ (int): Import list database id
 
         Returns:
-            JSON: 200 ok, 401 Unauthorized
+            JSON: 200 Ok, 401 Unauthorized
         """
         path = f"importlist/{id_}"
         return self.request_del(path, self.ver_uri)

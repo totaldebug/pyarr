@@ -1,4 +1,8 @@
+from typing import Any
+
 import requests
+from requests import Response
+from requests.auth import HTTPBasicAuth
 
 from .exceptions import (
     PyarrAccessRestricted,
@@ -28,7 +32,7 @@ class RequestHandler:
         self.session = requests.Session()
         self.auth = None
 
-    def _request_url(self, path, ver_uri):
+    def _request_url(self, path: str, ver_uri: str) -> str:
         """Builds the URL for the request to use.
 
         Args:
@@ -40,7 +44,7 @@ class RequestHandler:
         """
         return f"{self.host_url}/api{ver_uri}/{path}"
 
-    def basic_auth(self, username, password):
+    def basic_auth(self, username: str, password: str) -> HTTPBasicAuth:
         """If you have basic authentication setup you will need to pass your
         username and passwords to the requests.auth.HTTPBASICAUTH() method.
 
@@ -51,10 +55,11 @@ class RequestHandler:
         Returns:
             Object: HTTP Auth object
         """
-        self.auth = requests.auth.HTTPBasicAuth(username, password)
-        return self.auth
+        return HTTPBasicAuth(username, password)
 
-    def request_get(self, path, ver_uri="", params=None):
+    def request_get(
+        self, path: str, ver_uri: str = "", params: dict = None
+    ) -> list[dict] | dict | Response:
         """Wrapper on any get requests
 
         Args:
@@ -78,7 +83,9 @@ class RequestHandler:
             ) from exception
         return self._process_response(res)
 
-    def request_post(self, path, ver_uri="", params=None, data=None):
+    def request_post(
+        self, path, ver_uri="", params=None, data=None
+    ) -> list[dict] | dict | Response:
         """Wrapper on any post requests
 
         Args:
@@ -104,7 +111,9 @@ class RequestHandler:
             ) from exception
         return self._process_response(res)
 
-    def request_put(self, path, ver_uri="", params=None, data=None):
+    def request_put(
+        self, path, ver_uri="", params=None, data=None
+    ) -> list[dict] | dict | Response:
         """Wrapper on any put requests
 
         Args:
@@ -130,7 +139,9 @@ class RequestHandler:
             ) from exception
         return self._process_response(res)
 
-    def request_del(self, path, ver_uri="", params=None, data=None):
+    def request_del(
+        self, path, ver_uri="", params=None, data=None
+    ) -> list[dict] | dict | Response:
         """Wrapper on any delete requests
 
         Args:
@@ -156,7 +167,7 @@ class RequestHandler:
             ) from exception
         return self._process_response(res)
 
-    def _process_response(self, res):
+    def _process_response(self, res) -> list[dict] | Response | Any:
         """Check the response status code and error or return results
 
         Args:

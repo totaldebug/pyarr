@@ -1,3 +1,5 @@
+from typing import Any
+
 from pyarr.exceptions import PyarrMissingProfile
 
 from .base import BaseArrAPI
@@ -28,7 +30,7 @@ class ReadarrAPI(BaseArrAPI):
         search_for_new_book=False,
         author_monitor="all",
         author_search_for_missing_books=False,
-    ):
+    ) -> list[dict] | Any:
         """Constructs the JSON required to add a new book to Readarr
 
         Args:
@@ -89,7 +91,7 @@ class ReadarrAPI(BaseArrAPI):
         monitored=True,
         author_monitor="none",
         search_for_missing_books=False,
-    ):
+    ) -> list[dict] | Any:
         """Constructs the JSON required to add a new book to Readarr
 
         Args:
@@ -135,7 +137,7 @@ class ReadarrAPI(BaseArrAPI):
     # COMMAND
 
     # GET /command/:id
-    def get_command(self, id_=None):
+    def get_command(self, id_=None) -> list[dict] | Any:
         """Queries the status of a previously started command, or all currently started commands.
 
         Args:
@@ -148,7 +150,7 @@ class ReadarrAPI(BaseArrAPI):
         return self.request_get(path, self.ver_uri)
 
     # POST /command
-    def post_command(self, name, **kwargs):
+    def post_command(self, name, **kwargs) -> list[dict] | Any:
         """Performs any of the predetermined Sonarr command routines
 
         Note:
@@ -172,7 +174,9 @@ class ReadarrAPI(BaseArrAPI):
     ## WANTED (MISSING)
 
     # GET /wanted/missing
-    def get_missing(self, sort_key="releaseDate", page=1, page_size=10, sort_dir="asc"):
+    def get_missing(
+        self, sort_key="releaseDate", page=1, page_size=10, sort_dir="asc"
+    ) -> list[dict] | Any:
         """Gets missing episode (episodes without files)
 
         Args:
@@ -201,7 +205,7 @@ class ReadarrAPI(BaseArrAPI):
         page_size=10,
         sort_dir="descending",
         monitored=True,
-    ):
+    ) -> list[dict] | Any:
         """Get wanted items where the cutoff is unmet
 
         Args:
@@ -236,7 +240,7 @@ class ReadarrAPI(BaseArrAPI):
         unknown_authors=False,
         include_author=False,
         include_book=False,
-    ):
+    ) -> list[dict] | Any:
         """Get current download information
 
         Args:
@@ -265,7 +269,7 @@ class ReadarrAPI(BaseArrAPI):
         return self.request_get(path, self.ver_uri, params=params)
 
     # GET /metadataprofile/{id}
-    def get_metadata_profile(self, id_=None):
+    def get_metadata_profile(self, id_=None) -> list[dict] | Any:
         """Gets all metadata profiles or specific one with id_
 
         Args:
@@ -278,7 +282,7 @@ class ReadarrAPI(BaseArrAPI):
         return self.request_get(path, self.ver_uri)
 
     # GET /delayprofile/{id}
-    def get_delay_profile(self, id_):
+    def get_delay_profile(self, id_) -> list[dict] | Any:
         """Gets all delay profiles or specific one with id_
 
         Args:
@@ -291,7 +295,7 @@ class ReadarrAPI(BaseArrAPI):
         return self.request_get(path, self.ver_uri)
 
     # GET /releaseprofile/{id}
-    def get_release_profile(self, id_=None):
+    def get_release_profile(self, id_=None) -> list[dict] | Any:
         """Gets all release profiles or specific one with id_
 
         Args:
@@ -306,7 +310,7 @@ class ReadarrAPI(BaseArrAPI):
     ## BOOKS
 
     # GET /book and /book/{id}
-    def get_book(self, id_=None):
+    def get_book(self, id_=None) -> list[dict] | Any:
         """Returns all books in your collection or the book with the matching
         book ID if one is found.
 
@@ -320,7 +324,7 @@ class ReadarrAPI(BaseArrAPI):
         return self.request_get(path, self.ver_uri)
 
     # GET /book/lookup
-    def lookup_book(self, term):
+    def lookup_book(self, term) -> list[dict] | Any:
         """Searches for new books using a term, goodreads ID, isbn or asin.
 
         Args:
@@ -348,7 +352,7 @@ class ReadarrAPI(BaseArrAPI):
         search_for_new_book=False,
         author_monitor="all",
         author_search_for_missing_books=False,
-    ):
+    ) -> list[dict] | Any:
         """Adds a new book and  its associated author (if not already added)
 
         Args:
@@ -387,7 +391,7 @@ class ReadarrAPI(BaseArrAPI):
         return self.request_post(path, self.ver_uri, data=book_json)
 
     # PUT /book/{id}
-    def upd_book(self, id_, data):
+    def upd_book(self, id_, data) -> list[dict] | Any:
         """Update the given book, currently only monitored is changed, all other modifications are ignored.
 
         Note:
@@ -425,7 +429,7 @@ class ReadarrAPI(BaseArrAPI):
     # AUTHOR
 
     # GET /author and /author/{id}
-    def get_author(self, id_=None):
+    def get_author(self, id_=None) -> list[dict] | Any:
         """Returns all authors in your collection or the author with the matching ID if one is found.
 
         Args:
@@ -438,7 +442,7 @@ class ReadarrAPI(BaseArrAPI):
         return self.request_get(path, self.ver_uri)
 
     # GET /author/lookup/
-    def lookup_author(self, term):
+    def lookup_author(self, term) -> list[dict] | Any:
         """Searches for new authors using a term
 
         Args:
@@ -461,7 +465,7 @@ class ReadarrAPI(BaseArrAPI):
         monitored=True,
         author_monitor="none",
         author_search_for_missing_books=False,
-    ):
+    ) -> list[dict] | Any:
         """Adds an authorbased on search term, must be author name or book by goodreads / isbn / asin ID
 
         Args:
@@ -490,7 +494,7 @@ class ReadarrAPI(BaseArrAPI):
         return self.request_post(path, self.ver_uri, data=author_json)
 
     # PUT /author/{id}
-    def upd_author(self, id_, data):
+    def upd_author(self, id_, data) -> list[dict] | Any:
         """Update the given author, currently only monitored is changed, all other modifications are ignored.
 
         Note:
@@ -507,7 +511,9 @@ class ReadarrAPI(BaseArrAPI):
         return self.request_put(path, self.ver_uri, data=data)
 
     # DELETE /author/{id}
-    def del_author(self, id_, delete_files=False, import_list_exclusion=True):
+    def del_author(
+        self, id_, delete_files=False, import_list_exclusion=True
+    ) -> list[dict] | Any:
         """Delete the author with the given id
 
         Args:
@@ -528,7 +534,7 @@ class ReadarrAPI(BaseArrAPI):
     ## LOG
 
     # GET /log/file
-    def get_log_file(self):
+    def get_log_file(self) -> list[dict] | Any:
         """Get log file
 
         Returns:
@@ -552,7 +558,7 @@ class ReadarrAPI(BaseArrAPI):
         defaultTags: list = [],
         defaultQualityProfileId: int = 1,
         defaultMetadataProfileId: int = 1,
-    ):
+    ) -> list[dict] | Any:
         """Add a new root directory to the Readarr Server
 
         Args:
@@ -586,7 +592,7 @@ class ReadarrAPI(BaseArrAPI):
         return self.request_post(path, self.ver_uri, data=folder_json)
 
     # GET /config/metadataProvider
-    def get_metadata_provider(self):
+    def get_metadata_provider(self) -> list[dict] | Any:
         """Get metadata provider from settings/metadata
 
         Returns:
@@ -596,7 +602,7 @@ class ReadarrAPI(BaseArrAPI):
         return self.request_get(path, self.ver_uri)
 
     # PUT /config/metadataProvider
-    def upd_metadata_provider(self, data):
+    def upd_metadata_provider(self, data) -> list[dict] | Any:
         """Update the metadata provider data.
 
         Note:

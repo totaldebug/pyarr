@@ -1,3 +1,5 @@
+from typing import Any
+
 from .base import BaseArrAPI
 
 
@@ -25,7 +27,7 @@ class SonarrAPI(BaseArrAPI):
         ignore_episodes_with_files=False,
         ignore_episodes_without_files=False,
         search_for_missing_episodes=False,
-    ):
+    ) -> list[dict] | Any:
         """Searches for new shows on trakt and returns Series JSON to add
 
         Args:
@@ -66,7 +68,7 @@ class SonarrAPI(BaseArrAPI):
     ## COMMAND
 
     # GET /command
-    def get_command(self, id_=None):
+    def get_command(self, id_=None) -> list[dict] | Any:
         """Queries the status of a previously started command, or all currently started commands.
 
         Args:
@@ -79,7 +81,7 @@ class SonarrAPI(BaseArrAPI):
         return self.request_get(path, self.ver_uri)
 
     # POST /command
-    def post_command(self, name, **kwargs):
+    def post_command(self, name, **kwargs) -> list[dict] | Any:
         """Performs any of the predetermined Sonarr command routines
 
         Note:
@@ -105,7 +107,9 @@ class SonarrAPI(BaseArrAPI):
     ## EPISODE
 
     # GET /episode
-    def get_episodes_by_series_id(self, id_):
+    def get_episodes_by_series_id(
+        self, id_
+    ) -> list[dict] | Any:  # sourcery skip: class-extract-method
         """Gets all episodes from a given series ID
 
         Args:
@@ -119,7 +123,7 @@ class SonarrAPI(BaseArrAPI):
         return self.request_get(path, self.ver_uri, params=params)
 
     # GET /episode/{id}
-    def get_episode_by_episode_id(self, id_):
+    def get_episode_by_episode_id(self, id_) -> list[dict] | Any:
         """Gets a specific episode by database id
 
         Args:
@@ -132,7 +136,7 @@ class SonarrAPI(BaseArrAPI):
         return self.request_get(path, self.ver_uri)
 
     # PUT /episode
-    def upd_episode(self, data):
+    def upd_episode(self, data) -> list[dict] | Any:
         """Update the given episodes, currently only monitored is changed, all other modifications are ignored.
 
         Note:
@@ -150,7 +154,7 @@ class SonarrAPI(BaseArrAPI):
     ## EPISODE FILE
 
     # GET /episodefile
-    def get_episode_files_by_series_id(self, id_):
+    def get_episode_files_by_series_id(self, id_) -> list[dict] | Any:
         """Returns all episode file information for series id specified
 
         Args:
@@ -164,7 +168,7 @@ class SonarrAPI(BaseArrAPI):
         return self.request_get(path, self.ver_uri, params=params)
 
     # GET /episodefile/{id}
-    def get_episode_file(self, id_):
+    def get_episode_file(self, id_) -> list[dict] | Any:
         """Returns episode file information for specified id
 
         Args:
@@ -177,7 +181,7 @@ class SonarrAPI(BaseArrAPI):
         return self.request_get(path, self.ver_uri)
 
     # DELETE /episodefile/{id}
-    def del_episode_file(self, id_):
+    def del_episode_file(self, id_) -> dict | Any:
         """Deletes the episode file with corresponding id
 
         Args:
@@ -190,7 +194,7 @@ class SonarrAPI(BaseArrAPI):
         return self.request_del(path, self.ver_uri)
 
     # PUT /episodefile/{id}
-    def upd_episode_file_quality(self, id_, data):
+    def upd_episode_file_quality(self, id_, data) -> list[dict] | Any:
         """Updates the quality of the episode file and returns the episode file
 
         Args:
@@ -215,7 +219,9 @@ class SonarrAPI(BaseArrAPI):
         path = f"episodefile/{id_}"
         return self.request_put(path, self.ver_uri, data=data)
 
-    def get_wanted(self, sort_key="airDateUtc", page=1, page_size=10, sort_dir="asc"):
+    def get_wanted(
+        self, sort_key="airDateUtc", page=1, page_size=10, sort_dir="asc"
+    ) -> list[dict] | Any:
         """Gets missing episode (episodes without files)
 
         Args:
@@ -239,7 +245,7 @@ class SonarrAPI(BaseArrAPI):
     ## QUEUE
 
     # GET /queue
-    def get_queue(self):
+    def get_queue(self) -> list[dict] | Any:
         """Gets currently downloading info
 
         Returns:
@@ -251,7 +257,7 @@ class SonarrAPI(BaseArrAPI):
     ## PARSE
 
     # GET /parse
-    def get_parsed_title(self, title):
+    def get_parsed_title(self, title) -> list[dict] | Any:
         """Returns the result of parsing a title. series and episodes will be
         returned only if the parsing matches to a specific series and one or more
         episodes. series and episodes will be formatted the same as Series and Episode
@@ -268,7 +274,7 @@ class SonarrAPI(BaseArrAPI):
         return self.request_get(path, self.ver_uri, params=params)
 
     # GET /parse
-    def get_parsed_path(self, file_path):
+    def get_parsed_path(self, file_path) -> list[dict] | Any:
         """Returns the result of parsing a file path. series and episodes will be
         returned only if the parsing matches to a specific series and one or more
         episodes. series and episodes will be formatted the same as Series and Episode
@@ -287,7 +293,7 @@ class SonarrAPI(BaseArrAPI):
     ## RELEASE
 
     # GET /release
-    def get_releases(self, id_):
+    def get_releases(self, id_) -> list[dict] | Any:
         """Get a release with a specific episode ID.
 
         Args:
@@ -313,12 +319,15 @@ class SonarrAPI(BaseArrAPI):
         Returns:
             [type]: [description]
         """
+        # TODO: figure out what this return type is supposed to be
         data = {"guid": guid, "indexerId": indexer_id}
         path = "release"
         return self.request_post(path, self.ver_uri, data=data)
 
     # POST /release/push
-    def push_release(self, title, download_url, protocol, publish_date):
+    def push_release(
+        self, title, download_url, protocol, publish_date
+    ) -> list[dict] | Any:
         """If the title is wanted, Sonarr will grab it.
 
         Args:
@@ -341,7 +350,7 @@ class SonarrAPI(BaseArrAPI):
 
     ## SERIES
     # GET /series and /series/{id}
-    def get_series(self, id_=None):
+    def get_series(self, id_=None) -> list[dict] | Any:
         """Returns all series in your collection or the series with the matching
         series ID if one is found.
 
@@ -365,7 +374,7 @@ class SonarrAPI(BaseArrAPI):
         ignore_episodes_with_files=False,
         ignore_episodes_without_files=False,
         search_for_missing_episodes=False,
-    ):
+    ) -> list[dict] | Any:
         """Adds a new series to your collection
 
         Note:
@@ -400,7 +409,7 @@ class SonarrAPI(BaseArrAPI):
         return self.request_post(path, self.ver_uri, data=series_json)
 
     # PUT /series
-    def upd_series(self, data):
+    def upd_series(self, data) -> list[dict] | Any:
         """Update an existing series
 
         Args:
@@ -413,7 +422,7 @@ class SonarrAPI(BaseArrAPI):
         return self.request_put(path, self.ver_uri, data=data)
 
     # DELETE /series/{id}
-    def del_series(self, id_, delete_files=False):
+    def del_series(self, id_, delete_files=False) -> dict | Any:
         """Delete the series with the given id
 
         Args:
@@ -429,7 +438,7 @@ class SonarrAPI(BaseArrAPI):
         return self.request_del(path, self.ver_uri, params=params)
 
     # GET /series/lookup
-    def lookup_series(self, term):
+    def lookup_series(self, term) -> list[dict] | Any:
         """Searches for new shows on TheTVDB.com utilizing sonarr.tv's caching and augmentation proxy.
 
         Args:
@@ -443,7 +452,7 @@ class SonarrAPI(BaseArrAPI):
         return self.request_get(path, self.ver_uri, params=params)
 
     # GET /series/lookup
-    def lookup_series_by_tvdb_id(self, id_):
+    def lookup_series_by_tvdb_id(self, id_) -> list[dict] | Any:
         """Searches for new shows on TheTVDB.com utilizing sonarr.tv's caching and augmentation proxy.
 
         Args:
