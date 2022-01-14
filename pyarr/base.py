@@ -31,7 +31,6 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "calendar"
         params = {}
         if start_date:
             params["start"] = datetime.strptime(start_date, "%Y-%m-%d").strftime(
@@ -41,7 +40,7 @@ class BaseArrAPI(RequestHandler):
             params["end"] = datetime.strptime(end_date, "%Y-%m-%d").strftime("%Y-%m-%d")
         params["unmonitored"] = unmonitored
 
-        return self.request_get(path, self.ver_uri, params=params)
+        return self._get("calendar", self.ver_uri, params=params)
 
     # SYSTEM
 
@@ -52,8 +51,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "system/status"
-        return self.request_get(path, self.ver_uri)
+        return self._get("system/status", self.ver_uri)
 
     # GET /health
     def get_health(self) -> list[dict] | Any:
@@ -62,8 +60,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "health"
-        return self.request_get(path, self.ver_uri)
+        return self._get("health", self.ver_uri)
 
     # GET /metadata
     def get_metadata(self) -> list[dict] | Any:
@@ -72,8 +69,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "metadata"
-        return self.request_get(path, self.ver_uri)
+        return self._get("metadata", self.ver_uri)
 
     # GET /update
     def get_update(self) -> list[dict] | Any:
@@ -82,8 +78,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "update"
-        return self.request_get(path, self.ver_uri)
+        return self._get("update", self.ver_uri)
 
     # GET /rootfolder
     def get_root_folder(self) -> list[dict] | Any:
@@ -92,8 +87,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "rootfolder"
-        return self.request_get(path, self.ver_uri)
+        return self._get("rootfolder", self.ver_uri)
 
     # DELETE /rootfolder
     def del_root_folder(
@@ -107,9 +101,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        params = {"id": id_}
-        path = "rootfolder"
-        return self.request_del(path, self.ver_uri, params=params)
+        return self._del("rootfolder", self.ver_uri, params={"id": id_})
 
     # GET /diskspace
     def get_disk_space(self) -> list[dict] | Any:
@@ -119,8 +111,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "diskspace"
-        return self.request_get(path, self.ver_uri)
+        return self._get("diskspace", self.ver_uri)
 
     # GET /system/backup
     def get_backup(self) -> list[dict] | Any:
@@ -129,8 +120,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "system/backup"
-        return self.request_get(path, self.ver_uri)
+        return self._get("system/backup", self.ver_uri)
 
     # LOGS
 
@@ -157,16 +147,18 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "log"
-        params = {
-            "page": page,
-            "pageSize": page_size,
-            "sortKey": sort_key,
-            "sortDir": sort_dir,
-            "filterKey": filter_key,
-            "filterValue": filter_value,
-        }
-        return self.request_get(path, self.ver_uri, params=params)
+        return self._get(
+            "log",
+            self.ver_uri,
+            params={
+                "page": page,
+                "pageSize": page_size,
+                "sortKey": sort_key,
+                "sortDir": sort_dir,
+                "filterKey": filter_key,
+                "filterValue": filter_value,
+            },
+        )
 
     # GET /history
     def get_history(
@@ -184,7 +176,6 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "history"
         params = {
             "sortKey": sort_key,
             "page": page,
@@ -193,7 +184,7 @@ class BaseArrAPI(RequestHandler):
         }
         if id_:
             params["episodeId"] = id_
-        return self.request_get(path, self.ver_uri, params=params)
+        return self._get("history", self.ver_uri, params=params)
 
     # BLOCKLIST
 
@@ -216,14 +207,16 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        params = {
-            "page": page,
-            "pageSize": page_size,
-            "sortDirection": sort_direction,
-            "sortKey": sort_key,
-        }
-        path = "blocklist"
-        return self.request_get(path, self.ver_uri, params=params)
+        return self._get(
+            "blocklist",
+            self.ver_uri,
+            params={
+                "page": page,
+                "pageSize": page_size,
+                "sortDirection": sort_direction,
+                "sortKey": sort_key,
+            },
+        )
 
     # DELETE /blocklist
     def del_blocklist(self, id_) -> list[dict] | Any:
@@ -235,9 +228,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        params = {"id": id_}
-        path = "blocklist"
-        return self.request_del(path, self.ver_uri, params=params)
+        return self._del("blocklist", self.ver_uri, params={"id": id_})
 
     # DELETE /blocklist/bulk
     def del_blocklist_bulk(self, data) -> Response | Any:
@@ -249,8 +240,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: 200 Ok, 401 Unauthorized
         """
-        path = "blocklist/bulk"
-        return self.request_del(path, self.ver_uri, data=data)
+        return self._del("blocklist/bulk", self.ver_uri, data=data)
 
     # PROFILES
 
@@ -264,8 +254,9 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "qualityprofile" if not id_ else f"qualityprofile/{id_}"
-        return self.request_get(path, self.ver_uri)
+        return self._get(
+            "qualityprofile" if not id_ else f"qualityprofile/{id_}", self.ver_uri
+        )
 
     # PUT /qualityprofile/{id}
     def upd_quality_profile(self, id_, data) -> list[dict] | Any:
@@ -281,8 +272,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = f"qualityprofile/{id_}"
-        return self.request_put(path, self.ver_uri, data=data)
+        return self._put(f"qualityprofile/{id_}", self.ver_uri, data=data)
 
     # DELETE /qualityprofile
     def del_quality_profile(self, id_) -> list[dict] | Any:
@@ -294,9 +284,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        params = {"id": id_}
-        path = "qualityprofile"
-        return self.request_del(path, self.ver_uri, params=params)
+        return self._del("qualityprofile", self.ver_uri, params={"id": id_})
 
     # GET /qualitydefinition/{id}
     def get_quality_definition(self, id_=None) -> list[dict] | Any:
@@ -308,8 +296,9 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "qualitydefinition" if not id_ else f"qualitydefinition/{id_}"
-        return self.request_get(path, self.ver_uri)
+        return self._get(
+            "qualitydefinition" if not id_ else f"qualitydefinition/{id_}", self.ver_uri
+        )
 
     # PUT /qualitydefinition/{id}
     def upd_quality_definition(self, id_, data) -> list[dict] | Any:
@@ -325,8 +314,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = f"qualitydefinition/{id_}"
-        return self.request_put(path, self.ver_uri, data=data)
+        return self._put(f"qualitydefinition/{id_}", self.ver_uri, data=data)
 
     # INDEXER
 
@@ -340,8 +328,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "indexer" if not id_ else f"indexer/{id_}"
-        return self.request_get(path, self.ver_uri)
+        return self._get("indexer" if not id_ else f"indexer/{id_}", self.ver_uri)
 
     # PUT /indexer/{id}
     def upd_indexer(self, id_, data) -> list[dict] | Any:
@@ -357,8 +344,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = f"indexer/{id_}"
-        return self.request_put(path, self.ver_uri, data=data)
+        return self._put(f"indexer/{id_}", self.ver_uri, data=data)
 
     # DELETE /indexer
     def del_indexer(self, id_) -> list[dict] | Any:
@@ -370,9 +356,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        params = {"id": id_}
-        path = "indexer"
-        return self.request_del(path, self.ver_uri, params=params)
+        return self._del("indexer", self.ver_uri, params={"id": id_})
 
     # QUEUE
 
@@ -390,9 +374,11 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: 200 Ok, 401 Unauthorized
         """
-        params = {"removeFromClient": remove_from_client, "blacklist": blacklist}
-        path = f"queue/{id_}"
-        return self.request_del(path, self.ver_uri, params=params)
+        return self._del(
+            f"queue/{id_}",
+            self.ver_uri,
+            params={"removeFromClient": remove_from_client, "blacklist": blacklist},
+        )
 
     # GET /system/task/{id}
     def get_task(self, id_=None) -> list[dict] | Any:
@@ -404,8 +390,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = f"system/task/{id_}" if id_ else "system/task"
-        return self.request_get(path, self.ver_uri)
+        return self._get(f"system/task/{id_}" if id_ else "system/task", self.ver_uri)
 
     # GET /remotePathMapping
     def get_remote_path_mapping(self) -> list[dict] | Any:
@@ -414,8 +399,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "remotePathMapping"
-        return self.request_get(path, self.ver_uri)
+        return self._get("remotePathMapping", self.ver_uri)
 
     # CONFIG
 
@@ -426,8 +410,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "config/ui"
-        return self.request_get(path, self.ver_uri)
+        return self._get("config/ui", self.ver_uri)
 
     # PUT /config/ui
     def upd_config_ui(self, data) -> Response | Any:
@@ -439,8 +422,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: 200 Ok, 401 Unauthorized
         """
-        path = "config/ui"
-        return self.request_put(path, self.ver_uri, data=data)
+        return self._put("config/ui", self.ver_uri, data=data)
 
     # GET /config/host
     def get_config_host(self) -> list[dict] | Any:
@@ -449,8 +431,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "config/host"
-        return self.request_get(path, self.ver_uri)
+        return self._get("config/host", self.ver_uri)
 
     # PUT /config/host
     def upd_config_host(self, data) -> Response | Any:
@@ -462,8 +443,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: 200 Ok, 401 Unauthorized
         """
-        path = "config/host"
-        return self.request_put(path, self.ver_uri, data=data)
+        return self._put("config/host", self.ver_uri, data=data)
 
     # GET /config/naming
     def get_config_naming(self) -> list[dict] | Any:
@@ -472,8 +452,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "config/naming"
-        return self.request_get(path, self.ver_uri, self.ver_uri)
+        return self._get("config/naming", self.ver_uri, self.ver_uri)
 
     # PUT /config/naming
     def upd_config_naming(self, data) -> Response | Any:
@@ -485,8 +464,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: 200 Ok, 401 Unauthorized
         """
-        path = "config/naming"
-        return self.request_put(path, self.ver_uri, data=data)
+        return self._put("config/naming", self.ver_uri, data=data)
 
     # GET /config/mediamanagement
     def get_media_management(self) -> list[dict] | Any:
@@ -495,8 +473,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "config/mediamanagement"
-        return self.request_get(path, self.ver_uri)
+        return self._get("config/mediamanagement", self.ver_uri)
 
     # NOTIFICATIONS
 
@@ -510,8 +487,9 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "notification" if not id_ else f"notification/{id_}"
-        return self.request_get(path, self.ver_uri)
+        return self._get(
+            "notification" if not id_ else f"notification/{id_}", self.ver_uri
+        )
 
     # GET /notification/schema
     def get_notification_schema(self) -> list[dict] | Any:
@@ -520,8 +498,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "notification/schema"
-        return self.request_get(path, self.ver_uri)
+        return self._get("notification/schema", self.ver_uri)
 
     # PUT /notification/{id}
     def upd_notification(self, id_, data) -> Response | Any:
@@ -534,8 +511,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: 200 Ok, 401 Unauthorized
         """
-        path = f"notification/{id_}"
-        return self.request_put(path, self.ver_uri, data=data)
+        return self._put(f"notification/{id_}", self.ver_uri, data=data)
 
     # DELETE /notification/{id}
     def del_notification(self, id_) -> Response | Any:
@@ -547,8 +523,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: 201 Ok, 401 Unauthorized
         """
-        path = f"notification/{id_}"
-        return self.request_del(path, self.ver_uri)
+        return self._del(f"notification/{id_}", self.ver_uri)
 
     # TAGS
 
@@ -562,8 +537,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "tag" if not id_ else f"tag/{id_}"
-        return self.request_get(path, self.ver_uri)
+        return self._get("tag" if not id_ else f"tag/{id_}", self.ver_uri)
 
     # GET /tag/detail/{id}
     def get_tag_detail(self, id_=None) -> list[dict] | Any:
@@ -575,8 +549,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "tag/detail" if not id_ else f"tag/detail/{id_}"
-        return self.request_get(path, self.ver_uri)
+        return self._get("tag/detail" if not id_ else f"tag/detail/{id_}", self.ver_uri)
 
     # POST /tag
     def create_tag(self, label) -> list[dict] | Any:
@@ -588,9 +561,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        data = {"label": label}
-        path = "tag"
-        return self.request_post(path, self.ver_uri, data=data)
+        return self._post("tag", self.ver_uri, data={"label": label})
 
     # PUT /tag/{id}
     def upd_tag(self, id_, label) -> list[dict] | Any:
@@ -606,9 +577,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        data = {"id": id_, "label": label}
-        path = f"tag/{id_}"
-        return self.request_put(path, self.ver_uri, data=data)
+        return self._put(f"tag/{id_}", self.ver_uri, data={"id": id_, "label": label})
 
     # DELETE /tag/{id}
     def del_tag(self, id_) -> dict | Any:
@@ -620,8 +589,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: {}
         """
-        path = f"tag/{id_}"
-        return self.request_del(path, self.ver_uri)
+        return self._del(f"tag/{id_}", self.ver_uri)
 
     # DOWNLOAD CLIENT
 
@@ -635,8 +603,9 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "downloadclient" if not id_ else f"downloadclient/{id_}"
-        return self.request_get(path, self.ver_uri)
+        return self._get(
+            "downloadclient" if not id_ else f"downloadclient/{id_}", self.ver_uri
+        )
 
     # GET /downloadclient/schema
     def get_download_client_schema(self) -> list[dict] | Any:
@@ -645,8 +614,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "downloadclient/schema"
-        return self.request_get(path, self.ver_uri)
+        return self._get("downloadclient/schema", self.ver_uri)
 
     # PUT /downloadclient/{id}
     def upd_download_client(self, id_, data) -> Response | Any:
@@ -659,8 +627,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: 200 Ok
         """
-        path = f"downloadclient/{id_}"
-        return self.request_put(path, self.ver_uri, data=data)
+        return self._put(f"downloadclient/{id_}", self.ver_uri, data=data)
 
     # DELETE /downloadclient/{id}
     def del_download_client(self, id_) -> Response | Any:
@@ -672,8 +639,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: 200 Ok
         """
-        path = f"downloadclient/{id_}"
-        return self.request_del(path, self.ver_uri)
+        return self._del(f"downloadclient/{id_}", self.ver_uri)
 
     # IMPORT LIST
 
@@ -687,8 +653,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "importlist" if not id_ else f"importlist/{id_}"
-        return self.request_get(path, self.ver_uri)
+        return self._get("importlist" if not id_ else f"importlist/{id_}", self.ver_uri)
 
     # PUT /importlist/{id}
     def upd_import_list(self, id_, data) -> Response | Any:
@@ -701,8 +666,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: 200 Ok, 401 Unauthorized
         """
-        path = f"importlist/{id_}"
-        return self.request_put(path, self.ver_uri, data=data)
+        return self._put(f"importlist/{id_}", self.ver_uri, data=data)
 
     # DELETE /importlist/{id}
     def del_import_list(self, id_) -> Response | Any:
@@ -714,5 +678,4 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: 200 Ok, 401 Unauthorized
         """
-        path = f"importlist/{id_}"
-        return self.request_del(path, self.ver_uri)
+        return self._del(f"importlist/{id_}", self.ver_uri)

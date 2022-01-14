@@ -57,7 +57,7 @@ class RequestHandler:
         """
         return HTTPBasicAuth(username, password)
 
-    def request_get(
+    def _get(
         self, path: str, ver_uri: str = "", params: dict = None
     ) -> list[dict] | dict | Response:
         """Wrapper on any get requests
@@ -83,7 +83,7 @@ class RequestHandler:
             ) from exception
         return self._process_response(res)
 
-    def request_post(
+    def _post(
         self, path, ver_uri="", params=None, data=None
     ) -> list[dict] | dict | Response:
         """Wrapper on any post requests
@@ -111,7 +111,7 @@ class RequestHandler:
             ) from exception
         return self._process_response(res)
 
-    def request_put(
+    def _put(
         self, path, ver_uri="", params=None, data=None
     ) -> list[dict] | dict | Response:
         """Wrapper on any put requests
@@ -139,7 +139,7 @@ class RequestHandler:
             ) from exception
         return self._process_response(res)
 
-    def request_del(
+    def _del(
         self, path, ver_uri="", params=None, data=None
     ) -> list[dict] | dict | Response:
         """Wrapper on any delete requests

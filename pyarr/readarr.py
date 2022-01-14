@@ -146,8 +146,7 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        path = f"command/{id_}" if id_ else "command"
-        return self.request_get(path, self.ver_uri)
+        return self._get(f"command/{id_}" if id_ else "command", self.ver_uri)
 
     # POST /command
     def post_command(self, name, **kwargs) -> list[dict] | Any:
@@ -164,12 +163,14 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        path = "command"
-        data = {
-            "name": name,
-            **kwargs,
-        }
-        return self.request_post(path, self.ver_uri, data=data)
+        return self._post(
+            "command",
+            self.ver_uri,
+            data={
+                "name": name,
+                **kwargs,
+            },
+        )
 
     ## WANTED (MISSING)
 
@@ -188,14 +189,16 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        path = "wanted/missing"
-        params = {
-            "sortKey": sort_key,
-            "page": page,
-            "pageSize": page_size,
-            "sortDir": sort_dir,
-        }
-        return self.request_get(path, self.ver_uri, params=params)
+        return self._get(
+            "wanted/missing",
+            self.ver_uri,
+            params={
+                "sortKey": sort_key,
+                "page": page,
+                "pageSize": page_size,
+                "sortDir": sort_dir,
+            },
+        )
 
     # GET /wanted/cutoff
     def get_cutoff(
@@ -218,15 +221,17 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        path = "wanted/cutoff"
-        params = {
-            "sortKey": sort_key,
-            "page": page,
-            "pageSize": page_size,
-            "sortDir": sort_dir,
-            "monitored": monitored,
-        }
-        return self.request_get(path, self.ver_uri, params=params)
+        return self._get(
+            "wanted/cutoff",
+            self.ver_uri,
+            params={
+                "sortKey": sort_key,
+                "page": page,
+                "pageSize": page_size,
+                "sortDir": sort_dir,
+                "monitored": monitored,
+            },
+        )
 
     ## QUEUE
 
@@ -255,18 +260,19 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-
-        path = "queue"
-        params = {
-            "sortKey": sort_key,
-            "page": page,
-            "pageSize": page_size,
-            "sortDirection": sort_dir,
-            "includeUnknownAuthorItems": unknown_authors,
-            "includeAuthor": include_author,
-            "includeBook": include_book,
-        }
-        return self.request_get(path, self.ver_uri, params=params)
+        return self._get(
+            "queue",
+            self.ver_uri,
+            params={
+                "sortKey": sort_key,
+                "page": page,
+                "pageSize": page_size,
+                "sortDirection": sort_dir,
+                "includeUnknownAuthorItems": unknown_authors,
+                "includeAuthor": include_author,
+                "includeBook": include_book,
+            },
+        )
 
     # GET /metadataprofile/{id}
     def get_metadata_profile(self, id_=None) -> list[dict] | Any:
@@ -278,8 +284,9 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        path = "metadataprofile" if not id_ else f"metadataprofile/{id_}"
-        return self.request_get(path, self.ver_uri)
+        return self._get(
+            "metadataprofile" if not id_ else f"metadataprofile/{id_}", self.ver_uri
+        )
 
     # GET /delayprofile/{id}
     def get_delay_profile(self, id_) -> list[dict] | Any:
@@ -291,8 +298,9 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        path = "delayprofile" if not id_ else f"delayprofile/{id_}"
-        return self.request_get(path, self.ver_uri)
+        return self._get(
+            "delayprofile" if not id_ else f"delayprofile/{id_}", self.ver_uri
+        )
 
     # GET /releaseprofile/{id}
     def get_release_profile(self, id_=None) -> list[dict] | Any:
@@ -304,8 +312,9 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        path = "releaseprofile" if not id_ else f"releaseprofile/{id_}"
-        return self.request_get(path, self.ver_uri)
+        return self._get(
+            "releaseprofile" if not id_ else f"releaseprofile/{id_}", self.ver_uri
+        )
 
     ## BOOKS
 
@@ -320,8 +329,7 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        path = f"book/{id_}" if id_ else "book"
-        return self.request_get(path, self.ver_uri)
+        return self._get(f"book/{id_}" if id_ else "book", self.ver_uri)
 
     # GET /book/lookup
     def lookup_book(self, term) -> list[dict] | Any:
@@ -336,9 +344,7 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        params = {"term": term}
-        path = "book/lookup"
-        return self.request_get(path, self.ver_uri, params=params)
+        return self._get("book/lookup", self.ver_uri, params={"term": term})
 
     # POST /book
     def add_book(
@@ -375,20 +381,21 @@ class ReadarrAPI(BaseArrAPI):
         book_id_types = ["goodreads", "isbn", "asin"]
         if book_id_type not in book_id_types:
             raise ValueError(f"Invalid book id type. Expected one of: {book_id_types}")
-
-        book_json = self._book_json(
-            db_id,
-            book_id_type,
-            root_dir,
-            quality_profile_id,
-            metadata_profile_id,
-            monitored,
-            search_for_new_book,
-            author_monitor,
-            author_search_for_missing_books,
+        return self._post(
+            "book",
+            self.ver_uri,
+            data=self._book_json(
+                db_id,
+                book_id_type,
+                root_dir,
+                quality_profile_id,
+                metadata_profile_id,
+                monitored,
+                search_for_new_book,
+                author_monitor,
+                author_search_for_missing_books,
+            ),
         )
-        path = "book"
-        return self.request_post(path, self.ver_uri, data=book_json)
 
     # PUT /book/{id}
     def upd_book(self, id_, data) -> list[dict] | Any:
@@ -404,8 +411,7 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        path = f"book/{id_}"
-        return self.request_put(path, self.ver_uri, data=data)
+        return self._put(f"book/{id_}", self.ver_uri, data=data)
 
     # DELETE /book/{id}
     def del_book(self, id_, delete_files=False, import_list_exclusion=True):
@@ -419,12 +425,14 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             JSON: {}
         """
-        params = {
-            "deleteFiles": delete_files,
-            "addImportListExclusion": import_list_exclusion,
-        }
-        path = f"book/{id_}"
-        return self.request_del(path, self.ver_uri, params=params)
+        return self._del(
+            f"book/{id_}",
+            self.ver_uri,
+            params={
+                "deleteFiles": delete_files,
+                "addImportListExclusion": import_list_exclusion,
+            },
+        )
 
     # AUTHOR
 
@@ -438,8 +446,7 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        path = f"author/{id_}" if id_ else "author"
-        return self.request_get(path, self.ver_uri)
+        return self._get(f"author/{id_}" if id_ else "author", self.ver_uri)
 
     # GET /author/lookup/
     def lookup_author(self, term) -> list[dict] | Any:
@@ -451,9 +458,7 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        params = {"term": term}
-        path = "author/lookup"
-        return self.request_get(path, self.ver_uri, params=params)
+        return self._get("author/lookup", self.ver_uri, params={"term": term})
 
     # POST /author/
     def add_author(
@@ -480,18 +485,19 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        author_json = self._author_json(
-            search_term,
-            root_dir,
-            quality_profile_id,
-            metadata_profile_id,
-            monitored,
-            author_monitor,
-            author_search_for_missing_books,
+        return self._post(
+            "author",
+            self.ver_uri,
+            data=self._author_json(
+                search_term,
+                root_dir,
+                quality_profile_id,
+                metadata_profile_id,
+                monitored,
+                author_monitor,
+                author_search_for_missing_books,
+            ),
         )
-
-        path = "author"
-        return self.request_post(path, self.ver_uri, data=author_json)
 
     # PUT /author/{id}
     def upd_author(self, id_, data) -> list[dict] | Any:
@@ -507,8 +513,7 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        path = f"author/{id_}"
-        return self.request_put(path, self.ver_uri, data=data)
+        return self._put(f"author/{id_}", self.ver_uri, data=data)
 
     # DELETE /author/{id}
     def del_author(
@@ -524,12 +529,14 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        params = {
-            "deleteFiles": delete_files,
-            "addImportListExclusion": import_list_exclusion,
-        }
-        path = f"author/{id_}"
-        return self.request_del(path, self.ver_uri, params=params)
+        return self._del(
+            f"author/{id_}",
+            self.ver_uri,
+            params={
+                "deleteFiles": delete_files,
+                "addImportListExclusion": import_list_exclusion,
+            },
+        )
 
     ## LOG
 
@@ -540,8 +547,7 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        path = "log/file"
-        return self.request_get(path, self.ver_uri)
+        return self._get("log/file", self.ver_uri)
 
     # CONFIG
 
@@ -576,20 +582,22 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        folder_json = {
-            "isCalibreLibrary": isCalibreLib,
-            "host": calibreHost,
-            "port": calibrePort,
-            "useSsl": useSsl,
-            "outputProfile": outputProfile,
-            "defaultTags": defaultTags,
-            "defaultQualityProfileId": defaultQualityProfileId,
-            "defaultMetadataProfileId": defaultMetadataProfileId,
-            "name": name,
-            "path": dir,
-        }
-        path = "rootFolder"
-        return self.request_post(path, self.ver_uri, data=folder_json)
+        return self._post(
+            "rootFolder",
+            self.ver_uri,
+            data={
+                "isCalibreLibrary": isCalibreLib,
+                "host": calibreHost,
+                "port": calibrePort,
+                "useSsl": useSsl,
+                "outputProfile": outputProfile,
+                "defaultTags": defaultTags,
+                "defaultQualityProfileId": defaultQualityProfileId,
+                "defaultMetadataProfileId": defaultMetadataProfileId,
+                "name": name,
+                "path": dir,
+            },
+        )
 
     # GET /config/metadataProvider
     def get_metadata_provider(self) -> list[dict] | Any:
@@ -598,8 +606,7 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        path = "config/metadataProvider"
-        return self.request_get(path, self.ver_uri)
+        return self._get("config/metadataProvider", self.ver_uri)
 
     # PUT /config/metadataProvider
     def upd_metadata_provider(self, data) -> list[dict] | Any:
@@ -614,5 +621,4 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        path = "config/metadataProvider"
-        return self.request_put(path, self.ver_uri, data=data)
+        return self._put("config/metadataProvider", self.ver_uri, data=data)

@@ -85,8 +85,7 @@ class RadarrAPI(BaseArrAPI):
         params = {}
         if id_:
             params["tmdbId"] = id_
-        path = "movie"
-        return self.request_get(path, self.ver_uri, params=params)
+        return self._get("movie", self.ver_uri, params=params)
 
     # POST /movie
     def add_movie(
@@ -111,12 +110,13 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             JSON: 200 Ok, 401 Unauthorized
         """
-        movie_json = self._movie_json(
-            db_id, quality_profile_id, root_dir, monitored, search_for_movie, tmdb
+        return self._post(
+            "movie",
+            self.ver_uri,
+            data=self._movie_json(
+                db_id, quality_profile_id, root_dir, monitored, search_for_movie, tmdb
+            ),
         )
-
-        path = "movie"
-        return self.request_post(path, self.ver_uri, data=movie_json)
 
     # PUT /movie
     def upd_movie(self, data, move_files=False) -> Response | Any:
@@ -129,10 +129,9 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             JSON: 200 Ok, 401 Unauthorized
         """
-
-        path = "/api/movie"
-        params = {"moveFiles": move_files}
-        return self.request_put(path, self.ver_uri, data=data, params=params)
+        return self._put(
+            "/api/movie", self.ver_uri, data=data, params={"moveFiles": move_files}
+        )
 
     # GET /movie/{id}
     def get_movie_by_movie_id(self, id_) -> dict | Any:
@@ -144,8 +143,7 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             JSON: Movie data if present in database
         """
-        path = f"movie/{id_}"
-        return self.request_get(path, self.ver_uri)
+        return self._get(f"movie/{id_}", self.ver_uri)
 
     # DELETE /movie/{id}
     def del_movie(self, id_, delete_files=False, add_exclusion=False) -> Response | Any:
@@ -159,9 +157,11 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             JSON: 200 Ok, 401 Unauthorized
         """
-        params = {"deleteFiles": delete_files, "addExclusion": add_exclusion}
-        path = f"movie/{id_}"
-        return self.request_del(path, self.ver_uri, params=params)
+        return self._del(
+            f"movie/{id_}",
+            self.ver_uri,
+            params={"deleteFiles": delete_files, "addExclusion": add_exclusion},
+        )
 
     # GET /movie/lookup
     def lookup_movie(self, term) -> list[dict] | Any:
@@ -173,9 +173,7 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        params = {"term": term}
-        path = "movie/lookup"
-        return self.request_get(path, self.ver_uri, params=params)
+        return self._get("movie/lookup", self.ver_uri, params={"term": term})
 
     # GET /movie/lookup
     def lookup_movie_by_tmdb_id(self, id_) -> list[dict] | Any:
@@ -187,9 +185,7 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        params = {"term": f"tmdb:{id_}"}
-        path = "movie/lookup"
-        return self.request_get(path, self.ver_uri, params=params)
+        return self._get("movie/lookup", self.ver_uri, params={"term": f"tmdb:{id_}"})
 
     # GET /movie/lookup
     def lookup_movie_by_imdb_id(self, id_) -> list[dict] | Any:
@@ -201,9 +197,9 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        params = {"term": f"imdb:{id_}"}
-        path = "/api/v3/movie/lookup"
-        return self.request_get(path, self.ver_uri, params=params)
+        return self._get(
+            "/api/v3/movie/lookup", self.ver_uri, params={"term": f"imdb:{id_}"}
+        )
 
     # PUT /movie/editor
     def upd_movies(self, data) -> Response | Any:
@@ -215,8 +211,7 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             JSON: 200 Ok, 401 Unauthorized
         """
-        path = "movie/editor"
-        return self.request_put(path, self.ver_uri, data=data)
+        return self._put("movie/editor", self.ver_uri, data=data)
 
     # DELETE /movie/editor
     def del_movies(self, data) -> Response | Any:
@@ -236,8 +231,7 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             JSON: 200 Ok, 401 Unauthorized
         """
-        path = "movie/editor"
-        return self.request_del(path, self.ver_uri, data=data)
+        return self._del("movie/editor", self.ver_uri, data=data)
 
     # POST /movie/import
     def import_movies(self, data) -> Response | Any:
@@ -249,8 +243,7 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             JSON: 200 Ok, 401 Unauthorized
         """
-        path = "movie/import"
-        return self.request_post(path, self.ver_uri, data=data)
+        return self._post("movie/import", self.ver_uri, data=data)
 
     ## MOVIEFILE
 
@@ -264,9 +257,7 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             JSON: {}
         """
-        params = {"movieid": id_}
-        path = "moviefile"
-        return self.request_get(path, self.ver_uri, params=params)
+        return self._get("moviefile", self.ver_uri, params={"movieid": id_})
 
     # GET /moviefile
     def get_movie_files(self, moviefile_ids) -> list[dict] | Any:
@@ -278,9 +269,9 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        params = {"moviefileids": moviefile_ids}
-        path = "moviefile"
-        return self.request_get(path, self.ver_uri, params=params)
+        return self._get(
+            "moviefile", self.ver_uri, params={"moviefileids": moviefile_ids}
+        )
 
     # GET /moviefile/{id}
     def get_movie_file(self, id_) -> dict | Any:
@@ -292,8 +283,7 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             JSON: {}
         """
-        path = f"moviefile/{id_}"
-        return self.request_get(path, self.ver_uri)
+        return self._get(f"moviefile/{id_}", self.ver_uri)
 
     # DELETE /moviefile/{id}
     def del_movie_file(self, id_) -> Response | Any:
@@ -305,9 +295,8 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             JSON: 200 Ok, 401 Unauthorized
         """
-        path = f"moviefile/{id_}"
-        return self.request_del(
-            path,
+        return self._del(
+            f"moviefile/{id_}",
             self.ver_uri,
         )
 
@@ -325,8 +314,7 @@ class RadarrAPI(BaseArrAPI):
         params = {"movieId": id_}
         if event_type:
             params["eventType"] = event_type
-        path = "history/movie"
-        return self.request_get(path, self.ver_uri, params=params)
+        return self._get("history/movie", self.ver_uri, params=params)
 
     ## BLACKLIST
 
@@ -343,9 +331,7 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        params = {"movieId": id_}
-        path = "blacklist/movie"
-        return self.request_get(path, self.ver_uri, params=params)
+        return self._get("blacklist/movie", self.ver_uri, params={"movieId": id_})
 
     ## QUEUE
 
@@ -370,15 +356,17 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        params = {
-            "page": page,
-            "pageSize": page_size,
-            "sortDirection": sort_direction,
-            "sortKey": sort_key,
-            "includeUnknownMovieItems": include_unknown_movie_items,
-        }
-        path = "queue"
-        return self.request_get(path, self.ver_uri, params=params)
+        return self._get(
+            "queue",
+            self.ver_uri,
+            params={
+                "page": page,
+                "pageSize": page_size,
+                "sortDirection": sort_direction,
+                "sortKey": sort_key,
+                "includeUnknownMovieItems": include_unknown_movie_items,
+            },
+        )
 
     # DELETE /queue/bulk
     def del_queue_bulk(
@@ -401,9 +389,12 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             JSON: 200 ok, 401 invalid api key
         """
-        params = {"removeFromClient": remove_from_client, "blacklist": blacklist}
-        path = "queue/bulk"
-        return self.request_del(path, self.ver_uri, params=params, data=data)
+        return self._del(
+            "queue/bulk",
+            self.ver_uri,
+            params={"removeFromClient": remove_from_client, "blacklist": blacklist},
+            data=data,
+        )
 
     # GET /queue/details
     def get_queue_details(
@@ -418,11 +409,13 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        params = {
-            "includeMovie": include_movie,
-        }
-        path = "queue/details"
-        return self.request_get(path, self.ver_uri, params=params)
+        return self._get(
+            "queue/details",
+            self.ver_uri,
+            params={
+                "includeMovie": include_movie,
+            },
+        )
 
     # GET /queue/status
     def get_queue_status(self) -> list[dict] | Any:
@@ -431,8 +424,7 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        path = "queue/status"
-        return self.request_get(path, self.ver_uri)
+        return self._get("queue/status", self.ver_uri)
 
     # POST /queue/grab/{id}
     def force_grab_queue_item(self, id_) -> Response | Any:
@@ -444,8 +436,7 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             JSON: 200 Ok, 401 Invalid API Key
         """
-        path = f"queue/grab/{id_}"
-        return self.request_post(path, self.ver_uri)
+        return self._post(f"queue/grab/{id_}", self.ver_uri)
 
     ## INDEXER
 
@@ -459,8 +450,7 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        path = "indexer" if not id_ else f"indexer/{id_}"
-        return self.request_get(path, self.ver_uri)
+        return self._get("indexer" if not id_ else f"indexer/{id_}", self.ver_uri)
 
     # PUT /indexer/{id}
     def upd_indexer(self, id_, data) -> Response | Any:
@@ -473,8 +463,7 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             JSON: 200 ok, 401 Unauthorized
         """
-        path = f"indexer/{id_}"
-        return self.request_put(path, self.ver_uri, data=data)
+        return self._put(f"indexer/{id_}", self.ver_uri, data=data)
 
     # DELETE /indexer/{id}
     def del_indexer(self, id_) -> Response | Any:
@@ -486,8 +475,7 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             JSON: 200 Ok, 401 Unauthorized
         """
-        path = f"indexer/{id_}"
-        return self.request_del(path, self.ver_uri)
+        return self._del(f"indexer/{id_}", self.ver_uri)
 
     ## COMMAND
 
@@ -506,12 +494,14 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        data = {
-            "name": name,
-            **kwargs,
-        }
-        path = "command"
-        return self.request_post(path, self.ver_uri, data=data)
+        return self._post(
+            "command",
+            self.ver_uri,
+            data={
+                "name": name,
+                **kwargs,
+            },
+        )
 
     ## CUSTOM FILTERS
 
@@ -522,5 +512,4 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        path = "customfilter"
-        return self.request_get(path, self.ver_uri)
+        return self._get("customfilter", self.ver_uri)
