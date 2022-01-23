@@ -76,7 +76,7 @@ class RequestHandler:
             raise PyarrConnectionError(
                 "Timeout occurred while connecting to API"
             ) from exception
-        return self._process_response(res)
+        return _process_response(res)
 
     def request_post(self, path, ver_uri="", params=None, data=None):
         """Wrapper on any post requests
@@ -102,7 +102,7 @@ class RequestHandler:
             raise PyarrConnectionError(
                 "Timeout occurred while connecting to API"
             ) from exception
-        return self._process_response(res)
+        return _process_response(res)
 
     def request_put(self, path, ver_uri="", params=None, data=None):
         """Wrapper on any put requests
@@ -128,7 +128,7 @@ class RequestHandler:
             raise PyarrConnectionError(
                 "Timeout occurred while connecting to API"
             ) from exception
-        return self._process_response(res)
+        return _process_response(res)
 
     def request_del(self, path, ver_uri="", params=None, data=None):
         """Wrapper on any delete requests
@@ -154,36 +154,37 @@ class RequestHandler:
             raise PyarrConnectionError(
                 "Timeout occurred while connecting to API"
             ) from exception
-        return self._process_response(res)
+        return _process_response(res)
 
-    def _process_response(self, res):
-        """Check the response status code and error or return results
 
-        Args:
-            res (str): JSON or Text response from API Call
+def _process_response(res):
+    """Check the response status code and error or return results
 
-        Raises:
-            PyarrUnauthorizedError: Invalid API Key
-            PyarrAccessRestricted: Invalid Permissions
-            PyarrResourceNotFound: Incorrect Resource
-            PyarrBadGateway: Bad Gateway
+    Args:
+        res (str): JSON or Text response from API Call
 
-        Returns:
-            JSON: Array
-        """
-        if res.status_code == 401:
-            raise PyarrUnauthorizedError(
-                "Unauthorized. Please ensure valid API Key is used.", {}
-            )
-        if res.status_code == 403:
-            raise PyarrAccessRestricted(
-                "Access restricted. Please ensure API Key has correct permissions", {}
-            )
-        if res.status_code == 404:
-            raise PyarrResourceNotFound("Resource not found")
-        if res.status_code == 502:
-            raise PyarrBadGateway("Bad Gateway. Check your server is accessible")
-        content_type = res.headers.get("Content-Type", "")
-        if "application/json" in content_type:
-            return res.json()
-        return res
+    Raises:
+        PyarrUnauthorizedError: Invalid API Key
+        PyarrAccessRestricted: Invalid Permissions
+        PyarrResourceNotFound: Incorrect Resource
+        PyarrBadGateway: Bad Gateway
+
+    Returns:
+        JSON: Array
+    """
+    if res.status_code == 401:
+        raise PyarrUnauthorizedError(
+            "Unauthorized. Please ensure valid API Key is used.", {}
+        )
+    if res.status_code == 403:
+        raise PyarrAccessRestricted(
+            "Access restricted. Please ensure API Key has correct permissions", {}
+        )
+    if res.status_code == 404:
+        raise PyarrResourceNotFound("Resource not found")
+    if res.status_code == 502:
+        raise PyarrBadGateway("Bad Gateway. Check your server is accessible")
+    content_type = res.headers.get("Content-Type", "")
+    if "application/json" in content_type:
+        return res.json()
+    return res
