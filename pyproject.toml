@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyarr"
-version = "3.0.0"
+version = "3.0.1"
 description = "Python client for Servarr API's (Sonarr, Radarr, Readarr)"
 authors = ["Steven Marks <marksie1988@users.noreply.github.com>"]
 license = "MIT"
