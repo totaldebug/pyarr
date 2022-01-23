@@ -549,7 +549,7 @@ class ReadarrAPI(BaseArrAPI):
         calibre_port: int = 8080,
         use_ssl: bool = False,
         output_profile: str = "default",
-        default_tags: list = [],
+        default_tags: list = None,
         default_quality_profile_id: int = 1,
         default_metadata_profile_id: int = 1,
     ):
@@ -576,7 +576,7 @@ class ReadarrAPI(BaseArrAPI):
             "port": calibre_port,
             "useSsl": use_ssl,
             "outputProfile": output_profile,
-            "defaultTags": default_tags,
+            "defaultTags": default_tags or [],
             "defaultQualityProfileId": default_quality_profile_id,
             "defaultMetadataProfileId": default_metadata_profile_id,
             "name": name,
