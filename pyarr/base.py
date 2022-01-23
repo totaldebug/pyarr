@@ -318,7 +318,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = f"qualitydefinition/{id}"
+        path = f"qualitydefinition/{id_}"
         return self.request_put(path, self.ver_uri, data=data)
 
     # INDEXER

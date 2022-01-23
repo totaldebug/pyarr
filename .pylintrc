@@ -1,0 +1,2 @@
+[MASTER]
+disable=missing-module-docstring, line-too-long, too-many-public-methods, too-many-arguments

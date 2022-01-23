@@ -124,7 +124,7 @@ class RadarrAPI(BaseArrAPI):
             JSON: 200 Ok, 401 Unauthorized
         """
 
-        path = "/api/movie"
+        path = "movie"
         params = {"moveFiles": move_files}
         return self.request_put(path, self.ver_uri, data=data, params=params)
 
@@ -196,7 +196,7 @@ class RadarrAPI(BaseArrAPI):
             JSON: List of movies found
         """
         params = {"term": f"imdb:{id_}"}
-        path = "/api/v3/movie/lookup"
+        path = "movie/lookup"
         return self.request_get(path, self.ver_uri, params=params)
 
     # PUT /movie/editor
