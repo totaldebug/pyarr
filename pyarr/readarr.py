@@ -543,15 +543,15 @@ class ReadarrAPI(BaseArrAPI):
     def add_root_folder(
         self,
         name: str,
-        dir: str,
-        isCalibreLib: bool = False,
-        calibreHost: str = "localhost",
-        calibrePort: int = 8080,
-        useSsl: bool = False,
-        outputProfile: str = "default",
-        defaultTags: list = [],
-        defaultQualityProfileId: int = 1,
-        defaultMetadataProfileId: int = 1,
+        directory: str,
+        is_calibre_lib: bool = False,
+        calibre_host: str = "localhost",
+        calibre_port: int = 8080,
+        use_ssl: bool = False,
+        output_profile: str = "default",
+        default_tags: list = [],
+        default_quality_profile_id: int = 1,
+        default_metadata_profile_id: int = 1,
     ):
         """Add a new root directory to the Readarr Server
 
@@ -571,16 +571,16 @@ class ReadarrAPI(BaseArrAPI):
             JSON: Array
         """
         folder_json = {
-            "isCalibreLibrary": isCalibreLib,
-            "host": calibreHost,
-            "port": calibrePort,
-            "useSsl": useSsl,
-            "outputProfile": outputProfile,
-            "defaultTags": defaultTags,
-            "defaultQualityProfileId": defaultQualityProfileId,
-            "defaultMetadataProfileId": defaultMetadataProfileId,
+            "isCalibreLibrary": is_calibre_lib,
+            "host": calibre_host,
+            "port": calibre_port,
+            "useSsl": use_ssl,
+            "outputProfile": output_profile,
+            "defaultTags": default_tags,
+            "defaultQualityProfileId": default_quality_profile_id,
+            "defaultMetadataProfileId": default_metadata_profile_id,
             "name": name,
-            "path": dir,
+            "path": directory,
         }
         path = "rootFolder"
         return self.request_post(path, self.ver_uri, data=folder_json)
