@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
+from os.path import abspath, dirname, join
 import re
 import sys
-from os.path import abspath, dirname, join
 
 path = dirname(dirname(abspath(__file__)))
 sys.path.append(path)
@@ -64,21 +64,6 @@ htmlhelp_basename = slug
 
 
 # -- Options for LaTeX output ------------------------------------------------
-
-latex_elements = {
-    # The paper size ('letterpaper' or 'a4paper').
-    #
-    # 'papersize': 'letterpaper',
-    # The font size ('10pt', '11pt' or '12pt').
-    #
-    # 'pointsize': '10pt',
-    # Additional stuff for the LaTeX preamble.
-    #
-    # 'preamble': '',
-    # Latex figure (float) alignment
-    #
-    # 'figure_align': 'htbp',
-}
 
 latex_documents = [
     ("index", "{0}.tex".format(slug), project, author, "manual"),

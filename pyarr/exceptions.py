@@ -24,3 +24,7 @@ class PyarrBadGateway(PyarrError):
 
 class PyarrMissingProfile(PyarrError):
     """Pyarr missing profile"""
+
+
+class PyarrMethodNotAllowed(PyarrError):
+    """Pyarr method not allowed"""

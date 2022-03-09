@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Union
 
 from .request_handler import RequestHandler
 
@@ -162,6 +163,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_get(path, self.ver_uri, params=params)
 
     # GET /history
+    # TODO: check the ID on this method may need to move to specific APIs
     def get_history(
         self, sort_key="date", page=1, page_size=10, sort_dir="desc", id_=None
     ):
@@ -398,15 +400,18 @@ class BaseArrAPI(RequestHandler):
         path = f"system/task/{id_}" if id_ else "system/task"
         return self.request_get(path, self.ver_uri)
 
-    # GET /remotePathMapping
-    def get_remote_path_mapping(self):
-        """Get a list of remote paths being mapped and used
+    # GET /remotepathmapping
+    def get_remote_path_mapping(self, id_: Union[int, None] = None):
+        """Get remote path mappings for downloads Directory
+
+        Args:
+            id_ (Union[int, None], optional): ID for specific record. Defaults to None.
 
         Returns:
             JSON: Array
         """
-        path = "remotePathMapping"
-        return self.request_get(path, self.ver_uri)
+        _path = "" if isinstance(id_, str) or id_ is None else f"/{id_}"
+        return self.request_get(f"remotepathmapping{_path}", self.ver_uri)
 
     # CONFIG
 
@@ -491,18 +496,18 @@ class BaseArrAPI(RequestHandler):
 
     # NOTIFICATIONS
 
-    # GET /notification/{id}
-    def get_notification(self, id_=None):
-        """Get all notifications or a single notification by its database id
+    # GET /notification
+    def get_notification(self, id_: Union[int, None] = None):
+        """Get a list of all notification services, or single by ID
 
         Args:
-            id_ (int, optional): Notification database id. Defaults to None.
+            id_ (int | None, optional): Notification ID. Defaults to None.
 
         Returns:
             JSON: Array
         """
-        path = "notification" if not id_ else f"notification/{id_}"
-        return self.request_get(path, self.ver_uri)
+        _path = "" if isinstance(id_, str) or id_ is None else f"/{id_}"
+        return self.request_get(f"notification{_path}", self.ver_uri)
 
     # GET /notification/schema
     def get_notification_schema(self):
@@ -630,14 +635,39 @@ class BaseArrAPI(RequestHandler):
         return self.request_get(path, self.ver_uri)
 
     # GET /downloadclient/schema
-    def get_download_client_schema(self):
-        """Get a list of all the supported download clients
+    def get_download_client_schema(self, implementation_: Union[str, None] = None):
+        """Gets the schemas for the different download Clients
+
+        Args:
+            implementation_ (Union[str, None], optional): Client implementation name. Defaults to None.
 
         Returns:
             JSON: Array
         """
-        path = "downloadclient/schema"
-        return self.request_get(path, self.ver_uri)
+        schemas: dict = self.request_get("downloadclient/schema", self.ver_uri)
+        if implementation_:
+            return [
+                schema
+                for schema in schemas
+                if schema["implementation"] == implementation_
+            ]
+
+        return schemas
+
+    # POST /downloadclient/
+    def add_download_client(self, data):
+        """Add a download client based on the schema information supplied
+
+        Note:
+            Recommended to be used in conjunction with get_download_client_schema()
+
+        Args:
+            data (dict): dictionary with download client schema and settings
+
+        Returns:
+            JSON: Array
+        """
+        return self.request_post("downloadclient", self.ver_uri, data=data)
 
     # PUT /downloadclient/{id}
     def upd_download_client(self, id_, data):
@@ -681,6 +711,15 @@ class BaseArrAPI(RequestHandler):
         path = "importlist" if not id_ else f"importlist/{id_}"
         return self.request_get(path, self.ver_uri)
 
+    # POST /importlist/
+    def add_import_list(self):
+        """This is not implemented yet
+
+        Raises:
+            NotImplementedError: Error
+        """
+        raise NotImplementedError()
+
     # PUT /importlist/{id}
     def upd_import_list(self, id_, data):
         """Edit an importlist
@@ -696,7 +735,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_put(path, self.ver_uri, data=data)
 
     # DELETE /importlist/{id}
-    def del_import_list(self, id_):
+    def del_import_list(self, id_: int):
         """Delete an import list
 
         Args:
@@ -705,5 +744,22 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: 200 ok, 401 Unauthorized
         """
-        path = f"importlist/{id_}"
-        return self.request_del(path, self.ver_uri)
+        return self.request_del(f"importlist/{id_}", self.ver_uri)
+
+    # GET /config/downloadclient
+    def get_config_download_client(self):
+        """Gets download client page configuration
+
+        Returns:
+            JSON: Array
+        """
+        return self.request_get("config/downloadclient", self.ver_uri)
+
+    # POST /notifications
+    def add_notifications(self):
+        """This is not implemented yet
+
+        Raises:
+            NotImplementedError: Error
+        """
+        raise NotImplementedError()
