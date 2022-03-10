@@ -402,7 +402,8 @@ class LidarrAPI(BaseArrAPI):
         """
         return self.request_get("album/lookup", self.ver_uri, params={"term": term})
 
-    def command(self):
+    # POST /command
+    def post_command(self):
         """This function is not implemented
 
         Raises:
@@ -410,6 +411,7 @@ class LidarrAPI(BaseArrAPI):
         """
         raise NotImplementedError("This feature is not implemented yet.")
 
+    # GET /wanted
     def get_wanted(
         self,
         id_: Union[int, None] = None,
@@ -444,6 +446,7 @@ class LidarrAPI(BaseArrAPI):
             params=params,
         )
 
+    # GET /parse
     def get_parse(self, title: str):
         """Return the music / artist with a matching filename
 
@@ -535,12 +538,18 @@ class LidarrAPI(BaseArrAPI):
 
     # PUT /trackfile/{id_}
     def upd_track_file(self, data):
-        """This function is not implemented
+        """Update an existing track file
 
-        Raises:
-            NotImplementedError: Error
+        Note:
+            To be used in conjunction with get_track_file()
+
+        Args:
+            data (json): updated data for track files
+
+        Returns:
+            JSON: Array
         """
-        raise NotImplementedError("This feature is not implemented yet.")
+        return self.request_put("trackfile", self.ver_uri, data=data)
 
     # DEL /trackfile/{ids_}
     def delete_track_file(self, ids_: Union[int, List[int]]):
