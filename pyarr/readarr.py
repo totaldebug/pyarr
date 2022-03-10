@@ -276,7 +276,7 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        path = "metadataprofile" if not id_ else f"metadataprofile/{id_}"
+        path = f"metadataprofile/{id_}" if id_ else "metadataprofile"
         return self.request_get(path, self.ver_uri)
 
     # GET /delayprofile/{id}
@@ -289,7 +289,7 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        path = "delayprofile" if not id_ else f"delayprofile/{id_}"
+        path = f"delayprofile/{id_}" if id_ else "delayprofile"
         return self.request_get(path, self.ver_uri)
 
     # GET /releaseprofile/{id}
@@ -302,7 +302,7 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        path = "releaseprofile" if not id_ else f"releaseprofile/{id_}"
+        path = f"releaseprofile/{id_}" if id_ else "releaseprofile"
         return self.request_get(path, self.ver_uri)
 
     ## BOOKS
