@@ -1,4 +1,5 @@
 from .base import BaseArrAPI
+from .const import PAGE, PAGE_SIZE
 
 
 class RadarrAPI(BaseArrAPI):
@@ -346,8 +347,8 @@ class RadarrAPI(BaseArrAPI):
     # GET /queue
     def get_queue(
         self,
-        page=1,
-        page_size=20,
+        page=PAGE,
+        page_size=PAGE_SIZE,
         sort_direction="ascending",
         sort_key="timeLeft",
         include_unknown_movie_items=True,

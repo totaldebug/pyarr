@@ -1,6 +1,6 @@
-from pyarr.exceptions import PyarrMissingProfile
-
 from .base import BaseArrAPI
+from .const import PAGE, PAGE_SIZE
+from .exceptions import PyarrMissingProfile
 
 
 class ReadarrAPI(BaseArrAPI):
@@ -65,7 +65,7 @@ class ReadarrAPI(BaseArrAPI):
                 raise PyarrMissingProfile(
                     "There is no Metadata Profile setup"
                 ) from exception
-        book = self.lookup_book(book_id_type + ":" + str(db_id))[0]
+        book = self.lookup_book(f"{book_id_type}:{str(db_id)}")[0]
 
         book["author"]["metadataProfileId"] = metadata_profile_id
         book["author"]["qualityProfileId"] = quality_profile_id
@@ -172,7 +172,9 @@ class ReadarrAPI(BaseArrAPI):
     ## WANTED (MISSING)
 
     # GET /wanted/missing
-    def get_missing(self, sort_key="releaseDate", page=1, page_size=10, sort_dir="asc"):
+    def get_missing(
+        self, sort_key="releaseDate", page=PAGE, page_size=PAGE_SIZE, sort_dir="asc"
+    ):
         """Gets missing episode (episodes without files)
 
         Args:
@@ -197,8 +199,8 @@ class ReadarrAPI(BaseArrAPI):
     def get_cutoff(
         self,
         sort_key="releaseDate",
-        page=1,
-        page_size=10,
+        page=PAGE,
+        page_size=PAGE_SIZE,
         sort_dir="descending",
         monitored=True,
     ):
@@ -229,8 +231,8 @@ class ReadarrAPI(BaseArrAPI):
     # GET /queue
     def get_queue(
         self,
-        page=1,
-        page_size=10,
+        page=PAGE,
+        page_size=PAGE_SIZE,
         sort_dir="ascending",
         sort_key="timeleft",
         unknown_authors=False,
@@ -332,9 +334,8 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        params = {"term": term}
         path = "book/lookup"
-        return self.request_get(path, self.ver_uri, params=params)
+        return self.request_get(path, self.ver_uri, params={"term": term})
 
     # POST /book
     def add_book(

@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import Union
 
+from .const import PAGE, PAGE_SIZE
 from .request_handler import RequestHandler
 
 
@@ -131,8 +132,8 @@ class BaseArrAPI(RequestHandler):
     # GET /log
     def get_log(
         self,
-        page=1,
-        page_size=10,
+        page=PAGE,
+        page_size=PAGE_SIZE,
         sort_key="time",
         sort_dir="desc",
         filter_key=None,
@@ -151,7 +152,6 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "log"
         params = {
             "page": page,
             "pageSize": page_size,
@@ -160,12 +160,12 @@ class BaseArrAPI(RequestHandler):
             "filterKey": filter_key,
             "filterValue": filter_value,
         }
-        return self.request_get(path, self.ver_uri, params=params)
+        return self.request_get("log", self.ver_uri, params=params)
 
     # GET /history
     # TODO: check the ID on this method may need to move to specific APIs
     def get_history(
-        self, sort_key="date", page=1, page_size=10, sort_dir="desc", id_=None
+        self, sort_key="date", page=PAGE, page_size=PAGE_SIZE, sort_dir="desc", id_=None
     ):
         """Gets history (grabs/failures/completed)
 
@@ -195,8 +195,8 @@ class BaseArrAPI(RequestHandler):
     # GET /blocklist
     def get_blocklist(
         self,
-        page=1,
-        page_size=20,
+        page=PAGE,
+        page_size=PAGE_SIZE,
         sort_direction="descending",
         sort_key="date",
     ):
@@ -204,7 +204,7 @@ class BaseArrAPI(RequestHandler):
 
         Args:
             page (int, optional): Page to be returned. Defaults to 1.
-            page_size (int, optional): Number of results per page. Defaults to 20.
+            page_size (int, optional): Number of results per page. Defaults to 10.
             sort_direction (str, optional): Direction to sort items. Defaults to "descending".
             sort_key (str, optional): Field to sort by. Defaults to "date".
 
@@ -259,7 +259,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "qualityprofile" if not id_ else f"qualityprofile/{id_}"
+        path = f"qualityprofile/{id_}" if id_ else "qualityprofile"
         return self.request_get(path, self.ver_uri)
 
     # PUT /qualityprofile/{id}
@@ -303,7 +303,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "qualitydefinition" if not id_ else f"qualitydefinition/{id_}"
+        path = f"qualitydefinition/{id_}" if id_ else "qualitydefinition"
         return self.request_get(path, self.ver_uri)
 
     # PUT /qualitydefinition/{id}
@@ -335,7 +335,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "indexer" if not id_ else f"indexer/{id_}"
+        path = f"indexer/{id_}" if id_ else "indexer"
         return self.request_get(path, self.ver_uri)
 
     # PUT /indexer/{id}
@@ -558,7 +558,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "tag" if not id_ else f"tag/{id_}"
+        path = f"tag/{id_}" if id_ else "tag"
         return self.request_get(path, self.ver_uri)
 
     # GET /tag/detail/{id}
@@ -571,7 +571,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "tag/detail" if not id_ else f"tag/detail/{id_}"
+        path = f"tag/detail/{id_}" if id_ else "tag/detail"
         return self.request_get(path, self.ver_uri)
 
     # POST /tag
@@ -631,7 +631,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "downloadclient" if not id_ else f"downloadclient/{id_}"
+        path = f"downloadclient/{id_}" if id_ else "downloadclient"
         return self.request_get(path, self.ver_uri)
 
     # GET /downloadclient/schema
@@ -708,7 +708,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "importlist" if not id_ else f"importlist/{id_}"
+        path = f"importlist/{id_}" if id_ else "importlist"
         return self.request_get(path, self.ver_uri)
 
     # POST /importlist/

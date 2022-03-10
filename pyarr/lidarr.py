@@ -1,9 +1,9 @@
 from enum import Enum
 from typing import Dict, List, Union
 
-from pyarr.exceptions import PyarrError, PyarrMissingProfile
-
 from .base import BaseArrAPI
+from .const import PAGE, PAGE_SIZE
+from .exceptions import PyarrError, PyarrMissingProfile
 
 
 class LidarrSortKeys(str, Enum):
@@ -414,8 +414,8 @@ class LidarrAPI(BaseArrAPI):
         self,
         id_: Union[int, None] = None,
         sort_key: LidarrSortKeys = LidarrSortKeys.TITLE,
-        page: int = 1,
-        page_size: int = 10,
+        page: int = PAGE,
+        page_size: int = PAGE_SIZE,
         sort_dir: str = "asc",
         missing: bool = True,
     ):
@@ -619,8 +619,8 @@ class LidarrAPI(BaseArrAPI):
     # GET /queue
     def get_queue(
         self,
-        page: int = 1,
-        page_size: int = 10,
+        page: int = PAGE,
+        page_size: int = PAGE_SIZE,
         sort_key: LidarrSortKeys = LidarrSortKeys.TIMELEFT,
         unknown_artists: bool = False,
         include_artist: bool = False,
