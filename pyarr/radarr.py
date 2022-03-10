@@ -452,7 +452,7 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        path = "indexer" if not id_ else f"indexer/{id_}"
+        path = f"indexer/{id_}" if id_ else "indexer"
         return self.request_get(path, self.ver_uri)
 
     # PUT /indexer/{id}

@@ -568,7 +568,7 @@ class LidarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        _path = "" if not id_ else f"/{id_}"
+        _path = f"/{id_}" if id_ else ""
         return self.request_get(f"metadataprofile{_path}", self.ver_uri)
 
     # POST /metadataprofile
