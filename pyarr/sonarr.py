@@ -1,4 +1,5 @@
 from .base import BaseArrAPI
+from .const import PAGE, PAGE_SIZE
 
 
 class SonarrAPI(BaseArrAPI):
@@ -215,7 +216,9 @@ class SonarrAPI(BaseArrAPI):
         path = f"episodefile/{id_}"
         return self.request_put(path, self.ver_uri, data=data)
 
-    def get_wanted(self, sort_key="airDateUtc", page=1, page_size=10, sort_dir="asc"):
+    def get_wanted(
+        self, sort_key="airDateUtc", page=PAGE, page_size=PAGE_SIZE, sort_dir="asc"
+    ):
         """Gets missing episode (episodes without files)
 
         Args:

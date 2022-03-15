@@ -1,5 +1,7 @@
 from datetime import datetime
+from typing import Union
 
+from .const import PAGE, PAGE_SIZE
 from .request_handler import RequestHandler
 
 
@@ -130,8 +132,8 @@ class BaseArrAPI(RequestHandler):
     # GET /log
     def get_log(
         self,
-        page=1,
-        page_size=10,
+        page=PAGE,
+        page_size=PAGE_SIZE,
         sort_key="time",
         sort_dir="desc",
         filter_key=None,
@@ -150,7 +152,6 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "log"
         params = {
             "page": page,
             "pageSize": page_size,
@@ -159,11 +160,12 @@ class BaseArrAPI(RequestHandler):
             "filterKey": filter_key,
             "filterValue": filter_value,
         }
-        return self.request_get(path, self.ver_uri, params=params)
+        return self.request_get("log", self.ver_uri, params=params)
 
     # GET /history
+    # TODO: check the ID on this method may need to move to specific APIs
     def get_history(
-        self, sort_key="date", page=1, page_size=10, sort_dir="desc", id_=None
+        self, sort_key="date", page=PAGE, page_size=PAGE_SIZE, sort_dir="desc", id_=None
     ):
         """Gets history (grabs/failures/completed)
 
@@ -193,8 +195,8 @@ class BaseArrAPI(RequestHandler):
     # GET /blocklist
     def get_blocklist(
         self,
-        page=1,
-        page_size=20,
+        page=PAGE,
+        page_size=PAGE_SIZE,
         sort_direction="descending",
         sort_key="date",
     ):
@@ -202,7 +204,7 @@ class BaseArrAPI(RequestHandler):
 
         Args:
             page (int, optional): Page to be returned. Defaults to 1.
-            page_size (int, optional): Number of results per page. Defaults to 20.
+            page_size (int, optional): Number of results per page. Defaults to 10.
             sort_direction (str, optional): Direction to sort items. Defaults to "descending".
             sort_key (str, optional): Field to sort by. Defaults to "date".
 
@@ -257,7 +259,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "qualityprofile" if not id_ else f"qualityprofile/{id_}"
+        path = f"qualityprofile/{id_}" if id_ else "qualityprofile"
         return self.request_get(path, self.ver_uri)
 
     # PUT /qualityprofile/{id}
@@ -301,7 +303,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "qualitydefinition" if not id_ else f"qualitydefinition/{id_}"
+        path = f"qualitydefinition/{id_}" if id_ else "qualitydefinition"
         return self.request_get(path, self.ver_uri)
 
     # PUT /qualitydefinition/{id}
@@ -333,7 +335,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "indexer" if not id_ else f"indexer/{id_}"
+        path = f"indexer/{id_}" if id_ else "indexer"
         return self.request_get(path, self.ver_uri)
 
     # PUT /indexer/{id}
@@ -398,15 +400,18 @@ class BaseArrAPI(RequestHandler):
         path = f"system/task/{id_}" if id_ else "system/task"
         return self.request_get(path, self.ver_uri)
 
-    # GET /remotePathMapping
-    def get_remote_path_mapping(self):
-        """Get a list of remote paths being mapped and used
+    # GET /remotepathmapping
+    def get_remote_path_mapping(self, id_: Union[int, None] = None):
+        """Get remote path mappings for downloads Directory
+
+        Args:
+            id_ (Union[int, None], optional): ID for specific record. Defaults to None.
 
         Returns:
             JSON: Array
         """
-        path = "remotePathMapping"
-        return self.request_get(path, self.ver_uri)
+        _path = "" if isinstance(id_, str) or id_ is None else f"/{id_}"
+        return self.request_get(f"remotepathmapping{_path}", self.ver_uri)
 
     # CONFIG
 
@@ -491,18 +496,18 @@ class BaseArrAPI(RequestHandler):
 
     # NOTIFICATIONS
 
-    # GET /notification/{id}
-    def get_notification(self, id_=None):
-        """Get all notifications or a single notification by its database id
+    # GET /notification
+    def get_notification(self, id_: Union[int, None] = None):
+        """Get a list of all notification services, or single by ID
 
         Args:
-            id_ (int, optional): Notification database id. Defaults to None.
+            id_ (int | None, optional): Notification ID. Defaults to None.
 
         Returns:
             JSON: Array
         """
-        path = "notification" if not id_ else f"notification/{id_}"
-        return self.request_get(path, self.ver_uri)
+        _path = "" if isinstance(id_, str) or id_ is None else f"/{id_}"
+        return self.request_get(f"notification{_path}", self.ver_uri)
 
     # GET /notification/schema
     def get_notification_schema(self):
@@ -553,7 +558,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "tag" if not id_ else f"tag/{id_}"
+        path = f"tag/{id_}" if id_ else "tag"
         return self.request_get(path, self.ver_uri)
 
     # GET /tag/detail/{id}
@@ -566,7 +571,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "tag/detail" if not id_ else f"tag/detail/{id_}"
+        path = f"tag/detail/{id_}" if id_ else "tag/detail"
         return self.request_get(path, self.ver_uri)
 
     # POST /tag
@@ -626,18 +631,43 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "downloadclient" if not id_ else f"downloadclient/{id_}"
+        path = f"downloadclient/{id_}" if id_ else "downloadclient"
         return self.request_get(path, self.ver_uri)
 
     # GET /downloadclient/schema
-    def get_download_client_schema(self):
-        """Get a list of all the supported download clients
+    def get_download_client_schema(self, implementation_: Union[str, None] = None):
+        """Gets the schemas for the different download Clients
+
+        Args:
+            implementation_ (Union[str, None], optional): Client implementation name. Defaults to None.
 
         Returns:
             JSON: Array
         """
-        path = "downloadclient/schema"
-        return self.request_get(path, self.ver_uri)
+        schemas: dict = self.request_get("downloadclient/schema", self.ver_uri)
+        if implementation_:
+            return [
+                schema
+                for schema in schemas
+                if schema["implementation"] == implementation_
+            ]
+
+        return schemas
+
+    # POST /downloadclient/
+    def add_download_client(self, data):
+        """Add a download client based on the schema information supplied
+
+        Note:
+            Recommended to be used in conjunction with get_download_client_schema()
+
+        Args:
+            data (dict): dictionary with download client schema and settings
+
+        Returns:
+            JSON: Array
+        """
+        return self.request_post("downloadclient", self.ver_uri, data=data)
 
     # PUT /downloadclient/{id}
     def upd_download_client(self, id_, data):
@@ -678,8 +708,17 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: Array
         """
-        path = "importlist" if not id_ else f"importlist/{id_}"
+        path = f"importlist/{id_}" if id_ else "importlist"
         return self.request_get(path, self.ver_uri)
+
+    # POST /importlist/
+    def add_import_list(self):
+        """This is not implemented yet
+
+        Raises:
+            NotImplementedError: Error
+        """
+        raise NotImplementedError()
 
     # PUT /importlist/{id}
     def upd_import_list(self, id_, data):
@@ -696,7 +735,7 @@ class BaseArrAPI(RequestHandler):
         return self.request_put(path, self.ver_uri, data=data)
 
     # DELETE /importlist/{id}
-    def del_import_list(self, id_):
+    def del_import_list(self, id_: int):
         """Delete an import list
 
         Args:
@@ -705,5 +744,22 @@ class BaseArrAPI(RequestHandler):
         Returns:
             JSON: 200 ok, 401 Unauthorized
         """
-        path = f"importlist/{id_}"
-        return self.request_del(path, self.ver_uri)
+        return self.request_del(f"importlist/{id_}", self.ver_uri)
+
+    # GET /config/downloadclient
+    def get_config_download_client(self):
+        """Gets download client page configuration
+
+        Returns:
+            JSON: Array
+        """
+        return self.request_get("config/downloadclient", self.ver_uri)
+
+    # POST /notifications
+    def add_notifications(self):
+        """This is not implemented yet
+
+        Raises:
+            NotImplementedError: Error
+        """
+        raise NotImplementedError()

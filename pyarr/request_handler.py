@@ -4,6 +4,7 @@ from .exceptions import (
     PyarrAccessRestricted,
     PyarrBadGateway,
     PyarrConnectionError,
+    PyarrMethodNotAllowed,
     PyarrResourceNotFound,
     PyarrUnauthorizedError,
 )
@@ -76,6 +77,7 @@ class RequestHandler:
             raise PyarrConnectionError(
                 "Timeout occurred while connecting to API"
             ) from exception
+
         return _process_response(res)
 
     def request_post(self, path, ver_uri="", params=None, data=None):
@@ -184,6 +186,9 @@ def _process_response(res):
         raise PyarrResourceNotFound("Resource not found")
     if res.status_code == 502:
         raise PyarrBadGateway("Bad Gateway. Check your server is accessible")
+    if res.status_code == 405:
+        raise PyarrMethodNotAllowed(f"The endpoint {res.url} is not allowed")
+
     content_type = res.headers.get("Content-Type", "")
     if "application/json" in content_type:
         return res.json()
