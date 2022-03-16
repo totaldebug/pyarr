@@ -13,3 +13,4 @@
    sonarr
    radarr
    readarr
+   lidarr
