@@ -453,7 +453,7 @@ class BaseArrAPI(RequestHandler):
         """Edit General/Host settings.
 
         Args:
-            data (dict): data to bu updated
+            data (dict): data to be updated
 
         Returns:
             JSON: 200 Ok, 401 Unauthorized
@@ -486,7 +486,7 @@ class BaseArrAPI(RequestHandler):
 
     # GET /config/mediamanagement
     def get_media_management(self):
-        """Get media managemnet configuration
+        """Get media management configuration
 
         Returns:
             JSON: Array
