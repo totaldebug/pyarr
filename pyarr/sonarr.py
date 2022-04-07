@@ -13,7 +13,7 @@ class SonarrAPI(BaseArrAPI):
             api_key (str): API key for Readarr
         """
 
-        ver_uri = "/v3"
+        ver_uri = ""
         super().__init__(host_url, api_key, ver_uri)
 
     def _series_json(
