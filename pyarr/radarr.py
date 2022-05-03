@@ -10,11 +10,11 @@ class RadarrAPI(BaseArrAPI):
     """
 
     def __init__(self, host_url: str, api_key: str):
-        """Initialise Readarr API
+        """Initialize the Radarr API.
 
         Args:
-            host_url (str): URL for Readarr
-            api_key (str): API key for Readarr
+            host_url (str): URL for Radarr
+            api_key (str): API key for Radarr
         """
 
         ver_uri = "/v3"
