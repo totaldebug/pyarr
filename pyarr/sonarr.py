@@ -5,15 +5,15 @@ from .const import PAGE, PAGE_SIZE
 class SonarrAPI(BaseArrAPI):
     """API wrapper for Sonarr endpoints."""
 
-    def __init__(self, host_url: str, api_key: str):
-        """Initialise Readarr API
+    def __init__(self, host_url: str, api_key: str, ver_uri: str = ""):
+        """Initialize the Sonarr API.
 
         Args:
-            host_url (str): URL for Readarr
-            api_key (str): API key for Readarr
+            host_url (str): URL for Sonarr
+            api_key (str): API key for Sonarr
+            ver_uri (str): Version URI for Radarr. Defaults to None (empty string).
         """
 
-        ver_uri = ""
         super().__init__(host_url, api_key, ver_uri)
 
     def _series_json(
