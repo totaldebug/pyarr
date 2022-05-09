@@ -239,6 +239,52 @@ class SonarrAPI(BaseArrAPI):
         }
         return self.request_get(path, self.ver_uri, params=params)
 
+    # PROFILES
+
+    # GET /profile/{id}
+    def get_quality_profile(self, id_=None):
+        """Gets all quality profiles or specific one with id_
+
+        Args:
+            id_ (int): quality profile id from database
+
+        Returns:
+            JSON: Array
+        """
+        path = f"profile/{id_}" if id_ else "profile"
+        return self.request_get(path, self.ver_uri)
+
+    # PUT /profile/{id}
+    def upd_quality_profile(self, id_, data):
+        """Update the quality profile data.
+
+        Note:
+            To be used in conjunction with get_quality_profile()
+
+        Args:
+            id_ (int): Profile ID to Update
+            data (dict): All parameters to update
+
+        Returns:
+            JSON: Array
+        """
+        path = f"profile/{id_}"
+        return self.request_put(path, self.ver_uri, data=data)
+
+    # DELETE /profile
+    def del_quality_profile(self, id_):
+        """Removes a specific quality profile from the blocklist
+
+        Args:
+            id_ (int): quality profile id from database
+
+        Returns:
+            JSON: Array
+        """
+        params = {"id": id_}
+        path = "profile"
+        return self.request_del(path, self.ver_uri, params=params)
+
     ## QUEUE
 
     # GET /queue
