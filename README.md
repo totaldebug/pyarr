@@ -1,6 +1,6 @@
 # Sonarr and Radarr API Python Wrapper
 
-Python Wrapper for the [Sonarr](https://github.com/Sonarr/Sonarr) and [Radarr](https://github.com/Radarr/Radarr) API.
+Python Wrapper for the [Sonarr](https://github.com/Sonarr/Sonarr), [Radarr](https://github.com/Radarr/Radarr), [Lidarr](https://github.com/Lidarr/Lidarr) & [Readarr](https://github.com/Readarr/Readarr) API.
 
 See the full [documentation](https://docs.totaldebug.uk/pyarr/) for supported functions.
 
