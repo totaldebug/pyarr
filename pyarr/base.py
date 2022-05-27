@@ -749,7 +749,6 @@ class BaseArrAPI(RequestHandler):
         return response
 
     # POST /downloadclient/
-    # TODO: Add type hint for response
     def add_download_client(self, data: dict[str, Any]) -> dict[str, Any]:
         """Add a download client based on the schema information supplied
 

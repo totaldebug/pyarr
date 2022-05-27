@@ -5,7 +5,7 @@ from requests import Response
 from .base import BaseArrAPI
 from .const import PAGE, PAGE_SIZE
 from .exceptions import PyarrRecordNotFound
-from .models.common import PyarrSortDir
+from .models.common import PyarrSortDirection
 from .models.radarr import RadarrCommands, RadarrSortKeys
 
 
@@ -386,7 +386,7 @@ class RadarrAPI(BaseArrAPI):
         self,
         page: int = PAGE,
         page_size: int = PAGE_SIZE,
-        sort_direction: PyarrSortDir = PyarrSortDir.ASC,
+        sort_direction: PyarrSortDirection = PyarrSortDirection.ASC,
         sort_key: RadarrSortKeys = RadarrSortKeys.TIMELEFT,
         include_unknown_movie_items: bool = True,
     ) -> dict[str, Any]:
@@ -395,7 +395,7 @@ class RadarrAPI(BaseArrAPI):
         Args:
             page (int, optional): Page to be returned. Defaults to PAGE.
             page_size (int, optional): Number of results per page. Defaults to PAGE_SIZE.
-            sort_direction (PyarrSortDir, optional): Direction to sort. Defaults to PyarrSortDir.ASC.
+            sort_direction (PyarrSortDirection, optional): Direction to sort. Defaults to PyarrSortDirection.ASC.
             sort_key (RadarrSortKeys, optional): Field to sort. Defaults to RadarrSortKeys.TIME.
             include_unknown_movie_items (bool, optional): Include unknown movie items. Defaults to True.
 
@@ -536,7 +536,7 @@ class RadarrAPI(BaseArrAPI):
 
     # POST /command
     # TODO: type for kwargs and response
-    def post_command(self, name: RadarrCommands, **kwargs):
+    def post_command(self, name: RadarrCommands, **kwargs) -> Any:
         """Performs any of the predetermined Radarr command routines.
 
         Args:

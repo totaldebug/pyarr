@@ -5,6 +5,8 @@ from requests import Response
 
 from .base import BaseArrAPI
 from .const import PAGE, PAGE_SIZE
+from .models.common import PyarrSortDirection
+from .models.sonarr import SonarrCommands, SonarrSortKeys
 
 
 class SonarrAPI(BaseArrAPI):
@@ -86,15 +88,15 @@ class SonarrAPI(BaseArrAPI):
 
     # POST /command
     # TODO: confirm response, kwargs
-    def post_command(self, name: str, **kwargs):
+    def post_command(self, name: SonarrCommands, **kwargs) -> Any:
         """Performs any of the predetermined Sonarr command routines
 
         Note:
-            For command names and additional kwargs:
+            For additional kwargs:
             See https://github.com/Sonarr/Sonarr/wiki/Command
 
         Args:
-            name (str): command name that should be execured
+            name (SonarrCommands): command name that should be execured
             **kwargs: additional parameters for specific commands
 
 
@@ -232,21 +234,20 @@ class SonarrAPI(BaseArrAPI):
         return self._put(path, self.ver_uri, data=data)
 
     # GET /wanted/missing
-    # TODO: enums, types for consts
     def get_wanted(
         self,
-        sort_key: str = "airDateUtc",
+        sort_key: SonarrSortKeys = SonarrSortKeys.AIR_DATE_UTC,
         page: int = PAGE,
         page_size: int = PAGE_SIZE,
-        sort_dir: str = "asc",
+        sort_dir: PyarrSortDirection = PyarrSortDirection.ASC,
     ) -> dict[str, Any]:
         """Gets missing episode (episodes without files)
 
         Args:
-            sort_key (str, optional): series.titke or airDateUtc. Defaults to "airDateUtc".
+            sort_key (SonarrSortKeys, optional): series.titke or airDateUtc. Defaults to SonarrSortKeys.AIR_DATE_UTC.
             page (int, optional): Page number to return. Defaults to 1.
             page_size (int, optional): Number of items per page. Defaults to 10.
-            sort_dir (str, optional): Direction to sort the items. Defaults to "asc".
+            sort_dir (PyarrSortDirection, optional): Direction to sort the items. Defaults to PyarrSortDirection.ASC.
 
         Returns:
             JSON: Array
@@ -386,7 +387,7 @@ class SonarrAPI(BaseArrAPI):
 
     # POST /release
     # TODO: find response
-    def download_release(self, guid: str, indexer_id: int):
+    def download_release(self, guid: str, indexer_id: int) -> Any:
         """Adds a previously searched release to the download client, if the release is
          still in Sonarr's search cache (30 minute cache). If the release is not found
          in the cache Sonarr will return a 404.
@@ -406,7 +407,7 @@ class SonarrAPI(BaseArrAPI):
     # TODO: find response
     def push_release(
         self, title: str, download_url: str, protocol: str, publish_date: datetime
-    ):
+    ) -> Any:
         """If the title is wanted, Sonarr will grab it.
 
         Args:

@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class PyarrSortDir(str, Enum):
+class PyarrSortDirection(str, Enum):
     """Pyarr sort direction"""
 
     ASC = "ascending"

@@ -5,7 +5,7 @@ from requests import Response
 from .base import BaseArrAPI
 from .const import PAGE, PAGE_SIZE
 from .exceptions import PyarrMissingProfile
-from .models.common import PyarrSortDir
+from .models.common import PyarrSortDirection
 from .models.readarr import (
     ReadarrAuthorMonitor,
     ReadarrBookTypes,
@@ -187,7 +187,7 @@ class ReadarrAPI(BaseArrAPI):
         sort_key: ReadarrSortKeys = ReadarrSortKeys.BOOK_ID,
         page: int = PAGE,
         page_size: int = PAGE_SIZE,
-        sort_dir: PyarrSortDir = PyarrSortDir.ASC,
+        sort_dir: PyarrSortDirection = PyarrSortDirection.ASC,
     ) -> dict[str, Any]:
         """Gets missing episode (episodes without files)
 
@@ -195,7 +195,7 @@ class ReadarrAPI(BaseArrAPI):
             sort_key (ReadarrSortKeys, optional): id, title, ratings, bookid, or quality. (Others do not apply). Defaults to ReadarrSortKeys.BOOK_ID.
             page (int, optional): Page number to return. Defaults to PAGE.
             page_size (int, optional): Number of items per page. Defaults to PAGE_SIZE.
-            sort_dir (PyarrSortDirTypes, optional): Direction to sort the items. Defaults to PyarrSortDirTypes.ASC.
+            sort_dir (PyarrSortDirection, optional): Direction to sort the items. Defaults to PyarrSortDirection.ASC.
 
         Returns:
             dict[str, Any]: List of dictionaries with items
@@ -217,7 +217,7 @@ class ReadarrAPI(BaseArrAPI):
         sort_key: ReadarrSortKeys = ReadarrSortKeys.BOOK_ID,
         page: int = PAGE,
         page_size: int = PAGE_SIZE,
-        sort_dir: PyarrSortDir = PyarrSortDir.DESC,
+        sort_dir: PyarrSortDirection = PyarrSortDirection.DESC,
         monitored: bool = True,
     ) -> dict[str, Any]:
         """Get wanted items where the cutoff is unmet
@@ -226,7 +226,7 @@ class ReadarrAPI(BaseArrAPI):
             sort_key (ReadarrSortKeys, optional): id, title, ratings, bookid, or quality". (others do not apply). Defaults to ReadarrSortKeys.BOOK_ID.
             page (int, optional): Page number to return. Defaults to PAGE.
             page_size (int, optional):  Number of items per page. Defaults to PAGE_SIZE.
-            sort_dir (PyarrSortDir, optional): Direction to sort. Defaults to "descending".
+            sort_dir (PyarrSortDirection, optional): Direction to sort. Defaults to PyarrSortDirection.DESC.
             monitored (bool, optional): Search for monitored only. Defaults to True.
 
         Returns:
@@ -251,7 +251,7 @@ class ReadarrAPI(BaseArrAPI):
         self,
         page: int = PAGE,
         page_size: int = PAGE_SIZE,
-        sort_dir: PyarrSortDir = PyarrSortDir.ASC,
+        sort_dir: PyarrSortDirection = PyarrSortDirection.ASC,
         sort_key: ReadarrSortKeys = ReadarrSortKeys.TIMELEFT,
         unknown_authors: bool = False,
         include_author: bool = False,
@@ -262,7 +262,7 @@ class ReadarrAPI(BaseArrAPI):
         Args:
             page (int, optional): Page number. Defaults to PAGE.
             page_size (int, optional): Number of items per page. Defaults to PAGE_SIZE.
-            sort_dir (str, optional): Direction to sort. Defaults to "ascending".
+            sort_dir (PyarrSortDirection, optional): Direction to sort. Defaults to PyarrSortDirection.ASC.
             sort_key (ReadarrSortKeys, optional): Field to sort by. Defaults to ReadarrSortKeys.TIMELEFT.
             unknown_authors (bool, optional): Include items with an unknown author. Defaults to False.
             include_author (bool, optional): Include the author. Defaults to False.

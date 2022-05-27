@@ -5,7 +5,7 @@ from requests import Response
 from .base import BaseArrAPI
 from .const import PAGE, PAGE_SIZE
 from .exceptions import PyarrError, PyarrMissingProfile
-from .models.common import PyarrSortDir
+from .models.common import PyarrSortDirection
 from .models.lidarr import LidarrArtistMonitor, LidarrSortKeys
 
 
@@ -394,7 +394,7 @@ class LidarrAPI(BaseArrAPI):
         sort_key: LidarrSortKeys = LidarrSortKeys.TITLE,
         page: int = PAGE,
         page_size: int = PAGE_SIZE,
-        sort_dir: PyarrSortDir = PyarrSortDir.ASC,
+        sort_dir: PyarrSortDirection = PyarrSortDirection.ASC,
         missing: bool = True,
     ) -> dict[str, Any]:
         """Get wanted albums that are missing or not meeting cutoff
@@ -404,7 +404,7 @@ class LidarrAPI(BaseArrAPI):
             sort_key (LidarrSortKeys, optional): id, title, ratings, or quality". (Others do not apply). Defaults to LidarrSortKeys.TITLE.
             page (int, optional): Page number to return. Defaults to 1.
             page_size (int, optional): Number of items per page. Defaults to 10.
-            sort_dir (PyarrSortDir, optional): Sort ascending or descending. Defaults to PyarrSortDir.ASC.
+            sort_dir (PyarrSortDirection, optional): Sort ascending or descending. Defaults to PyarrSortDirection.ASC.
             missing (bool, optional): Search for missing (True) or cutoff not met (False). Defaults to True.
 
         Returns:
@@ -425,7 +425,7 @@ class LidarrAPI(BaseArrAPI):
         return response
 
     # GET /parse
-    # TODO: Confirm typings
+    # TODO: Confirm response type
     def get_parse(self, title: str) -> list[dict[str, Any]]:
         """Return the music / artist with a matching filename
 
