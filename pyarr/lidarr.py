@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import Any, Union
 
 from requests import Response
@@ -6,51 +5,8 @@ from requests import Response
 from .base import BaseArrAPI
 from .const import PAGE, PAGE_SIZE
 from .exceptions import PyarrError, PyarrMissingProfile
-
-
-class LidarrSortKeys(str, Enum):
-    """Lidarr sort keys."""
-
-    ALBUM_TITLE = "albums.title"
-    ARTIST_ID = "artistId"
-    DATE = "date"
-    DOWNLOAD_CLIENT = "downloadClient"
-    ID = "id"
-    INDEXER = "indexer"
-    MESSAGE = "message"
-    PATH = "path"
-    PROGRESS = "progress"
-    PROTOCOL = "protocol"
-    QUALITY = "quality"
-    RATINGS = "ratings"
-    RELEASE_DATE = "albums.releaseDate"
-    SOURCE_TITLE = "sourcetitle"
-    STATUS = "status"
-    TIMELEFT = "timeleft"
-    TITLE = "title"
-
-
-class LidarrArtistMonitor(str, Enum):
-    """Lidarr Monitor types for an artist music"""
-
-    ALL_ALBUMS = "all"
-    FUTURE_ALBUMS = "future"
-    MISSING_ALBUMS = "missing"
-    EXISTING_ALBUMS = "existing"
-    FIRST_ALBUM = "first"
-    LATEST_ALBUM = "latest"
-
-
-class LidarrCommands(str, Enum):
-    """Lidarr commands."""
-
-    ALBUM_SEARCH = "AlbumSearch"
-    APP_UPDATE_CHECK = "ApplicationUpdateCheck"
-    ARTIST_SEARCH = "ArtistSearch"
-    DOWNLOADED_ALBUMS_SCAN = "DownloadedAlbumsScan"
-    MISSING_ALBUM_SEARCH = "MissingAlbumSearch"
-    REFRESH_ALBUM = "RefreshAlbum"
-    REFRESH_ARTIST = "RefreshArtist"
+from .models.common import PyarrSortDir
+from .models.lidarr import LidarrArtistMonitor, LidarrSortKeys
 
 
 class LidarrAPI(BaseArrAPI):
@@ -438,7 +394,7 @@ class LidarrAPI(BaseArrAPI):
         sort_key: LidarrSortKeys = LidarrSortKeys.TITLE,
         page: int = PAGE,
         page_size: int = PAGE_SIZE,
-        sort_dir: str = "asc",
+        sort_dir: PyarrSortDir = PyarrSortDir.ASC,
         missing: bool = True,
     ) -> dict[str, Any]:
         """Get wanted albums that are missing or not meeting cutoff
@@ -448,7 +404,7 @@ class LidarrAPI(BaseArrAPI):
             sort_key (LidarrSortKeys, optional): id, title, ratings, or quality". (Others do not apply). Defaults to LidarrSortKeys.TITLE.
             page (int, optional): Page number to return. Defaults to 1.
             page_size (int, optional): Number of items per page. Defaults to 10.
-            sort_dir (str, optional): Sort ascending or descending. Defaults to "asc".
+            sort_dir (PyarrSortDir, optional): Sort ascending or descending. Defaults to PyarrSortDir.ASC.
             missing (bool, optional): Search for missing (True) or cutoff not met (False). Defaults to True.
 
         Returns:
