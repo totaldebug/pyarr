@@ -1,6 +1,17 @@
+from typing import Any, Union
+
+from requests import Response
+
 from .base import BaseArrAPI
 from .const import PAGE, PAGE_SIZE
 from .exceptions import PyarrMissingProfile
+from .models.common import PyarrSortDir
+from .models.readarr import (
+    ReadarrAuthorMonitor,
+    ReadarrBookTypes,
+    ReadarrCommands,
+    ReadarrSortKeys,
+)
 
 
 class ReadarrAPI(BaseArrAPI):
@@ -19,38 +30,35 @@ class ReadarrAPI(BaseArrAPI):
 
     def _book_json(
         self,
-        db_id,
-        book_id_type,
-        root_dir,
-        quality_profile_id=None,
-        metadata_profile_id=None,
-        monitored=True,
-        search_for_new_book=False,
-        author_monitor="all",
-        author_search_for_missing_books=False,
-    ):
+        db_id: str,
+        book_id_type: ReadarrBookTypes,
+        root_dir: str,
+        quality_profile_id: Union[int, None] = None,
+        metadata_profile_id: Union[int, None] = None,
+        monitored: bool = True,
+        search_for_new_book: bool = False,
+        author_monitor: ReadarrAuthorMonitor = ReadarrAuthorMonitor.ALL,
+        author_search_for_missing_books: bool = False,
+    ) -> dict[str, Any]:
         """Constructs the JSON required to add a new book to Readarr
 
         Args:
-            db_id (int): goodreads, isbn, asin ID
-            book_id_type (str): goodreads / isbn / asin
-            root_dir (str): root directory for books
-            quality_profile_id (int, optional): quality profile id. Defaults to 1.
-            metadata_profile_id (int, optional): metadata profile id. Defaults to 0.
-            monitored (bool, optional): should the book be monitored. Defaults to True.
-            search_for_new_book (bool, optional): shour a search for the new book happen. Defaults to False.
-            author_monitor (str, optional): monitor the author. Defaults to "all".
-            author_search_for_missing_books (bool, optional): search for other missing books by the author. Defaults to False.
+            db_id (str): Book ID from Goodreads, ISBN or ASIN
+            book_id_type (ReadarrBookTypes): Type of book ID
+            root_dir (str): Root directory for books
+            quality_profile_id (Union[int, None], optional): Quality profile ID. Defaults to None.
+            metadata_profile_id (Union[int, None], optional): Metadata profile ID. Defaults to None.
+            monitored (bool, optional): Monitor for book. Defaults to True.
+            search_for_new_book (bool, optional): Search for new book on adding. Defaults to False.
+            author_monitor (ReadarrAuthorMonitor, optional): Monitor the author. Defaults to ReadarrAuthorMonitor.ALL.
+            author_search_for_missing_books (bool, optional): Search for other missing books by author. Defaults to False.
 
         Raises:
-            ValueError: error raised if book_id_type is incorrect
+            PyarrMissingProfile: Error if Metadata or Quality profile ID are incorrect
 
         Returns:
-            JSON: Array
+            dict[str, Any]: Dictionary of generated record
         """
-        book_id_types = ["goodreads", "isbn", "asin"]
-        if book_id_type not in book_id_types:
-            raise ValueError(f"Invalid book id type. Expected one of: {book_id_types}")
         if quality_profile_id is None:
             try:
                 quality_profile_id = self.get_quality_profile()[0]["id"]
@@ -65,7 +73,7 @@ class ReadarrAPI(BaseArrAPI):
                 raise PyarrMissingProfile(
                     "There is no Metadata Profile setup"
                 ) from exception
-        book = self.lookup_book(f"{book_id_type}:{str(db_id)}")[0]
+        book = self.lookup_book(f"{book_id_type}:{db_id}")[0]
 
         book["author"]["metadataProfileId"] = metadata_profile_id
         book["author"]["qualityProfileId"] = quality_profile_id
@@ -82,27 +90,30 @@ class ReadarrAPI(BaseArrAPI):
 
     def _author_json(
         self,
-        term,
-        root_dir,
-        quality_profile_id=None,
-        metadata_profile_id=None,
-        monitored=True,
-        author_monitor="none",
-        search_for_missing_books=False,
-    ):
+        term: str,
+        root_dir: str,
+        quality_profile_id: Union[int, None] = None,
+        metadata_profile_id: Union[int, None] = None,
+        monitored: bool = True,
+        author_monitor: ReadarrAuthorMonitor = ReadarrAuthorMonitor.NONE,
+        search_for_missing_books: bool = False,
+    ) -> dict[str, Any]:
         """Constructs the JSON required to add a new book to Readarr
 
         Args:
-            search_term (str)
-            root_dir (str): root directory for books
-            quality_profile_id (int, optional): quality profile id. Defaults to 1.
-            metadata_profile_id (int, optional): metadata profile id. Defaults to 0.
-            monitored (bool, optional): should the book be monitored. Defaults to True.
-            author_monitor (str, optional): monitor the author. Defaults to "none".
-            search_for_missing_books (bool, optional): search for other missing books by the author. Defaults to False.
+            term (str): Search term
+            root_dir (str): Root directory for books
+            quality_profile_id (Union[int, None], optional): Quality profile ID. Defaults to None.
+            metadata_profile_id (Union[int, None], optional): Metadata profile ID. Defaults to None.
+            monitored (bool, optional): Monitor this author. Defaults to True.
+            author_monitor (ReadarrAuthorMonitor, optional): Monitor the author. Defaults to ReadarrAuthorMonitor.NONE.
+            search_for_missing_books (bool, optional): Search for missing books by the author. Defaults to False.
+
+        Raises:
+            PyarrMissingProfile: Error if Metadata or Quality profile ID are incorrect
 
         Returns:
-            JSON: Array
+            dict[str, Any]: Dictionary of author data
         """
         if quality_profile_id is None:
             try:
@@ -135,56 +146,59 @@ class ReadarrAPI(BaseArrAPI):
     # COMMAND
 
     # GET /command/:id
-    def get_command(self, id_=None):
+    def get_command(self, id_: Union[int, None] = None) -> list[dict[str, Any]]:
         """Queries the status of a previously started command, or all currently started commands.
 
         Args:
-            id_ (int, optional): Database id of the command. Defaults to None.
+            id_ (Union[int, None], optional): Database ID of the command. Defaults to None.
 
         Returns:
-            JSON: Array
+            list[dict[str, Any]]: List of dictionaries with items
         """
         path = f"command/{id_}" if id_ else "command"
-        return self.request_get(path, self.ver_uri)
+        response = self._get(path, self.ver_uri)
+        assert isinstance(response, list)
+        return response
 
     # POST /command
-    def post_command(self, name, **kwargs):
-        """Performs any of the predetermined Sonarr command routines
-
-        Note:
-            For command names and additional kwargs:
-                TODO
+    # TODO: confirm return type & Kwargs
+    def post_command(self, name: ReadarrCommands, **kwargs) -> Any:
+        """Performs any of the predetermined Readarr command routines
 
         Args:
-            name (str): command name that should be execured
-            **kwargs: additional parameters for specific commands
+            name (ReadarrCommands): Command name that should be executed
+            **kwargs: Additional parameters for specific commands
 
         Returns:
-            JSON: Array
+            _type_: _description_
         """
         path = "command"
         data = {
             "name": name,
             **kwargs,
         }
-        return self.request_post(path, self.ver_uri, data=data)
+        return self._post(path, self.ver_uri, data=data)
 
     ## WANTED (MISSING)
 
     # GET /wanted/missing
     def get_missing(
-        self, sort_key="releaseDate", page=PAGE, page_size=PAGE_SIZE, sort_dir="asc"
-    ):
+        self,
+        sort_key: ReadarrSortKeys = ReadarrSortKeys.BOOK_ID,
+        page: int = PAGE,
+        page_size: int = PAGE_SIZE,
+        sort_dir: PyarrSortDir = PyarrSortDir.ASC,
+    ) -> dict[str, Any]:
         """Gets missing episode (episodes without files)
 
         Args:
-            sort_key (str, optional): Books.Id or releaseDate. Defaults to "releaseDate".
-            page (int, optional): Page number to return. Defaults to 1.
-            page_size (int, optional): Number of items per page. Defaults to 10.
-            sort_dir (str, optional): Direction to sort the items. Defaults to "asc".
+            sort_key (ReadarrSortKeys, optional): id, title, ratings, bookid, or quality. (Others do not apply). Defaults to ReadarrSortKeys.BOOK_ID.
+            page (int, optional): Page number to return. Defaults to PAGE.
+            page_size (int, optional): Number of items per page. Defaults to PAGE_SIZE.
+            sort_dir (PyarrSortDirTypes, optional): Direction to sort the items. Defaults to PyarrSortDirTypes.ASC.
 
         Returns:
-            JSON: Array
+            dict[str, Any]: List of dictionaries with items
         """
         path = "wanted/missing"
         params = {
@@ -193,28 +207,30 @@ class ReadarrAPI(BaseArrAPI):
             "pageSize": page_size,
             "sortDir": sort_dir,
         }
-        return self.request_get(path, self.ver_uri, params=params)
+        response = self._get(path, self.ver_uri, params=params)
+        assert isinstance(response, dict)
+        return response
 
     # GET /wanted/cutoff
     def get_cutoff(
         self,
-        sort_key="releaseDate",
-        page=PAGE,
-        page_size=PAGE_SIZE,
-        sort_dir="descending",
-        monitored=True,
-    ):
+        sort_key: ReadarrSortKeys = ReadarrSortKeys.BOOK_ID,
+        page: int = PAGE,
+        page_size: int = PAGE_SIZE,
+        sort_dir: PyarrSortDir = PyarrSortDir.DESC,
+        monitored: bool = True,
+    ) -> dict[str, Any]:
         """Get wanted items where the cutoff is unmet
 
         Args:
-            sort_key (str, optional): field to sort by. Defaults to "releaseDate".
-            page (int, optional): page number. Defaults to 1.
-            page_size (int, optional): number of results per page_size. Defaults to 10.
-            sort_dir (str, optional): direction to sort. Defaults to "descending".
-            monitored (bool, optional): search for monitored only. Defaults to True.
+            sort_key (ReadarrSortKeys, optional): id, title, ratings, bookid, or quality". (others do not apply). Defaults to ReadarrSortKeys.BOOK_ID.
+            page (int, optional): Page number to return. Defaults to PAGE.
+            page_size (int, optional):  Number of items per page. Defaults to PAGE_SIZE.
+            sort_dir (PyarrSortDir, optional): Direction to sort. Defaults to "descending".
+            monitored (bool, optional): Search for monitored only. Defaults to True.
 
         Returns:
-            JSON: Array
+            dict[str, Any]: List of dictionaries with items
         """
         path = "wanted/cutoff"
         params = {
@@ -224,34 +240,36 @@ class ReadarrAPI(BaseArrAPI):
             "sortDir": sort_dir,
             "monitored": monitored,
         }
-        return self.request_get(path, self.ver_uri, params=params)
+        response = self._get(path, self.ver_uri, params=params)
+        assert isinstance(response, dict)
+        return response
 
     ## QUEUE
 
     # GET /queue
     def get_queue(
         self,
-        page=PAGE,
-        page_size=PAGE_SIZE,
-        sort_dir="ascending",
-        sort_key="timeleft",
-        unknown_authors=False,
-        include_author=False,
-        include_book=False,
-    ):
+        page: int = PAGE,
+        page_size: int = PAGE_SIZE,
+        sort_dir: PyarrSortDir = PyarrSortDir.ASC,
+        sort_key: ReadarrSortKeys = ReadarrSortKeys.TIMELEFT,
+        unknown_authors: bool = False,
+        include_author: bool = False,
+        include_book: bool = False,
+    ) -> dict[str, Any]:
         """Get current download information
 
         Args:
-            page (int, optional): page number. Defaults to 1.
-            page_size (int, optional): number of results per page_size. Defaults to 10.
-            sort_dir (str, optional): direction to sort. Defaults to "ascending".
-            sort_key (str, optional): field to sort by. Defaults to "timeleft".
+            page (int, optional): Page number. Defaults to PAGE.
+            page_size (int, optional): Number of items per page. Defaults to PAGE_SIZE.
+            sort_dir (str, optional): Direction to sort. Defaults to "ascending".
+            sort_key (ReadarrSortKeys, optional): Field to sort by. Defaults to ReadarrSortKeys.TIMELEFT.
             unknown_authors (bool, optional): Include items with an unknown author. Defaults to False.
             include_author (bool, optional): Include the author. Defaults to False.
             include_book (bool, optional): Include the book. Defaults to False.
 
         Returns:
-            JSON: Array
+            dict[str, Any]: List of dictionaries with items
         """
 
         path = "queue"
@@ -264,92 +282,107 @@ class ReadarrAPI(BaseArrAPI):
             "includeAuthor": include_author,
             "includeBook": include_book,
         }
-        return self.request_get(path, self.ver_uri, params=params)
+        response = self._get(path, self.ver_uri, params=params)
+        assert isinstance(response, dict)
+        return response
 
     # GET /metadataprofile/{id}
-    def get_metadata_profile(self, id_=None):
-        """Gets all metadata profiles or specific one with id_
+    def get_metadata_profile(
+        self, id_: Union[int, None] = None
+    ) -> list[dict[str, Any]]:
+        """Gets all metadata profiles or specific one with ID
 
         Args:
-            id_ (int): metadata profile id from database
+            id_ (Union[int, None], optional): Metadata profile id from database. Defaults to None.
 
         Returns:
-            JSON: Array
+            list[dict[str, Any]]: List of dictionaries with items
         """
         path = f"metadataprofile/{id_}" if id_ else "metadataprofile"
-        return self.request_get(path, self.ver_uri)
+        response = self._get(path, self.ver_uri)
+        assert isinstance(response, list)
+        return response
 
     # GET /delayprofile/{id}
-    def get_delay_profile(self, id_):
-        """Gets all delay profiles or specific one with id_
+    def get_delay_profile(self, id_: Union[int, None] = None) -> list[dict[str, Any]]:
+        """Gets all delay profiles or specific one with ID
 
         Args:
-            id_ (int): metadata profile id from database
+            id_ (Union[int, None], optional): Metadata profile ID from database. Defaults to None.
 
         Returns:
-            JSON: Array
+            list[dict[str, Any]]: List of dictionaries with items
         """
         path = f"delayprofile/{id_}" if id_ else "delayprofile"
-        return self.request_get(path, self.ver_uri)
+        response = self._get(path, self.ver_uri)
+        assert isinstance(response, list)
+        return response
 
     # GET /releaseprofile/{id}
-    def get_release_profile(self, id_=None):
-        """Gets all release profiles or specific one with id_
+    def get_release_profile(self, id_: Union[int, None] = None) -> list[dict[str, Any]]:
+        """Gets all release profiles or specific one with ID
 
         Args:
-            id_ (int): release profile id from database
+            id_ (Union[int, None], optional): Release profile ID from database. Defaults to None.
 
         Returns:
-            JSON: Array
+            list[dict[str, Any]]: List of dictionaries with items
         """
         path = f"releaseprofile/{id_}" if id_ else "releaseprofile"
-        return self.request_get(path, self.ver_uri)
+        response = self._get(path, self.ver_uri)
+        assert isinstance(response, list)
+        return response
 
     ## BOOKS
 
     # GET /book and /book/{id}
-    def get_book(self, id_=None):
+    def get_book(self, id_: Union[int, None] = None) -> list[dict[str, Any]]:
         """Returns all books in your collection or the book with the matching
         book ID if one is found.
 
         Args:
-            id_ (int, optional): Database id for book. Defaults to None.
+            id_ (Union[int, None], optional): Database id for book. Defaults to None.
 
         Returns:
-            JSON: Array
+            list[dict[str, Any]]: List of dictionaries with items
         """
         path = f"book/{id_}" if id_ else "book"
-        return self.request_get(path, self.ver_uri)
+        response = self._get(path, self.ver_uri)
+        assert isinstance(response, list)
+        return response
 
     # GET /book/lookup
-    def lookup_book(self, term):
+    def lookup_book(self, term: str) -> list[dict[str, Any]]:
         """Searches for new books using a term, goodreads ID, isbn or asin.
 
         Args:
-            term (str): search term
-            goodreads:656
-            isbn:067003469X
-            asin:B00JCDK5ME
+            term (str): Search term::
+
+                goodreads:656
+                isbn:067003469X
+                asin:B00JCDK5ME
 
         Returns:
-            JSON: Array
+            list[dict[str, Any]]: List of dictionaries with items
         """
         path = "book/lookup"
-        return self.request_get(path, self.ver_uri, params={"term": term})
+        response = self._get(path, self.ver_uri, params={"term": term})
+        assert isinstance(response, list)
+        return response
 
     # POST /book
     def add_book(
         self,
-        db_id,
-        book_id_type,
-        root_dir,
-        quality_profile_id=None,
-        metadata_profile_id=None,
-        monitored=True,
-        search_for_new_book=False,
-        author_monitor="all",
-        author_search_for_missing_books=False,
-    ):
+        db_id: str,
+        book_id_type: ReadarrBookTypes,
+        root_dir: str,
+        quality_profile_id: Union[int, None] = None,
+        metadata_profile_id: Union[int, None] = None,
+        monitored: bool = True,
+        search_for_new_book: bool = False,
+        author_monitor: ReadarrAuthorMonitor = ReadarrAuthorMonitor.ALL,
+        author_search_for_missing_books: bool = False,
+    ) -> dict[str, Any]:
         """Adds a new book and  its associated author (if not already added)
 
         Args:
@@ -363,15 +396,9 @@ class ReadarrAPI(BaseArrAPI):
             author_monitor (str, optional): monitor the author for new books. Defaults to "all".
             author_search_for_missing_books (bool, optional): search for missing books from this author. Defaults to False.
 
-        Raises:
-            ValueError: error raised if book_id_type is incorrect
-
         Returns:
-            JSON: Array
+            dict[str, Any]: Dictionary of added record
         """
-        book_id_types = ["goodreads", "isbn", "asin"]
-        if book_id_type not in book_id_types:
-            raise ValueError(f"Invalid book id type. Expected one of: {book_id_types}")
 
         book_json = self._book_json(
             db_id,
@@ -385,10 +412,10 @@ class ReadarrAPI(BaseArrAPI):
             author_search_for_missing_books,
         )
         path = "book"
-        return self.request_post(path, self.ver_uri, data=book_json)
+        return self._post(path, self.ver_uri, data=book_json)
 
     # PUT /book/{id}
-    def upd_book(self, id_, data):
+    def upd_book(self, id_: int, data: dict[str, Any]) -> dict[str, Any]:
         """Update the given book, currently only monitored is changed, all other modifications are ignored.
 
         Note:
@@ -396,73 +423,79 @@ class ReadarrAPI(BaseArrAPI):
 
         Args:
             id_ (int): Book database ID to update
-            data (dict): All parameters to update book
+            data (dict[str, Any]): All parameters to update book
 
         Returns:
-            JSON: Array
+            dict[str, Any]: Dictionary with updated record
         """
         path = f"book/{id_}"
-        return self.request_put(path, self.ver_uri, data=data)
+        return self._put(path, self.ver_uri, data=data)
 
     # DELETE /book/{id}
-    def del_book(self, id_, delete_files=False, import_list_exclusion=True):
-        """Delete the book with the given id
+    def del_book(
+        self, id_: int, delete_files: bool = False, import_list_exclusion: bool = True
+    ) -> Response:
+        """Delete the book with the given ID
 
         Args:
-            id_ (int): Database id for book
+            id_ (int): Database ID for book
             delete_files (bool, optional): If true book folder and files will be deleted. Defaults to False.
             import_list_exclusion (bool, optional): Add an exclusion so book doesn't get re-added. Defaults to True.
 
         Returns:
-            JSON: {}
+            Response: HTTP Response
         """
         params = {
             "deleteFiles": delete_files,
             "addImportListExclusion": import_list_exclusion,
         }
         path = f"book/{id_}"
-        return self.request_del(path, self.ver_uri, params=params)
+        return self._delete(path, self.ver_uri, params=params)
 
     # AUTHOR
 
     # GET /author and /author/{id}
-    def get_author(self, id_=None):
+    def get_author(self, id_: Union[int, None] = None) -> list[dict[str, Any]]:
         """Returns all authors in your collection or the author with the matching ID if one is found.
 
         Args:
-            id_ (int, optional): Database id for author. Defaults to None.
+            id_ (Union[int, None], optional): Database ID for author. Defaults to None.
 
         Returns:
-            JSON: Array
+            list[dict[str, Any]]: List of dictionaries with items
         """
         path = f"author/{id_}" if id_ else "author"
-        return self.request_get(path, self.ver_uri)
+        response = self._get(path, self.ver_uri)
+        assert isinstance(response, list)
+        return response
 
     # GET /author/lookup/
-    def lookup_author(self, term):
+    def lookup_author(self, term: str) -> list[dict[str, Any]]:
         """Searches for new authors using a term
 
         Args:
             term (str): Author name or book
 
         Returns:
-            JSON: Array
+            list[dict[str, Any]]: List of dictionaries with items
         """
         params = {"term": term}
         path = "author/lookup"
-        return self.request_get(path, self.ver_uri, params=params)
+        response = self._get(path, self.ver_uri, params=params)
+        assert isinstance(response, list)
+        return response
 
     # POST /author/
     def add_author(
         self,
-        search_term,
-        root_dir,
-        quality_profile_id=None,
-        metadata_profile_id=None,
-        monitored=True,
-        author_monitor="none",
-        author_search_for_missing_books=False,
-    ):
+        search_term: str,
+        root_dir: str,
+        quality_profile_id: Union[int, None] = None,
+        metadata_profile_id: Union[int, None] = None,
+        monitored: bool = True,
+        author_monitor: ReadarrAuthorMonitor = ReadarrAuthorMonitor.NONE,
+        author_search_for_missing_books: bool = False,
+    ) -> dict[str, Any]:
         """Adds an authorbased on search term, must be author name or book by goodreads / isbn / asin ID
 
         Args:
@@ -470,12 +503,12 @@ class ReadarrAPI(BaseArrAPI):
             root_dir (str): Directory for book to be stored
             quality_profile_id (int, optional): Quality profile id. Defaults to 1.
             metadata_profile_id (int, optional): Metadata profile id. Defaults to 0.
-            monitored (bool, optional): should the author be monitored. Defaults to True.
-            author_monitor (str, optional): What level  should the author be monitored. Defaults to "none".
-            author_search_for_missing_books (bool, optional): search for any missing books by the author. Defaults to False.
+            monitored (bool, optional): Should the author be monitored. Defaults to True.
+            author_monitor (ReadarrAuthorMonitor, optional): What level  should the author be monitored. Defaults to "ReadarrAuthorMonitor.NONE".
+            author_search_for_missing_books (bool, optional): Search for any missing books by the author. Defaults to False.
 
         Returns:
-            JSON: Array
+            dict[str, Any]: Dictonary of added record
         """
         author_json = self._author_json(
             search_term,
@@ -488,10 +521,10 @@ class ReadarrAPI(BaseArrAPI):
         )
 
         path = "author"
-        return self.request_post(path, self.ver_uri, data=author_json)
+        return self._post(path, self.ver_uri, data=author_json)
 
     # PUT /author/{id}
-    def upd_author(self, id_, data):
+    def upd_author(self, id_: int, data: dict[str, Any]) -> dict[str, Any]:
         """Update the given author, currently only monitored is changed, all other modifications are ignored.
 
         Note:
@@ -499,44 +532,48 @@ class ReadarrAPI(BaseArrAPI):
 
         Args:
             id_ (int): Author database ID to update
-            data (dict): All parameters to update author
+            data (dict[str, Any]): All parameters to update author
 
         Returns:
-            JSON: Array
+            dict[str, Any]: Dictionary with updated record
         """
         path = f"author/{id_}"
-        return self.request_put(path, self.ver_uri, data=data)
+        return self._put(path, self.ver_uri, data=data)
 
     # DELETE /author/{id}
-    def del_author(self, id_, delete_files=False, import_list_exclusion=True):
-        """Delete the author with the given id
+    def del_author(
+        self, id_: int, delete_files: bool = False, import_list_exclusion: bool = True
+    ) -> Response:
+        """Delete the author with the given ID
 
         Args:
-            id_ (int): Database id for author
+            id_ (int): Database ID for author
             delete_files (bool, optional): If true author folder and files will be deleted. Defaults to False.
             import_list_exclusion (bool, optional): Add an exclusion so author doesn't get re-added. Defaults to True.
 
         Returns:
-            JSON: Array
+            Response: HTTP Response
         """
         params = {
             "deleteFiles": delete_files,
             "addImportListExclusion": import_list_exclusion,
         }
         path = f"author/{id_}"
-        return self.request_del(path, self.ver_uri, params=params)
+        return self._delete(path, self.ver_uri, params=params)
 
     ## LOG
 
     # GET /log/file
-    def get_log_file(self):
+    def get_log_file(self) -> list[dict[str, Any]]:
         """Get log file
 
         Returns:
-            JSON: Array
+            list[dict[str, Any]]: List of dictionaries with items
         """
         path = "log/file"
-        return self.request_get(path, self.ver_uri)
+        response = self._get(path, self.ver_uri)
+        assert isinstance(response, list)
+        return response
 
     # CONFIG
 
@@ -550,26 +587,26 @@ class ReadarrAPI(BaseArrAPI):
         calibre_port: int = 8080,
         use_ssl: bool = False,
         output_profile: str = "default",
-        default_tags: list = None,
+        default_tags: Union[list, None] = None,
         default_quality_profile_id: int = 1,
         default_metadata_profile_id: int = 1,
-    ):
+    ) -> dict[str, Any]:
         """Add a new root directory to the Readarr Server
 
         Args:
             name (str): Friendly Name for folder
-            dir (str): Directory to use e.g. /books/
-            isCalibreLib (bool, optional): Use Calibre Content Server. Defaults to False.
-            calibreHost (str, optional): Calibre Content Server address. Defaults to "localhost".
-            calibrePort (int, optional): Calibre Content Server port. Defaults to "8080".
-            useSsl (bool, optional): Calibre Content Server SSL. Defaults to False.
-            outputProfile (str, optional): Books to monitor. Defaults to "default".
-            defaultTags (list, optional): List of tags to apply. Defaults to [].
-            defaultQualityProfileId (int, optional): Quality Profile to use. Defaults to 1.
-            defaultMetadataProfileId (int, optional): Metadata Profile to use. Defaults to 1.
+            directory (str): Directory to use e.g. /books/
+            is_calibre_lib (bool, optional): Use Calibre Content Server. Defaults to False.
+            calibre_host (str, optional): Calibre Content Server address. Defaults to "localhost".
+            calibre_port (int, optional): Calibre Content Server port. Defaults to 8080.
+            use_ssl (bool, optional): Calibre Content Server SSL. Defaults to False.
+            output_profile (str, optional): Books to monitor. Defaults to "default".
+            default_tags (Union[list, None], optional): List of tags to apply. Defaults to None.
+            default_quality_profile_id (int, optional): Quality Profile. Defaults to 1.
+            default_metadata_profile_id (int, optional): Metadata Profile. Defaults to 1.
 
         Returns:
-            JSON: Array
+            dict[str, Any]: Dictionary of added record
         """
         folder_json = {
             "isCalibreLibrary": is_calibre_lib,
@@ -584,30 +621,32 @@ class ReadarrAPI(BaseArrAPI):
             "path": directory,
         }
         path = "rootFolder"
-        return self.request_post(path, self.ver_uri, data=folder_json)
+        return self._post(path, self.ver_uri, data=folder_json)
 
     # GET /config/metadataProvider
-    def get_metadata_provider(self):
+    def get_metadata_provider(self) -> dict[str, Any]:
         """Get metadata provider from settings/metadata
 
         Returns:
-            JSON: Array
+            dict[str, Any]: Dictionary of record
         """
         path = "config/metadataProvider"
-        return self.request_get(path, self.ver_uri)
+        response = self._get(path, self.ver_uri)
+        assert isinstance(response, dict)
+        return response
 
     # PUT /config/metadataProvider
-    def upd_metadata_provider(self, data):
+    def upd_metadata_provider(self, data: dict[str, Any]) -> dict[str, Any]:
         """Update the metadata provider data.
 
         Note:
             To be used in conjunction with get_metadata_provider()
 
         Args:
-            data (dict): All parameters to update
+            data (dict[str, Any]): All parameters to update
 
         Returns:
-            JSON: Array
+            dict[str, Any]: Dictionary of updated record
         """
         path = "config/metadataProvider"
-        return self.request_put(path, self.ver_uri, data=data)
+        return self._put(path, self.ver_uri, data=data)

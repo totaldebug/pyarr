@@ -1,4 +1,8 @@
+from typing import Any, Union
+
 import requests
+from requests import Response
+from requests.auth import HTTPBasicAuth
 
 from .exceptions import (
     PyarrAccessRestricted,
@@ -26,10 +30,10 @@ class RequestHandler:
         """
         self.host_url = host_url
         self.api_key = api_key
-        self.session = requests.Session()
-        self.auth = None
+        self.session: requests.Session = requests.Session()
+        self.auth: Union[HTTPBasicAuth, None] = None
 
-    def _request_url(self, path, ver_uri):
+    def _request_url(self, path: str, ver_uri: str) -> str:
         """Builds the URL for the request to use.
 
         Args:
@@ -41,9 +45,9 @@ class RequestHandler:
         """
         return f"{self.host_url}/api{ver_uri}/{path}"
 
-    def basic_auth(self, username, password):
+    def basic_auth(self, username: str, password: str) -> Union[HTTPBasicAuth, None]:
         """If you have basic authentication setup you will need to pass your
-        username and passwords to the requests.auth.HTTPBASICAUTH() method.
+        username and passwords to the HTTPBASICAUTH() method.
 
         Args:
             username (str): Username for basic auth.
@@ -52,10 +56,14 @@ class RequestHandler:
         Returns:
             Object: HTTP Auth object
         """
-        self.auth = requests.auth.HTTPBasicAuth(username, password)
-        return self.auth
+        return HTTPBasicAuth(username, password)
 
-    def request_get(self, path, ver_uri="", params=None):
+    def _get(
+        self,
+        path: str,
+        ver_uri: str = "",
+        params: Union[dict[int, list[int]], dict, None] = None,
+    ) -> Union[list[dict], dict[str, Any]]:
         """Wrapper on any get requests
 
         Args:
@@ -75,12 +83,22 @@ class RequestHandler:
             )
         except requests.Timeout as exception:
             raise PyarrConnectionError(
-                "Timeout occurred while connecting to API"
+                "Timeout occurred while connecting to API."
             ) from exception
+        response = _process_response(res)
+        if isinstance(response, dict):
+            assert isinstance(response, dict)
+        else:
+            assert isinstance(response, list)
+        return response
 
-        return _process_response(res)
-
-    def request_post(self, path, ver_uri="", params=None, data=None):
+    def _post(
+        self,
+        path: str,
+        ver_uri: str = "",
+        params: Union[dict, None] = None,
+        data: Union[list[dict], dict, None] = None,
+    ) -> dict[str, Any]:
         """Wrapper on any post requests
 
         Args:
@@ -102,11 +120,19 @@ class RequestHandler:
             )
         except requests.Timeout as exception:
             raise PyarrConnectionError(
-                "Timeout occurred while connecting to API"
+                "Timeout occurred while connecting to API."
             ) from exception
-        return _process_response(res)
+        response = _process_response(res)
+        assert isinstance(response, dict)
+        return response
 
-    def request_put(self, path, ver_uri="", params=None, data=None):
+    def _put(
+        self,
+        path: str,
+        ver_uri: str = "",
+        params: Union[dict, None] = None,
+        data: Union[dict, None] = None,
+    ) -> dict[str, Any]:
         """Wrapper on any put requests
 
         Args:
@@ -128,11 +154,19 @@ class RequestHandler:
             )
         except requests.Timeout as exception:
             raise PyarrConnectionError(
-                "Timeout occurred while connecting to API"
+                "Timeout occurred while connecting to API."
             ) from exception
-        return _process_response(res)
+        response = _process_response(res)
+        assert isinstance(response, dict)
+        return response
 
-    def request_del(self, path, ver_uri="", params=None, data=None):
+    def _delete(
+        self,
+        path: str,
+        ver_uri: str = "",
+        params: Union[dict, None] = None,
+        data: Union[dict, None] = None,
+    ) -> Response:
         """Wrapper on any delete requests
 
         Args:
@@ -156,10 +190,14 @@ class RequestHandler:
             raise PyarrConnectionError(
                 "Timeout occurred while connecting to API"
             ) from exception
-        return _process_response(res)
+        response = _process_response(res)
+        assert isinstance(response, Response)
+        return response
 
 
-def _process_response(res):
+def _process_response(
+    res: Response,
+) -> Union[list[dict[str, Any]], Response, dict[str, Any], Any]:
     """Check the response status code and error or return results
 
     Args:
@@ -192,4 +230,6 @@ def _process_response(res):
     content_type = res.headers.get("Content-Type", "")
     if "application/json" in content_type:
         return res.json()
+    else:
+        assert isinstance(res, Response)
     return res
