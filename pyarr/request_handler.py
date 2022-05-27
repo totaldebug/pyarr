@@ -122,9 +122,7 @@ class RequestHandler:
             raise PyarrConnectionError(
                 "Timeout occurred while connecting to API."
             ) from exception
-        response = _process_response(res)
-        assert isinstance(response, dict)
-        return response
+        return self._return(res, dict)
 
     def _put(
         self,
@@ -156,9 +154,7 @@ class RequestHandler:
             raise PyarrConnectionError(
                 "Timeout occurred while connecting to API."
             ) from exception
-        response = _process_response(res)
-        assert isinstance(response, dict)
-        return response
+        return self._return(res, dict)
 
     def _delete(
         self,
@@ -190,8 +186,20 @@ class RequestHandler:
             raise PyarrConnectionError(
                 "Timeout occurred while connecting to API"
             ) from exception
+        return self._return(res, Response)
+
+    def _return(self, res: Response, arg1: type) -> Any:
+        """Takes the response and asserts its type
+
+        Args:
+            res (Response): Response from request
+            arg1 (type): The type that should be asserted
+
+        Returns:
+            Any: Many possible return types
+        """
         response = _process_response(res)
-        assert isinstance(response, Response)
+        assert isinstance(response, arg1)
         return response
 
 
