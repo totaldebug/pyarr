@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Union
+from typing import Any, Optional
 
 from requests import Response
 
@@ -74,11 +74,11 @@ class SonarrAPI(BaseArrAPI):
     ## COMMAND
 
     # GET /command
-    def get_command(self, id_: Union[int, None] = None) -> list[dict[str, Any]]:
+    def get_command(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
         """Queries the status of a previously started command, or all currently started commands.
 
         Args:
-            id_ (Union[int, None], optional): Database ID of the command. Defaults to None.
+            id_ (Optional[int], optional): Database ID of the command. Defaults to None.
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
@@ -249,7 +249,7 @@ class SonarrAPI(BaseArrAPI):
     # PROFILES
 
     # GET /profile/{id}
-    def get_quality_profile(self, id_: Union[int, None] = None) -> list[dict[str, Any]]:
+    def get_quality_profile(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
         """Gets all quality profiles or specific one with id_
 
         Args:
@@ -392,12 +392,12 @@ class SonarrAPI(BaseArrAPI):
 
     ## SERIES
     # GET /series and /series/{id}
-    def get_series(self, id_: Union[int, None] = None) -> list[dict[str, Any]]:
+    def get_series(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
         """Returns all series in your collection or the series with the matching
         series ID if one is found.
 
         Args:
-            id_ (Union[int, None], optional): Database id for series. Defaults to None.
+            id_ (Optional[int], optional): Database id for series. Defaults to None.
 
         Returns:
             list[dict]: List of dictionaries with items

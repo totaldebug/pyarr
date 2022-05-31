@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Union
+from typing import Any, Optional
 
 from requests import Response
 
@@ -27,7 +27,7 @@ class BaseArrAPI(RequestHandler):
         path: str,
         ver_uri: str,
         typearg: type,
-        params: Union[dict[str, Any], None] = None,
+        params: Optional[dict[str, Any]] = None,
     ) -> Any:
         """Helper function to add assert to enforce typing responses
 
@@ -52,16 +52,16 @@ class BaseArrAPI(RequestHandler):
     # GET /calendar/
     def get_calendar(
         self,
-        start_date: Union[str, None] = None,
-        end_date: Union[str, None] = None,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
         unmonitored: bool = True,
     ) -> list[dict[str, Any]]:
         """Gets upcoming releases by monitored, if start/end are not
         supplied, today and tomorrow will be returned
 
         Args:
-            start_date (Union[str, None], optional): ISO8601 start datetime. Defaults to None.
-            end_date (Union[str, None], optional): ISO8601 end datetime. Defaults to None.
+            start_date (Optional[str], optional): ISO8601 start datetime. Defaults to None.
+            end_date (Optional[str], optional): ISO8601 end datetime. Defaults to None.
             unmonitored (bool, optional): Include unmonitored movies. Defaults to True.
 
         Returns:
@@ -168,7 +168,7 @@ class BaseArrAPI(RequestHandler):
         page_size: int = PAGE_SIZE,
         sort_key: str = "time",
         sort_dir: str = "desc",
-        filter_key: Union[str, None] = None,
+        filter_key: Optional[str] = None,
         filter_value: str = "All",
     ) -> list[dict[str, Any]]:
         """Gets logs from instance
@@ -178,7 +178,7 @@ class BaseArrAPI(RequestHandler):
             page_size (int, optional): Number of items per page. Defaults to PAGE_SIZE.
             sort_key (str, optional): Field to sort by. Defaults to "time".
             sort_dir (str, optional): Direction to sort. Defaults to "desc".
-            filter_key (Union[str, None], optional): Key to filter by. Defaults to None.
+            filter_key (Optional[str], optional): Key to filter by. Defaults to None.
             filter_value (str, optional): Value of the filter. Defaults to "All".
 
         Returns:
@@ -202,7 +202,7 @@ class BaseArrAPI(RequestHandler):
         page: int = PAGE,
         page_size: int = PAGE_SIZE,
         sort_dir: str = "desc",
-        id_: Union[int, None] = None,
+        id_: Optional[int] = None,
     ) -> list[dict[str, Any]]:
         """Gets history (grabs/failures/completed)
 
@@ -211,7 +211,7 @@ class BaseArrAPI(RequestHandler):
             page (int, optional): Page number to return. Defaults to PAGE.
             page_size (int, optional): Number of items per page. Defaults to PAGE_SIZE.
             sort_dir (str, optional): Direction to sort the items. Defaults to "desc".
-            id_ (Union[int, None], optional): Filter to a specific episode ID. Defaults to None.
+            id_ (Optional[int], optional): Filter to a specific episode ID. Defaults to None.
 
         Returns:
            list[dict[str, Any]]: List of dictionaries with items
@@ -283,11 +283,11 @@ class BaseArrAPI(RequestHandler):
     # PROFILES
 
     # GET /qualityprofile/{id}
-    def get_quality_profile(self, id_: Union[int, None] = None) -> list[dict[str, Any]]:
+    def get_quality_profile(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
         """Gets all quality profiles or specific one with id_
 
         Args:
-            id_ (Union[int, None], optional): Quality profile id from database. Defaults to None.
+            id_ (Optional[int], optional): Quality profile id from database. Defaults to None.
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
@@ -325,13 +325,11 @@ class BaseArrAPI(RequestHandler):
         return self._delete("qualityprofile", self.ver_uri, params=params)
 
     # GET /qualitydefinition/{id}
-    def get_quality_definition(
-        self, id_: Union[int, None] = None
-    ) -> list[dict[str, Any]]:
+    def get_quality_definition(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
         """Gets all quality definitions or specific one by ID
 
         Args:
-            id_ (Union[int, None], optional): Import list database id. Defaults to None.
+            id_ (Optional[int], optional): Import list database id. Defaults to None.
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
@@ -358,11 +356,11 @@ class BaseArrAPI(RequestHandler):
     # INDEXER
 
     # GET /indexer/{id}
-    def get_indexer(self, id_: Union[int, None] = None) -> list[dict[str, Any]]:
+    def get_indexer(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
         """Get all indexers or specific by id
 
         Args:
-            id_ (Union[int, None], optional): Database if of indexer to return. Defaults to None.
+            id_ (Optional[int], optional): Database if of indexer to return. Defaults to None.
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
@@ -419,11 +417,11 @@ class BaseArrAPI(RequestHandler):
         return self._delete(f"queue/{id_}", self.ver_uri, params=params)
 
     # GET /system/task/{id}
-    def get_task(self, id_: Union[int, None] = None) -> list[dict[str, Any]]:
+    def get_task(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
         """Return a list of tasks, or specify a task ID to return single task
 
         Args:
-            id_ (Union[int, None], optional):  ID for task. Defaults to None.
+            id_ (Optional[int], optional):  ID for task. Defaults to None.
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
@@ -433,12 +431,12 @@ class BaseArrAPI(RequestHandler):
 
     # GET /remotepathmapping
     def get_remote_path_mapping(
-        self, id_: Union[int, None] = None
+        self, id_: Optional[int] = None
     ) -> list[dict[str, Any]]:
         """Get remote path mappings for downloads Directory
 
         Args:
-            id_ (Union[int, None], optional): ID for specific record. Defaults to None.
+            id_ (Optional[int], optional): ID for specific record. Defaults to None.
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
@@ -538,11 +536,11 @@ class BaseArrAPI(RequestHandler):
     # NOTIFICATIONS
 
     # GET /notification
-    def get_notification(self, id_: Union[int, None] = None) -> list[dict[str, Any]]:
+    def get_notification(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
         """Get a list of all notification services, or single by ID
 
         Args:
-            id_ (Union[int, None], optional): Notification ID. Defaults to None.
+            id_ (Optional[int], optional): Notification ID. Defaults to None.
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
@@ -587,11 +585,11 @@ class BaseArrAPI(RequestHandler):
     # TAGS
 
     # GET /tag/{id}
-    def get_tag(self, id_: Union[int, None] = None) -> list[dict[str, Any]]:
+    def get_tag(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
         """Returns all tags or specific tag by database id
 
         Args:
-            id_ (Union[int, None], optional): Database id for tag. Defaults to None.
+            id_ (Optional[int], optional): Database id for tag. Defaults to None.
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
@@ -600,11 +598,11 @@ class BaseArrAPI(RequestHandler):
         return self.assert_return(path, self.ver_uri, list)
 
     # GET /tag/detail/{id}
-    def get_tag_detail(self, id_: Union[int, None] = None) -> list[dict[str, Any]]:
+    def get_tag_detail(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
         """Returns all tags or specific tag by database id with detailed information
 
         Args:
-            id_ (Union[int, None], optional): Database id for tag. Defaults to None.
+            id_ (Optional[int], optional): Database id for tag. Defaults to None.
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
@@ -657,11 +655,11 @@ class BaseArrAPI(RequestHandler):
     # DOWNLOAD CLIENT
 
     # GET /downloadclient/{id}
-    def get_download_client(self, id_: Union[int, None] = None) -> list[dict[str, Any]]:
+    def get_download_client(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
         """Get a list of all the download clients or a single client by its database id
 
         Args:
-            id_ (Union[int, None], optional): Download client database id. Defaults to None.
+            id_ (Optional[int], optional): Download client database id. Defaults to None.
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
@@ -671,12 +669,12 @@ class BaseArrAPI(RequestHandler):
 
     # GET /downloadclient/schema
     def get_download_client_schema(
-        self, implementation_: Union[str, None] = None
+        self, implementation_: Optional[str] = None
     ) -> list[dict[str, Any]]:
         """Gets the schemas for the different download Clients
 
         Args:
-            implementation_ (Union[str, None], optional): Client implementation name. Defaults to None.
+            implementation_ (Optional[str], optional): Client implementation name. Defaults to None.
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
@@ -734,11 +732,11 @@ class BaseArrAPI(RequestHandler):
     # IMPORT LIST
 
     # GET /importlist
-    def get_import_list(self, id_: Union[int, None] = None) -> list[dict[str, Any]]:
+    def get_import_list(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
         """Query for all lists or a single list by its database id
 
         Args:
-            id_ (Union[int, None], optional): Import list database id. Defaults to None.
+            id_ (Optional[int], optional): Import list database id. Defaults to None.
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items

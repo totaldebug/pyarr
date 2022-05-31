@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Optional
 
 from requests import Response
 
@@ -76,7 +76,7 @@ class RadarrAPI(BaseArrAPI):
 
     # GET /movie
     def get_movie(
-        self, id_: Union[int, None] = None
+        self, id_: Optional[int] = None
     ) -> list[dict[str, Any]]:  # sourcery skip: class-extract-method
         """Returns all movies in the database, or returns a movie with a specific TMDB ID.
 
@@ -308,7 +308,7 @@ class RadarrAPI(BaseArrAPI):
 
     # GET /history/movie
     def get_movie_history(
-        self, id_: int, event_type: Union[int, None] = None
+        self, id_: int, event_type: Optional[int] = None
     ) -> list[dict[str, Any]]:
         """Get history for a given movie in database by its database ID
 
@@ -443,11 +443,11 @@ class RadarrAPI(BaseArrAPI):
     ## INDEXER
 
     # GET /indexer and /indexer/{id}
-    def get_indexer(self, id_: Union[int, None] = None) -> list[dict[str, Any]]:
+    def get_indexer(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
         """Get all indexers or a single indexer by its database ID.
 
         Args:
-            id_ (Union[int, None], optional): indexer database ID. Defaults to None.
+            id_ (Optional[int], optional): indexer database ID. Defaults to None.
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items

@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Optional, Union
 
 from requests import Response
 
@@ -91,8 +91,8 @@ class LidarrAPI(BaseArrAPI):
         self,
         term: str,
         root_dir: str,
-        quality_profile_id: Union[int, None] = None,
-        metadata_profile_id: Union[int, None] = None,
+        quality_profile_id: Optional[int] = None,
+        metadata_profile_id: Optional[int] = None,
         monitored: bool = True,
         artist_monitor: LidarrArtistMonitor = LidarrArtistMonitor.ALL_ALBUMS,
         artist_search_for_missing_albums: bool = False,
@@ -102,8 +102,8 @@ class LidarrAPI(BaseArrAPI):
         Args:
             term (str): Search term for artist
             root_dir (str): Root directory for music
-            quality_profile_id (Union[int, None], optional): Quality profile Id. Defaults to None.
-            metadata_profile_id (Union[int, None], optional): Metadata profile ID. Defaults to None.
+            quality_profile_id (Optional[int], optional): Quality profile Id. Defaults to None.
+            metadata_profile_id (Optional[int], optional): Metadata profile ID. Defaults to None.
             monitored (bool, optional): Should this be monitored. Defaults to True.
             artist_monitor (LidarrArtistMonitor, optional): Should the artist be monitored. Defaults to LidarrArtistMonitor.ALL_ALBUMS.
             artist_search_for_missing_albums (bool, optional): Should we search for missing albums. Defaults to False.
@@ -146,8 +146,8 @@ class LidarrAPI(BaseArrAPI):
         self,
         search_term: str,
         root_dir: str,
-        quality_profile_id: Union[int, None] = None,
-        metadata_profile_id: Union[int, None] = None,
+        quality_profile_id: Optional[int] = None,
+        metadata_profile_id: Optional[int] = None,
         monitored: bool = True,
         artist_monitor: LidarrArtistMonitor = LidarrArtistMonitor.ALL_ALBUMS,
         artist_search_for_missing_albums: bool = False,
@@ -158,8 +158,8 @@ class LidarrAPI(BaseArrAPI):
         Args:
             search_term (str): Artist name or album/single
             root_dir (str): Directory for music to be stored
-            quality_profile_id (Union[int, None], optional): Quality profile ID. Defaults to None.
-            metadata_profile_id (Union[int, None], optional): Metadata profile ID. Defaults to None.
+            quality_profile_id (Optional[int], optional): Quality profile ID. Defaults to None.
+            metadata_profile_id (Optional[int], optional): Metadata profile ID. Defaults to None.
             monitored (bool, optional): Monitor the artist. Defaults to True.
             artist_monitor (LidarrArtistMonitor, optional): Monitor the artist. Defaults to LidarrArtistMonitor.ALL_ALBUMS.
             artist_search_for_missing_albums (bool, optional): Search for missing albums by this artist. Defaults to False.
@@ -218,16 +218,16 @@ class LidarrAPI(BaseArrAPI):
     def get_album(
         self,
         albumIds: Union[int, list[int], None] = None,
-        artistId: Union[int, None] = None,
-        foreignAlbumId: Union[int, None] = None,
+        artistId: Optional[int] = None,
+        foreignAlbumId: Optional[int] = None,
         allArtistAlbums: bool = False,
     ) -> list[dict[str, Any]]:
         """Get a specific album by ID, or get all albums
 
         Args:
             albumIds (Union[int, list[int], None], optional): Database album IDs. Defaults to None.
-            artistId (Union[int, None], optional): Database artist IDs. Defaults to None.
-            foreignAlbumId (Union[int, None], optional): Foreign album id. Defaults to None.
+            artistId (Optional[int], optional): Database artist IDs. Defaults to None.
+            foreignAlbumId (Optional[int], optional): Foreign album id. Defaults to None.
             allArtistAlbums (bool, optional): Get all artists albums. Defaults to False.
 
         Returns:
@@ -248,8 +248,8 @@ class LidarrAPI(BaseArrAPI):
         self,
         term: str,
         root_dir: str,
-        quality_profile_id: Union[int, None] = None,
-        metadata_profile_id: Union[int, None] = None,
+        quality_profile_id: Optional[int] = None,
+        metadata_profile_id: Optional[int] = None,
         monitored: bool = True,
         artist_monitor: LidarrArtistMonitor = LidarrArtistMonitor.ALL_ALBUMS,
         artist_search_for_missing_albums: bool = False,
@@ -259,8 +259,8 @@ class LidarrAPI(BaseArrAPI):
         Args:
             term (str): Search term for the album
             root_dir (str): Director to store the album.
-            quality_profile_id (Union[int, None], optional): Quality profile ID. Defaults to None.
-            metadata_profile_id (Union[int, None], optional): Metadata profile ID. Defaults to None.
+            quality_profile_id (Optional[int], optional): Quality profile ID. Defaults to None.
+            metadata_profile_id (Optional[int], optional): Metadata profile ID. Defaults to None.
             monitored (bool, optional): Monitor the albums. Defaults to True.
             artist_monitor (LidarrArtistMonitor, optional): Monitor the artist. Defaults to LidarrArtistMonitor.ALL_ALBUMS.
             artist_search_for_missing_albums (bool, optional): Search for missing albums by the artist. Defaults to False.
@@ -303,8 +303,8 @@ class LidarrAPI(BaseArrAPI):
         self,
         search_term: str,
         root_dir: str,
-        quality_profile_id: Union[int, None] = None,
-        metadata_profile_id: Union[int, None] = None,
+        quality_profile_id: Optional[int] = None,
+        metadata_profile_id: Optional[int] = None,
         monitored: bool = True,
         artist_monitor: LidarrArtistMonitor = LidarrArtistMonitor.ALL_ALBUMS,
         artist_search_for_missing_albums: bool = False,
@@ -314,8 +314,8 @@ class LidarrAPI(BaseArrAPI):
         Args:
             search_term (str): Name of the album to search for
             root_dir (str): Location to store music
-            quality_profile_id (Union[int, None], optional): Quality profile ID. Defaults to None.
-            metadata_profile_id (Union[int, None], optional): Metadata profile ID. Defaults to None.
+            quality_profile_id (Optional[int], optional): Quality profile ID. Defaults to None.
+            metadata_profile_id (Optional[int], optional): Metadata profile ID. Defaults to None.
             monitored (bool, optional): Should the album be monitored. Defaults to True.
             artist_monitor (LidarrArtistMonitor, optional): What level to monitor the artist. Defaults to LidarrArtistMonitor.ALL_ALBUMS.
             artist_search_for_missing_albums (bool, optional): Search for any missing albums by this artist. Defaults to False.
@@ -384,7 +384,7 @@ class LidarrAPI(BaseArrAPI):
     # GET /wanted
     def get_wanted(
         self,
-        id_: Union[int, None] = None,
+        id_: Optional[int] = None,
         sort_key: LidarrSortKeys = LidarrSortKeys.TITLE,
         page: int = PAGE,
         page_size: int = PAGE_SIZE,
@@ -433,17 +433,17 @@ class LidarrAPI(BaseArrAPI):
     # GET /track
     def get_tracks(
         self,
-        artistId: Union[int, None] = None,
-        albumId: Union[int, None] = None,
-        albumReleaseId: Union[int, None] = None,
+        artistId: Optional[int] = None,
+        albumId: Optional[int] = None,
+        albumReleaseId: Optional[int] = None,
         trackIds: Union[int, list[int], None] = None,
     ) -> list[dict[str, Any]]:
         """Get tracks based on provided IDs
 
         Args:
-            artistId (Union[int, None], optional): Artist ID. Defaults to None.
-            albumId (Union[int, None], optional): Album ID. Defaults to None.
-            albumReleaseId (Union[int, None], optional): Album Release ID. Defaults to None.
+            artistId (Optional[int], optional): Artist ID. Defaults to None.
+            albumId (Optional[int], optional): Album ID. Defaults to None.
+            albumReleaseId (Optional[int], optional): Album Release ID. Defaults to None.
             trackIds (Union[int, list[int], None], optional): Track IDs. Defaults to None.
 
         Returns:
@@ -468,16 +468,16 @@ class LidarrAPI(BaseArrAPI):
     # GET /trackfile/
     def get_track_file(
         self,
-        artistId: Union[int, None] = None,
-        albumId: Union[int, None] = None,
+        artistId: Optional[int] = None,
+        albumId: Optional[int] = None,
         trackFileIds: Union[int, list[int], None] = None,
         unmapped: bool = False,
     ) -> list[dict[str, Any]]:
         """Get track files based on IDs, or get all unmapped files
 
         Args:
-            artistId (Union[int, None], optional): Artist database ID. Defaults to None.
-            albumId (Union[int, None], optional): Album database ID. Defaults to None.
+            artistId (Optional[int], optional): Artist database ID. Defaults to None.
+            albumId (Optional[int], optional): Album database ID. Defaults to None.
             trackFileIds (Union[int, list[int], None], optional): Specific file IDs. Defaults to None.
             unmapped (bool, optional): Get all unmapped filterExistingFiles. Defaults to False.
 
@@ -542,13 +542,11 @@ class LidarrAPI(BaseArrAPI):
         )
 
     # GET /metadataprofile/{id}
-    def get_metadata_profile(
-        self, id_: Union[int, None] = None
-    ) -> list[dict[str, Any]]:
+    def get_metadata_profile(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
         """Gets all metadata profiles or specific one with id_
 
         Args:
-            id_ (Union[int, None], optional): Metadata profile id from database. Defaults to None.
+            id_ (Optional[int], optional): Metadata profile id from database. Defaults to None.
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
@@ -640,7 +638,7 @@ class LidarrAPI(BaseArrAPI):
     # GET /queue/details
     def get_queue_details(
         self,
-        artistId: Union[int, None] = None,
+        artistId: Optional[int] = None,
         albumIds: Union[list[int], None] = None,
         include_artist: bool = False,
         include_album: bool = True,
@@ -648,7 +646,7 @@ class LidarrAPI(BaseArrAPI):
         """Get queue details for artist or album
 
         Args:
-            artistId (Union[int, None], optional): Artist database ID. Defaults to None.
+            artistId (Optional[int], optional): Artist database ID. Defaults to None.
             albumIds (Union[list[int], None], optional): Album database ID. Defaults to None.
             include_artist (bool, optional): Include the artist. Defaults to False.
             include_album (bool, optional): Include the album. Defaults to True.
@@ -670,13 +668,13 @@ class LidarrAPI(BaseArrAPI):
 
     # GET /release
     def get_release(
-        self, artistId: Union[int, None] = None, albumId: Union[int, None] = None
+        self, artistId: Optional[int] = None, albumId: Optional[int] = None
     ) -> list[dict[str, Any]]:
         """Search indexers for specified fields.
 
         Args:
-            artistId (Union[int, None], optional): Artist ID from DB. Defaults to None.
-            albumId (Union[int, None], optional): Album IT from Database. Defaults to None.
+            artistId (Optional[int], optional): Artist ID from DB. Defaults to None.
+            albumId (Optional[int], optional): Album IT from Database. Defaults to None.
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
@@ -690,13 +688,13 @@ class LidarrAPI(BaseArrAPI):
 
     # GET /rename
     def get_rename(
-        self, artistId: int, albumId: Union[int, None] = None
+        self, artistId: int, albumId: Optional[int] = None
     ) -> list[dict[str, Any]]:
         """Get files matching specified id that are not properly renamed yet.
 
         Args:
             artistId (int): Database ID for Artists
-            albumId (Union[int, None], optional): Album ID. Defaults to None.
+            albumId (Optional[int], optional): Album ID. Defaults to None.
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
@@ -716,7 +714,7 @@ class LidarrAPI(BaseArrAPI):
         self,
         downloadId: str,
         artistId: int = 0,
-        folder: Union[str, None] = None,
+        folder: Optional[str] = None,
         filterExistingFiles: bool = True,
         replaceExistingFiles: bool = True,
     ) -> list[dict[str, Any]]:
@@ -725,7 +723,7 @@ class LidarrAPI(BaseArrAPI):
         Args:
             downloadId (str): Download IDs
             artistId (int, optional): Artist Database ID. Defaults to 0.
-            folder (Union[str, None], optional): folder name. Defaults to None.
+            folder (Optional[str], optional): folder name. Defaults to None.
             filterExistingFiles (bool, optional): filter files. Defaults to True.
             replaceExistingFiles (bool, optional): replace files. Defaults to True.
 
@@ -758,13 +756,13 @@ class LidarrAPI(BaseArrAPI):
 
     # GET /retag
     def get_retag(
-        self, artistId: int, albumId: Union[int, None] = None
+        self, artistId: int, albumId: Optional[int] = None
     ) -> list[dict[str, Any]]:
         """Get Retag
 
         Args:
             artistId (int): ID for the  artist
-            albumId Union[int, None], optional): ID foir the album. Defaults to None.
+            albumId Optional[int], optional): ID foir the album. Defaults to None.
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items

@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Optional, Union
 
 from requests import Response
 
@@ -33,8 +33,8 @@ class ReadarrAPI(BaseArrAPI):
         db_id: str,
         book_id_type: ReadarrBookTypes,
         root_dir: str,
-        quality_profile_id: Union[int, None] = None,
-        metadata_profile_id: Union[int, None] = None,
+        quality_profile_id: Optional[int] = None,
+        metadata_profile_id: Optional[int] = None,
         monitored: bool = True,
         search_for_new_book: bool = False,
         author_monitor: ReadarrAuthorMonitor = ReadarrAuthorMonitor.ALL,
@@ -46,8 +46,8 @@ class ReadarrAPI(BaseArrAPI):
             db_id (str): Book ID from Goodreads, ISBN or ASIN
             book_id_type (ReadarrBookTypes): Type of book ID
             root_dir (str): Root directory for books
-            quality_profile_id (Union[int, None], optional): Quality profile ID. Defaults to None.
-            metadata_profile_id (Union[int, None], optional): Metadata profile ID. Defaults to None.
+            quality_profile_id (Optional[int], optional): Quality profile ID. Defaults to None.
+            metadata_profile_id (Optional[int], optional): Metadata profile ID. Defaults to None.
             monitored (bool, optional): Monitor for book. Defaults to True.
             search_for_new_book (bool, optional): Search for new book on adding. Defaults to False.
             author_monitor (ReadarrAuthorMonitor, optional): Monitor the author. Defaults to ReadarrAuthorMonitor.ALL.
@@ -92,8 +92,8 @@ class ReadarrAPI(BaseArrAPI):
         self,
         term: str,
         root_dir: str,
-        quality_profile_id: Union[int, None] = None,
-        metadata_profile_id: Union[int, None] = None,
+        quality_profile_id: Optional[int] = None,
+        metadata_profile_id: Optional[int] = None,
         monitored: bool = True,
         author_monitor: ReadarrAuthorMonitor = ReadarrAuthorMonitor.NONE,
         search_for_missing_books: bool = False,
@@ -103,8 +103,8 @@ class ReadarrAPI(BaseArrAPI):
         Args:
             term (str): Search term
             root_dir (str): Root directory for books
-            quality_profile_id (Union[int, None], optional): Quality profile ID. Defaults to None.
-            metadata_profile_id (Union[int, None], optional): Metadata profile ID. Defaults to None.
+            quality_profile_id (Optional[int], optional): Quality profile ID. Defaults to None.
+            metadata_profile_id (Optional[int], optional): Metadata profile ID. Defaults to None.
             monitored (bool, optional): Monitor this author. Defaults to True.
             author_monitor (ReadarrAuthorMonitor, optional): Monitor the author. Defaults to ReadarrAuthorMonitor.NONE.
             search_for_missing_books (bool, optional): Search for missing books by the author. Defaults to False.
@@ -146,11 +146,11 @@ class ReadarrAPI(BaseArrAPI):
     # COMMAND
 
     # GET /command/:id
-    def get_command(self, id_: Union[int, None] = None) -> list[dict[str, Any]]:
+    def get_command(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
         """Queries the status of a previously started command, or all currently started commands.
 
         Args:
-            id_ (Union[int, None], optional): Database ID of the command. Defaults to None.
+            id_ (Optional[int], optional): Database ID of the command. Defaults to None.
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
@@ -274,13 +274,11 @@ class ReadarrAPI(BaseArrAPI):
         return self.assert_return("queue", self.ver_uri, dict, params)
 
     # GET /metadataprofile/{id}
-    def get_metadata_profile(
-        self, id_: Union[int, None] = None
-    ) -> list[dict[str, Any]]:
+    def get_metadata_profile(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
         """Gets all metadata profiles or specific one with ID
 
         Args:
-            id_ (Union[int, None], optional): Metadata profile id from database. Defaults to None.
+            id_ (Optional[int], optional): Metadata profile id from database. Defaults to None.
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
@@ -289,11 +287,11 @@ class ReadarrAPI(BaseArrAPI):
         return self.assert_return(path, self.ver_uri, list)
 
     # GET /delayprofile/{id}
-    def get_delay_profile(self, id_: Union[int, None] = None) -> list[dict[str, Any]]:
+    def get_delay_profile(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
         """Gets all delay profiles or specific one with ID
 
         Args:
-            id_ (Union[int, None], optional): Metadata profile ID from database. Defaults to None.
+            id_ (Optional[int], optional): Metadata profile ID from database. Defaults to None.
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
@@ -302,11 +300,11 @@ class ReadarrAPI(BaseArrAPI):
         return self.assert_return(path, self.ver_uri, list)
 
     # GET /releaseprofile/{id}
-    def get_release_profile(self, id_: Union[int, None] = None) -> list[dict[str, Any]]:
+    def get_release_profile(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
         """Gets all release profiles or specific one with ID
 
         Args:
-            id_ (Union[int, None], optional): Release profile ID from database. Defaults to None.
+            id_ (Optional[int], optional): Release profile ID from database. Defaults to None.
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
@@ -317,12 +315,12 @@ class ReadarrAPI(BaseArrAPI):
     ## BOOKS
 
     # GET /book and /book/{id}
-    def get_book(self, id_: Union[int, None] = None) -> list[dict[str, Any]]:
+    def get_book(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
         """Returns all books in your collection or the book with the matching
         book ID if one is found.
 
         Args:
-            id_ (Union[int, None], optional): Database id for book. Defaults to None.
+            id_ (Optional[int], optional): Database id for book. Defaults to None.
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
@@ -352,8 +350,8 @@ class ReadarrAPI(BaseArrAPI):
         db_id: str,
         book_id_type: ReadarrBookTypes,
         root_dir: str,
-        quality_profile_id: Union[int, None] = None,
-        metadata_profile_id: Union[int, None] = None,
+        quality_profile_id: Optional[int] = None,
+        metadata_profile_id: Optional[int] = None,
         monitored: bool = True,
         search_for_new_book: bool = False,
         author_monitor: ReadarrAuthorMonitor = ReadarrAuthorMonitor.ALL,
@@ -428,11 +426,11 @@ class ReadarrAPI(BaseArrAPI):
     # AUTHOR
 
     # GET /author and /author/{id}
-    def get_author(self, id_: Union[int, None] = None) -> list[dict[str, Any]]:
+    def get_author(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
         """Returns all authors in your collection or the author with the matching ID if one is found.
 
         Args:
-            id_ (Union[int, None], optional): Database ID for author. Defaults to None.
+            id_ (Optional[int], optional): Database ID for author. Defaults to None.
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
@@ -458,8 +456,8 @@ class ReadarrAPI(BaseArrAPI):
         self,
         search_term: str,
         root_dir: str,
-        quality_profile_id: Union[int, None] = None,
-        metadata_profile_id: Union[int, None] = None,
+        quality_profile_id: Optional[int] = None,
+        metadata_profile_id: Optional[int] = None,
         monitored: bool = True,
         author_monitor: ReadarrAuthorMonitor = ReadarrAuthorMonitor.NONE,
         author_search_for_missing_books: bool = False,
