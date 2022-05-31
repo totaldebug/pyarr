@@ -22,6 +22,31 @@ class BaseArrAPI(RequestHandler):
         self.ver_uri = ver_uri
         super().__init__(host_url, api_key)
 
+    def assert_return(
+        self,
+        path: str,
+        ver_uri: str,
+        typearg: type,
+        params: Union[dict[str, Any], None] = None,
+    ) -> Any:
+        """Helper function to add assert to enforce typing responses
+
+        Args:
+            path (str): Path on API
+            ver_uri (str): API Version
+            typearg (type): Python Type
+            params (Union[dict[str, Any], None], optional): Any required params. Defaults to None.
+
+        Returns:
+            Any: Any
+        """
+        if params is None:
+            response = self._get(path, ver_uri)
+        else:
+            response = self._get(path, ver_uri, params=params)
+        assert isinstance(response, typearg)
+        return response
+
     # CALENDAR
 
     # GET /calendar/
@@ -42,7 +67,6 @@ class BaseArrAPI(RequestHandler):
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
-        path = "calendar"
         params: dict[str, Any] = {}
         if start_date:
             params["start"] = datetime.strptime(start_date, "%Y-%m-%d").strftime(
@@ -52,9 +76,7 @@ class BaseArrAPI(RequestHandler):
             params["end"] = datetime.strptime(end_date, "%Y-%m-%d").strftime("%Y-%m-%d")
         params["unmonitored"] = unmonitored
 
-        response = self._get(path, self.ver_uri, params=params)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return("calendar", self.ver_uri, list, params)
 
     # SYSTEM
 
@@ -65,10 +87,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
            list[dict[str, Any]]: List of dictionaries with items
         """
-        path = "system/status"
-        response = self._get(path, self.ver_uri)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return("system/status", self.ver_uri, list)
 
     # GET /health
     def get_health(self) -> list[dict[str, Any]]:
@@ -77,10 +96,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
-        path = "health"
-        response = self._get(path, self.ver_uri)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return("health", self.ver_uri, list)
 
     # GET /metadata
     def get_metadata(self) -> list[dict[str, Any]]:
@@ -89,10 +105,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
              list[dict[str, Any]]: List of dictionaries with items
         """
-        path = "metadata"
-        response = self._get(path, self.ver_uri)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return("metadata", self.ver_uri, list)
 
     # GET /update
     def get_update(self) -> list[dict[str, Any]]:
@@ -101,10 +114,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
              list[dict[str, Any]]: List of dictionaries with items
         """
-        path = "update"
-        response = self._get(path, self.ver_uri)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return("update", self.ver_uri, list)
 
     # GET /rootfolder
     def get_root_folder(self) -> list[dict[str, Any]]:
@@ -113,10 +123,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
              list[dict[str, Any]]: List of dictionaries with items
         """
-        path = "rootfolder"
-        response = self._get(path, self.ver_uri)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return("rootfolder", self.ver_uri, list)
 
     # DELETE /rootfolder
     def del_root_folder(
@@ -131,8 +138,7 @@ class BaseArrAPI(RequestHandler):
             Response: HTTP Response
         """
         params = {"id": id_}
-        path = "rootfolder"
-        return self._delete(path, self.ver_uri, params=params)
+        return self._delete("rootfolder", self.ver_uri, params=params)
 
     # GET /diskspace
     def get_disk_space(self) -> list[dict[str, Any]]:
@@ -142,10 +148,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
-        path = "diskspace"
-        response = self._get(path, self.ver_uri)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return("diskspace", self.ver_uri, list)
 
     # GET /system/backup
     def get_backup(self) -> list[dict[str, Any]]:
@@ -154,10 +157,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
-        path = "system/backup"
-        response = self._get(path, self.ver_uri)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return("system/backup", self.ver_uri, list)
 
     # LOGS
 
@@ -192,9 +192,7 @@ class BaseArrAPI(RequestHandler):
             "filterKey": filter_key,
             "filterValue": filter_value,
         }
-        response = self._get("log", self.ver_uri, params=params)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return("log", self.ver_uri, list, params)
 
     # GET /history
     # TODO: check the ID on this method may need to move to specific APIs
@@ -218,7 +216,6 @@ class BaseArrAPI(RequestHandler):
         Returns:
            list[dict[str, Any]]: List of dictionaries with items
         """
-        path = "history"
         params = {
             "sortKey": sort_key,
             "page": page,
@@ -227,9 +224,7 @@ class BaseArrAPI(RequestHandler):
         }
         if id_:
             params["episodeId"] = id_
-        response = self._get(path, self.ver_uri, params=params)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return("history", self.ver_uri, list, params)
 
     # BLOCKLIST
 
@@ -258,10 +253,7 @@ class BaseArrAPI(RequestHandler):
             "sortDirection": sort_direction,
             "sortKey": sort_key,
         }
-        path = "blocklist"
-        response = self._get(path, self.ver_uri, params=params)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return("blocklist", self.ver_uri, list, params)
 
     # DELETE /blocklist
     def del_blocklist(self, id_: int) -> Response:
@@ -274,8 +266,7 @@ class BaseArrAPI(RequestHandler):
             Response: HTTP Response
         """
         params = {"id": id_}
-        path = "blocklist"
-        return self._delete(path, self.ver_uri, params=params)
+        return self._delete("blocklist", self.ver_uri, params=params)
 
     # DELETE /blocklist/bulk
     def del_blocklist_bulk(self, data: dict[str, Any]) -> Response:
@@ -287,8 +278,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             Response: HTTP Response
         """
-        path = "blocklist/bulk"
-        return self._delete(path, self.ver_uri, data=data)
+        return self._delete("blocklist/bulk", self.ver_uri, data=data)
 
     # PROFILES
 
@@ -303,9 +293,7 @@ class BaseArrAPI(RequestHandler):
             list[dict[str, Any]]: List of dictionaries with items
         """
         path = f"qualityprofile/{id_}" if id_ else "qualityprofile"
-        response = self._get(path, self.ver_uri)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return(path, self.ver_uri, list)
 
     # PUT /qualityprofile/{id}
     def upd_quality_profile(self, id_: int, data: dict[str, Any]) -> dict[str, Any]:
@@ -321,8 +309,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             dict[str, Any]: Dictionary of updated record
         """
-        path = f"qualityprofile/{id_}"
-        return self._put(path, self.ver_uri, data=data)
+        return self._put(f"qualityprofile/{id_}", self.ver_uri, data=data)
 
     # DELETE /qualityprofile
     def del_quality_profile(self, id_: int) -> Response:
@@ -335,8 +322,7 @@ class BaseArrAPI(RequestHandler):
             Response: HTTP Response
         """
         params = {"id": id_}
-        path = "qualityprofile"
-        return self._delete(path, self.ver_uri, params=params)
+        return self._delete("qualityprofile", self.ver_uri, params=params)
 
     # GET /qualitydefinition/{id}
     def get_quality_definition(
@@ -351,9 +337,7 @@ class BaseArrAPI(RequestHandler):
             list[dict[str, Any]]: List of dictionaries with items
         """
         path = f"qualitydefinition/{id_}" if id_ else "qualitydefinition"
-        response = self._get(path, self.ver_uri)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return(path, self.ver_uri, list)
 
     # PUT /qualitydefinition/{id}
     def upd_quality_definition(self, id_: int, data: dict[str, Any]) -> dict[str, Any]:
@@ -369,8 +353,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             dict[str, Any]: Dictionary of updated record
         """
-        path = f"qualitydefinition/{id_}"
-        return self._put(path, self.ver_uri, data=data)
+        return self._put(f"qualitydefinition/{id_}", self.ver_uri, data=data)
 
     # INDEXER
 
@@ -385,9 +368,7 @@ class BaseArrAPI(RequestHandler):
             list[dict[str, Any]]: List of dictionaries with items
         """
         path = f"indexer/{id_}" if id_ else "indexer"
-        response = self._get(path, self.ver_uri)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return(path, self.ver_uri, list)
 
     # PUT /indexer/{id}
     def upd_indexer(self, id_: int, data: dict[str, Any]) -> dict[str, Any]:
@@ -403,8 +384,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             dict[str, Any]: Dictionary of updated record
         """
-        path = f"indexer/{id_}"
-        return self._put(path, self.ver_uri, data=data)
+        return self._put(f"indexer/{id_}", self.ver_uri, data=data)
 
     # DELETE /indexer
     def del_indexer(self, id_: int) -> Response:
@@ -417,8 +397,7 @@ class BaseArrAPI(RequestHandler):
             Response: HTTP Response
         """
         params = {"id": id_}
-        path = "indexer"
-        return self._delete(path, self.ver_uri, params=params)
+        return self._delete("indexer", self.ver_uri, params=params)
 
     # QUEUE
 
@@ -437,8 +416,7 @@ class BaseArrAPI(RequestHandler):
             Response: HTTP Response
         """
         params = {"removeFromClient": remove_from_client, "blacklist": blacklist}
-        path = f"queue/{id_}"
-        return self._delete(path, self.ver_uri, params=params)
+        return self._delete(f"queue/{id_}", self.ver_uri, params=params)
 
     # GET /system/task/{id}
     def get_task(self, id_: Union[int, None] = None) -> list[dict[str, Any]]:
@@ -451,9 +429,7 @@ class BaseArrAPI(RequestHandler):
             list[dict[str, Any]]: List of dictionaries with items
         """
         path = f"system/task/{id_}" if id_ else "system/task"
-        response = self._get(path, self.ver_uri)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return(path, self.ver_uri, list)
 
     # GET /remotepathmapping
     def get_remote_path_mapping(
@@ -468,9 +444,7 @@ class BaseArrAPI(RequestHandler):
             list[dict[str, Any]]: List of dictionaries with items
         """
         _path = "" if isinstance(id_, str) or id_ is None else f"/{id_}"
-        response = self._get(f"remotepathmapping{_path}", self.ver_uri)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return(f"remotepathmapping{_path}", self.ver_uri, list)
 
     # CONFIG
 
@@ -481,10 +455,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             dict[str, Any]: List of dictionaries with items
         """
-        path = "config/ui"
-        response = self._get(path, self.ver_uri)
-        assert isinstance(response, dict)
-        return response
+        return self.assert_return("config/ui", self.ver_uri, dict)
 
     # PUT /config/ui
     def upd_config_ui(self, data: dict[str, Any]) -> dict[str, Any]:
@@ -496,8 +467,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             dict[str, Any]: Dictionary with items
         """
-        path = "config/ui"
-        return self._put(path, self.ver_uri, data=data)
+        return self._put("config/ui", self.ver_uri, data=data)
 
     # GET /config/host
     def get_config_host(self) -> dict[str, Any]:
@@ -506,10 +476,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             dict[str, Any]: Dictionaries with items
         """
-        path = "config/host"
-        response = self._get(path, self.ver_uri)
-        assert isinstance(response, dict)
-        return response
+        return self.assert_return("config/host", self.ver_uri, dict)
 
     # PUT /config/host
     def upd_config_host(self, data: dict[str, Any]) -> dict[str, Any]:
@@ -521,8 +488,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             dict[str, Any]: Dictionaries with items
         """
-        path = "config/host"
-        return self._put(path, self.ver_uri, data=data)
+        return self._put("config/host", self.ver_uri, data=data)
 
     # GET /config/naming
     def get_config_naming(self) -> dict[str, Any]:
@@ -531,10 +497,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             dict[str, Any]: Dictionary with items
         """
-        path = "config/naming"
-        response = self._get(path, self.ver_uri)
-        assert isinstance(response, dict)
-        return response
+        return self.assert_return("config/naming", self.ver_uri, dict)
 
     # PUT /config/naming
     def upd_config_naming(self, data: dict[str, Any]) -> dict[str, Any]:
@@ -546,8 +509,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             dict[str, Any]: Dictionary with items
         """
-        path = "config/naming"
-        return self._put(path, self.ver_uri, data=data)
+        return self._put("config/naming", self.ver_uri, data=data)
 
     # GET /config/mediamanagement
     def get_media_management(self) -> dict[str, Any]:
@@ -556,10 +518,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             dict[str, Any]: Dictionary with items
         """
-        path = "config/mediamanagement"
-        response = self._get(path, self.ver_uri)
-        assert isinstance(response, dict)
-        return response
+        return self.assert_return("config/mediamanagement", self.ver_uri, dict)
 
     # PUT /config/mediamanagement
     def upd_media_management(self, data: dict[str, Any]) -> dict[str, Any]:
@@ -589,9 +548,7 @@ class BaseArrAPI(RequestHandler):
             list[dict[str, Any]]: List of dictionaries with items
         """
         _path = "" if isinstance(id_, str) or id_ is None else f"/{id_}"
-        response = self._get(f"notification{_path}", self.ver_uri)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return(f"notification{_path}", self.ver_uri, list)
 
     # GET /notification/schema
     def get_notification_schema(self) -> list[dict[str, Any]]:
@@ -600,10 +557,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
-        path = "notification/schema"
-        response = self._get(path, self.ver_uri)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return("notification/schema", self.ver_uri, list)
 
     # PUT /notification/{id}
     def upd_notification(self, id_: int, data: dict[str, Any]) -> dict[str, Any]:
@@ -628,8 +582,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             Response: HTTP Response
         """
-        path = f"notification/{id_}"
-        return self._delete(path, self.ver_uri)
+        return self._delete(f"notification/{id_}", self.ver_uri)
 
     # TAGS
 
@@ -644,9 +597,7 @@ class BaseArrAPI(RequestHandler):
             list[dict[str, Any]]: List of dictionaries with items
         """
         path = f"tag/{id_}" if id_ else "tag"
-        response = self._get(path, self.ver_uri)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return(path, self.ver_uri, list)
 
     # GET /tag/detail/{id}
     def get_tag_detail(self, id_: Union[int, None] = None) -> list[dict[str, Any]]:
@@ -659,9 +610,7 @@ class BaseArrAPI(RequestHandler):
             list[dict[str, Any]]: List of dictionaries with items
         """
         path = f"tag/detail/{id_}" if id_ else "tag/detail"
-        response = self._get(path, self.ver_uri)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return(path, self.ver_uri, list)
 
     # POST /tag
     def create_tag(self, label: str) -> dict[str, Any]:
@@ -674,8 +623,7 @@ class BaseArrAPI(RequestHandler):
             dict[str, Any]: Dictionary of new record
         """
         data = {"label": label}
-        path = "tag"
-        return self._post(path, self.ver_uri, data=data)
+        return self._post("tag", self.ver_uri, data=data)
 
     # PUT /tag/{id}
     def upd_tag(self, id_: int, label: str) -> dict[str, Any]:
@@ -692,8 +640,7 @@ class BaseArrAPI(RequestHandler):
             dict[str, Any]: Dictionary of updated items
         """
         data = {"id": id_, "label": label}
-        path = f"tag/{id_}"
-        return self._put(path, self.ver_uri, data=data)
+        return self._put(f"tag/{id_}", self.ver_uri, data=data)
 
     # DELETE /tag/{id}
     def del_tag(self, id_: int) -> Response:
@@ -705,8 +652,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             Response: HTTP Response
         """
-        path = f"tag/{id_}"
-        return self._delete(path, self.ver_uri)
+        return self._delete(f"tag/{id_}", self.ver_uri)
 
     # DOWNLOAD CLIENT
 
@@ -721,9 +667,7 @@ class BaseArrAPI(RequestHandler):
             list[dict[str, Any]]: List of dictionaries with items
         """
         path = f"downloadclient/{id_}" if id_ else "downloadclient"
-        response = self._get(path, self.ver_uri)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return(path, self.ver_uri, list)
 
     # GET /downloadclient/schema
     def get_download_client_schema(
@@ -737,8 +681,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
-        response = self._get("downloadclient/schema", self.ver_uri)
-        assert isinstance(response, list)
+        response = self.assert_return("downloadclient/schema", self.ver_uri, list)
         if implementation_:
             return [
                 schema
@@ -774,8 +717,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             dict[str, Any]: dictionary of updated item
         """
-        path = f"downloadclient/{id_}"
-        return self._put(path, self.ver_uri, data=data)
+        return self._put(f"downloadclient/{id_}", self.ver_uri, data=data)
 
     # DELETE /downloadclient/{id}
     def del_download_client(self, id_: int) -> Response:
@@ -787,8 +729,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             Response: HTTP Response
         """
-        path = f"downloadclient/{id_}"
-        return self._delete(path, self.ver_uri)
+        return self._delete(f"downloadclient/{id_}", self.ver_uri)
 
     # IMPORT LIST
 
@@ -803,9 +744,7 @@ class BaseArrAPI(RequestHandler):
             list[dict[str, Any]]: List of dictionaries with items
         """
         path = f"importlist/{id_}" if id_ else "importlist"
-        response = self._get(path, self.ver_uri)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return(path, self.ver_uri, list)
 
     # POST /importlist/
     def add_import_list(self) -> Any:
@@ -827,8 +766,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             dict[str, Any]: Dictionary of updated data
         """
-        path = f"importlist/{id_}"
-        return self._put(path, self.ver_uri, data=data)
+        return self._put(f"importlist/{id_}", self.ver_uri, data=data)
 
     # DELETE /importlist/{id}
     def del_import_list(self, id_: int) -> Response:
@@ -849,9 +787,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             dict[str, Any]: Dictionary of configuration
         """
-        response = self._get("config/downloadclient", self.ver_uri)
-        assert isinstance(response, dict)
-        return response
+        return self.assert_return("config/downloadclient", self.ver_uri, dict)
 
     # POST /notifications
     def add_notifications(self) -> Any:

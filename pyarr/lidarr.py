@@ -67,10 +67,7 @@ class LidarrAPI(BaseArrAPI):
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
-
-        response = self._get("search", self.ver_uri, params={"term": term})
-        assert isinstance(response, list)
-        return response
+        return self.assert_return("search", self.ver_uri, list, params={"term": term})
 
     def get_artist(self, id_: Union[str, int, None] = None) -> list[dict[str, Any]]:
         """Get an artist by ID or get all artists
@@ -83,13 +80,12 @@ class LidarrAPI(BaseArrAPI):
         """
 
         _path = "" if isinstance(id_, str) or id_ is None else f"/{id_}"
-        response = self._get(
+        return self.assert_return(
             f"artist{_path}",
             self.ver_uri,
+            list,
             params={"mbId": id_} if isinstance(id_, str) else None,
         )
-        assert isinstance(response, list)
-        return response
 
     def _artist_json(
         self,
@@ -215,9 +211,9 @@ class LidarrAPI(BaseArrAPI):
             list[dict[str, Any]]: List of dictionaries with items
         """
 
-        response = self._get("artist/lookup", self.ver_uri, params={"term": term})
-        assert isinstance(response, list)
-        return response
+        return self.assert_return(
+            "artist/lookup", self.ver_uri, list, params={"term": term}
+        )
 
     def get_album(
         self,
@@ -246,9 +242,7 @@ class LidarrAPI(BaseArrAPI):
         if foreignAlbumId is not None:
             params["foreignAlbumId"] = foreignAlbumId
         _path = "" if isinstance(albumIds, list) or albumIds is None else f"/{albumIds}"
-        response = self._get(f"album{_path}", self.ver_uri, params=params)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return(f"album{_path}", self.ver_uri, list, params=params)
 
     def _album_json(
         self,
@@ -374,9 +368,9 @@ class LidarrAPI(BaseArrAPI):
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
-        response = self._get("album/lookup", self.ver_uri, params={"term": term})
-        assert isinstance(response, list)
-        return response
+        return self.assert_return(
+            "album/lookup", self.ver_uri, list, params={"term": term}
+        )
 
     # POST /command
     def post_command(self) -> Any:
@@ -416,13 +410,12 @@ class LidarrAPI(BaseArrAPI):
             "pageSize": page_size,
         }
         _path = "missing" if missing else "cutoff"
-        response = self._get(
+        return self.assert_return(
             f"wanted/{_path}{'' if id_ is None else f'/{id_}'}",
             self.ver_uri,
+            dict,
             params=params,
         )
-        assert isinstance(response, dict)
-        return response
 
     # GET /parse
     # TODO: Confirm response type
@@ -435,9 +428,7 @@ class LidarrAPI(BaseArrAPI):
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
-        response = self._get("parse", self.ver_uri, params={"title": title})
-        assert isinstance(response, list)
-        return response
+        return self.assert_return("parse", self.ver_uri, list, params={"title": title})
 
     # GET /track
     def get_tracks(
@@ -467,13 +458,12 @@ class LidarrAPI(BaseArrAPI):
             params["albumReleaseId"] = albumReleaseId
         if isinstance(trackIds, list):
             params["trackIds"] = trackIds
-        response = self._get(
+        return self.assert_return(
             f"track{f'/{trackIds}' if isinstance(trackIds, int) else ''}",
             self.ver_uri,
+            list,
             params=params,
         )
-        assert isinstance(response, list)
-        return response
 
     # GET /trackfile/
     def get_track_file(
@@ -513,13 +503,12 @@ class LidarrAPI(BaseArrAPI):
             params["albumId"] = albumId
         if isinstance(trackFileIds, list):
             params["trackFileIds"] = trackFileIds
-        response = self._get(
+        return self.assert_return(
             f"trackfile{f'/{trackFileIds}' if isinstance(trackFileIds, int) else ''}",
             self.ver_uri,
+            list,
             params=params,
         )
-        assert isinstance(response, list)
-        return response
 
     # PUT /trackfile/{id_}
     def upd_track_file(self, data: dict[str, Any]) -> dict[str, Any]:
@@ -597,9 +586,7 @@ class LidarrAPI(BaseArrAPI):
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
-        response = self._get("config/metadataProvider", self.ver_uri)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return("config/metadataProvider", self.ver_uri, list)
 
     # PUT /config/metadataprovider
     def upd_metadata_provider(self, data: dict[str, Any]) -> dict[str, Any]:
@@ -648,9 +635,7 @@ class LidarrAPI(BaseArrAPI):
             "includeArtist": include_artist,
         }
 
-        response = self._get("queue", self.ver_uri, params=params)
-        assert isinstance(response, dict)
-        return response
+        return self.assert_return("queue", self.ver_uri, dict, params=params)
 
     # GET /queue/details
     def get_queue_details(
@@ -681,9 +666,7 @@ class LidarrAPI(BaseArrAPI):
         if albumIds is not None:
             params["albumIds"] = albumIds
 
-        response = self._get("queue/details", self.ver_uri, params=params)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return("queue/details", self.ver_uri, list, params=params)
 
     # GET /release
     def get_release(
@@ -703,9 +686,7 @@ class LidarrAPI(BaseArrAPI):
             params["artistId"] = artistId
         if albumId is not None:
             params["artistId"] = albumId
-        response = self._get("release", self.ver_uri, params=params)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return("release", self.ver_uri, list, params=params)
 
     # GET /rename
     def get_rename(
@@ -723,13 +704,12 @@ class LidarrAPI(BaseArrAPI):
         params = {"artistId": artistId}
         if albumId is not None:
             params["albumId"] = albumId
-        response = self._get(
+        return self.assert_return(
             "rename",
             self.ver_uri,
+            list,
             params=params,
         )
-        assert isinstance(response, list)
-        return response
 
     # GET /manualimport
     def get_manual_import(
@@ -759,9 +739,7 @@ class LidarrAPI(BaseArrAPI):
             "folder": folder if folder is not None else "",
             "replaceExistingFiles": str(replaceExistingFiles),
         }
-        response = self._get("manualimport", self.ver_uri, params=params)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return("manualimport", self.ver_uri, list, params=params)
 
     # PUT /manualimport
     def upd_manual_import(self, data: dict[str, Any]) -> dict[str, Any]:
@@ -794,10 +772,9 @@ class LidarrAPI(BaseArrAPI):
         params = {"artistId": artistId}
         if albumId is not None:
             params["albumId"] = albumId
-        response = self._get(
+        return self.assert_return(
             "retag",
             self.ver_uri,
+            list,
             params=params,
         )
-        assert isinstance(response, list)
-        return response

@@ -156,9 +156,7 @@ class ReadarrAPI(BaseArrAPI):
             list[dict[str, Any]]: List of dictionaries with items
         """
         path = f"command/{id_}" if id_ else "command"
-        response = self._get(path, self.ver_uri)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return(path, self.ver_uri, list)
 
     # POST /command
     # TODO: confirm return type & Kwargs
@@ -172,12 +170,11 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             _type_: _description_
         """
-        path = "command"
         data = {
             "name": name,
             **kwargs,
         }
-        return self._post(path, self.ver_uri, data=data)
+        return self._post("command", self.ver_uri, data=data)
 
     ## WANTED (MISSING)
 
@@ -200,16 +197,13 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             dict[str, Any]: List of dictionaries with items
         """
-        path = "wanted/missing"
         params = {
             "sortKey": sort_key,
             "page": page,
             "pageSize": page_size,
             "sortDir": sort_dir,
         }
-        response = self._get(path, self.ver_uri, params=params)
-        assert isinstance(response, dict)
-        return response
+        return self.assert_return("wanted/missing", self.ver_uri, dict, params)
 
     # GET /wanted/cutoff
     def get_cutoff(
@@ -232,7 +226,6 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             dict[str, Any]: List of dictionaries with items
         """
-        path = "wanted/cutoff"
         params = {
             "sortKey": sort_key,
             "page": page,
@@ -240,9 +233,7 @@ class ReadarrAPI(BaseArrAPI):
             "sortDir": sort_dir,
             "monitored": monitored,
         }
-        response = self._get(path, self.ver_uri, params=params)
-        assert isinstance(response, dict)
-        return response
+        return self.assert_return("wanted/cutoff", self.ver_uri, dict, params)
 
     ## QUEUE
 
@@ -271,8 +262,6 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             dict[str, Any]: List of dictionaries with items
         """
-
-        path = "queue"
         params = {
             "sortKey": sort_key,
             "page": page,
@@ -282,9 +271,7 @@ class ReadarrAPI(BaseArrAPI):
             "includeAuthor": include_author,
             "includeBook": include_book,
         }
-        response = self._get(path, self.ver_uri, params=params)
-        assert isinstance(response, dict)
-        return response
+        return self.assert_return("queue", self.ver_uri, dict, params)
 
     # GET /metadataprofile/{id}
     def get_metadata_profile(
@@ -299,9 +286,7 @@ class ReadarrAPI(BaseArrAPI):
             list[dict[str, Any]]: List of dictionaries with items
         """
         path = f"metadataprofile/{id_}" if id_ else "metadataprofile"
-        response = self._get(path, self.ver_uri)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return(path, self.ver_uri, list)
 
     # GET /delayprofile/{id}
     def get_delay_profile(self, id_: Union[int, None] = None) -> list[dict[str, Any]]:
@@ -314,9 +299,7 @@ class ReadarrAPI(BaseArrAPI):
             list[dict[str, Any]]: List of dictionaries with items
         """
         path = f"delayprofile/{id_}" if id_ else "delayprofile"
-        response = self._get(path, self.ver_uri)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return(path, self.ver_uri, list)
 
     # GET /releaseprofile/{id}
     def get_release_profile(self, id_: Union[int, None] = None) -> list[dict[str, Any]]:
@@ -329,9 +312,7 @@ class ReadarrAPI(BaseArrAPI):
             list[dict[str, Any]]: List of dictionaries with items
         """
         path = f"releaseprofile/{id_}" if id_ else "releaseprofile"
-        response = self._get(path, self.ver_uri)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return(path, self.ver_uri, list)
 
     ## BOOKS
 
@@ -347,9 +328,7 @@ class ReadarrAPI(BaseArrAPI):
             list[dict[str, Any]]: List of dictionaries with items
         """
         path = f"book/{id_}" if id_ else "book"
-        response = self._get(path, self.ver_uri)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return(path, self.ver_uri, list)
 
     # GET /book/lookup
     def lookup_book(self, term: str) -> list[dict[str, Any]]:
@@ -365,10 +344,7 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
-        path = "book/lookup"
-        response = self._get(path, self.ver_uri, params={"term": term})
-        assert isinstance(response, list)
-        return response
+        return self.assert_return("book/lookup", self.ver_uri, list, {"term": term})
 
     # POST /book
     def add_book(
@@ -411,8 +387,7 @@ class ReadarrAPI(BaseArrAPI):
             author_monitor,
             author_search_for_missing_books,
         )
-        path = "book"
-        return self._post(path, self.ver_uri, data=book_json)
+        return self._post("book", self.ver_uri, data=book_json)
 
     # PUT /book/{id}
     def upd_book(self, id_: int, data: dict[str, Any]) -> dict[str, Any]:
@@ -428,8 +403,7 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             dict[str, Any]: Dictionary with updated record
         """
-        path = f"book/{id_}"
-        return self._put(path, self.ver_uri, data=data)
+        return self._put(f"book/{id_}", self.ver_uri, data=data)
 
     # DELETE /book/{id}
     def del_book(
@@ -449,8 +423,7 @@ class ReadarrAPI(BaseArrAPI):
             "deleteFiles": delete_files,
             "addImportListExclusion": import_list_exclusion,
         }
-        path = f"book/{id_}"
-        return self._delete(path, self.ver_uri, params=params)
+        return self._delete(f"book/{id_}", self.ver_uri, params=params)
 
     # AUTHOR
 
@@ -465,9 +438,7 @@ class ReadarrAPI(BaseArrAPI):
             list[dict[str, Any]]: List of dictionaries with items
         """
         path = f"author/{id_}" if id_ else "author"
-        response = self._get(path, self.ver_uri)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return(path, self.ver_uri, list)
 
     # GET /author/lookup/
     def lookup_author(self, term: str) -> list[dict[str, Any]]:
@@ -480,10 +451,7 @@ class ReadarrAPI(BaseArrAPI):
             list[dict[str, Any]]: List of dictionaries with items
         """
         params = {"term": term}
-        path = "author/lookup"
-        response = self._get(path, self.ver_uri, params=params)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return("author/lookup", self.ver_uri, list, params)
 
     # POST /author/
     def add_author(
@@ -519,9 +487,7 @@ class ReadarrAPI(BaseArrAPI):
             author_monitor,
             author_search_for_missing_books,
         )
-
-        path = "author"
-        return self._post(path, self.ver_uri, data=author_json)
+        return self._post("author", self.ver_uri, data=author_json)
 
     # PUT /author/{id}
     def upd_author(self, id_: int, data: dict[str, Any]) -> dict[str, Any]:
@@ -537,8 +503,7 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             dict[str, Any]: Dictionary with updated record
         """
-        path = f"author/{id_}"
-        return self._put(path, self.ver_uri, data=data)
+        return self._put(f"author/{id_}", self.ver_uri, data=data)
 
     # DELETE /author/{id}
     def del_author(
@@ -558,8 +523,7 @@ class ReadarrAPI(BaseArrAPI):
             "deleteFiles": delete_files,
             "addImportListExclusion": import_list_exclusion,
         }
-        path = f"author/{id_}"
-        return self._delete(path, self.ver_uri, params=params)
+        return self._delete(f"author/{id_}", self.ver_uri, params=params)
 
     ## LOG
 
@@ -570,10 +534,7 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
-        path = "log/file"
-        response = self._get(path, self.ver_uri)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return("log/file", self.ver_uri, list)
 
     # CONFIG
 
@@ -620,8 +581,7 @@ class ReadarrAPI(BaseArrAPI):
             "name": name,
             "path": directory,
         }
-        path = "rootFolder"
-        return self._post(path, self.ver_uri, data=folder_json)
+        return self._post("rootFolder", self.ver_uri, data=folder_json)
 
     # GET /config/metadataProvider
     def get_metadata_provider(self) -> dict[str, Any]:
@@ -630,10 +590,7 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             dict[str, Any]: Dictionary of record
         """
-        path = "config/metadataProvider"
-        response = self._get(path, self.ver_uri)
-        assert isinstance(response, dict)
-        return response
+        return self.assert_return("config/metadataProvider", self.ver_uri, dict)
 
     # PUT /config/metadataProvider
     def upd_metadata_provider(self, data: dict[str, Any]) -> dict[str, Any]:
@@ -648,5 +605,4 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             dict[str, Any]: Dictionary of updated record
         """
-        path = "config/metadataProvider"
-        return self._put(path, self.ver_uri, data=data)
+        return self._put("config/metadataProvider", self.ver_uri, data=data)

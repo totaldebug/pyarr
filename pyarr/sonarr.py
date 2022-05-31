@@ -74,17 +74,17 @@ class SonarrAPI(BaseArrAPI):
     ## COMMAND
 
     # GET /command
-    def get_command(self, id_: Union[int, None] = None):
+    def get_command(self, id_: Union[int, None] = None) -> list[dict[str, Any]]:
         """Queries the status of a previously started command, or all currently started commands.
 
         Args:
-            id_ (int, optional): Database id of the command. Defaults to None.
+            id_ (Union[int, None], optional): Database ID of the command. Defaults to None.
 
         Returns:
-            JSON: Array
+            list[dict[str, Any]]: List of dictionaries with items
         """
         path = f"command/{id_}" if id_ else "command"
-        return self._get(path, self.ver_uri)
+        return self.assert_return(path, self.ver_uri, list)
 
     # POST /command
     # TODO: confirm response, kwargs
@@ -104,12 +104,11 @@ class SonarrAPI(BaseArrAPI):
         Returns:
             JSON: Array
         """
-        path = "command"
         data = {
             "name": name,
             **kwargs,
         }
-        return self._post(path, self.ver_uri, data=data)
+        return self._post("command", self.ver_uri, data=data)
 
     ## EPISODE
 
@@ -122,13 +121,10 @@ class SonarrAPI(BaseArrAPI):
             id_ (int): Database id for series
 
         Returns:
-            JSON: Array
+            list[dict[str, Any]]: List of dictionaries with items
         """
-        path = "episode"
         params = {"seriesId": id_}
-        response = self._get(path, self.ver_uri, params=params)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return("episode", self.ver_uri, list, params)
 
     # GET /episode/{id}
     def get_episode_by_episode_id(self, id_: int) -> list[dict[str, Any]]:
@@ -138,28 +134,24 @@ class SonarrAPI(BaseArrAPI):
             id_ (int): Database id for episode
 
         Returns:
-            JSON: Array
+            list[dict[str, Any]]: List of dictionaries with items
         """
-        path = f"episode/{id_}"
-        response = self._get(path, self.ver_uri)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return(f"episode/{id_}", self.ver_uri, list)
 
     # PUT /episode
-    def upd_episode(self, data: dict) -> dict:
+    def upd_episode(self, data: dict[str, Any]) -> dict[str, Any]:
         """Update the given episodes, currently only monitored is changed, all other modifications are ignored.
 
         Note:
             To be used in conjunction with get_episode()
 
         Args:
-            data (dict): All parameters to update episode
+            data (dict[str, Any]): All parameters to update episode
 
         Returns:
-            JSON: Array
+            dict[str, Any]: Dictionary with updated record
         """
-        path = "episode"
-        return self._put(path, self.ver_uri, data=data)
+        return self._put("episode", self.ver_uri, data=data)
 
     ## EPISODE FILE
 
@@ -171,13 +163,10 @@ class SonarrAPI(BaseArrAPI):
             id_ (int): Database id of series
 
         Returns:
-            JSON: Array
+            list[dict[str, Any]]: List of dictionaries with items
         """
-        path = "episodefile"
         params = {"seriesId": id_}
-        response = self._get(path, self.ver_uri, params=params)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return("episodefile", self.ver_uri, list, params)
 
     # GET /episodefile/{id}
     def get_episode_file(self, id_: int) -> list[dict[str, Any]]:
@@ -187,12 +176,9 @@ class SonarrAPI(BaseArrAPI):
             id_ (int): Database id of episode file
 
         Returns:
-            JSON: Array
+            list[dict[str, Any]]: List of dictionaries with items
         """
-        path = f"episodefile/{id_}"
-        response = self._get(path, self.ver_uri)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return(f"episodefile/{id_}", self.ver_uri, list)
 
     # DELETE /episodefile/{id}
     def del_episode_file(self, id_: int) -> Response:
@@ -202,18 +188,19 @@ class SonarrAPI(BaseArrAPI):
             id_ (int): Database id for episode file
 
         Returns:
-            Response: 200 / 401
+            Response: HTTP Response
         """
-        path = f"episodefile/{id_}"
-        return self._delete(path, self.ver_uri)
+        return self._delete(f"episodefile/{id_}", self.ver_uri)
 
     # PUT /episodefile/{id}
-    def upd_episode_file_quality(self, id_: int, data: dict) -> dict:
+    def upd_episode_file_quality(
+        self, id_: int, data: dict[str, Any]
+    ) -> dict[str, Any]:
         """Updates the quality of the episode file and returns the episode file
 
         Args:
             id_ (int): Database id for episode file
-            data (dict): data with quality::
+            data (dict[str, Any]): data with quality::
 
                 {
                     "quality": {
@@ -228,10 +215,9 @@ class SonarrAPI(BaseArrAPI):
                 }
 
         Returns:
-            JSON: Array
+            dict[str, Any]: Dictionary with updated record
         """
-        path = f"episodefile/{id_}"
-        return self._put(path, self.ver_uri, data=data)
+        return self._put(f"episodefile/{id_}", self.ver_uri, data=data)
 
     # GET /wanted/missing
     def get_wanted(
@@ -250,18 +236,15 @@ class SonarrAPI(BaseArrAPI):
             sort_dir (PyarrSortDirection, optional): Direction to sort the items. Defaults to PyarrSortDirection.ASC.
 
         Returns:
-            JSON: Array
+            dict[str, Any]: Dictionary with items
         """
-        path = "wanted/missing"
         params = {
             "sortKey": sort_key,
             "page": page,
             "pageSize": page_size,
             "sortDir": sort_dir,
         }
-        response = self._get(path, self.ver_uri, params=params)
-        assert isinstance(response, dict)
-        return response
+        return self.assert_return("wanted/missing", self.ver_uri, dict, params)
 
     # PROFILES
 
@@ -273,16 +256,14 @@ class SonarrAPI(BaseArrAPI):
             id_ (int): quality profile id from database
 
         Returns:
-            JSON: Array
+            list[dict[str, Any]]: List of dictionaries with items
         """
         path = f"profile/{id_}" if id_ else "profile"
-        response = self._get(path, self.ver_uri)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return(path, self.ver_uri, list)
 
     # PUT /profile/{id}
-    # TODO: this doesnt work on v3
-    def upd_quality_profile(self, id_: int, data: dict) -> dict:
+    # TODO: this doesnt work on v3 API
+    def upd_quality_profile(self, id_: int, data: dict[str, Any]) -> dict[str, Any]:
         """Update the quality profile data.
 
         Note:
@@ -290,28 +271,26 @@ class SonarrAPI(BaseArrAPI):
 
         Args:
             id_ (int): Profile ID to Update
-            data (dict): All parameters to update
+            data (dict[str, Any]): All parameters to update
 
         Returns:
-            JSON: Array
+            dict[str, Any]: Dictionary with updated record
         """
-        path = f"profile/{id_}"
-        return self._put(path, self.ver_uri, data=data)
+        return self._put(f"profile/{id_}", self.ver_uri, data=data)
 
     # DELETE /profile
-    # TODO: this doesnt work on v3
-    def del_quality_profile(self, id_: int):
+    # TODO: this doesnt work on v3 API
+    def del_quality_profile(self, id_: int) -> Response:
         """Removes a specific quality profile from the blocklist
 
         Args:
-            id_ (int): quality profile id from database
+            id_ (int): Quality profile id from database
 
         Returns:
-            JSON: Array
+            Response: HTTP Response
         """
         params = {"id": id_}
-        path = "profile"
-        return self._delete(path, self.ver_uri, params=params)
+        return self._delete("profile", self.ver_uri, params=params)
 
     ## QUEUE
 
@@ -320,12 +299,9 @@ class SonarrAPI(BaseArrAPI):
         """Gets currently downloading info
 
         Returns:
-            JSON: Array
+            list[dict[str, Any]]: List of dictionaries with items
         """
-        path = "queue"
-        response = self._get(path, self.ver_uri)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return("queue", self.ver_uri, list)
 
     ## PARSE
 
@@ -340,13 +316,9 @@ class SonarrAPI(BaseArrAPI):
             title (str): Title of series / episode
 
         Returns:
-            JSON: Array
+            list[dict[str, Any]]: List of dictionaries with items
         """
-        params = {"title": title}
-        path = "parse"
-        response = self._get(path, self.ver_uri, params=params)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return("parse", self.ver_uri, list, {"title": title})
 
     # GET /parse
     def get_parsed_path(self, file_path: str) -> list[dict[str, Any]]:
@@ -359,13 +331,9 @@ class SonarrAPI(BaseArrAPI):
             file_path (str): file path of series / episode
 
         Returns:
-            JSON: Array
+            list[dict[str, Any]]: List of dictionaries with items
         """
-        params = {"path": file_path}
-        path = "parse"
-        response = self._get(path, self.ver_uri, params=params)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return("parse", self.ver_uri, list, {"path": file_path})
 
     ## RELEASE
 
@@ -377,13 +345,9 @@ class SonarrAPI(BaseArrAPI):
             id_ (int): Database id for episode
 
         Returns:
-            JSON: Array
+            list[dict[str, Any]]: List of dictionaries with items
         """
-        params = {"episodeId": id_}
-        path = "release"
-        response = self._get(path, self.ver_uri, params=params)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return("release", self.ver_uri, list, {"episodeId": id_})
 
     # POST /release
     # TODO: find response
@@ -400,8 +364,7 @@ class SonarrAPI(BaseArrAPI):
             [type]: [description]
         """
         data = {"guid": guid, "indexerId": indexer_id}
-        path = "release"
-        return self._post(path, self.ver_uri, data=data)
+        return self._post("release", self.ver_uri, data=data)
 
     # POST /release/push
     # TODO: find response
@@ -425,8 +388,7 @@ class SonarrAPI(BaseArrAPI):
             "protocol": protocol,
             "publishDate": publish_date.isoformat(),
         }
-        path = "release/push"
-        return self._post(path, self.ver_uri, data=data)
+        return self._post("release/push", self.ver_uri, data=data)
 
     ## SERIES
     # GET /series and /series/{id}
@@ -441,9 +403,7 @@ class SonarrAPI(BaseArrAPI):
             list[dict]: List of dictionaries with items
         """
         path = f"series/{id_}" if id_ else "series"
-        response = self._get(path, self.ver_uri)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return(path, self.ver_uri, list)
 
     # POST /series
     def add_series(
@@ -474,7 +434,7 @@ class SonarrAPI(BaseArrAPI):
             search_for_missing_episodes (bool, optional): Search for missing episodes to download. Defaults to False.
 
         Returns:
-            dict: Dictionary of added record
+            dict[str, Any]: Dictionary of added record
         """
         series_json = self._series_json(
             tvdb_id,
@@ -487,21 +447,19 @@ class SonarrAPI(BaseArrAPI):
             search_for_missing_episodes,
         )
 
-        path = "series"
-        return self._post(path, self.ver_uri, data=series_json)
+        return self._post("series", self.ver_uri, data=series_json)
 
     # PUT /series
-    def upd_series(self, data: dict) -> dict[str, Any]:
+    def upd_series(self, data: dict[str, Any]) -> dict[str, Any]:
         """Update an existing series
 
         Args:
-            data (dict): contains data obtained by get_series()
+            data (dict[str, Any]): contains data obtained by get_series()
 
         Returns:
-            dict: Dictionary or updated record
+            dict[str, Any]: Dictionary or updated record
         """
-        path = "series"
-        return self._put(path, self.ver_uri, data=data)
+        return self._put("series", self.ver_uri, data=data)
 
     # DELETE /series/{id}
     def del_series(self, id_: int, delete_files: bool = False) -> Response:
@@ -516,8 +474,7 @@ class SonarrAPI(BaseArrAPI):
         """
         # File deletion does not work
         params = {"deleteFiles": delete_files}
-        path = f"series/{id_}"
-        return self._delete(path, self.ver_uri, params=params)
+        return self._delete(f"series/{id_}", self.ver_uri, params=params)
 
     # GET /series/lookup
     def lookup_series(self, term: str) -> list[dict[str, Any]]:
@@ -527,15 +484,9 @@ class SonarrAPI(BaseArrAPI):
             term (str): Series' Name, using `%20` to signify spaces, as in `The%20Blacklist`
 
         Returns:
-            list[dict]: List of dictionaries with items
+            list[dict[str, Any]]: List of dictionaries with items
         """
-        params = {"term": term}
-        path = "series/lookup"
-        response = self._get(path, self.ver_uri, params=params)
-
-        assert isinstance(response, list)
-
-        return response
+        return self.assert_return("series/lookup", self.ver_uri, list, {"term": term})
 
     # GET /series/lookup
     def lookup_series_by_tvdb_id(self, id_: int) -> list[dict[str, Any]]:
@@ -545,10 +496,7 @@ class SonarrAPI(BaseArrAPI):
             id_ (int): TVDB ID
 
         Returns:
-            list[dict]: List of dictionaries with items
+            list[dict[str, Any]]: List of dictionaries with items
         """
         params = {"term": f"tvdb:{id_}"}
-        path = "series/lookup"
-        response = self._get(path, self.ver_uri, params=params)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return("series/lookup", self.ver_uri, list, params)
