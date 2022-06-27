@@ -406,7 +406,7 @@ class ReadarrAPI(BaseArrAPI):
     # DELETE /book/{id}
     def del_book(
         self, id_: int, delete_files: bool = False, import_list_exclusion: bool = True
-    ) -> Response:
+    ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
         """Delete the book with the given ID
 
         Args:
@@ -506,7 +506,7 @@ class ReadarrAPI(BaseArrAPI):
     # DELETE /author/{id}
     def del_author(
         self, id_: int, delete_files: bool = False, import_list_exclusion: bool = True
-    ) -> Response:
+    ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
         """Delete the author with the given ID
 
         Args:

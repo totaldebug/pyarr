@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 from requests import Response
 
@@ -128,7 +128,9 @@ class BaseArrAPI(RequestHandler):
     # DELETE /rootfolder
     def del_root_folder(
         self, id_: int
-    ) -> Response:  # sourcery skip: class-extract-method
+    ) -> Union[
+        Response, dict[str, Any], dict[Any, Any]
+    ]:  # sourcery skip: class-extract-method
         """Delete root folder with specified id
 
         Args:
@@ -256,7 +258,9 @@ class BaseArrAPI(RequestHandler):
         return self.assert_return("blocklist", self.ver_uri, list, params)
 
     # DELETE /blocklist
-    def del_blocklist(self, id_: int) -> Response:
+    def del_blocklist(
+        self, id_: int
+    ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
         """Removes a specific release (the id provided) from the blocklist
 
         Args:
@@ -269,7 +273,9 @@ class BaseArrAPI(RequestHandler):
         return self._delete("blocklist", self.ver_uri, params=params)
 
     # DELETE /blocklist/bulk
-    def del_blocklist_bulk(self, data: dict[str, Any]) -> Response:
+    def del_blocklist_bulk(
+        self, data: dict[str, Any]
+    ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
         """Delete blocked releases in bulk
 
         Args:
@@ -312,7 +318,9 @@ class BaseArrAPI(RequestHandler):
         return self._put(f"qualityprofile/{id_}", self.ver_uri, data=data)
 
     # DELETE /qualityprofile
-    def del_quality_profile(self, id_: int) -> Response:
+    def del_quality_profile(
+        self, id_: int
+    ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
         """Removes a specific quality profile from the blocklist
 
         Args:
@@ -385,7 +393,7 @@ class BaseArrAPI(RequestHandler):
         return self._put(f"indexer/{id_}", self.ver_uri, data=data)
 
     # DELETE /indexer
-    def del_indexer(self, id_: int) -> Response:
+    def del_indexer(self, id_: int) -> Union[Response, dict[str, Any], dict[Any, Any]]:
         """Removes a specific indexer from the blocklist
 
         Args:
@@ -402,7 +410,7 @@ class BaseArrAPI(RequestHandler):
     # DELETE /queue/{id}
     def del_queue(
         self, id_: int, remove_from_client: bool = True, blacklist: bool = True
-    ) -> Response:
+    ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
         """Remove an item from the queue and blacklist it
 
         Args:
@@ -571,7 +579,9 @@ class BaseArrAPI(RequestHandler):
         return self._put(f"notification/{id_}", self.ver_uri, data=data)
 
     # DELETE /notification/{id}
-    def del_notification(self, id_: int) -> Response:
+    def del_notification(
+        self, id_: int
+    ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
         """Delete a notification by its database id
 
         Args:
@@ -641,7 +651,7 @@ class BaseArrAPI(RequestHandler):
         return self._put(f"tag/{id_}", self.ver_uri, data=data)
 
     # DELETE /tag/{id}
-    def del_tag(self, id_: int) -> Response:
+    def del_tag(self, id_: int) -> Union[Response, dict[str, Any], dict[Any, Any]]:
         """Delete the tag with the given ID
 
         Args:
@@ -718,7 +728,9 @@ class BaseArrAPI(RequestHandler):
         return self._put(f"downloadclient/{id_}", self.ver_uri, data=data)
 
     # DELETE /downloadclient/{id}
-    def del_download_client(self, id_: int) -> Response:
+    def del_download_client(
+        self, id_: int
+    ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
         """Delete a download client by database id
 
         Args:
@@ -767,7 +779,9 @@ class BaseArrAPI(RequestHandler):
         return self._put(f"importlist/{id_}", self.ver_uri, data=data)
 
     # DELETE /importlist/{id}
-    def del_import_list(self, id_: int) -> Response:
+    def del_import_list(
+        self, id_: int
+    ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
         """Delete an import list
 
         Args:

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyarr"
-version = "4.0.1"
+version = "4.0.2"
 description = "Synchronous Sonarr, Radarr, Lidarr and Readarr API's for Python"
 authors = ["Steven Marks <marksie1988@users.noreply.github.com>"]
 license = "MIT"
