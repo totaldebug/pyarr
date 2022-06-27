@@ -190,7 +190,9 @@ class LidarrAPI(BaseArrAPI):
         """
         return self._put("artist", self.ver_uri, data=data)
 
-    def delete_artist(self, id_: int) -> Response:
+    def delete_artist(
+        self, id_: int
+    ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
         """Delete an artist with the provided ID
 
         Args:
@@ -348,7 +350,7 @@ class LidarrAPI(BaseArrAPI):
         """
         return self._put("album", self.ver_uri, data=data)
 
-    def delete_album(self, id_: int) -> Response:
+    def delete_album(self, id_: int) -> Union[Response, dict[str, Any], dict[Any, Any]]:
         """Delete an album with the provided ID
 
         Args:
@@ -526,7 +528,9 @@ class LidarrAPI(BaseArrAPI):
         return self._put("trackfile", self.ver_uri, data=data)
 
     # DEL /trackfile/{ids_}
-    def delete_track_file(self, ids_: Union[int, list[int]]) -> Response:
+    def delete_track_file(
+        self, ids_: Union[int, list[int]]
+    ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
         """Delete track files. Use integer for one file or list for mass deletion.
 
         Args:

@@ -162,7 +162,7 @@ class RequestHandler:
         ver_uri: str = "",
         params: Union[dict, None] = None,
         data: Union[dict, None] = None,
-    ) -> Response:
+    ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
         """Wrapper on any delete requests
 
         Args:
@@ -186,7 +186,12 @@ class RequestHandler:
             raise PyarrConnectionError(
                 "Timeout occurred while connecting to API"
             ) from exception
-        return self._return(res, Response)
+        response = _process_response(res)
+        if isinstance(response, dict):
+            assert isinstance(response, dict)
+        else:
+            assert isinstance(response, Response)
+        return response
 
     def _return(self, res: Response, arg1: type) -> Any:
         """Takes the response and asserts its type

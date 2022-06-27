@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 from requests import Response
 
@@ -152,7 +152,7 @@ class RadarrAPI(BaseArrAPI):
     # DELETE /movie/{id}
     def del_movie(
         self, id_: int, delete_files: bool = False, add_exclusion: bool = False
-    ) -> Response:
+    ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
         """Delete a single movie by database id.
 
         Args:
@@ -218,7 +218,9 @@ class RadarrAPI(BaseArrAPI):
         return self._put("movie/editor", self.ver_uri, data=data)
 
     # DELETE /movie/editor
-    def del_movies(self, data: dict[str, Any]) -> Response:
+    def del_movies(
+        self, data: dict[str, Any]
+    ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
         """The delete operation allows mass deletion of movies (and optionally files)
 
         Args:
@@ -292,7 +294,9 @@ class RadarrAPI(BaseArrAPI):
         return self.assert_return(f"moviefile/{id_}", self.ver_uri, list)
 
     # DELETE /moviefile/{id}
-    def del_movie_file(self, id_: int) -> Response:
+    def del_movie_file(
+        self, id_: int
+    ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
         """Allows for deletion of a moviefile by its database ID.
 
         Args:
@@ -380,7 +384,7 @@ class RadarrAPI(BaseArrAPI):
         data: dict[str, Any],
         remove_from_client: bool = True,
         blacklist: bool = True,
-    ) -> Response:
+    ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
         """Remove multiple items from queue by their IDs
 
         Args:
@@ -469,7 +473,7 @@ class RadarrAPI(BaseArrAPI):
         return self._put(f"indexer/{id_}", self.ver_uri, data=data)
 
     # DELETE /indexer/{id}
-    def del_indexer(self, id_: int) -> Response:
+    def del_indexer(self, id_: int) -> Union[Response, dict[str, Any], dict[Any, Any]]:
         """Delete indexer by database ID
 
         Args:

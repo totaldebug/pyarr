@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any, Optional, Union
 from warnings import warn
 
 from requests import Response
@@ -214,7 +214,9 @@ class SonarrAPI(BaseArrAPI):
         return self.assert_return(f"episodefile/{id_}", self.ver_uri, list)
 
     # DELETE /episodefile/{id}
-    def del_episode_file(self, id_: int) -> Response:
+    def del_episode_file(
+        self, id_: int
+    ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
         """Deletes the episode file with corresponding id
 
         Args:
@@ -464,7 +466,9 @@ class SonarrAPI(BaseArrAPI):
         return self._put("series", self.ver_uri, data=data)
 
     # DELETE /series/{id}
-    def del_series(self, id_: int, delete_files: bool = False) -> Response:
+    def del_series(
+        self, id_: int, delete_files: bool = False
+    ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
         """Delete the series with the given ID
 
         Args:
@@ -472,7 +476,7 @@ class SonarrAPI(BaseArrAPI):
             delete_files (bool, optional): If true series folder and files will be deleted. Defaults to False.
 
         Returns:
-            Response: HTTP Response
+            dict: Blank dictionary
         """
         # File deletion does not work
         params = {"deleteFiles": delete_files}
