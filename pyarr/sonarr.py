@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Any, Optional
+from warnings import warn
 
 from requests import Response
 
@@ -113,6 +114,24 @@ class SonarrAPI(BaseArrAPI):
     ## EPISODE
 
     # GET /episode
+    def get_episode(self, id_: int, series: bool = False) -> dict[str, Any]:
+        """Get get episodes by ID or series
+
+        Args:
+            id_ (int): ID for Episode or Series.
+            series (bool, optional): Set to true if the ID is for a Series. Defaults to false.
+
+        Returns:
+            list[dict[str, Any]]: List of dictionaries with items
+        """
+        return self.assert_return(
+            f"episode{'' if series else f'/{id_}'}",
+            self.ver_uri,
+            dict,
+            params={"seriesId": id_} if series else None,
+        )
+
+    # GET /episode
     def get_episodes_by_series_id(self, id_: int) -> list[dict[str, Any]]:
         # sourcery skip: class-extract-method
         """Gets all episodes from a given series ID
@@ -123,11 +142,16 @@ class SonarrAPI(BaseArrAPI):
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
+        warn(
+            "This method is deprecated and will be removed in a future release. Please use get_episode()",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         params = {"seriesId": id_}
         return self.assert_return("episode", self.ver_uri, list, params)
 
     # GET /episode/{id}
-    def get_episode_by_episode_id(self, id_: int) -> list[dict[str, Any]]:
+    def get_episode_by_episode_id(self, id_: int) -> dict[str, Any]:
         """Gets a specific episode by database id
 
         Args:
@@ -136,22 +160,30 @@ class SonarrAPI(BaseArrAPI):
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
-        return self.assert_return(f"episode/{id_}", self.ver_uri, list)
+        warn(
+            "This method is deprecated and will be removed in a future release. Please use get_episode()",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return self.assert_return(f"episode/{id_}", self.ver_uri, dict)
 
     # PUT /episode
-    def upd_episode(self, data: dict[str, Any]) -> dict[str, Any]:
-        """Update the given episodes, currently only monitored is changed, all other modifications are ignored.
-
-        Note:
-            To be used in conjunction with get_episode()
+    def upd_episode(self, id_: int, data: dict[str, Any]) -> dict[str, Any]:
+        """Update the given episodes, currently only monitored is supported
 
         Args:
-            data (dict[str, Any]): All parameters to update episode
+            id_ (int): ID of the Episode to be updated
+            data (dict[str, Any]): Parameters to update the episode
+
+        Example:
+            ::
+                payload = {"monitored": True}
+                sonarr.upd_episode(1, payload)
 
         Returns:
             dict[str, Any]: Dictionary with updated record
         """
-        return self._put("episode", self.ver_uri, data=data)
+        return self._put(f"episode/{id_}", self.ver_uri, data=data)
 
     ## EPISODE FILE
 
@@ -260,37 +292,6 @@ class SonarrAPI(BaseArrAPI):
         """
         path = f"profile/{id_}" if id_ else "profile"
         return self.assert_return(path, self.ver_uri, list)
-
-    # PUT /profile/{id}
-    # TODO: this doesnt work on v3 API
-    def upd_quality_profile(self, id_: int, data: dict[str, Any]) -> dict[str, Any]:
-        """Update the quality profile data.
-
-        Note:
-            To be used in conjunction with get_quality_profile()
-
-        Args:
-            id_ (int): Profile ID to Update
-            data (dict[str, Any]): All parameters to update
-
-        Returns:
-            dict[str, Any]: Dictionary with updated record
-        """
-        return self._put(f"profile/{id_}", self.ver_uri, data=data)
-
-    # DELETE /profile
-    # TODO: this doesnt work on v3 API
-    def del_quality_profile(self, id_: int) -> Response:
-        """Removes a specific quality profile from the blocklist
-
-        Args:
-            id_ (int): Quality profile id from database
-
-        Returns:
-            Response: HTTP Response
-        """
-        params = {"id": id_}
-        return self._delete("profile", self.ver_uri, params=params)
 
     ## QUEUE
 

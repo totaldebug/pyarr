@@ -17,6 +17,8 @@ dist
 build
 .vscode/*
 *.egg-info
+.mypy_cache
+.pytest_cache
 
 .devcontainer/*
 !.devcontainer/recommended-devcontainer.json
