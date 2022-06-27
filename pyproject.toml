@@ -1,11 +1,11 @@
 [tool.poetry]
 name = "pyarr"
-version = "3.1.3"
-description = "Python client for Servarr API's (Sonarr, Radarr, Readarr)"
+version = "4.0.0"
+description = "Synchronous Sonarr, Radarr, Lidarr and Readarr API's for Python"
 authors = ["Steven Marks <marksie1988@users.noreply.github.com>"]
 license = "MIT"
 readme = "README.md"
-keywords = ["sonarr", "radarr", "readarr", "api", "wrapper"]
+keywords = ["sonarr", "radarr", "readarr", "lidarr", "api", "wrapper", "plex"]
 homepage = "https://github.com/totaldebug/pyarr"
 repository = "https://github.com/totaldebug/pyarr"
 documentation = "https://docs.totaldebug.uk/pyarr"
@@ -15,22 +15,23 @@ classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Natural Language :: English",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
     "Topic :: Software Development :: Libraries :: Python Modules"
 ]
 packages = [
-    {include = "pyarr"}
+    {include = "pyarr"},
+    {include = "pyarr/py.typed"}
 ]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 requests = "^2.21.0"
 types-requests = "^2.25.11"
 
 [tool.poetry.dev-dependencies]
-black = {version = "^20.8b1", allow-prereleases = true}
+black = {version = "^22.3", allow-prereleases = true}
 flake8 = "^3.8.4"
 isort = "^5.10.0"
 mypy = "^0.910"
@@ -43,7 +44,7 @@ sphinx-rtd-theme = "^1.0.0"
 
 [tool.black]
 line-length = 88
-target_version = ['py38']
+target_version = ['py39']
 include = '\.pyi?$'
 exclude = '''
 
@@ -64,7 +65,7 @@ exclude = '''
 '''
 
 [tool.mypy]
-python_version = "3.8"
+python_version = "3.9"
 warn_return_any = true
 warn_unused_configs = true
 
@@ -83,6 +84,7 @@ known_first_party = [
 forced_separate = [
     "tests",
 ]
+combine_as_imports = true
 
 [tool.interrogate]
 ignore-init-method = true

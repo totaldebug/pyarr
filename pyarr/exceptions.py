@@ -28,3 +28,7 @@ class PyarrMissingProfile(PyarrError):
 
 class PyarrMethodNotAllowed(PyarrError):
     """Pyarr method not allowed"""
+
+
+class PyarrRecordNotFound(PyarrError):
+    """Pyarr record was not found"""
