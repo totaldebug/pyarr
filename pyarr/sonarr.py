@@ -177,6 +177,7 @@ class SonarrAPI(BaseArrAPI):
 
         Example:
             ::
+
                 payload = {"monitored": True}
                 sonarr.upd_episode(1, payload)
 
