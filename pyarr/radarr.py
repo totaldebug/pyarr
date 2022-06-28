@@ -1,4 +1,5 @@
 from typing import Any, Optional, Union
+from warnings import warn
 
 from requests import Response
 
@@ -29,7 +30,7 @@ class RadarrAPI(BaseArrAPI):
 
     def _movie_json(
         self,
-        db_id: str,
+        db_id: Union[str, int],
         quality_profile_id: int,
         root_dir: str,
         monitored: bool = True,
@@ -39,12 +40,12 @@ class RadarrAPI(BaseArrAPI):
         """Searches for movie on tmdb and returns Movie json to add.
 
         Args:
-            db_id (str): imdb or tmdb id
+            db_id (Union[str, int]): imdb or tmdb id
             quality_profile_id (int): ID of the quality profile the movie will use
             root_dir (str): location of the root DIR
             monitored (bool, optional): should the movie be monitored. Defaults to True.
             search_for_movie (bool, optional): Should we search for the movie. Defaults to True.
-            tmdb (bool, optional): Use TMDB IDs. Set to False to use IMDB. Defaults to True.
+            tmdb (bool, optional): Not used, deprecated. Defaults to True.
 
         Raises:
             PyarrRecordNotFound: Movie doesnt exist
@@ -52,7 +53,12 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             dict[str, Any]: Dictionary containing movie information
         """
-        if tmdb:
+        warn(
+            "Option tmdb is going to be deprecated and will be removed in a future release.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        if isinstance(db_id, int):
             movie = self.lookup_movie_by_tmdb_id(db_id)[0]
         else:
             movie = self.lookup_movie_by_imdb_id(db_id)[0]
@@ -76,26 +82,34 @@ class RadarrAPI(BaseArrAPI):
 
     # GET /movie
     def get_movie(
-        self, id_: Optional[int] = None
-    ) -> list[dict[str, Any]]:  # sourcery skip: class-extract-method
-        """Returns all movies in the database, or returns a movie with a specific TMDB ID.
+        self, id_: Optional[int] = None, tmdb: bool = False
+    ) -> Union[
+        list[dict[str, Any]], dict[str, Any]
+    ]:  # sourcery skip: class-extract-method
+        """Returns all movies in the database, movie based on the Radarr ID or TMDB id.
+
+        Note:
+            IMDB is not supported at this time
 
         Args:
-            id_ (int, optional): TMDB Id of Movies. Defaults to None.
+            id_ (Optional[int], optional): Radarr ID or TMDB ID of Movies. Defaults to None.
+            tmdb (bool): Use TMDB Id. Defaults to False
 
         Returns:
-            list[dict[str, Any]]: List of Dictionaries with items
+            Union[list[dict[str, Any]], dict[str, Any]]: List or Dictionary with items
         """
-        params = {}
-        if id_:
-            params["tmdbId"] = id_
-        path = "movie"
-        return self.assert_return(path, self.ver_uri, list, params)
+
+        return self.assert_return(
+            f"movie{'' if id_ is None or tmdb else f'/{id_}'}",
+            self.ver_uri,
+            list if id_ is None else dict,
+            params=None if id_ is None else {"tmdbid": id_},
+        )
 
     # POST /movie
     def add_movie(
         self,
-        db_id: str,
+        db_id: Union[str, int],
         quality_profile_id: int,
         root_dir: str,
         monitored: bool = True,
@@ -105,18 +119,23 @@ class RadarrAPI(BaseArrAPI):
         """Adds a movie to the database
 
         Args:
-            db_id (str): IMDB or TMDB ID
+            db_id (Union[str, int]): IMDB or TMDB ID
             quality_profile_id (int): ID of the quality profile the movie will use
             root_dir (str): Location of the root DIR
             monitored (bool, optional): Should the movie be monitored. Defaults to True.
             search_for_movie (bool, optional): Should we search for the movie. Defaults to True.
-            tmdb (bool, optional): Use TMDB IDs. Set to False to use IMDB. Defaults to True.
+            tmdb (bool, optional): Not in use, Deprecated. Defaults to True.
 
         Returns:
             dict[str, Any]: Dictonary with added record
         """
+        warn(
+            "Option tmdb is going to be deprecated and will be removed in a future release.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         movie_json = self._movie_json(
-            db_id, quality_profile_id, root_dir, monitored, search_for_movie, tmdb
+            db_id, quality_profile_id, root_dir, monitored, search_for_movie
         )
 
         return self._post("movie", self.ver_uri, data=movie_json)
@@ -138,7 +157,7 @@ class RadarrAPI(BaseArrAPI):
         return self._put("movie", self.ver_uri, data=data, params=params)
 
     # GET /movie/{id}
-    def get_movie_by_movie_id(self, id_: int) -> list[dict[str, Any]]:
+    def get_movie_by_movie_id(self, id_: int) -> dict[str, Any]:
         """Get a movie by the Radarr database ID
 
         Args:
@@ -147,7 +166,12 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
-        return self.assert_return(f"movie/{id_}", self.ver_uri, list)
+        warn(
+            "This method is deprecated and will be removed in a future release. Please use get_movie()",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return self.assert_return(f"movie/{id_}", self.ver_uri, dict)
 
     # DELETE /movie/{id}
     def del_movie(
@@ -180,7 +204,7 @@ class RadarrAPI(BaseArrAPI):
         return self.assert_return("movie/lookup", self.ver_uri, list, params)
 
     # GET /movie/lookup
-    def lookup_movie_by_tmdb_id(self, id_: str) -> list[dict[str, Any]]:
+    def lookup_movie_by_tmdb_id(self, id_: int) -> list[dict[str, Any]]:
         """Search for movie by TMDB ID
 
         Args:
