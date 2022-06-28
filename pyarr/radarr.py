@@ -98,11 +98,10 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             Union[list[dict[str, Any]], dict[str, Any]]: List or Dictionary with items
         """
-
         return self.assert_return(
             f"movie{'' if id_ is None or tmdb else f'/{id_}'}",
             self.ver_uri,
-            list if id_ is None else dict,
+            list if not id_ or tmdb else dict,
             params=None if id_ is None else {"tmdbid": id_},
         )
 
@@ -175,20 +174,33 @@ class RadarrAPI(BaseArrAPI):
 
     # DELETE /movie/{id}
     def del_movie(
-        self, id_: int, delete_files: bool = False, add_exclusion: bool = False
+        self,
+        id_: Union[int, list],
+        delete_files: bool = False,
+        add_exclusion: bool = False,
     ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
-        """Delete a single movie by database id.
+        """Delete a single movie or multiple movies by database id.
 
         Args:
-            id_ (int): Database Id of movie to delete.
+            id_ (Union[int, list]): Int with single movie Id or list with multiple IDs to delete.
             delete_files (bool, optional): Delete movie files when deleting movies. Defaults to False.
             add_exclusion (bool, optional): Add deleted movies to List Exclusions. Defaults to False.
 
         Returns:
             Response: HTTP Response
         """
-        params = {"deleteFiles": delete_files, "addExclusion": add_exclusion}
-        return self._delete(f"movie/{id_}", self.ver_uri, params=params)
+        params: dict[str, str | list[int]] = {
+            "deleteFiles": str(delete_files),
+            "addImportExclusion": str(add_exclusion),
+        }
+        if isinstance(id_, list):
+            params["moviIds"] = id_
+        return self._delete(
+            "movie/editor" if isinstance(id_, list) else f"movie/{id_}",
+            self.ver_uri,
+            params=None if isinstance(id_, list) else params,
+            data=params if isinstance(id_, list) else None,
+        )
 
     # GET /movie/lookup
     def lookup_movie(self, term: str) -> list[dict[str, Any]]:
