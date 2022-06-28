@@ -139,6 +139,10 @@ class SonarrAPI(BaseArrAPI):
         Args:
             id_ (int): Database id for series
 
+        Note:
+            This method is deprecated and will be removed in a
+            future release. Please use get_episode()
+
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
@@ -156,6 +160,10 @@ class SonarrAPI(BaseArrAPI):
 
         Args:
             id_ (int): Database id for episode
+
+        Note:
+            This method is deprecated and will be removed in a
+            future release. Please use get_episode()
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items

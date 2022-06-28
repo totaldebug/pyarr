@@ -162,6 +162,10 @@ class RadarrAPI(BaseArrAPI):
         Args:
             id_ (int): Database Id of movie to return
 
+        Note:
+            This method is deprecated and will be removed in a
+            future release. Please use get_movie()
+
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
