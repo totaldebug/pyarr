@@ -1,0 +1,16 @@
+{
+    "seriesId": 1,
+    "tvdbId": 1234567,
+    "episodeFileId": 1,
+    "seasonNumber": 1,
+    "episodeNumber": 1,
+    "title": "string",
+    "airDate": "2015-06-21",
+    "airDateUtc": "2015-06-22T02:30:00Z",
+    "overview": "string",
+    "hasFile": true,
+    "monitored": true,
+    "absoluteEpisodeNumber": 1,
+    "unverifiedSceneNumbering": false,
+    "id": 1
+}

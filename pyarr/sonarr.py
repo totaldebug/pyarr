@@ -127,7 +127,7 @@ class SonarrAPI(BaseArrAPI):
         return self.assert_return(
             f"episode{'' if series else f'/{id_}'}",
             self.ver_uri,
-            dict,
+            list if series else dict,
             params={"seriesId": id_} if series else None,
         )
 

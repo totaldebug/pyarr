@@ -19,6 +19,8 @@ build
 *.egg-info
 .mypy_cache
 .pytest_cache
+.coverage
+coverage.xml
 
 .devcontainer/*
 !.devcontainer/recommended-devcontainer.json
