@@ -269,6 +269,7 @@ class SonarrAPI(BaseArrAPI):
         page: int = PAGE,
         page_size: int = PAGE_SIZE,
         sort_dir: PyarrSortDirection = PyarrSortDirection.ASC,
+        include_series: bool = False,
     ) -> dict[str, Any]:
         """Gets missing episode (episodes without files)
 
@@ -277,6 +278,7 @@ class SonarrAPI(BaseArrAPI):
             page (int, optional): Page number to return. Defaults to 1.
             page_size (int, optional): Number of items per page. Defaults to 10.
             sort_dir (PyarrSortDirection, optional): Direction to sort the items. Defaults to PyarrSortDirection.ASC.
+            include_series (bool, optional): Include the whole series. Defaults to False
 
         Returns:
             dict[str, Any]: Dictionary with items
@@ -287,6 +289,8 @@ class SonarrAPI(BaseArrAPI):
             "pageSize": page_size,
             "sortDir": sort_dir,
         }
+        if include_series:
+            params["includeSeries"] = True
         return self.assert_return("wanted/missing", self.ver_uri, dict, params)
 
     # PROFILES
