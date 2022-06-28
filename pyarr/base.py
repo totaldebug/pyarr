@@ -608,7 +608,9 @@ class BaseArrAPI(RequestHandler):
         return self.assert_return(path, self.ver_uri, list)
 
     # GET /tag/detail/{id}
-    def get_tag_detail(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
+    def get_tag_detail(
+        self, id_: Optional[int] = None
+    ) -> Union[list[dict[str, Any]], dict[str, Any]]:
         """Returns all tags or specific tag by database id with detailed information
 
         Args:
@@ -618,7 +620,7 @@ class BaseArrAPI(RequestHandler):
             list[dict[str, Any]]: List of dictionaries with items
         """
         path = f"tag/detail/{id_}" if id_ else "tag/detail"
-        return self.assert_return(path, self.ver_uri, list)
+        return self.assert_return(path, self.ver_uri, list if id_ is None else dict)
 
     # POST /tag
     def create_tag(self, label: str) -> dict[str, Any]:
