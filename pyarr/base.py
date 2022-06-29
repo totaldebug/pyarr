@@ -289,7 +289,9 @@ class BaseArrAPI(RequestHandler):
     # PROFILES
 
     # GET /qualityprofile/{id}
-    def get_quality_profile(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
+    def get_quality_profile(
+        self, id_: Optional[int] = None
+    ) -> Union[list[dict[str, Any]], dict[Any, Any]]:
         """Gets all quality profiles or specific one with id_
 
         Args:
@@ -298,8 +300,9 @@ class BaseArrAPI(RequestHandler):
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
-        path = f"qualityprofile/{id_}" if id_ else "qualityprofile"
-        return self.assert_return(path, self.ver_uri, list)
+
+        path = f"qualityprofile{f'/{id_}' if id_ else ''}"
+        return self.assert_return(path, self.ver_uri, dict if id_ else list)
 
     # PUT /qualityprofile/{id}
     def upd_quality_profile(self, id_: int, data: dict[str, Any]) -> dict[str, Any]:

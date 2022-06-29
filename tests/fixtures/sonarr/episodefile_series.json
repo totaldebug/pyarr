@@ -1,0 +1,88 @@
+[
+    {
+        "seriesId": 1,
+        "seasonNumber": 1,
+        "relativePath": "file.mkv",
+        "path": "/tv/folder/file.mkv",
+        "size": 1844044894,
+        "dateAdded": "2017-01-16T21:09:06.070997Z",
+        "language": {
+            "id": 1,
+            "name": "English"
+        },
+        "quality": {
+            "quality": {
+                "id": 4,
+                "name": "HDTV-720p",
+                "source": "television",
+                "resolution": 720
+            },
+            "revision": {
+                "version": 1,
+                "real": 0,
+                "isRepack": false
+            }
+        },
+        "mediaInfo": {
+            "audioBitrate": 384000,
+            "audioChannels": 5.1,
+            "audioCodec": "AC3",
+            "audioLanguages": "English",
+            "audioStreamCount": 1,
+            "videoBitDepth": 8,
+            "videoBitrate": 7381526,
+            "videoCodec": "x264",
+            "videoFps": 23.976,
+            "resolution": "1280x720",
+            "runTime": "31:01",
+            "scanType": "Progressive",
+            "subtitles": ""
+        },
+        "qualityCutoffNotMet": false,
+        "languageCutoffNotMet": false,
+        "id": 1
+    },
+    {
+        "seriesId": 1,
+        "seasonNumber": 1,
+        "relativePath": "file.mkv",
+        "path": "/tv/folder/file.mkv",
+        "size": 1844044894,
+        "dateAdded": "2017-01-16T21:09:06.070997Z",
+        "language": {
+            "id": 1,
+            "name": "English"
+        },
+        "quality": {
+            "quality": {
+                "id": 4,
+                "name": "HDTV-720p",
+                "source": "television",
+                "resolution": 720
+            },
+            "revision": {
+                "version": 1,
+                "real": 0,
+                "isRepack": false
+            }
+        },
+        "mediaInfo": {
+            "audioBitrate": 384000,
+            "audioChannels": 5.1,
+            "audioCodec": "AC3",
+            "audioLanguages": "English",
+            "audioStreamCount": 1,
+            "videoBitDepth": 8,
+            "videoBitrate": 7381526,
+            "videoCodec": "x264",
+            "videoFps": 23.976,
+            "resolution": "1280x720",
+            "runTime": "31:01",
+            "scanType": "Progressive",
+            "subtitles": ""
+        },
+        "qualityCutoffNotMet": false,
+        "languageCutoffNotMet": false,
+        "id": 2
+    }
+]

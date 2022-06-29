@@ -1,0 +1,44 @@
+{
+    "seriesId": 0,
+    "seasonNumber": 0,
+    "relativePath": "string",
+    "path": "string",
+    "size": 0,
+    "dateAdded": "2019-05-19T05:33:25.295709Z",
+    "releaseGroup": "string",
+    "language": {
+        "id": 0,
+        "name": "string"
+    },
+    "quality": {
+        "quality": {
+            "id": 0,
+            "name": "string",
+            "source": "string",
+            "resolution": 0
+        },
+        "revision": {
+            "version": 0,
+            "real": 0,
+            "isRepack": false
+        }
+    },
+    "mediaInfo": {
+        "audioBitrate": 0,
+        "audioChannels": 0.0,
+        "audioCodec": "string",
+        "audioLanguages": "string",
+        "audioStreamCount": 0,
+        "videoBitDepth": 0,
+        "videoBitrate": 0,
+        "videoCodec": "string",
+        "videoFps": 0.0,
+        "resolution": "string",
+        "runTime": "00:00",
+        "scanType": "string",
+        "subtitles": "string"
+    },
+    "qualityCutoffNotMet": true,
+    "languageCutoffNotMet": false,
+    "id": 0
+}

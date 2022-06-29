@@ -206,20 +206,31 @@ class SonarrAPI(BaseArrAPI):
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
+        warn(
+            "This method is deprecated and will be removed in a future release. Please use get_episode_file()",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         params = {"seriesId": id_}
         return self.assert_return("episodefile", self.ver_uri, list, params)
 
     # GET /episodefile/{id}
-    def get_episode_file(self, id_: int) -> list[dict[str, Any]]:
+    def get_episode_file(self, id_: int, series: bool = False) -> dict[str, Any]:
         """Returns episode file information for specified id
 
         Args:
             id_ (int): Database id of episode file
+            series (bool, optional): Set to true if the ID is for a Series. Defaults to false.
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            dict[str, Any]: Dictionary with data
         """
-        return self.assert_return(f"episodefile/{id_}", self.ver_uri, list)
+        return self.assert_return(
+            f"episodefile{'' if series else f'/{id_}'}",
+            self.ver_uri,
+            list if series else dict,
+            params={"seriesId": id_} if series else None,
+        )
 
     # DELETE /episodefile/{id}
     def del_episode_file(
@@ -268,16 +279,16 @@ class SonarrAPI(BaseArrAPI):
         sort_key: SonarrSortKeys = SonarrSortKeys.AIR_DATE_UTC,
         page: int = PAGE,
         page_size: int = PAGE_SIZE,
-        sort_dir: PyarrSortDirection = PyarrSortDirection.ASC,
+        sort_direction: PyarrSortDirection = PyarrSortDirection.DEFAULT,
         include_series: bool = False,
     ) -> dict[str, Any]:
         """Gets missing episode (episodes without files)
 
         Args:
-            sort_key (SonarrSortKeys, optional): series.titke or airDateUtc. Defaults to SonarrSortKeys.AIR_DATE_UTC.
+            sort_key (SonarrSortKeys, optional): series.title or airDateUtc. Defaults to SonarrSortKeys.AIR_DATE_UTC.
             page (int, optional): Page number to return. Defaults to 1.
             page_size (int, optional): Number of items per page. Defaults to 10.
-            sort_dir (PyarrSortDirection, optional): Direction to sort the items. Defaults to PyarrSortDirection.ASC.
+            sort_direction (PyarrSortDirection, optional): Direction to sort the items. Defaults to PyarrSortDirection.DEFAULT.
             include_series (bool, optional): Include the whole series. Defaults to False
 
         Returns:
@@ -287,26 +298,11 @@ class SonarrAPI(BaseArrAPI):
             "sortKey": sort_key,
             "page": page,
             "pageSize": page_size,
-            "sortDir": sort_dir,
+            "sortDirection": sort_direction,
         }
         if include_series:
             params["includeSeries"] = True
         return self.assert_return("wanted/missing", self.ver_uri, dict, params)
-
-    # PROFILES
-
-    # GET /profile/{id}
-    def get_quality_profile(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
-        """Gets all quality profiles or specific one with id_
-
-        Args:
-            id_ (int): quality profile id from database
-
-        Returns:
-            list[dict[str, Any]]: List of dictionaries with items
-        """
-        path = f"profile/{id_}" if id_ else "profile"
-        return self.assert_return(path, self.ver_uri, list)
 
     ## QUEUE
 

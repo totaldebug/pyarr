@@ -61,7 +61,8 @@ class ReadarrAPI(BaseArrAPI):
         """
         if quality_profile_id is None:
             try:
-                quality_profile_id = self.get_quality_profile()[0]["id"]
+                quality_profiles = self.get_quality_profile()[0]["id"]
+                quality_profile_id = quality_profiles[0]["id"]
             except IndexError as exception:
                 raise PyarrMissingProfile(
                     "There is no Quality Profile setup"

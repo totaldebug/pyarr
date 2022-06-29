@@ -1,0 +1,24 @@
+{
+    "page": 1,
+    "pageSize": 10,
+    "sortKey": "airDateUtc",
+    "sortDirection": "default",
+    "totalRecords": 1,
+    "records": [
+        {
+            "seriesId": 0,
+            "episodeFileId": 0,
+            "seasonNumber": 0,
+            "episodeNumber": 0,
+            "title": "string",
+            "airDate": "2010-03-07",
+            "airDateUtc": "2010-03-07T05:00:00Z",
+            "overview": "string",
+            "hasFile": false,
+            "monitored": true,
+            "absoluteEpisodeNumber": 0,
+            "unverifiedSceneNumbering": false,
+            "id": 0
+        }
+    ]
+}
