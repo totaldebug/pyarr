@@ -303,3 +303,16 @@ def test_get_releases(responses, sonarr_client):
     )
     data = sonarr_client.get_releases(1)
     assert isinstance(data, list)
+
+
+@pytest.mark.usefixtures
+def test_download_release(responses, sonarr_client):
+    responses.add(
+        responses.POST,
+        "https://127.0.0.1:8989/api/v3/release",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/release_download.json"),
+        status=201,
+    )
+    data = sonarr_client.download_release(guid="1450590", indexer_id=2)
+    assert isinstance(data, dict)
