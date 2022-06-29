@@ -202,3 +202,16 @@ def test_get_quality_profile(responses, sonarr_client):
     )
     data = sonarr_client.get_quality_profile(1)
     assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_get_queue(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/queue?page=1&pageSize=20&sortDirection=default&sortKey=timeleft&includeUnknownSeriesItems=False&includeSeries=False&includeEpisode=False",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/queue.json"),
+        status=200,
+    )
+    data = sonarr_client.get_queue()
+    assert isinstance(data, dict)

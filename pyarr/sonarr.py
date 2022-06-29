@@ -295,10 +295,10 @@ class SonarrAPI(BaseArrAPI):
             dict[str, Any]: Dictionary with items
         """
         params = {
-            "sortKey": sort_key,
+            "sortKey": sort_key.value,
             "page": page,
             "pageSize": page_size,
-            "sortDirection": sort_direction,
+            "sortDirection": sort_direction.value,
         }
         if include_series:
             params["includeSeries"] = True
@@ -307,13 +307,31 @@ class SonarrAPI(BaseArrAPI):
     ## QUEUE
 
     # GET /queue
-    def get_queue(self) -> list[dict[str, Any]]:
+    def get_queue(
+        self,
+        page: int = 1,
+        page_size: int = 20,
+        sort_dir: PyarrSortDirection = PyarrSortDirection.DEFAULT,
+        sort_key: SonarrSortKeys = SonarrSortKeys.TIMELEFT,
+        include_unknown_series_items: bool = False,
+        include_series: bool = False,
+        include_episode: bool = False,
+    ) -> dict[str, Any]:
         """Gets currently downloading info
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
-        return self.assert_return("queue", self.ver_uri, list)
+        params = {
+            "page": page,
+            "pageSize": page_size,
+            "sortDirection": sort_dir.value,
+            "sortKey": sort_key.value,
+            "includeUnknownSeriesItems": str(include_unknown_series_items),
+            "includeSeries": str(include_series),
+            "includeEpisode": str(include_episode),
+        }
+        return self.assert_return("queue", self.ver_uri, dict, params)
 
     ## PARSE
 
