@@ -280,3 +280,26 @@ def test_get_parse_title_path(responses, sonarr_client):
     with contextlib.suppress(PyarrMissingArgument):
         data = sonarr_client.get_parse_title_path()
         assert False
+
+
+@pytest.mark.usefixtures
+def test_get_releases(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/release",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/release.json"),
+        status=200,
+    )
+    data = sonarr_client.get_releases()
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/release?episodeId=1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/release.json"),
+        status=200,
+    )
+    data = sonarr_client.get_releases(1)
+    assert isinstance(data, list)

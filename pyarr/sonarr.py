@@ -407,16 +407,18 @@ class SonarrAPI(BaseArrAPI):
     ## RELEASE
 
     # GET /release
-    def get_releases(self, id_: int) -> list[dict[str, Any]]:
-        """Get a release with a specific episode ID.
+    def get_releases(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
+        """Query indexers for latest releases.
 
         Args:
-            id_ (int): Database id for episode
+            id_ (int): Database id for episode to check
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
-        return self.assert_return("release", self.ver_uri, list, {"episodeId": id_})
+        return self.assert_return(
+            "release", self.ver_uri, list, {"episodeId": id_} if id_ else None
+        )
 
     # POST /release
     # TODO: find response
