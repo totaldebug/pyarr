@@ -1,0 +1,118 @@
+{
+    "title": "string",
+    "parsedEpisodeInfo": {
+        "releaseTitle": "string",
+        "seriesTitle": "string",
+        "seriesTitleInfo": {
+            "title": "string",
+            "titleWithoutYear": "string",
+            "year": 0
+        },
+        "quality": {
+            "quality": {
+                "id": 0,
+                "name": "string",
+                "source": "string",
+                "resolution": 0
+            },
+            "revision": {
+                "version": 0,
+                "real": 0,
+                "isRepack": false
+            }
+        },
+        "seasonNumber": 0,
+        "episodeNumbers": [
+            0
+        ],
+        "absoluteEpisodeNumbers": [
+            0
+        ],
+        "specialAbsoluteEpisodeNumbers": [
+            0
+        ],
+        "language": {
+            "id": 0,
+            "name": "string"
+        },
+        "fullSeason": false,
+        "isPartialSeason": false,
+        "isMultiSeason": false,
+        "isSeasonExtra": false,
+        "special": false,
+        "releaseHash": "string",
+        "seasonPart": 0,
+        "releaseTokens": "string",
+        "isDaily": false,
+        "isAbsoluteNumbering": false,
+        "isPossibleSpecialEpisode": false,
+        "isPossibleSceneSeasonSpecial": false
+    },
+    "series": {
+        "title": "string",
+        "sortTitle": "string",
+        "status": "string",
+        "ended": true,
+        "overview": "string",
+        "network": "string",
+        "airTime": "00:00",
+        "images": [
+            {
+                "coverType": "poster",
+                "url": "string"
+            }
+        ],
+        "seasons": [
+            {
+                "seasonNumber": 0,
+                "monitored": false
+            }
+        ],
+        "year": 0,
+        "path": "string",
+        "qualityProfileId": 0,
+        "languageProfileId": 0,
+        "seasonFolder": true,
+        "monitored": true,
+        "useSceneNumbering": false,
+        "runtime": 0,
+        "tvdbId": 0,
+        "tvRageId": 0,
+        "tvMazeId": 0,
+        "firstAired": "2011-09-26T00:00:00Z",
+        "seriesType": "string",
+        "cleanTitle": "string",
+        "imdbId": "string",
+        "titleSlug": "0",
+        "certification": "string",
+        "genres": [
+            "string"
+        ],
+        "tags": [
+            0
+        ],
+        "added": "2020-05-19T05:33:31.868402Z",
+        "ratings": {
+            "votes": 0,
+            "value": 0.0
+        },
+        "id": 0
+    },
+    "episodes": [
+        {
+            "seriesId": 0,
+            "episodeFileId": 0,
+            "seasonNumber": 0,
+            "episodeNumber": 0,
+            "title": "string",
+            "airDate": "2010-08-26",
+            "airDateUtc": "2006-09-27T00:00:00Z",
+            "overview": "string",
+            "hasFile": true,
+            "monitored": false,
+            "absoluteEpisodeNumber": 0,
+            "unverifiedSceneNumbering": false,
+            "id": 0
+        }
+    ]
+}

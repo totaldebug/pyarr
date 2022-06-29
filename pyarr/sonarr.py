@@ -4,6 +4,8 @@ from warnings import warn
 
 from requests import Response
 
+from pyarr.exceptions import PyarrMissingArgument
+
 from .base import BaseArrAPI
 from .const import PAGE, PAGE_SIZE
 from .models.common import PyarrSortDirection
@@ -279,7 +281,7 @@ class SonarrAPI(BaseArrAPI):
         sort_key: SonarrSortKeys = SonarrSortKeys.AIR_DATE_UTC,
         page: int = PAGE,
         page_size: int = PAGE_SIZE,
-        sort_direction: PyarrSortDirection = PyarrSortDirection.DEFAULT,
+        sort_dir: PyarrSortDirection = PyarrSortDirection.DEFAULT,
         include_series: bool = False,
     ) -> dict[str, Any]:
         """Gets missing episode (episodes without files)
@@ -288,17 +290,17 @@ class SonarrAPI(BaseArrAPI):
             sort_key (SonarrSortKeys, optional): series.title or airDateUtc. Defaults to SonarrSortKeys.AIR_DATE_UTC.
             page (int, optional): Page number to return. Defaults to 1.
             page_size (int, optional): Number of items per page. Defaults to 10.
-            sort_direction (PyarrSortDirection, optional): Direction to sort the items. Defaults to PyarrSortDirection.DEFAULT.
+            sort_dir (PyarrSortDirection, optional): Direction to sort the items. Defaults to PyarrSortDirection.DEFAULT.
             include_series (bool, optional): Include the whole series. Defaults to False
 
         Returns:
             dict[str, Any]: Dictionary with items
         """
         params = {
-            "sortKey": sort_key.value,
+            "sortKey": sort_key,
             "page": page,
             "pageSize": page_size,
-            "sortDirection": sort_direction.value,
+            "sortDirection": sort_dir,
         }
         if include_series:
             params["includeSeries"] = True
@@ -325,8 +327,8 @@ class SonarrAPI(BaseArrAPI):
         params = {
             "page": page,
             "pageSize": page_size,
-            "sortDirection": sort_dir.value,
-            "sortKey": sort_key.value,
+            "sortDirection": sort_dir,
+            "sortKey": sort_key,
             "includeUnknownSeriesItems": str(include_unknown_series_items),
             "includeSeries": str(include_series),
             "includeEpisode": str(include_episode),
@@ -335,8 +337,35 @@ class SonarrAPI(BaseArrAPI):
 
     ## PARSE
 
+    def get_parse_title_path(
+        self, title: Optional[str] = None, path: Optional[str] = None
+    ) -> dict[str, Any]:
+        """Returns the result of parsing a title or path. series and episodes will be
+        returned only if the parsing matches to a specific series and one or more
+        episodes. series and episodes will be formatted the same as Series and Episode
+        responses.
+
+        Args:
+            title (Optional[str], optional): Title of series or episode. Defaults to None.
+            path (Optional[str], optional): file path of series or episode. Defaults to None.
+
+        Raises:
+            PyarrMissingArgument: If no argument is passed, error
+
+        Returns:
+            dict[str, Any]: Dictionary with items
+        """
+        if title is None and path is None:
+            raise PyarrMissingArgument("A title or path must be specified")
+        params = {}
+        if title is not None:
+            params["title"] = title
+        if path is not None:
+            params["path"] = path
+        return self.assert_return("parse", self.ver_uri, dict, params)
+
     # GET /parse
-    def get_parsed_title(self, title: str) -> list[dict[str, Any]]:
+    def get_parsed_title(self, title: str) -> dict[str, Any]:
         """Returns the result of parsing a title. series and episodes will be
         returned only if the parsing matches to a specific series and one or more
         episodes. series and episodes will be formatted the same as Series and Episode
@@ -346,12 +375,17 @@ class SonarrAPI(BaseArrAPI):
             title (str): Title of series / episode
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            dict[str, Any]: List of dictionaries with items
         """
-        return self.assert_return("parse", self.ver_uri, list, {"title": title})
+        warn(
+            "This method is deprecated and will be removed in a future release. Please use get_parse_title_path()",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return self.assert_return("parse", self.ver_uri, dict, {"title": title})
 
     # GET /parse
-    def get_parsed_path(self, file_path: str) -> list[dict[str, Any]]:
+    def get_parsed_path(self, file_path: str) -> dict[str, Any]:
         """Returns the result of parsing a file path. series and episodes will be
         returned only if the parsing matches to a specific series and one or more
         episodes. series and episodes will be formatted the same as Series and Episode
@@ -361,9 +395,14 @@ class SonarrAPI(BaseArrAPI):
             file_path (str): file path of series / episode
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            dict[str, Any]: List of dictionaries with items
         """
-        return self.assert_return("parse", self.ver_uri, list, {"path": file_path})
+        warn(
+            "This method is deprecated and will be removed in a future release. Please use get_parse_title_path()",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return self.assert_return("parse", self.ver_uri, dict, {"path": file_path})
 
     ## RELEASE
 

@@ -32,3 +32,7 @@ class PyarrMethodNotAllowed(PyarrError):
 
 class PyarrRecordNotFound(PyarrError):
     """Pyarr record was not found"""
+
+
+class PyarrMissingArgument(PyarrError):
+    """Missing one of multiple possible arguments"""

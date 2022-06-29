@@ -1,7 +1,9 @@
+import contextlib
 from warnings import warn
 
 import pytest
 
+from pyarr.exceptions import PyarrMissingArgument
 from pyarr.models.common import PyarrSortDirection
 from pyarr.models.sonarr import SonarrSortKeys
 
@@ -176,7 +178,7 @@ def test_get_wanted(responses, sonarr_client):
         sort_key=SonarrSortKeys.SERIES_TITLE,
         page=2,
         page_size=20,
-        sort_direction=PyarrSortDirection.ASC,
+        sort_dir=PyarrSortDirection.ASC,
     )
     assert isinstance(data, dict)
 
@@ -215,3 +217,66 @@ def test_get_queue(responses, sonarr_client):
     )
     data = sonarr_client.get_queue()
     assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_get_parsed_title(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/parse?title=Series.Title.S01E01",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/parse.json"),
+        status=200,
+    )
+    data = sonarr_client.get_parsed_title("Series.Title.S01E01")
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_get_parsed_path(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/parse?path=/",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/parse.json"),
+        status=200,
+    )
+    data = sonarr_client.get_parsed_path("/")
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_get_parse_title_path(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/parse?title=Series.Title.S01E01&path=/",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/parse.json"),
+        status=200,
+    )
+    data = sonarr_client.get_parse_title_path(title="Series.Title.S01E01", path="/")
+    assert isinstance(data, dict)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/parse?title=Series.Title.S01E01",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/parse.json"),
+        status=200,
+    )
+    data = sonarr_client.get_parse_title_path(title="Series.Title.S01E01")
+    assert isinstance(data, dict)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/parse",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/parse.json"),
+        status=200,
+    )
+    data = sonarr_client.get_parse_title_path(path="/")
+    assert isinstance(data, dict)
+
+    with contextlib.suppress(PyarrMissingArgument):
+        data = sonarr_client.get_parse_title_path()
+        assert False
