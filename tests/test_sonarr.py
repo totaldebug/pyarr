@@ -1,4 +1,5 @@
 import contextlib
+from datetime import datetime
 from warnings import warn
 
 import pytest
@@ -8,6 +9,61 @@ from pyarr.models.common import PyarrSortDirection
 from pyarr.models.sonarr import SonarrSortKeys
 
 from tests import load_fixture
+
+
+@pytest.mark.usefixtures
+def test__series_json(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/series/lookup?term=tvdb%3A1234567",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/series_lookup.json"),
+        status=200,
+    )
+
+    data = sonarr_client._series_json(
+        tvdb_id=1234567,
+        quality_profile_id=1,
+        root_dir="/",
+        season_folder=False,
+        monitored=False,
+        ignore_episodes_with_files=True,
+        ignore_episodes_without_files=True,
+        search_for_missing_episodes=True,
+    )
+
+    assert isinstance(data, dict)
+    assert data["rootFolderPath"] == "/"
+    assert data["qualityProfileId"] == 1
+    assert data["seasonFolder"] == False
+    assert data["monitored"] == False
+    assert data["tvdbId"] == 1234567
+    assert data["addOptions"]["ignoreEpisodesWithFiles"] == True
+    assert data["addOptions"]["ignoreEpisodesWithoutFiles"] == True
+    assert data["addOptions"]["searchForMissingEpisodes"] == True
+
+
+@pytest.mark.usefixtures
+def test_get_command(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/command",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/command_all.json"),
+        status=200,
+    )
+    data = sonarr_client.get_command()
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/command/4327826",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/command.json"),
+        status=200,
+    )
+    data = sonarr_client.get_command(4327826)
+    assert isinstance(data, dict)
 
 
 @pytest.mark.usefixtures
@@ -316,3 +372,109 @@ def test_download_release(responses, sonarr_client):
     )
     data = sonarr_client.download_release(guid="1450590", indexer_id=2)
     assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_push_release(responses, sonarr_client):
+    responses.add(
+        responses.POST,
+        "https://127.0.0.1:8989/api/v3/release/push",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/release_download.json"),
+        status=201,
+    )
+    data = sonarr_client.push_release(
+        title="test",
+        download_url="https://ipt.beelyrics.net/t/1450590",
+        protocol="Torrent",
+        publish_date=datetime(2020, 5, 17),
+    )
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_get_series(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/series",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/series_all.json"),
+        status=200,
+    )
+    data = sonarr_client.get_series()
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/series/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/series.json"),
+        status=200,
+    )
+    data = sonarr_client.get_series(1)
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_del_series(responses, sonarr_client):
+    responses.add(
+        responses.DELETE,
+        "https://127.0.0.1:8989/api/v3/series/1?deleteFiles=False",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/delete.json"),
+        status=200,
+    )
+    data = sonarr_client.del_series(1)
+    assert isinstance(data, dict)
+    assert data == {}
+
+    responses.add(
+        responses.DELETE,
+        "https://127.0.0.1:8989/api/v3/series/1?deleteFiles=True",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/delete.json"),
+        status=200,
+    )
+    data = sonarr_client.del_series(1, delete_files=True)
+    assert isinstance(data, dict)
+    assert data == {}
+
+
+@pytest.mark.usefixtures
+def test_lookup_series(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/series/lookup?term=tvdb:123456",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/series_lookup.json"),
+        status=200,
+    )
+    data = sonarr_client.lookup_series(id_=123456)
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/series/lookup?term=test",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/series_lookup.json"),
+        status=200,
+    )
+    data = sonarr_client.lookup_series(term="test")
+    assert isinstance(data, list)
+
+    with contextlib.suppress(PyarrMissingArgument):
+        data = sonarr_client.lookup_series()
+        assert False
+
+
+@pytest.mark.usefixtures
+def test_lookup_series_by_tvdb_id(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/series/lookup?term=tvdb%3A123456",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/series_lookup.json"),
+        status=200,
+    )
+    data = sonarr_client.lookup_series_by_tvdb_id(123456)
+    assert isinstance(data, list)

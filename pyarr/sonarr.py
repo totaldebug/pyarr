@@ -77,7 +77,9 @@ class SonarrAPI(BaseArrAPI):
     ## COMMAND
 
     # GET /command
-    def get_command(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
+    def get_command(
+        self, id_: Optional[int] = None
+    ) -> Union[list[dict[str, Any]], dict[str, Any]]:
         """Queries the status of a previously started command, or all currently started commands.
 
         Args:
@@ -86,8 +88,8 @@ class SonarrAPI(BaseArrAPI):
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
-        path = f"command/{id_}" if id_ else "command"
-        return self.assert_return(path, self.ver_uri, list)
+        path = f"command{f'/{id_}' if id_ else ''}"
+        return self.assert_return(path, self.ver_uri, dict if id_ else list)
 
     # POST /command
     # TODO: confirm response, kwargs
@@ -421,8 +423,7 @@ class SonarrAPI(BaseArrAPI):
         )
 
     # POST /release
-    # TODO: find response
-    def download_release(self, guid: str, indexer_id: int) -> Any:
+    def download_release(self, guid: str, indexer_id: int) -> dict[str, Any]:
         """Adds a previously searched release to the download client, if the release is
          still in Sonarr's search cache (30 minute cache). If the release is not found
          in the cache Sonarr will return a 404.
@@ -432,7 +433,7 @@ class SonarrAPI(BaseArrAPI):
             indexer_id (int): Database id of indexer to use
 
         Returns:
-            [type]: [description]
+            dict[str, Any]: Dictionary with download release details
         """
         data = {"guid": guid, "indexerId": indexer_id}
         return self._post("release", self.ver_uri, data=data)
@@ -463,7 +464,9 @@ class SonarrAPI(BaseArrAPI):
 
     ## SERIES
     # GET /series and /series/{id}
-    def get_series(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
+    def get_series(
+        self, id_: Optional[int] = None
+    ) -> Union[list[dict[str, Any]], dict[str, Any]]:
         """Returns all series in your collection or the series with the matching
         series ID if one is found.
 
@@ -471,10 +474,11 @@ class SonarrAPI(BaseArrAPI):
             id_ (Optional[int], optional): Database id for series. Defaults to None.
 
         Returns:
-            list[dict]: List of dictionaries with items
+            Union[list[dict[str, Any]], dict[str, Any]]: List of dictionaries with items, or a
+            dictionary with single item
         """
-        path = f"series/{id_}" if id_ else "series"
-        return self.assert_return(path, self.ver_uri, list)
+        path = f"series{f'/{id_}' if id_ else ''}"
+        return self.assert_return(path, self.ver_uri, dict if id_ else list)
 
     # POST /series
     def add_series(
@@ -550,16 +554,24 @@ class SonarrAPI(BaseArrAPI):
         return self._delete(f"series/{id_}", self.ver_uri, params=params)
 
     # GET /series/lookup
-    def lookup_series(self, term: str) -> list[dict[str, Any]]:
+    def lookup_series(
+        self, term: Optional[str] = None, id_: Optional[int] = None
+    ) -> list[dict[str, Any]]:
         """Searches for new shows on TheTVDB.com utilizing sonarr.tv's caching and augmentation proxy.
 
         Args:
-            term (str): Series' Name, using `%20` to signify spaces, as in `The%20Blacklist`
+            term (Optional[str], optional): Series' Name
+            id_ (Optional[int], optional): TVDB ID for series
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
-        return self.assert_return("series/lookup", self.ver_uri, list, {"term": term})
+        if term is None and id_ is None:
+            raise PyarrMissingArgument("A term or TVDB id must be included")
+
+        return self.assert_return(
+            "series/lookup", self.ver_uri, list, {"term": term or f"tvdb:{id_}"}
+        )
 
     # GET /series/lookup
     def lookup_series_by_tvdb_id(self, id_: int) -> list[dict[str, Any]]:
@@ -571,5 +583,10 @@ class SonarrAPI(BaseArrAPI):
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
+        warn(
+            "This method is deprecated and will be removed in a future release. Please use lookup_series()",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         params = {"term": f"tvdb:{id_}"}
         return self.assert_return("series/lookup", self.ver_uri, list, params)
