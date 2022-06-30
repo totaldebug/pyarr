@@ -4,9 +4,13 @@ from warnings import warn
 
 import pytest
 
-from pyarr.exceptions import PyarrMissingArgument
+from pyarr.exceptions import (
+    PyarrMissingArgument,
+    PyarrRecordNotFound,
+    PyarrResourceNotFound,
+)
 from pyarr.models.common import PyarrSortDirection
-from pyarr.models.sonarr import SonarrSortKeys
+from pyarr.models.sonarr import SonarrCommands, SonarrSortKeys
 
 from tests import load_fixture
 
@@ -45,6 +49,9 @@ def test__series_json(responses, sonarr_client):
 
 @pytest.mark.usefixtures
 def test_get_command(responses, sonarr_client):
+    """Check get_command()"""
+
+    # No args
     responses.add(
         responses.GET,
         "https://127.0.0.1:8989/api/v3/command",
@@ -55,6 +62,7 @@ def test_get_command(responses, sonarr_client):
     data = sonarr_client.get_command()
     assert isinstance(data, list)
 
+    # When an ID is supplied
     responses.add(
         responses.GET,
         "https://127.0.0.1:8989/api/v3/command/4327826",
@@ -64,6 +72,59 @@ def test_get_command(responses, sonarr_client):
     )
     data = sonarr_client.get_command(4327826)
     assert isinstance(data, dict)
+
+    # when an incorrect ID is supplied, not found response
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/command/4321",
+        headers={"Content-Type": "application/json"},
+        status=404,
+    )
+    with contextlib.suppress(PyarrResourceNotFound):
+        data = sonarr_client.get_command(4321)
+        assert False
+
+
+@pytest.mark.usefixtures
+def test_post_command(responses, sonarr_client):
+    responses.add(
+        responses.POST,
+        "https://127.0.0.1:8989/api/v3/command",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/command.json"),
+        status=201,
+    )
+
+    data = sonarr_client.post_command(name=SonarrCommands.REFRESH_SERIES)
+    assert isinstance(data, dict)
+    data = sonarr_client.post_command(SonarrCommands.REFRESH_SERIES, seriesId=1)
+    assert isinstance(data, dict)
+    data = sonarr_client.post_command(SonarrCommands.RESCAN_SERIES)
+    assert isinstance(data, dict)
+    data = sonarr_client.post_command(SonarrCommands.RESCAN_SERIES, seriesId=1)
+    assert isinstance(data, dict)
+    data = sonarr_client.post_command(
+        SonarrCommands.EPISODE_SEARCH, episodeIds=[1, 2, 3]
+    )
+    assert isinstance(data, dict)
+    data = sonarr_client.post_command(
+        SonarrCommands.SEASON_SEARCH, seriesId=1, seasonNumber=1
+    )
+    assert isinstance(data, dict)
+    data = sonarr_client.post_command(SonarrCommands.SERIES_SEARCH, seriesId=1)
+    assert isinstance(data, dict)
+    data = sonarr_client.post_command(SonarrCommands.DOWNLOADED_EPISODES_SCAN)
+    assert isinstance(data, dict)
+    data = sonarr_client.post_command(SonarrCommands.RSS_SYNC)
+    assert isinstance(data, dict)
+    data = sonarr_client.post_command(SonarrCommands.RENAME_FILES, files=[1, 2, 3])
+    assert isinstance(data, dict)
+    data = sonarr_client.post_command(SonarrCommands.RENAME_SERIES, seriesIds=[1, 2, 3])
+    assert isinstance(data, dict)
+    data = sonarr_client.post_command(SonarrCommands.BACKUP)
+    assert isinstance(data, dict)
+
+    data = sonarr_client.post_command(SonarrCommands.MISSING_EPISODE_SEARCH)
 
 
 @pytest.mark.usefixtures
@@ -90,6 +151,16 @@ def test_get_episode(responses, sonarr_client):
     data = sonarr_client.get_episode(1, True)
     assert isinstance(data, list)
 
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/episode/999",
+        headers={"Content-Type": "application/json"},
+        status=404,
+    )
+    with contextlib.suppress(PyarrResourceNotFound):
+        data = sonarr_client.get_episode(999)
+        assert False
+
 
 @pytest.mark.usefixtures
 def test_get_episodes_by_series_id(responses, sonarr_client):
@@ -104,6 +175,16 @@ def test_get_episodes_by_series_id(responses, sonarr_client):
 
     assert isinstance(data, list)
 
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/episode?seriesId=999",
+        headers={"Content-Type": "application/json"},
+        status=404,
+    )
+    with contextlib.suppress(PyarrResourceNotFound):
+        data = sonarr_client.get_episodes_by_series_id(999)
+        assert False
+
 
 @pytest.mark.usefixtures
 def test_get_episode_by_episode_id(responses, sonarr_client):
@@ -117,6 +198,16 @@ def test_get_episode_by_episode_id(responses, sonarr_client):
     data = sonarr_client.get_episode_by_episode_id(0)
 
     assert isinstance(data, dict)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/episode/999",
+        headers={"Content-Type": "application/json"},
+        status=404,
+    )
+    with contextlib.suppress(PyarrResourceNotFound):
+        data = sonarr_client.get_episode_by_episode_id(999)
+        assert False
 
 
 @pytest.mark.usefixtures
@@ -134,6 +225,8 @@ def test_upd_episode(responses, sonarr_client):
     assert isinstance(data, dict)
     assert data["monitored"] == True
 
+    # TODO: Add test if incorrect data provided
+
 
 @pytest.mark.usefixtures
 def test_get_episode_files_by_series_id(responses, sonarr_client):
@@ -145,22 +238,17 @@ def test_get_episode_files_by_series_id(responses, sonarr_client):
         status=200,
     )
     data = sonarr_client.get_episode_files_by_series_id(1)
-
     assert isinstance(data, list)
 
-
-@pytest.mark.usefixtures
-def test_get_episode_file(responses, sonarr_client):
     responses.add(
         responses.GET,
-        "https://127.0.0.1:8989/api/v3/episodefile/1",
+        "https://127.0.0.1:8989/api/v3/episodefile?seriesId=999",
         headers={"Content-Type": "application/json"},
-        body=load_fixture("sonarr/episodefile.json"),
-        status=200,
+        status=404,
     )
-    data = sonarr_client.get_episode_file(1)
-
-    assert isinstance(data, dict)
+    with contextlib.suppress(PyarrResourceNotFound):
+        data = sonarr_client.get_episode_files_by_series_id(999)
+        assert False
 
 
 @pytest.mark.usefixtures
@@ -187,6 +275,16 @@ def test_get_episode_file(responses, sonarr_client):
     data = sonarr_client.get_episode_file(1, True)
     assert isinstance(data, list)
 
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/episodefile/999",
+        headers={"Content-Type": "application/json"},
+        status=404,
+    )
+    with contextlib.suppress(PyarrResourceNotFound):
+        data = sonarr_client.get_episode_file(999)
+        assert False
+
 
 @pytest.mark.usefixtures
 def test_del_episode_file(responses, sonarr_client):
@@ -199,6 +297,16 @@ def test_del_episode_file(responses, sonarr_client):
     )
     data = sonarr_client.del_episode_file(1)
     assert isinstance(data, dict)
+
+    responses.add(
+        responses.DELETE,
+        "https://127.0.0.1:8989/api/v3/episodefile/999",
+        headers={"Content-Type": "application/json"},
+        status=404,
+    )
+    with contextlib.suppress(PyarrResourceNotFound):
+        data = sonarr_client.del_episode_file(999)
+        assert False
 
 
 @pytest.mark.usefixtures

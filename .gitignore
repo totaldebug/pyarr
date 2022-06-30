@@ -21,6 +21,7 @@ build
 .pytest_cache
 .coverage
 coverage.xml
+_build
 
 .devcontainer/*
 !.devcontainer/recommended-devcontainer.json

@@ -292,7 +292,7 @@ class BaseArrAPI(RequestHandler):
     def get_quality_profile(
         self, id_: Optional[int] = None
     ) -> Union[list[dict[str, Any]], dict[Any, Any]]:
-        """Gets all quality profiles or specific one with id_
+        """Gets all quality profiles or specific one with id
 
         Args:
             id_ (Optional[int], optional): Quality profile id from database. Defaults to None.

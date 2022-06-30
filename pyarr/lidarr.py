@@ -547,7 +547,7 @@ class LidarrAPI(BaseArrAPI):
 
     # GET /metadataprofile/{id}
     def get_metadata_profile(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
-        """Gets all metadata profiles or specific one with id_
+        """Gets all metadata profiles or specific one with id
 
         Args:
             id_ (Optional[int], optional): Metadata profile id from database. Defaults to None.

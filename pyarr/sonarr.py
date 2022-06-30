@@ -92,27 +92,40 @@ class SonarrAPI(BaseArrAPI):
         return self.assert_return(path, self.ver_uri, dict if id_ else list)
 
     # POST /command
-    # TODO: confirm response, kwargs
-    def post_command(self, name: SonarrCommands, **kwargs) -> Any:
+    # TODO: Add more logic to ensure correct kwargs for a command
+    # TODO: look into DownloadedEpisodesScan and how to use it
+    def post_command(
+        self, name: SonarrCommands, **kwargs: Optional[Union[int, list[int]]]
+    ) -> dict[str, Any]:
         """Performs any of the predetermined Sonarr command routines
 
-        Note:
-            For additional kwargs:
-            See https://github.com/Sonarr/Sonarr/wiki/Command
-
         Args:
-            name (SonarrCommands): command name that should be execured
-            **kwargs: additional parameters for specific commands
+            name (SonarrCommands): Command that should be executed
+            **kwargs: Additional parameters for specific commands. See note.
 
-
+        Note:
+            Required Kwargs:
+                RefreshSeries: seriesId (int, optional) - If not set, all series will be refreshed and scanned
+                RescanSeries: seriesId (int, optional) - If not set all series will be scanned
+                EpisodeSearch: episodeIds (lsit[int], optional) - One or more episodeIds in a list
+                SeasonSearch: seriesId (int) seasonNumber (int)
+                SeriesSearch: seriesId (int)
+                DownloadedEpisodesScan:
+                RssSync: None
+                RenameFiles: files (list[int]) - List of File IDs to rename
+                RenameSeries: seriesIds (list[int]) List of Series IDs to rename
+                Backup: None
+                missingEpisodeSearch: None
 
         Returns:
-            JSON: Array
+            dict[str, Any]: Dictionary containing job
         """
-        data = {
+        data: dict[str, Any] = {
             "name": name,
-            **kwargs,
         }
+        if kwargs:
+            data |= kwargs
+        print(data)
         return self._post("command", self.ver_uri, data=data)
 
     ## EPISODE

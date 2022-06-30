@@ -25,6 +25,7 @@ extensions = [
     "sphinx_rtd_theme",
     "sphinx.ext.napoleon",
     "sphinx.ext.autosectionlabel",
+    "enum_tools.autoenum",
 ]
 
 # -- Napoleon Settings -----------------------------------------------------
