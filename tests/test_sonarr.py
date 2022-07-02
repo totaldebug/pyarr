@@ -1,5 +1,6 @@
 import contextlib
 from datetime import datetime
+import json
 from warnings import warn
 
 import pytest
@@ -310,6 +311,21 @@ def test_del_episode_file(responses, sonarr_client):
 
 
 @pytest.mark.usefixtures
+def test_upd_episode_file_quality(responses, sonarr_client):
+    responses.add(
+        responses.PUT,
+        "https://127.0.0.1:8989/api/v3/episodefile/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/episodefile.json"),
+        status=202,
+    )
+    data = sonarr_client.upd_episode_file_quality(
+        1, load_fixture("sonarr/file_quality.json")
+    )
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
 def test_get_wanted(responses, sonarr_client):
     responses.add(
         responses.GET,
@@ -520,6 +536,46 @@ def test_get_series(responses, sonarr_client):
         status=200,
     )
     data = sonarr_client.get_series(1)
+    assert isinstance(data, dict)
+
+
+def test_add_series(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/series/lookup?term=tvdb:123456",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/series_lookup.json"),
+        status=200,
+    )
+    responses.add(
+        responses.POST,
+        "https://127.0.0.1:8989/api/v3/series",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/series.json"),
+        status=200,
+    )
+    data = sonarr_client.add_series(tvdb_id=123456, quality_profile_id=0, root_dir="/")
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_upd_series(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/series/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/series.json"),
+        status=200,
+    )
+    series = sonarr_client.get_series(1)
+    responses.add(
+        responses.PUT,
+        "https://127.0.0.1:8989/api/v3/series",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/series.json"),
+        status=202,
+    )
+    data = sonarr_client.upd_series(data=series)
     assert isinstance(data, dict)
 
 
