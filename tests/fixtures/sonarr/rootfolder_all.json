@@ -1,0 +1,14 @@
+[
+    {
+        "path": "/tv",
+        "accessible": true,
+        "freeSpace": 6172693233664,
+        "unmappedFolders": [
+            {
+                "name": "string",
+                "path": "/tv/string"
+            }
+        ],
+        "id": 3
+    }
+]

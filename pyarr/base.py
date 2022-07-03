@@ -52,8 +52,8 @@ class BaseArrAPI(RequestHandler):
     # GET /calendar/
     def get_calendar(
         self,
-        start_date: Optional[str] = None,
-        end_date: Optional[str] = None,
+        start_date: Optional[datetime] = None,
+        end_date: Optional[datetime] = None,
         unmonitored: bool = True,
     ) -> list[dict[str, Any]]:
         """Gets upcoming releases by monitored, if start/end are not
@@ -69,11 +69,9 @@ class BaseArrAPI(RequestHandler):
         """
         params: dict[str, Any] = {}
         if start_date:
-            params["start"] = datetime.strptime(start_date, "%Y-%m-%d").strftime(
-                "%Y-%m-%d"
-            )
+            params["start"] = start_date.strftime("%Y-%m-%d")
         if end_date:
-            params["end"] = datetime.strptime(end_date, "%Y-%m-%d").strftime("%Y-%m-%d")
+            params["end"] = end_date.strftime("%Y-%m-%d")
         params["unmonitored"] = unmonitored
 
         return self.assert_return("calendar", self.ver_uri, list, params)
@@ -81,13 +79,13 @@ class BaseArrAPI(RequestHandler):
     # SYSTEM
 
     # GET /system/status
-    def get_system_status(self) -> list[dict[str, Any]]:
+    def get_system_status(self) -> dict[str, Any]:
         """Gets system status
 
         Returns:
-           list[dict[str, Any]]: List of dictionaries with items
+           dict[str, Any]: Dictionary with items
         """
-        return self.assert_return("system/status", self.ver_uri, list)
+        return self.assert_return("system/status", self.ver_uri, dict)
 
     # GET /health
     def get_health(self) -> list[dict[str, Any]]:
@@ -99,13 +97,20 @@ class BaseArrAPI(RequestHandler):
         return self.assert_return("health", self.ver_uri, list)
 
     # GET /metadata
-    def get_metadata(self) -> list[dict[str, Any]]:
+    def get_metadata(
+        self, id_: Optional[int] = None
+    ) -> Union[list[dict[str, Any]], dict[str, Any]]:
         """Get all metadata consumer settings
 
+        Args:
+            id_ (Optional[int], optional): ID for specific metadata record
+
         Returns:
-             list[dict[str, Any]]: List of dictionaries with items
+             Union[list[dict[str, Any]], dict[str, Any]]: List of dictionaries with items
         """
-        return self.assert_return("metadata", self.ver_uri, list)
+        return self.assert_return(
+            f"metadata{f'/{id_}' if id_ else ''}", self.ver_uri, dict if id_ else list
+        )
 
     # GET /update
     def get_update(self) -> list[dict[str, Any]]:
@@ -117,13 +122,20 @@ class BaseArrAPI(RequestHandler):
         return self.assert_return("update", self.ver_uri, list)
 
     # GET /rootfolder
-    def get_root_folder(self) -> list[dict[str, Any]]:
+    def get_root_folder(
+        self, id_: Optional[int] = None
+    ) -> Union[list[dict[str, Any]], dict[str, Any]]:
         """Get list of root folders, free space and any unmappedFolders
 
+        Args:
+            id_ (Optional[int], optional): ID of the folder to return. Defaults to None.
+
         Returns:
-             list[dict[str, Any]]: List of dictionaries with items
+             Union[list[dict[str, Any]], dict[str, Any]]: List of dictionaries with items
         """
-        return self.assert_return("rootfolder", self.ver_uri, list)
+        return self.assert_return(
+            f"rootfolder{f'/{id_}' if id_ else ''}", self.ver_uri, dict if id_ else list
+        )
 
     # DELETE /rootfolder
     def del_root_folder(

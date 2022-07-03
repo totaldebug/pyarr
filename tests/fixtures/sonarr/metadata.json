@@ -1,0 +1,72 @@
+{
+    "enable": true,
+    "name": "Kodi (XBMC) / Emby",
+    "fields": [
+        {
+            "order": 0,
+            "name": "seriesMetadata",
+            "label": "Series Metadata",
+            "helpText": "tvshow.nfo with full series metadata",
+            "value": true,
+            "type": "checkbox",
+            "advanced": false,
+            "section": "metadata"
+        },
+        {
+            "order": 1,
+            "name": "seriesMetadataUrl",
+            "label": "Series Metadata URL",
+            "helpText": "tvshow.nfo with TheTVDB show URL (can be combined with 'Series Metadata')",
+            "value": false,
+            "type": "checkbox",
+            "advanced": true,
+            "section": "metadata"
+        },
+        {
+            "order": 2,
+            "name": "episodeMetadata",
+            "label": "Episode Metadata",
+            "helpText": "<filename>.nfo",
+            "value": true,
+            "type": "checkbox",
+            "advanced": false,
+            "section": "metadata"
+        },
+        {
+            "order": 3,
+            "name": "seriesImages",
+            "label": "Series Images",
+            "helpText": "fanart.jpg, poster.jpg, banner.jpg",
+            "value": true,
+            "type": "checkbox",
+            "advanced": false,
+            "section": "image"
+        },
+        {
+            "order": 4,
+            "name": "seasonImages",
+            "label": "Season Images",
+            "helpText": "season##-poster.jpg, season##-banner.jpg, season-specials-poster.jpg, season-specials-banner.jpg",
+            "value": true,
+            "type": "checkbox",
+            "advanced": false,
+            "section": "image"
+        },
+        {
+            "order": 5,
+            "name": "episodeImages",
+            "label": "Episode Images",
+            "helpText": "<filename>-thumb.jpg",
+            "value": true,
+            "type": "checkbox",
+            "advanced": false,
+            "section": "image"
+        }
+    ],
+    "implementationName": "Kodi (XBMC) / Emby",
+    "implementation": "XbmcMetadata",
+    "configContract": "XbmcMetadataSettings",
+    "infoLink": "https://wiki.servarr.com/sonarr/supported#xbmcmetadata",
+    "tags": [],
+    "id": 1
+}

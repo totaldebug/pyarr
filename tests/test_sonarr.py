@@ -642,3 +642,105 @@ def test_lookup_series_by_tvdb_id(responses, sonarr_client):
     )
     data = sonarr_client.lookup_series_by_tvdb_id(123456)
     assert isinstance(data, list)
+
+
+#### BASE TESTS ####
+# These  tests are to make sure the base functions work as
+# expected for each api
+
+
+@pytest.mark.usefixtures
+def test_get_calendar(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/calendar?start=2020-11-30&end=2020-12-01&unmonitored=True",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/calendar.json"),
+        status=200,
+    )
+    start = datetime.strptime("Nov 30 2020  1:33PM", "%b %d %Y %I:%M%p")
+    end = datetime.strptime("Dec 1 2020  1:33PM", "%b %d %Y %I:%M%p")
+    data = sonarr_client.get_calendar(start_date=start, end_date=end)
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/calendar?start=2020-11-30&end=2020-12-01&unmonitored=False",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/calendar.json"),
+        status=200,
+    )
+    start = datetime.strptime("Nov 30 2020  1:33PM", "%b %d %Y %I:%M%p")
+    end = datetime.strptime("Dec 1 2020  1:33PM", "%b %d %Y %I:%M%p")
+    data = sonarr_client.get_calendar(start_date=start, end_date=end, unmonitored=False)
+    assert isinstance(data, list)
+
+
+def test_get_system_status(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/system/status",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/system_status.json"),
+        status=200,
+    )
+    data = sonarr_client.get_system_status()
+    assert isinstance(data, dict)
+
+
+def test_get_health(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/health",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/health.json"),
+        status=200,
+    )
+    data = sonarr_client.get_health()
+    assert isinstance(data, list)
+
+
+def test_get_metadata(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/metadata",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/metadata_all.json"),
+        status=200,
+    )
+    data = sonarr_client.get_metadata()
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/metadata/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/metadata.json"),
+        status=200,
+    )
+    data = sonarr_client.get_metadata(1)
+    assert isinstance(data, dict)
+
+
+def test_get_update(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/update",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/metadata_all.json"),
+        status=200,
+    )
+    data = sonarr_client.get_update()
+    assert isinstance(data, list)
+
+
+def test_get_root_folder(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/rootfolder/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/rootfolder.json"),
+        status=200,
+    )
+    data = sonarr_client.get_root_folder(1)
+    assert isinstance(data, dict)
