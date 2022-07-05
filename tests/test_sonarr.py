@@ -10,7 +10,12 @@ from pyarr.exceptions import (
     PyarrRecordNotFound,
     PyarrResourceNotFound,
 )
-from pyarr.models.common import PyarrSortDirection
+from pyarr.models.common import (
+    PyarrLogFilterKey,
+    PyarrLogFilterValue,
+    PyarrLogSortKey,
+    PyarrSortDirection,
+)
 from pyarr.models.sonarr import SonarrCommands, SonarrSortKeys
 
 from tests import load_fixture
@@ -737,6 +742,16 @@ def test_get_update(responses, sonarr_client):
 def test_get_root_folder(responses, sonarr_client):
     responses.add(
         responses.GET,
+        "https://127.0.0.1:8989/api/v3/rootfolder",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/rootfolder_all.json"),
+        status=200,
+    )
+    data = sonarr_client.get_root_folder()
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
         "https://127.0.0.1:8989/api/v3/rootfolder/1",
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/rootfolder.json"),
@@ -744,3 +759,90 @@ def test_get_root_folder(responses, sonarr_client):
     )
     data = sonarr_client.get_root_folder(1)
     assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_del_root_folder(responses, sonarr_client):
+    responses.add(
+        responses.DELETE,
+        "https://127.0.0.1:8989/api/v3/rootfolder/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/delete.json"),
+        status=200,
+    )
+    data = sonarr_client.del_root_folder(1)
+    assert isinstance(data, dict)
+
+    responses.add(
+        responses.DELETE,
+        "https://127.0.0.1:8989/api/v3/rootfolder/999",
+        headers={"Content-Type": "application/json"},
+        status=404,
+    )
+    with contextlib.suppress(PyarrResourceNotFound):
+        data = sonarr_client.del_root_folder(999)
+        assert False
+
+
+def test_get_disk_space(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/diskspace",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/diskspace.json"),
+        status=200,
+    )
+    data = sonarr_client.get_disk_space()
+    assert isinstance(data, list)
+
+
+def test_get_backup(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/system/backup",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/backup.json"),
+        status=200,
+    )
+    data = sonarr_client.get_backup()
+    assert isinstance(data, list)
+
+
+def test_get_log(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/log",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/log.json"),
+        status=200,
+    )
+    data = sonarr_client.get_log()
+    assert isinstance(data, dict)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/log?page=10&pageSize=10&sortKey=time&sortDirection=descending",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/log.json"),
+        status=200,
+    )
+    data = sonarr_client.get_log(
+        page=10,
+        page_size=10,
+        sort_key=PyarrLogSortKey.TIME,
+        sort_dir=PyarrSortDirection.DESC,
+    )
+    assert isinstance(data, dict)
+
+    with contextlib.suppress(PyarrMissingArgument):
+        data = sonarr_client.get_log(sort_key=PyarrLogSortKey.TIME)
+        assert False
+    with contextlib.suppress(PyarrMissingArgument):
+        data = sonarr_client.get_log(sort_dir=PyarrSortDirection.DESC)
+        assert False
+    with contextlib.suppress(PyarrMissingArgument):
+        data = sonarr_client.get_log(filter_key=PyarrLogFilterKey.LEVEL)
+        assert False
+    with contextlib.suppress(PyarrMissingArgument):
+        data = sonarr_client.get_log(filter_value=PyarrLogFilterValue.ALL)
+        assert False

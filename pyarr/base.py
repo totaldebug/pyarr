@@ -3,6 +3,14 @@ from typing import Any, Optional, Union
 
 from requests import Response
 
+from pyarr.exceptions import PyarrMissingArgument
+from pyarr.models.common import (
+    PyarrLogFilterKey,
+    PyarrLogFilterValue,
+    PyarrLogSortKey,
+    PyarrSortDirection,
+)
+
 from .const import PAGE, PAGE_SIZE
 from .request_handler import RequestHandler
 
@@ -151,8 +159,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             Response: HTTP Response
         """
-        params = {"id": id_}
-        return self._delete("rootfolder", self.ver_uri, params=params)
+        return self._delete(f"rootfolder/{id_}", self.ver_uri)
 
     # GET /diskspace
     def get_disk_space(self) -> list[dict[str, Any]]:
@@ -178,35 +185,57 @@ class BaseArrAPI(RequestHandler):
     # GET /log
     def get_log(
         self,
-        page: int = PAGE,
-        page_size: int = PAGE_SIZE,
-        sort_key: str = "time",
-        sort_dir: str = "desc",
-        filter_key: Optional[str] = None,
-        filter_value: str = "All",
-    ) -> list[dict[str, Any]]:
+        page: Optional[int] = None,
+        page_size: Optional[int] = None,
+        sort_key: Optional[PyarrLogSortKey] = None,
+        sort_dir: Optional[PyarrSortDirection] = None,
+        filter_key: Optional[PyarrLogFilterKey] = None,
+        filter_value: Optional[PyarrLogFilterValue] = None,
+    ) -> dict[str, Any]:
         """Gets logs from instance
 
         Args:
-            page (int, optional): Specifiy page to return. Defaults to PAGE.
-            page_size (int, optional): Number of items per page. Defaults to PAGE_SIZE.
-            sort_key (str, optional): Field to sort by. Defaults to "time".
-            sort_dir (str, optional): Direction to sort. Defaults to "desc".
-            filter_key (Optional[str], optional): Key to filter by. Defaults to None.
-            filter_value (str, optional): Value of the filter. Defaults to "All".
+            page (Optional[int], optional): Specifiy page to return. Defaults to None.
+            page_size (Optional[int], optional): Number of items per page. Defaults to None.
+            sort_key (Optional[PyarrLogSortKey], optional): Field to sort by. Defaults to None.
+            sort_dir (Optional[PyarrSortDirection], optional): Direction to sort. Defaults to None.
+            filter_key (Optional[PyarrLogFilterKey], optional): Key to filter by. Defaults to None.
+            filter_value (Optional[PyarrLogFilterValue], optional): Value of the filter. Defaults to None.
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            dict[str, Any]: List of dictionaries with items
         """
-        params = {
-            "page": page,
-            "pageSize": page_size,
-            "sortKey": sort_key,
-            "sortDir": sort_dir,
-            "filterKey": filter_key,
-            "filterValue": filter_value,
-        }
-        return self.assert_return("log", self.ver_uri, list, params)
+        params: dict[
+            str,
+            Union[
+                int,
+                PyarrLogSortKey,
+                PyarrSortDirection,
+                PyarrLogFilterKey,
+                PyarrLogFilterValue,
+            ],
+        ] = {}
+        if page:
+            params["page"] = page
+
+        if page_size:
+            params["pageSize"] = page_size
+
+        if sort_key and sort_dir:
+            params["sortKey"] = sort_key
+            params["sortDirection"] = sort_dir
+        elif sort_key or sort_dir:
+            raise PyarrMissingArgument("sort_key and sort_dir  must be used together")
+
+        if filter_key and filter_value:
+            params["filterKey"] = filter_key
+            params["filterValue"] = filter_value
+        elif filter_key or filter_value:
+            raise PyarrMissingArgument(
+                "filter_key and filter_value  must be used together"
+            )
+
+        return self.assert_return("log", self.ver_uri, dict, params)
 
     # GET /history
     # TODO: check the ID on this method may need to move to specific APIs
