@@ -10,7 +10,11 @@ class PyarrSortDirection(str, Enum):
 
 
 class PyarrLogSortKey(str, Enum):
-    """Log Sort Keys"""
+    """Log Sort Keys
+
+    Note:
+        There may be more, however these are yet to be identified
+    """
 
     ID = "Id"
     LEVEL = "level"
@@ -19,6 +23,22 @@ class PyarrLogSortKey(str, Enum):
     MESSAGE = "message"
     EXCEPTION = "exception"
     EXCEPTION_TYPE = "exceptionType"
+
+
+class PyarrBlocklistSortKey(str, Enum):
+    """Block list sort keys"""
+
+    DATE = "date"
+
+
+class PyarrHistorySortKey(str, Enum):
+    """history sort keys
+
+    Note:
+        There may be more, however these are yet to be identified
+    """
+
+    TIME = "time"
 
 
 class PyarrLogFilterKey(str, Enum):

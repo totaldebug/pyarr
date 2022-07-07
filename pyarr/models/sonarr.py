@@ -35,8 +35,7 @@ class SonarrCommands(str, Enum):
     """seriesId (int) required"""
 
 
-@enum_tools.documentation.document_enum
-class SonarrSortKeys(str, Enum):
+class SonarrSortKey(str, Enum):
     """Sonarr sort keys."""
 
     AIR_DATE_UTC = "airDateUtc"

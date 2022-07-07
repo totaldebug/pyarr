@@ -1,0 +1,83 @@
+{
+    "page": 1,
+    "pageSize": 10,
+    "sortKey": "date",
+    "sortDirection": "descending",
+    "totalRecords": 4815,
+    "records": [
+        {
+            "episodeId": 7414,
+            "seriesId": 106,
+            "sourceTitle": "string",
+            "language": {
+                "id": 1,
+                "name": "English"
+            },
+            "quality": {
+                "quality": {
+                    "id": 9,
+                    "name": "HDTV-1080p",
+                    "source": "television",
+                    "resolution": 1080
+                },
+                "revision": {
+                    "version": 1,
+                    "real": 0,
+                    "isRepack": false
+                }
+            },
+            "qualityCutoffNotMet": false,
+            "languageCutoffNotMet": false,
+            "date": "2022-07-06T13:48:09.330878Z",
+            "downloadId": "B0DFA7663432B216A08FAB21FC13265464DDA9DA",
+            "eventType": "downloadFolderImported",
+            "data": {
+                "fileId": "16520",
+                "droppedPath": "/downloads/string.mkv",
+                "importedPath": "/tv/string.mkv",
+                "downloadClient": "Deluge",
+                "downloadClientName": "Deluge",
+                "preferredWordScore": "0",
+                "releaseGroup": "MeGusta"
+            },
+            "id": 5207
+        },
+        {
+            "episodeId": 7418,
+            "seriesId": 106,
+            "sourceTitle": "string",
+            "language": {
+                "id": 1,
+                "name": "English"
+            },
+            "quality": {
+                "quality": {
+                    "id": 9,
+                    "name": "HDTV-1080p",
+                    "source": "television",
+                    "resolution": 1080
+                },
+                "revision": {
+                    "version": 1,
+                    "real": 0,
+                    "isRepack": false
+                }
+            },
+            "qualityCutoffNotMet": false,
+            "languageCutoffNotMet": false,
+            "date": "2022-07-06T13:47:26.914404Z",
+            "downloadId": "0F5A4E0186ECC9A239A1F51B979CECC718B7DB57",
+            "eventType": "downloadFolderImported",
+            "data": {
+                "fileId": "16519",
+                "droppedPath": "/downloads/string.mkv",
+                "importedPath": "/tv/string.mkv",
+                "downloadClient": "Deluge",
+                "downloadClientName": "Deluge",
+                "preferredWordScore": "0",
+                "releaseGroup": "MeGusta"
+            },
+            "id": 5206
+        }
+    ]
+}

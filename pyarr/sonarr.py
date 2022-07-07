@@ -8,8 +8,8 @@ from pyarr.exceptions import PyarrMissingArgument
 
 from .base import BaseArrAPI
 from .const import PAGE, PAGE_SIZE
-from .models.common import PyarrSortDirection
-from .models.sonarr import SonarrCommands, SonarrSortKeys
+from .models.common import PyarrHistorySortKey, PyarrSortDirection
+from .models.sonarr import SonarrCommands, SonarrSortKey
 
 
 class SonarrAPI(BaseArrAPI):
@@ -293,7 +293,7 @@ class SonarrAPI(BaseArrAPI):
     # GET /wanted/missing
     def get_wanted(
         self,
-        sort_key: SonarrSortKeys = SonarrSortKeys.AIR_DATE_UTC,
+        sort_key: SonarrSortKey = SonarrSortKey.AIR_DATE_UTC,
         page: int = PAGE,
         page_size: int = PAGE_SIZE,
         sort_dir: PyarrSortDirection = PyarrSortDirection.DEFAULT,
@@ -302,7 +302,7 @@ class SonarrAPI(BaseArrAPI):
         """Gets missing episode (episodes without files)
 
         Args:
-            sort_key (SonarrSortKeys, optional): series.title or airDateUtc. Defaults to SonarrSortKeys.AIR_DATE_UTC.
+            sort_key (SonarrSortKey, optional): series.title or airDateUtc. Defaults to SonarrSortKey.AIR_DATE_UTC.
             page (int, optional): Page number to return. Defaults to 1.
             page_size (int, optional): Number of items per page. Defaults to 10.
             sort_dir (PyarrSortDirection, optional): Direction to sort the items. Defaults to PyarrSortDirection.DEFAULT.
@@ -329,7 +329,7 @@ class SonarrAPI(BaseArrAPI):
         page: int = 1,
         page_size: int = 20,
         sort_dir: PyarrSortDirection = PyarrSortDirection.DEFAULT,
-        sort_key: SonarrSortKeys = SonarrSortKeys.TIMELEFT,
+        sort_key: SonarrSortKey = SonarrSortKey.TIMELEFT,
         include_unknown_series_items: bool = False,
         include_series: bool = False,
         include_episode: bool = False,
@@ -603,3 +603,44 @@ class SonarrAPI(BaseArrAPI):
         )
         params = {"term": f"tvdb:{id_}"}
         return self.assert_return("series/lookup", self.ver_uri, list, params)
+
+    # GET /history
+    # Overrides base get history for ID
+    def get_history(
+        self,
+        page: Optional[int] = None,
+        page_size: Optional[int] = None,
+        sort_key: Optional[PyarrHistorySortKey] = None,
+        sort_dir: Optional[PyarrSortDirection] = None,
+        id_: Optional[int] = None,
+    ) -> dict[str, Any]:
+        """Gets history (grabs/failures/completed)
+
+        Args:
+            page (Optional[int], optional): Page number to return. Defaults to None.
+            page_size (Optional[int], optional): Number of items per page. Defaults to None.
+            sort_key (Optional[PyarrHistorySortKey], optional): Field to sort by. Defaults to None.
+            sort_dir (Optional[PyarrSortDirection], optional): Direction to sort the items. Defaults to None.
+            id_ (Optional[int], optional): Filter to a specific episode ID. Defaults to None.
+
+        Returns:
+           dict[str, Any]: Dictionary with items
+        """
+        params: dict[str, Union[int, PyarrHistorySortKey, PyarrSortDirection]] = {}
+
+        if page:
+            params["page"] = page
+
+        if page_size:
+            params["pageSize"] = page_size
+
+        if sort_key and sort_dir:
+            params["sortKey"] = sort_key
+            params["sortDirection"] = sort_dir
+        elif sort_key or sort_dir:
+            raise PyarrMissingArgument("sort_key and sort_dir  must be used together")
+
+        if id_:
+            params["episodeId"] = id_
+
+        return self.assert_return("history", self.ver_uri, dict, params)

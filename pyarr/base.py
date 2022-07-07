@@ -5,13 +5,14 @@ from requests import Response
 
 from pyarr.exceptions import PyarrMissingArgument
 from pyarr.models.common import (
+    PyarrBlocklistSortKey,
+    PyarrHistorySortKey,
     PyarrLogFilterKey,
     PyarrLogFilterValue,
     PyarrLogSortKey,
     PyarrSortDirection,
 )
 
-from .const import PAGE, PAGE_SIZE
 from .request_handler import RequestHandler
 
 
@@ -199,8 +200,8 @@ class BaseArrAPI(RequestHandler):
             page_size (Optional[int], optional): Number of items per page. Defaults to None.
             sort_key (Optional[PyarrLogSortKey], optional): Field to sort by. Defaults to None.
             sort_dir (Optional[PyarrSortDirection], optional): Direction to sort. Defaults to None.
-            filter_key (Optional[PyarrLogFilterKey], optional): Key to filter by. Defaults to None.
-            filter_value (Optional[PyarrLogFilterValue], optional): Value of the filter. Defaults to None.
+            filter_key (Optional[PyarrFilterKey], optional): Key to filter by. Defaults to None.
+            filter_value (Optional[PyarrFilterValue], optional): Value of the filter. Defaults to None.
 
         Returns:
             dict[str, Any]: List of dictionaries with items
@@ -238,65 +239,76 @@ class BaseArrAPI(RequestHandler):
         return self.assert_return("log", self.ver_uri, dict, params)
 
     # GET /history
-    # TODO: check the ID on this method may need to move to specific APIs
     def get_history(
         self,
-        sort_key: str = "date",
-        page: int = PAGE,
-        page_size: int = PAGE_SIZE,
-        sort_dir: str = "desc",
-        id_: Optional[int] = None,
-    ) -> list[dict[str, Any]]:
+        page: Optional[int] = None,
+        page_size: Optional[int] = None,
+        sort_key: Optional[PyarrHistorySortKey] = None,
+        sort_dir: Optional[PyarrSortDirection] = None,
+    ) -> dict[str, Any]:
         """Gets history (grabs/failures/completed)
 
         Args:
-            sort_key (str, optional): Field to sort by. Defaults to "date".
-            page (int, optional): Page number to return. Defaults to PAGE.
-            page_size (int, optional): Number of items per page. Defaults to PAGE_SIZE.
-            sort_dir (str, optional): Direction to sort the items. Defaults to "desc".
-            id_ (Optional[int], optional): Filter to a specific episode ID. Defaults to None.
+            page (Optional[int], optional): Page number to return. Defaults to None.
+            page_size (Optional[int], optional): Number of items per page. Defaults to None.
+            sort_key (Optional[PyarrSortKey], optional): Field to sort by. Defaults to None.
+            sort_dir (Optional[PyarrSortDirection], optional): Direction to sort the items. Defaults to None.
 
         Returns:
-           list[dict[str, Any]]: List of dictionaries with items
+           dict[str, Any]: Dictionary with items
         """
-        params = {
-            "sortKey": sort_key,
-            "page": page,
-            "pageSize": page_size,
-            "sortDir": sort_dir,
-        }
-        if id_:
-            params["episodeId"] = id_
-        return self.assert_return("history", self.ver_uri, list, params)
+        params: dict[str, Union[int, PyarrHistorySortKey, PyarrSortDirection]] = {}
+
+        if page:
+            params["page"] = page
+
+        if page_size:
+            params["pageSize"] = page_size
+
+        if sort_key and sort_dir:
+            params["sortKey"] = sort_key
+            params["sortDirection"] = sort_dir
+        elif sort_key or sort_dir:
+            raise PyarrMissingArgument("sort_key and sort_dir  must be used together")
+
+        return self.assert_return("history", self.ver_uri, dict, params)
 
     # BLOCKLIST
 
     # GET /blocklist
     def get_blocklist(
         self,
-        page: int = PAGE,
-        page_size: int = PAGE_SIZE,
-        sort_direction: str = "descending",
-        sort_key: str = "date",
-    ) -> list[dict[str, Any]]:
+        page: Optional[int] = None,
+        page_size: Optional[int] = None,
+        sort_key: Optional[PyarrBlocklistSortKey] = None,
+        sort_dir: Optional[PyarrSortDirection] = None,
+    ) -> dict[str, Any]:
         """Returns blocked releases.
 
         Args:
-            page (int, optional): Page to be returned. Defaults to PAGE.
-            page_size (int, optional): Number of results per page. Defaults to PAGE_SIZE.
-            sort_direction (str, optional): Direction to sort items. Defaults to "descending".
-            sort_key (str, optional): Field to sort by. Defaults to "date".
+            page (Optional[int], optional): Page number to return. Defaults to None.
+            page_size (Optional[int], optional): Number of items per page. Defaults to None.
+            sort_key (Optional[PyarrBlocklistSortKey], optional): Field to sort by. Defaults to None.
+            sort_dir (Optional[PyarrSortDirection], optional): Direction to sort the items. Defaults to None.
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            dict[str, Any]: Dictionary with items
         """
-        params = {
-            "page": page,
-            "pageSize": page_size,
-            "sortDirection": sort_direction,
-            "sortKey": sort_key,
-        }
-        return self.assert_return("blocklist", self.ver_uri, list, params)
+        params: dict[str, Union[int, PyarrBlocklistSortKey, PyarrSortDirection]] = {}
+
+        if page:
+            params["page"] = page
+
+        if page_size:
+            params["pageSize"] = page_size
+
+        if sort_key and sort_dir:
+            params["sortKey"] = sort_key
+            params["sortDirection"] = sort_dir
+        elif sort_key or sort_dir:
+            raise PyarrMissingArgument("sort_key and sort_dir  must be used together")
+
+        return self.assert_return("blocklist", self.ver_uri, dict, params)
 
     # DELETE /blocklist
     def del_blocklist(

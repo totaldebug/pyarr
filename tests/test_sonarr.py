@@ -1,7 +1,5 @@
 import contextlib
 from datetime import datetime
-import json
-from warnings import warn
 
 import pytest
 
@@ -11,12 +9,13 @@ from pyarr.exceptions import (
     PyarrResourceNotFound,
 )
 from pyarr.models.common import (
+    PyarrHistorySortKey,
     PyarrLogFilterKey,
     PyarrLogFilterValue,
     PyarrLogSortKey,
     PyarrSortDirection,
 )
-from pyarr.models.sonarr import SonarrCommands, SonarrSortKeys
+from pyarr.models.sonarr import SonarrCommands, SonarrSortKey
 
 from tests import load_fixture
 
@@ -29,6 +28,7 @@ def test__series_json(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/series_lookup.json"),
         status=200,
+        match_querystring=True,
     )
 
     data = sonarr_client._series_json(
@@ -64,6 +64,7 @@ def test_get_command(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/command_all.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_command()
     assert isinstance(data, list)
@@ -75,6 +76,7 @@ def test_get_command(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/command.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_command(4327826)
     assert isinstance(data, dict)
@@ -85,6 +87,7 @@ def test_get_command(responses, sonarr_client):
         "https://127.0.0.1:8989/api/v3/command/4321",
         headers={"Content-Type": "application/json"},
         status=404,
+        match_querystring=True,
     )
     with contextlib.suppress(PyarrResourceNotFound):
         data = sonarr_client.get_command(4321)
@@ -99,6 +102,7 @@ def test_post_command(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/command.json"),
         status=201,
+        match_querystring=True,
     )
 
     data = sonarr_client.post_command(name=SonarrCommands.REFRESH_SERIES)
@@ -142,6 +146,7 @@ def test_get_episode(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/episode.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_episode(0)
 
@@ -153,6 +158,7 @@ def test_get_episode(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/episode_series.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_episode(1, True)
     assert isinstance(data, list)
@@ -162,6 +168,7 @@ def test_get_episode(responses, sonarr_client):
         "https://127.0.0.1:8989/api/v3/episode/999",
         headers={"Content-Type": "application/json"},
         status=404,
+        match_querystring=True,
     )
     with contextlib.suppress(PyarrResourceNotFound):
         data = sonarr_client.get_episode(999)
@@ -176,6 +183,7 @@ def test_get_episodes_by_series_id(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/episode_series.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_episodes_by_series_id(1)
 
@@ -186,6 +194,7 @@ def test_get_episodes_by_series_id(responses, sonarr_client):
         "https://127.0.0.1:8989/api/v3/episode?seriesId=999",
         headers={"Content-Type": "application/json"},
         status=404,
+        match_querystring=True,
     )
     with contextlib.suppress(PyarrResourceNotFound):
         data = sonarr_client.get_episodes_by_series_id(999)
@@ -200,6 +209,7 @@ def test_get_episode_by_episode_id(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/episode.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_episode_by_episode_id(0)
 
@@ -210,6 +220,7 @@ def test_get_episode_by_episode_id(responses, sonarr_client):
         "https://127.0.0.1:8989/api/v3/episode/999",
         headers={"Content-Type": "application/json"},
         status=404,
+        match_querystring=True,
     )
     with contextlib.suppress(PyarrResourceNotFound):
         data = sonarr_client.get_episode_by_episode_id(999)
@@ -224,6 +235,7 @@ def test_upd_episode(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/episode_update.json"),
         status=200,
+        match_querystring=True,
     )
     payload = {"monitored": True}
     data = sonarr_client.upd_episode(1, payload)
@@ -242,6 +254,7 @@ def test_get_episode_files_by_series_id(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/episodefile_series.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_episode_files_by_series_id(1)
     assert isinstance(data, list)
@@ -251,6 +264,7 @@ def test_get_episode_files_by_series_id(responses, sonarr_client):
         "https://127.0.0.1:8989/api/v3/episodefile?seriesId=999",
         headers={"Content-Type": "application/json"},
         status=404,
+        match_querystring=True,
     )
     with contextlib.suppress(PyarrResourceNotFound):
         data = sonarr_client.get_episode_files_by_series_id(999)
@@ -266,6 +280,7 @@ def test_get_episode_file(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/episodefile.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_episode_file(0)
 
@@ -277,6 +292,7 @@ def test_get_episode_file(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/episodefile_series.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_episode_file(1, True)
     assert isinstance(data, list)
@@ -286,6 +302,7 @@ def test_get_episode_file(responses, sonarr_client):
         "https://127.0.0.1:8989/api/v3/episodefile/999",
         headers={"Content-Type": "application/json"},
         status=404,
+        match_querystring=True,
     )
     with contextlib.suppress(PyarrResourceNotFound):
         data = sonarr_client.get_episode_file(999)
@@ -300,6 +317,7 @@ def test_del_episode_file(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/delete.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.del_episode_file(1)
     assert isinstance(data, dict)
@@ -309,6 +327,7 @@ def test_del_episode_file(responses, sonarr_client):
         "https://127.0.0.1:8989/api/v3/episodefile/999",
         headers={"Content-Type": "application/json"},
         status=404,
+        match_querystring=True,
     )
     with contextlib.suppress(PyarrResourceNotFound):
         data = sonarr_client.del_episode_file(999)
@@ -323,6 +342,7 @@ def test_upd_episode_file_quality(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/episodefile.json"),
         status=202,
+        match_querystring=True,
     )
     data = sonarr_client.upd_episode_file_quality(
         1, load_fixture("sonarr/file_quality.json")
@@ -338,6 +358,7 @@ def test_get_wanted(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/wanted_missing.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_wanted()
     assert isinstance(data, dict)
@@ -348,6 +369,7 @@ def test_get_wanted(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/wanted_missing_extended.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_wanted(include_series=True)
     assert isinstance(data, dict)
@@ -358,9 +380,10 @@ def test_get_wanted(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/wanted_missing.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_wanted(
-        sort_key=SonarrSortKeys.SERIES_TITLE,
+        sort_key=SonarrSortKey.SERIES_TITLE,
         page=2,
         page_size=20,
         sort_dir=PyarrSortDirection.ASC,
@@ -376,6 +399,7 @@ def test_get_quality_profile(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/qualityprofileall.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_quality_profile()
     assert isinstance(data, list)
@@ -386,6 +410,7 @@ def test_get_quality_profile(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/qualityprofile.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_quality_profile(1)
     assert isinstance(data, dict)
@@ -399,6 +424,7 @@ def test_get_queue(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/queue.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_queue()
     assert isinstance(data, dict)
@@ -412,6 +438,7 @@ def test_get_parsed_title(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/parse.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_parsed_title("Series.Title.S01E01")
     assert isinstance(data, dict)
@@ -425,6 +452,7 @@ def test_get_parsed_path(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/parse.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_parsed_path("/")
     assert isinstance(data, dict)
@@ -438,6 +466,7 @@ def test_get_parse_title_path(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/parse.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_parse_title_path(title="Series.Title.S01E01", path="/")
     assert isinstance(data, dict)
@@ -448,16 +477,18 @@ def test_get_parse_title_path(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/parse.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_parse_title_path(title="Series.Title.S01E01")
     assert isinstance(data, dict)
 
     responses.add(
         responses.GET,
-        "https://127.0.0.1:8989/api/v3/parse",
+        "https://127.0.0.1:8989/api/v3/parse?path=/",
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/parse.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_parse_title_path(path="/")
     assert isinstance(data, dict)
@@ -475,6 +506,7 @@ def test_get_releases(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/release.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_releases()
     assert isinstance(data, list)
@@ -485,6 +517,7 @@ def test_get_releases(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/release.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_releases(1)
     assert isinstance(data, list)
@@ -498,6 +531,7 @@ def test_download_release(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/release_download.json"),
         status=201,
+        match_querystring=True,
     )
     data = sonarr_client.download_release(guid="1450590", indexer_id=2)
     assert isinstance(data, dict)
@@ -511,6 +545,7 @@ def test_push_release(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/release_download.json"),
         status=201,
+        match_querystring=True,
     )
     data = sonarr_client.push_release(
         title="test",
@@ -529,6 +564,7 @@ def test_get_series(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/series_all.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_series()
     assert isinstance(data, list)
@@ -539,6 +575,7 @@ def test_get_series(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/series.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_series(1)
     assert isinstance(data, dict)
@@ -551,6 +588,7 @@ def test_add_series(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/series_lookup.json"),
         status=200,
+        match_querystring=True,
     )
     responses.add(
         responses.POST,
@@ -558,6 +596,7 @@ def test_add_series(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/series.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.add_series(tvdb_id=123456, quality_profile_id=0, root_dir="/")
     assert isinstance(data, dict)
@@ -571,6 +610,7 @@ def test_upd_series(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/series.json"),
         status=200,
+        match_querystring=True,
     )
     series = sonarr_client.get_series(1)
     responses.add(
@@ -579,6 +619,7 @@ def test_upd_series(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/series.json"),
         status=202,
+        match_querystring=True,
     )
     data = sonarr_client.upd_series(data=series)
     assert isinstance(data, dict)
@@ -592,6 +633,7 @@ def test_del_series(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/delete.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.del_series(1)
     assert isinstance(data, dict)
@@ -603,6 +645,7 @@ def test_del_series(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/delete.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.del_series(1, delete_files=True)
     assert isinstance(data, dict)
@@ -617,6 +660,7 @@ def test_lookup_series(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/series_lookup.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.lookup_series(id_=123456)
     assert isinstance(data, list)
@@ -627,6 +671,7 @@ def test_lookup_series(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/series_lookup.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.lookup_series(term="test")
     assert isinstance(data, list)
@@ -644,6 +689,7 @@ def test_lookup_series_by_tvdb_id(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/series_lookup.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.lookup_series_by_tvdb_id(123456)
     assert isinstance(data, list)
@@ -662,6 +708,7 @@ def test_get_calendar(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/calendar.json"),
         status=200,
+        match_querystring=True,
     )
     start = datetime.strptime("Nov 30 2020  1:33PM", "%b %d %Y %I:%M%p")
     end = datetime.strptime("Dec 1 2020  1:33PM", "%b %d %Y %I:%M%p")
@@ -674,6 +721,7 @@ def test_get_calendar(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/calendar.json"),
         status=200,
+        match_querystring=True,
     )
     start = datetime.strptime("Nov 30 2020  1:33PM", "%b %d %Y %I:%M%p")
     end = datetime.strptime("Dec 1 2020  1:33PM", "%b %d %Y %I:%M%p")
@@ -688,6 +736,7 @@ def test_get_system_status(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/system_status.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_system_status()
     assert isinstance(data, dict)
@@ -700,6 +749,7 @@ def test_get_health(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/health.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_health()
     assert isinstance(data, list)
@@ -712,6 +762,7 @@ def test_get_metadata(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/metadata_all.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_metadata()
     assert isinstance(data, list)
@@ -722,6 +773,7 @@ def test_get_metadata(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/metadata.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_metadata(1)
     assert isinstance(data, dict)
@@ -734,6 +786,7 @@ def test_get_update(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/metadata_all.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_update()
     assert isinstance(data, list)
@@ -746,6 +799,7 @@ def test_get_root_folder(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/rootfolder_all.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_root_folder()
     assert isinstance(data, list)
@@ -756,6 +810,7 @@ def test_get_root_folder(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/rootfolder.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_root_folder(1)
     assert isinstance(data, dict)
@@ -769,6 +824,7 @@ def test_del_root_folder(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/delete.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.del_root_folder(1)
     assert isinstance(data, dict)
@@ -791,6 +847,7 @@ def test_get_disk_space(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/diskspace.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_disk_space()
     assert isinstance(data, list)
@@ -803,6 +860,7 @@ def test_get_backup(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/backup.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_backup()
     assert isinstance(data, list)
@@ -815,27 +873,29 @@ def test_get_log(responses, sonarr_client):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/log.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_log()
     assert isinstance(data, dict)
 
     responses.add(
         responses.GET,
-        "https://127.0.0.1:8989/api/v3/log?page=10&pageSize=10&sortKey=time&sortDirection=descending",
+        "https://127.0.0.1:8989/api/v3/log?page=10&pageSize=10&sortKey=Id&sortDirection=descending",
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/log.json"),
         status=200,
+        match_querystring=True,
     )
     data = sonarr_client.get_log(
         page=10,
         page_size=10,
-        sort_key=PyarrLogSortKey.TIME,
+        sort_key=PyarrLogSortKey.ID,
         sort_dir=PyarrSortDirection.DESC,
     )
     assert isinstance(data, dict)
 
     with contextlib.suppress(PyarrMissingArgument):
-        data = sonarr_client.get_log(sort_key=PyarrLogSortKey.TIME)
+        data = sonarr_client.get_log(sort_key=PyarrLogSortKey.ID)
         assert False
     with contextlib.suppress(PyarrMissingArgument):
         data = sonarr_client.get_log(sort_dir=PyarrSortDirection.DESC)
@@ -845,4 +905,56 @@ def test_get_log(responses, sonarr_client):
         assert False
     with contextlib.suppress(PyarrMissingArgument):
         data = sonarr_client.get_log(filter_value=PyarrLogFilterValue.ALL)
+        assert False
+
+
+def test_get_history(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/history",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/history.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_history()
+    assert isinstance(data, dict)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/history?episodeId=1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/history.json"),
+        status=200,
+        match_querystring=True,
+    )
+
+    data = sonarr_client.get_history(id_=1)
+    assert isinstance(data, dict)
+
+    with contextlib.suppress(PyarrMissingArgument):
+        data = sonarr_client.get_history(sort_key=PyarrHistorySortKey.TIME)
+        assert False
+    with contextlib.suppress(PyarrMissingArgument):
+        data = sonarr_client.get_history(sort_dir=PyarrSortDirection.DESC)
+        assert False
+
+
+def test_get_blocklist(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/blocklist",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/blocklist.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_blocklist()
+    assert isinstance(data, dict)
+
+    with contextlib.suppress(PyarrMissingArgument):
+        data = sonarr_client.get_blocklist(sort_key=PyarrHistorySortKey.TIME)
+        assert False
+    with contextlib.suppress(PyarrMissingArgument):
+        data = sonarr_client.get_blocklist(sort_dir=PyarrSortDirection.DESC)
         assert False
