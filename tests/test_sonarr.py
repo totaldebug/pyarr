@@ -840,6 +840,7 @@ def test_del_root_folder(responses, sonarr_client):
         assert False
 
 
+@pytest.mark.usefixtures
 def test_get_disk_space(responses, sonarr_client):
     responses.add(
         responses.GET,
@@ -853,6 +854,7 @@ def test_get_disk_space(responses, sonarr_client):
     assert isinstance(data, list)
 
 
+@pytest.mark.usefixtures
 def test_get_backup(responses, sonarr_client):
     responses.add(
         responses.GET,
@@ -866,6 +868,7 @@ def test_get_backup(responses, sonarr_client):
     assert isinstance(data, list)
 
 
+@pytest.mark.usefixtures
 def test_get_log(responses, sonarr_client):
     responses.add(
         responses.GET,
@@ -908,6 +911,7 @@ def test_get_log(responses, sonarr_client):
         assert False
 
 
+@pytest.mark.usefixtures
 def test_get_history(responses, sonarr_client):
     responses.add(
         responses.GET,
@@ -940,6 +944,7 @@ def test_get_history(responses, sonarr_client):
         assert False
 
 
+@pytest.mark.usefixtures
 def test_get_blocklist(responses, sonarr_client):
     responses.add(
         responses.GET,
@@ -957,4 +962,29 @@ def test_get_blocklist(responses, sonarr_client):
         assert False
     with contextlib.suppress(PyarrMissingArgument):
         data = sonarr_client.get_blocklist(sort_dir=PyarrSortDirection.DESC)
+        assert False
+
+
+@pytest.mark.usefixtures
+def test_del_blocklist(responses, sonarr_client):
+    responses.add(
+        responses.DELETE,
+        "https://127.0.0.1:8989/api/v3/blocklist/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/delete.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.del_blocklist(1)
+    assert isinstance(data, dict)
+
+    responses.add(
+        responses.DELETE,
+        "https://127.0.0.1:8989/api/v3/blocklist/999",
+        headers={"Content-Type": "application/json"},
+        status=404,
+        match_querystring=True,
+    )
+    with contextlib.suppress(PyarrResourceNotFound):
+        data = sonarr_client.del_blocklist(999)
         assert False

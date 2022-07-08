@@ -322,8 +322,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             Response: HTTP Response
         """
-        params = {"id": id_}
-        return self._delete("blocklist", self.ver_uri, params=params)
+        return self._delete(f"blocklist/{id_}", self.ver_uri)
 
     # DELETE /blocklist/bulk
     def del_blocklist_bulk(
