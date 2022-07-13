@@ -1,6 +1,11 @@
 from enum import Enum
 
+import enum_tools.documentation
 
+enum_tools.documentation.INTERACTIVE = True
+
+
+@enum_tools.documentation.document_enum
 class LidarrSortKeys(str, Enum):
     """Lidarr sort keys."""
 
@@ -23,6 +28,7 @@ class LidarrSortKeys(str, Enum):
     TITLE = "title"
 
 
+@enum_tools.documentation.document_enum
 class LidarrArtistMonitor(str, Enum):
     """Lidarr Monitor types for an artist music"""
 
@@ -34,6 +40,7 @@ class LidarrArtistMonitor(str, Enum):
     LATEST_ALBUM = "latest"
 
 
+@enum_tools.documentation.document_enum
 class LidarrCommands(str, Enum):
     """Lidarr commands."""
 

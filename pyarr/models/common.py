@@ -1,6 +1,11 @@
 from enum import Enum
 
+import enum_tools.documentation
 
+enum_tools.documentation.INTERACTIVE = True
+
+
+@enum_tools.documentation.document_enum
 class PyarrSortDirection(str, Enum):
     """Pyarr sort direction"""
 
@@ -9,6 +14,7 @@ class PyarrSortDirection(str, Enum):
     DESC = "descending"
 
 
+@enum_tools.documentation.document_enum
 class PyarrLogSortKey(str, Enum):
     """Log Sort Keys
 
@@ -25,12 +31,14 @@ class PyarrLogSortKey(str, Enum):
     EXCEPTION_TYPE = "exceptionType"
 
 
+@enum_tools.documentation.document_enum
 class PyarrBlocklistSortKey(str, Enum):
     """Block list sort keys"""
 
     DATE = "date"
 
 
+@enum_tools.documentation.document_enum
 class PyarrHistorySortKey(str, Enum):
     """history sort keys
 
@@ -41,6 +49,18 @@ class PyarrHistorySortKey(str, Enum):
     TIME = "time"
 
 
+@enum_tools.documentation.document_enum
+class PyarrTaskSortKey(str, Enum):
+    """Task sort keys
+
+    Note:
+        There may be more, however these are yet to be identified
+    """
+
+    TIME_LEFT = "timeleft"
+
+
+@enum_tools.documentation.document_enum
 class PyarrLogFilterKey(str, Enum):
     """Log filter keys
 
@@ -51,6 +71,7 @@ class PyarrLogFilterKey(str, Enum):
     LEVEL = "level"
 
 
+@enum_tools.documentation.document_enum
 class PyarrLogFilterValue(str, Enum):
     """Log filter values
 

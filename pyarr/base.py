@@ -11,6 +11,7 @@ from pyarr.models.common import (
     PyarrLogFilterValue,
     PyarrLogSortKey,
     PyarrSortDirection,
+    PyarrTaskSortKey,
 )
 
 from .request_handler import RequestHandler
@@ -326,16 +327,17 @@ class BaseArrAPI(RequestHandler):
 
     # DELETE /blocklist/bulk
     def del_blocklist_bulk(
-        self, data: dict[str, Any]
+        self, ids: list[int]
     ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
         """Delete blocked releases in bulk
 
         Args:
-            data (dict[str, Any]): Blocklists that should be deleted
+            ids (list[int]): Blocklists ids that should be deleted
 
         Returns:
             Response: HTTP Response
         """
+        data = {"ids": ids}
         return self._delete("blocklist/bulk", self.ver_uri, data=data)
 
     # PROFILES
@@ -384,21 +386,22 @@ class BaseArrAPI(RequestHandler):
         Returns:
             Response: HTTP Response
         """
-        params = {"id": id_}
-        return self._delete("qualityprofile", self.ver_uri, params=params)
+        return self._delete(f"qualityprofile/{id_}", self.ver_uri)
 
     # GET /qualitydefinition/{id}
-    def get_quality_definition(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
+    def get_quality_definition(
+        self, id_: Optional[int] = None
+    ) -> Union[list[dict[str, Any]], dict[Any, Any]]:
         """Gets all quality definitions or specific one by ID
 
         Args:
             id_ (Optional[int], optional): Import list database id. Defaults to None.
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            Union[list[dict[str, Any]], dict[Any, Any]]: List of dictionaries with items
         """
         path = f"qualitydefinition/{id_}" if id_ else "qualitydefinition"
-        return self.assert_return(path, self.ver_uri, list)
+        return self.assert_return(path, self.ver_uri, dict if id_ else list)
 
     # PUT /qualitydefinition/{id}
     def upd_quality_definition(self, id_: int, data: dict[str, Any]) -> dict[str, Any]:
@@ -419,17 +422,19 @@ class BaseArrAPI(RequestHandler):
     # INDEXER
 
     # GET /indexer/{id}
-    def get_indexer(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
+    def get_indexer(
+        self, id_: Optional[int] = None
+    ) -> Union[list[dict[str, Any]], dict[Any, Any]]:
         """Get all indexers or specific by id
 
         Args:
             id_ (Optional[int], optional): Database if of indexer to return. Defaults to None.
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            Union[list[dict[str, Any]], dict[Any, Any]]: List of dictionaries with items
         """
         path = f"indexer/{id_}" if id_ else "indexer"
-        return self.assert_return(path, self.ver_uri, list)
+        return self.assert_return(path, self.ver_uri, dict if id_ else list)
 
     # PUT /indexer/{id}
     def upd_indexer(self, id_: int, data: dict[str, Any]) -> dict[str, Any]:
@@ -457,40 +462,80 @@ class BaseArrAPI(RequestHandler):
         Returns:
             Response: HTTP Response
         """
-        params = {"id": id_}
-        return self._delete("indexer", self.ver_uri, params=params)
+
+        return self._delete(f"indexer/{id_}", self.ver_uri)
 
     # QUEUE
 
     # DELETE /queue/{id}
+    # TODO: check if blacklist has changed to blocklist
     def del_queue(
-        self, id_: int, remove_from_client: bool = True, blacklist: bool = True
+        self,
+        id_: int,
+        remove_from_client: Optional[bool] = None,
+        blacklist: Optional[bool] = None,
     ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
         """Remove an item from the queue and blacklist it
 
         Args:
             id_ (int): ID of the item to be removed
-            remove_from_client (bool, optional): Remove the item from the client. Defaults to True.
-            blacklist (bool, optional): Add the item to the blacklist. Defaults to True.
+            remove_from_client (Optional[bool], optional): Remove the item from the client. Defaults to None.
+            blacklist (Optional[bool], optional): Add the item to the blacklist. Defaults to None.
 
         Returns:
             Response: HTTP Response
         """
-        params = {"removeFromClient": remove_from_client, "blacklist": blacklist}
+        params = {}
+        if remove_from_client:
+            params["removeFromClient"] = remove_from_client
+        if blacklist:
+            params["blacklist"] = blacklist
+
         return self._delete(f"queue/{id_}", self.ver_uri, params=params)
 
     # GET /system/task/{id}
-    def get_task(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
+    def get_task(
+        self,
+        page: Optional[int] = None,
+        page_size: Optional[int] = None,
+        sort_key: Optional[PyarrTaskSortKey] = None,
+        sort_dir: Optional[PyarrSortDirection] = None,
+        id_: Optional[int] = None,
+    ) -> dict[Any, Any]:
         """Return a list of tasks, or specify a task ID to return single task
 
         Args:
+            page (Optional[int], optional): Page number to return. Defaults to None.
+            page_size (Optional[int], optional): Number of items per page. Defaults to None.
+            sort_key (Optional[PyarrTaskSortKey], optional): Field to sort by. Defaults to None.
+            sort_dir (Optional[PyarrSortDirection], optional): Direction to sort the items. Defaults to None.
             id_ (Optional[int], optional):  ID for task. Defaults to None.
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            Union[list[dict[str, Any]], dict[Any, Any]]: List of dictionaries with items
         """
+        params: dict[
+            str,
+            Union[
+                int,
+                PyarrTaskSortKey,
+                PyarrSortDirection,
+            ],
+        ] = {}
+        if page:
+            params["page"] = page
+
+        if page_size:
+            params["pageSize"] = page_size
+
+        if sort_key and sort_dir:
+            params["sortKey"] = sort_key
+            params["sortDirection"] = sort_dir
+        elif sort_key or sort_dir:
+            raise PyarrMissingArgument("sort_key and sort_dir  must be used together")
+
         path = f"system/task/{id_}" if id_ else "system/task"
-        return self.assert_return(path, self.ver_uri, list)
+        return self.assert_return(path, self.ver_uri, dict, params)
 
     # GET /remotepathmapping
     def get_remote_path_mapping(

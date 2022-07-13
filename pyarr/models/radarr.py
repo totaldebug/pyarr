@@ -1,6 +1,11 @@
 from enum import Enum
 
+import enum_tools.documentation
 
+enum_tools.documentation.INTERACTIVE = True
+
+
+@enum_tools.documentation.document_enum
 class RadarrCommands(str, Enum):
     """Radarr commands."""
 
@@ -11,6 +16,7 @@ class RadarrCommands(str, Enum):
     RESCAN_MOVIE = "RescanMovie"
 
 
+@enum_tools.documentation.document_enum
 class RadarrSortKeys(str, Enum):
     """Radarr sort keys."""
 

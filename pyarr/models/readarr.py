@@ -1,6 +1,11 @@
 from enum import Enum
 
+import enum_tools.documentation
 
+enum_tools.documentation.INTERACTIVE = True
+
+
+@enum_tools.documentation.document_enum
 class ReadarrCommands(str, Enum):
     """Readarr commands."""
 
@@ -13,6 +18,7 @@ class ReadarrCommands(str, Enum):
     RESCAN_FOLDERS = "RescanFolders"
 
 
+@enum_tools.documentation.document_enum
 class ReadarrSortKeys(str, Enum):
     """Readarr sort keys."""
 
@@ -35,6 +41,7 @@ class ReadarrSortKeys(str, Enum):
     TITLE = "title"
 
 
+@enum_tools.documentation.document_enum
 class ReadarrBookTypes(str, Enum):
     """Readarr book types."""
 
@@ -43,6 +50,7 @@ class ReadarrBookTypes(str, Enum):
     ISBN = "isbn"
 
 
+@enum_tools.documentation.document_enum
 class ReadarrAuthorMonitor(str, Enum):
     """Readarr author monitor options."""
 

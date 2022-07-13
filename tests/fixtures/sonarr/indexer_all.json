@@ -1,0 +1,121 @@
+[
+    {
+        "enableRss": true,
+        "enableAutomaticSearch": true,
+        "enableInteractiveSearch": true,
+        "supportsRss": true,
+        "supportsSearch": true,
+        "protocol": "torrent",
+        "priority": 25,
+        "downloadClientId": 0,
+        "name": "string",
+        "fields": [
+            {
+                "order": 0,
+                "name": "baseUrl",
+                "label": "URL",
+                "value": "string",
+                "type": "textbox",
+                "advanced": false
+            },
+            {
+                "order": 1,
+                "name": "apiPath",
+                "label": "API Path",
+                "helpText": "Path to the api, usually /api",
+                "value": "/api",
+                "type": "textbox",
+                "advanced": true
+            },
+            {
+                "order": 2,
+                "name": "apiKey",
+                "label": "API Key",
+                "value": "string",
+                "type": "textbox",
+                "advanced": false
+            },
+            {
+                "order": 3,
+                "name": "categories",
+                "label": "Categories",
+                "helpText": "Drop down list, leave blank to disable standard/daily shows",
+                "value": [
+                    5030,
+                    5040
+                ],
+                "type": "select",
+                "advanced": false,
+                "selectOptionsProviderAction": "newznabCategories"
+            },
+            {
+                "order": 4,
+                "name": "animeCategories",
+                "label": "Anime Categories",
+                "helpText": "Drop down list, leave blank to disable anime",
+                "value": [],
+                "type": "select",
+                "advanced": false,
+                "selectOptionsProviderAction": "newznabCategories"
+            },
+            {
+                "order": 5,
+                "name": "animeStandardFormatSearch",
+                "label": "Anime Standard Format Search",
+                "helpText": "Also search for anime using the standard numbering",
+                "value": false,
+                "type": "checkbox",
+                "advanced": false
+            },
+            {
+                "order": 6,
+                "name": "additionalParameters",
+                "label": "Additional Parameters",
+                "helpText": "Additional Newznab parameters",
+                "type": "textbox",
+                "advanced": true
+            },
+            {
+                "order": 7,
+                "name": "minimumSeeders",
+                "label": "Minimum Seeders",
+                "helpText": "Minimum number of seeders required.",
+                "value": 1,
+                "type": "number",
+                "advanced": true
+            },
+            {
+                "order": 8,
+                "name": "seedCriteria.seedRatio",
+                "label": "Seed Ratio",
+                "helpText": "The ratio a torrent should reach before stopping, empty is download client's default",
+                "type": "textbox",
+                "advanced": true
+            },
+            {
+                "order": 9,
+                "name": "seedCriteria.seedTime",
+                "label": "Seed Time",
+                "unit": "minutes",
+                "helpText": "The time a torrent should be seeded before stopping, empty is download client's default",
+                "type": "number",
+                "advanced": true
+            },
+            {
+                "order": 10,
+                "name": "seedCriteria.seasonPackSeedTime",
+                "label": "Season-Pack Seed Time",
+                "unit": "minutes",
+                "helpText": "The time a torrent should be seeded before stopping, empty is download client's default",
+                "type": "number",
+                "advanced": true
+            }
+        ],
+        "implementationName": "Torznab",
+        "implementation": "Torznab",
+        "configContract": "TorznabSettings",
+        "infoLink": "https://wiki.servarr.com/sonarr/supported#torznab",
+        "tags": [],
+        "id": 2
+    }
+]

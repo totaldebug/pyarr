@@ -35,6 +35,7 @@ class SonarrCommands(str, Enum):
     """seriesId (int) required"""
 
 
+@enum_tools.documentation.document_enum
 class SonarrSortKey(str, Enum):
     """Sonarr sort keys."""
 

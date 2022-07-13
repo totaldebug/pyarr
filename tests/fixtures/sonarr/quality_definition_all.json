@@ -1,0 +1,41 @@
+[
+    {
+        "quality": {
+            "id": 0,
+            "name": "Unknown",
+            "source": "unknown",
+            "resolution": 0
+        },
+        "title": "Unknown",
+        "weight": 1,
+        "minSize": 0.0,
+        "maxSize": 42.7,
+        "id": 1
+    },
+    {
+        "quality": {
+            "id": 1,
+            "name": "SDTV",
+            "source": "television",
+            "resolution": 480
+        },
+        "title": "SDTV",
+        "weight": 2,
+        "minSize": 0.0,
+        "maxSize": 26.0,
+        "id": 2
+    },
+    {
+        "quality": {
+            "id": 8,
+            "name": "WEBDL-480p",
+            "source": "web",
+            "resolution": 480
+        },
+        "title": "WEBDL-480p",
+        "weight": 3,
+        "minSize": 0.0,
+        "maxSize": 26.1,
+        "id": 3
+    }
+]

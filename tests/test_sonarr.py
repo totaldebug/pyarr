@@ -14,6 +14,7 @@ from pyarr.models.common import (
     PyarrLogFilterValue,
     PyarrLogSortKey,
     PyarrSortDirection,
+    PyarrTaskSortKey,
 )
 from pyarr.models.sonarr import SonarrCommands, SonarrSortKey
 
@@ -987,4 +988,266 @@ def test_del_blocklist(responses, sonarr_client):
     )
     with contextlib.suppress(PyarrResourceNotFound):
         data = sonarr_client.del_blocklist(999)
+        assert False
+
+
+@pytest.mark.usefixtures
+def test_del_blocklist_bulk(responses, sonarr_client):
+    responses.add(
+        responses.DELETE,
+        "https://127.0.0.1:8989/api/v3/blocklist/bulk",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/delete.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.del_blocklist_bulk(ids=[8])
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_get_quality_profile(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/qualityprofile",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/quality_profile_all.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_quality_profile()
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/qualityprofile/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/quality_profile.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_quality_profile(1)
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_upd_quality_profile(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/qualityprofile/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/quality_profile.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_quality_profile(1)
+
+    responses.add(
+        responses.PUT,
+        "https://127.0.0.1:8989/api/v3/qualityprofile/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/quality_profile.json"),
+        status=202,
+        match_querystring=True,
+    )
+    data = sonarr_client.upd_quality_profile(1, data)
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_del_quality_profile(responses, sonarr_client):
+    responses.add(
+        responses.DELETE,
+        "https://127.0.0.1:8989/api/v3/qualityprofile/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/delete.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.del_quality_profile(id_=1)
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_get_quality_definition(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/qualitydefinition",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/quality_definition_all.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_quality_definition()
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/qualitydefinition/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/quality_definition.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_quality_definition(1)
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_upd_quality_definition(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/qualitydefinition/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/quality_definition.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_quality_definition(1)
+
+    responses.add(
+        responses.PUT,
+        "https://127.0.0.1:8989/api/v3/qualitydefinition/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/quality_definition.json"),
+        status=202,
+        match_querystring=True,
+    )
+    data = sonarr_client.upd_quality_definition(1, data)
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_get_indexer(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/indexer",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/indexer_all.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_indexer()
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/indexer/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/indexer.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_indexer(1)
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_upd_indexer(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/indexer/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/indexer.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_indexer(1)
+
+    responses.add(
+        responses.PUT,
+        "https://127.0.0.1:8989/api/v3/indexer/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/indexer.json"),
+        status=202,
+        match_querystring=True,
+    )
+    data = sonarr_client.upd_indexer(1, data)
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_del_indexer(responses, sonarr_client):
+    responses.add(
+        responses.DELETE,
+        "https://127.0.0.1:8989/api/v3/indexer/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/delete.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.del_indexer(id_=1)
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_del_queue(responses, sonarr_client):
+    responses.add(
+        responses.DELETE,
+        "https://127.0.0.1:8989/api/v3/queue/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/delete.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.del_queue(id_=1)
+    assert isinstance(data, dict)
+    responses.add(
+        responses.DELETE,
+        "https://127.0.0.1:8989/api/v3/queue/1?removeFromClient=True&blacklist=True",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/delete.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.del_queue(id_=1, remove_from_client=True, blacklist=True)
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_get_task(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/system/task",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/system_task_all.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_task()
+    assert isinstance(data, dict)
+
+    # TODO: Need an example task, currently using fake dict
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/system/task/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/system_task.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_task(id_=1)
+    assert isinstance(data, dict)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/system/task?page=1&pageSize=10&sortKey=timeleft&sortDirection=default",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/system_task_all.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_task(
+        page=1,
+        page_size=10,
+        sort_key=PyarrTaskSortKey.TIME_LEFT,
+        sort_dir=PyarrSortDirection.DEFAULT,
+    )
+    assert isinstance(data, dict)
+
+    with contextlib.suppress(PyarrMissingArgument):
+        data = sonarr_client.get_task(sort_key=PyarrTaskSortKey.TIME_LEFT)
+        assert False
+    with contextlib.suppress(PyarrMissingArgument):
+        data = sonarr_client.get_task(sort_dir=PyarrSortDirection.DESC)
         assert False

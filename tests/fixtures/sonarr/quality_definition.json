@@ -1,0 +1,13 @@
+{
+    "quality": {
+        "id": 0,
+        "name": "Unknown",
+        "source": "unknown",
+        "resolution": 0
+    },
+    "title": "Unknown",
+    "weight": 1,
+    "minSize": 0.0,
+    "maxSize": 42.7,
+    "id": 1
+}
