@@ -10,6 +10,7 @@ from pyarr.models.common import (
     PyarrLogFilterKey,
     PyarrLogFilterValue,
     PyarrLogSortKey,
+    PyarrNotificationSchema,
     PyarrSortDirection,
     PyarrTaskSortKey,
 )
@@ -524,10 +525,8 @@ class BaseArrAPI(RequestHandler):
         ] = {}
         if page:
             params["page"] = page
-
         if page_size:
             params["pageSize"] = page_size
-
         if sort_key and sort_dir:
             params["sortKey"] = sort_key
             params["sortDirection"] = sort_dir
@@ -540,7 +539,7 @@ class BaseArrAPI(RequestHandler):
     # GET /remotepathmapping
     def get_remote_path_mapping(
         self, id_: Optional[int] = None
-    ) -> list[dict[str, Any]]:
+    ) -> Union[list[dict[str, Any]], dict[Any, Any]]:
         """Get remote path mappings for downloads Directory
 
         Args:
@@ -549,8 +548,11 @@ class BaseArrAPI(RequestHandler):
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
-        _path = "" if isinstance(id_, str) or id_ is None else f"/{id_}"
-        return self.assert_return(f"remotepathmapping{_path}", self.ver_uri, list)
+        _path = f"remotepathmapping{'' if id_ is None else f'/{id_}'}"
+        return self.assert_return(_path, self.ver_uri, dict if id_ else list)
+
+    # TODO: Add Delete remote path mapping
+    # TODO: Add update remote path mapping
 
     # CONFIG
 
@@ -644,26 +646,41 @@ class BaseArrAPI(RequestHandler):
     # NOTIFICATIONS
 
     # GET /notification
-    def get_notification(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
+    def get_notification(
+        self, id_: Optional[int] = None
+    ) -> Union[list[dict[str, Any]], dict[Any, Any]]:
         """Get a list of all notification services, or single by ID
 
         Args:
             id_ (Optional[int], optional): Notification ID. Defaults to None.
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            Union[list[dict[str, Any]], dict[Any, Any]]: List of dictionaries with items
         """
-        _path = "" if isinstance(id_, str) or id_ is None else f"/{id_}"
-        return self.assert_return(f"notification{_path}", self.ver_uri, list)
+        _path = "" if id_ is None else f"/{id_}"
+        return self.assert_return(
+            f"notification{_path}", self.ver_uri, dict if id_ else list
+        )
 
     # GET /notification/schema
-    def get_notification_schema(self) -> list[dict[str, Any]]:
+    def get_notification_schema(
+        self, implementation: Optional[PyarrNotificationSchema] = None
+    ) -> Union[list[dict[str, Any]], dict[str, Any]]:
         """Get possible notification connections
 
+        Args:
+            implementation (Optional[PyarrNotificationSchema], optional): notification system
+
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            Union[list[dict[str, Any]], dict[str, Any]]: List of dictionaries with items
         """
-        return self.assert_return("notification/schema", self.ver_uri, list)
+        response = self.assert_return("notification/schema", self.ver_uri, list)
+        if implementation:
+            response = next(
+                (item for item in response if item["implementation"] == implementation),
+                None,
+            )
+        return response
 
     # PUT /notification/{id}
     def upd_notification(self, id_: int, data: dict[str, Any]) -> dict[str, Any]:

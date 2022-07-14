@@ -83,3 +83,31 @@ class PyarrLogFilterValue(str, Enum):
     INFO = "info"
     WARN = "warn"
     ERROR = "error"
+
+
+@enum_tools.documentation.document_enum
+class PyarrNotificationSchema(str, Enum):
+    """Notification schema implementations"""
+
+    BOXCAR = "Boxcar"
+    CUSTOM = "CustomScript"
+    DISCORD = "Discord"
+    EMAIL = "Email"
+    MEDIA_BROWSER = "MediaBrowser"
+    GOTIFY = "Gotify"
+    JOIN = "Join"
+    XBMC = "Xbmc"
+    MAILGUN = "MailGun"
+    PLEX_THEATER = "PlexHomeTheater"
+    PLEX_CLIENT = "PlexClient"
+    PLEX_SERVER = "PlexServer"
+    PROWL = "Prowl"
+    PUSH_BULLET = "PushBullet"
+    PUSHOVER = "Pushover"
+    SAND_GRID = "SendGrid"
+    SLACK = "Slack"
+    SYNOLOGY_INDEXER = "SynologyIndexer"
+    TELEGRAM = "Telegram"
+    TRAKT = "Trakt"
+    TWITTER = "Twitter"
+    WEBHOOK = "Webhook"

@@ -1,0 +1,79 @@
+{
+    "onGrab": false,
+    "onDownload": true,
+    "onUpgrade": true,
+    "onRename": true,
+    "onSeriesDelete": false,
+    "onEpisodeFileDelete": false,
+    "onEpisodeFileDeleteForUpgrade": true,
+    "onHealthIssue": false,
+    "onApplicationUpdate": false,
+    "supportsOnGrab": false,
+    "supportsOnDownload": true,
+    "supportsOnUpgrade": true,
+    "supportsOnRename": true,
+    "supportsOnSeriesDelete": true,
+    "supportsOnEpisodeFileDelete": true,
+    "supportsOnEpisodeFileDeleteForUpgrade": true,
+    "supportsOnHealthIssue": false,
+    "supportsOnApplicationUpdate": false,
+    "includeHealthWarnings": false,
+    "name": "HomePlex",
+    "fields": [
+        {
+            "order": 0,
+            "name": "host",
+            "label": "Host",
+            "value": "127.0.0.1",
+            "type": "textbox",
+            "advanced": false
+        },
+        {
+            "order": 1,
+            "name": "port",
+            "label": "Port",
+            "value": 32400,
+            "type": "textbox",
+            "advanced": false
+        },
+        {
+            "order": 2,
+            "name": "useSsl",
+            "label": "Use SSL",
+            "helpText": "Connect to Plex over HTTPS instead of HTTP",
+            "value": false,
+            "type": "checkbox",
+            "advanced": false
+        },
+        {
+            "order": 3,
+            "name": "authToken",
+            "label": "Auth Token",
+            "value": "string",
+            "type": "textbox",
+            "advanced": true
+        },
+        {
+            "order": 4,
+            "name": "signIn",
+            "label": "Authenticate with Plex.tv",
+            "value": "startOAuth",
+            "type": "oAuth",
+            "advanced": false
+        },
+        {
+            "order": 5,
+            "name": "updateLibrary",
+            "label": "Update Library",
+            "value": true,
+            "type": "checkbox",
+            "advanced": false
+        }
+    ],
+    "implementationName": "Plex Media Server",
+    "implementation": "PlexServer",
+    "configContract": "PlexServerSettings",
+    "infoLink": "https://wiki.servarr.com/sonarr/supported#plexserver",
+    "tags": [],
+    "id": 1
+}

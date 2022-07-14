@@ -54,3 +54,5 @@ jobs:
         run: poetry run mypy pyarr
       - name: Check docstrings
         run: poetry run interrogate pyarr
+      - name: 🧪 Check tests are passing
+        run: poetry run pytest tests

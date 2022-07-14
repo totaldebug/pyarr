@@ -13,6 +13,7 @@ from pyarr.models.common import (
     PyarrLogFilterKey,
     PyarrLogFilterValue,
     PyarrLogSortKey,
+    PyarrNotificationSchema,
     PyarrSortDirection,
     PyarrTaskSortKey,
 )
@@ -355,7 +356,7 @@ def test_upd_episode_file_quality(responses, sonarr_client):
 def test_get_wanted(responses, sonarr_client):
     responses.add(
         responses.GET,
-        "https://127.0.0.1:8989/api/v3/wanted/missing?sortKey=airDateUtc&page=1&pageSize=10&sortDirection=default",
+        "https://127.0.0.1:8989/api/v3/wanted/missing",
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/wanted_missing.json"),
         status=200,
@@ -366,7 +367,7 @@ def test_get_wanted(responses, sonarr_client):
 
     responses.add(
         responses.GET,
-        "https://127.0.0.1:8989/api/v3/wanted/missing?sortKey=airDateUtc&page=1&pageSize=10&sortDirection=default&includeSeries=True",
+        "https://127.0.0.1:8989/api/v3/wanted/missing?includeSeries=True",
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/wanted_missing_extended.json"),
         status=200,
@@ -377,16 +378,16 @@ def test_get_wanted(responses, sonarr_client):
 
     responses.add(
         responses.GET,
-        "https://127.0.0.1:8989/api/v3/wanted/missing?sortKey=series.sortTitle&page=2&pageSize=20&sortDirection=ascending",
+        "https://127.0.0.1:8989/api/v3/wanted/missing?page=2&pageSize=20&sortKey=series.sortTitle&sortDirection=ascending",
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/wanted_missing.json"),
         status=200,
         match_querystring=True,
     )
     data = sonarr_client.get_wanted(
-        sort_key=SonarrSortKey.SERIES_TITLE,
         page=2,
         page_size=20,
+        sort_key=SonarrSortKey.SERIES_TITLE,
         sort_dir=PyarrSortDirection.ASC,
     )
     assert isinstance(data, dict)
@@ -421,7 +422,7 @@ def test_get_quality_profile(responses, sonarr_client):
 def test_get_queue(responses, sonarr_client):
     responses.add(
         responses.GET,
-        "https://127.0.0.1:8989/api/v3/queue?page=1&pageSize=20&sortDirection=default&sortKey=timeleft&includeUnknownSeriesItems=False&includeSeries=False&includeEpisode=False",
+        "https://127.0.0.1:8989/api/v3/queue",
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/queue.json"),
         status=200,
@@ -429,6 +430,32 @@ def test_get_queue(responses, sonarr_client):
     )
     data = sonarr_client.get_queue()
     assert isinstance(data, dict)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/queue?page=1&pageSize=20&sortKey=timeleft&sortDirection=default&includeUnknownSeriesItems=False&includeSeries=False&includeEpisode=False",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/queue.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_queue(
+        page=1,
+        page_size=20,
+        sort_key=SonarrSortKey.TIMELEFT,
+        sort_dir=PyarrSortDirection.DEFAULT,
+        include_unknown_series_items=False,
+        include_series=False,
+        include_episode=False,
+    )
+    assert isinstance(data, dict)
+
+    with contextlib.suppress(PyarrMissingArgument):
+        data = sonarr_client.get_queue(sort_key=SonarrSortKey.TIMELEFT)
+        assert False
+    with contextlib.suppress(PyarrMissingArgument):
+        data = sonarr_client.get_queue(sort_dir=PyarrSortDirection.DEFAULT)
+        assert False
 
 
 @pytest.mark.usefixtures
@@ -1251,3 +1278,140 @@ def test_get_task(responses, sonarr_client):
     with contextlib.suppress(PyarrMissingArgument):
         data = sonarr_client.get_task(sort_dir=PyarrSortDirection.DESC)
         assert False
+
+
+@pytest.mark.usefixtures
+def test_get_remote_path_mapping(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/remotepathmapping",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/remotepathmapping_all.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_remote_path_mapping()
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/remotepathmapping/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/remotepathmapping.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_remote_path_mapping(1)
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_get_config_ui(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/config/ui",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/config_ui.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_config_ui()
+    assert isinstance(data, dict)
+
+
+# TODO: update config ui
+
+
+@pytest.mark.usefixtures
+def test_get_config_host(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/config/host",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/config_host.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_config_host()
+    assert isinstance(data, dict)
+
+
+# TODO: update config host
+
+
+@pytest.mark.usefixtures
+def test_get_config_naming(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/config/naming",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/config_naming.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_config_naming()
+    assert isinstance(data, dict)
+
+
+# TODO: update config naming
+
+
+@pytest.mark.usefixtures
+def test_get_media_management(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/config/mediamanagement",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/media_management.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_media_management()
+    assert isinstance(data, dict)
+
+
+# TODO: update media management
+
+
+@pytest.mark.usefixtures
+def test_get_notification(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/notification",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/notification_all.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_notification()
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/notification/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/notification.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_notification(id_=1)
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_get_notification_schema(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/notification/schema",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/notification_schema_all.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_notification_schema()
+    assert isinstance(data, list)
+
+    data = sonarr_client.get_notification_schema(
+        implementation=PyarrNotificationSchema.BOXCAR
+    )
+    assert isinstance(data, dict)

@@ -1,0 +1,21 @@
+{
+    "autoUnmonitorPreviouslyDownloadedEpisodes": true,
+    "recycleBin": "",
+    "recycleBinCleanupDays": 7,
+    "downloadPropersAndRepacks": "doNotUpgrade",
+    "createEmptySeriesFolders": true,
+    "deleteEmptyFolders": false,
+    "fileDate": "none",
+    "rescanAfterRefresh": "always",
+    "setPermissionsLinux": false,
+    "chmodFolder": "755",
+    "chownGroup": "",
+    "episodeTitleRequired": "always",
+    "skipFreeSpaceCheckWhenImporting": false,
+    "minimumFreeSpaceWhenImporting": 100,
+    "copyUsingHardlinks": true,
+    "importExtraFiles": false,
+    "extraFileExtensions": "srt",
+    "enableMediaInfo": true,
+    "id": 1
+}

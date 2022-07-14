@@ -7,7 +7,6 @@ from requests import Response
 from pyarr.exceptions import PyarrMissingArgument
 
 from .base import BaseArrAPI
-from .const import PAGE, PAGE_SIZE
 from .models.common import PyarrHistorySortKey, PyarrSortDirection
 from .models.sonarr import SonarrCommands, SonarrSortKey
 
@@ -293,32 +292,37 @@ class SonarrAPI(BaseArrAPI):
     # GET /wanted/missing
     def get_wanted(
         self,
-        sort_key: SonarrSortKey = SonarrSortKey.AIR_DATE_UTC,
-        page: int = PAGE,
-        page_size: int = PAGE_SIZE,
-        sort_dir: PyarrSortDirection = PyarrSortDirection.DEFAULT,
-        include_series: bool = False,
+        page: Optional[int] = None,
+        page_size: Optional[int] = None,
+        sort_key: Optional[SonarrSortKey] = None,
+        sort_dir: Optional[PyarrSortDirection] = None,
+        include_series: Optional[bool] = None,
     ) -> dict[str, Any]:
         """Gets missing episode (episodes without files)
 
         Args:
-            sort_key (SonarrSortKey, optional): series.title or airDateUtc. Defaults to SonarrSortKey.AIR_DATE_UTC.
-            page (int, optional): Page number to return. Defaults to 1.
-            page_size (int, optional): Number of items per page. Defaults to 10.
-            sort_dir (PyarrSortDirection, optional): Direction to sort the items. Defaults to PyarrSortDirection.DEFAULT.
-            include_series (bool, optional): Include the whole series. Defaults to False
+            page (Optional[int], optional): Page number to return. Defaults to None.
+            page_size (Optional[int], optional): Number of items per page. Defaults to None.
+            sort_key (Optional[SonarrSortKey], optional): series.title or airDateUtc. Defaults to None.
+            sort_dir (Optional[PyarrSortDirection], optional): Direction to sort the items. Defaults to None.
+            include_series (Optional[bool], optional): Include the whole series. Defaults to None
 
         Returns:
             dict[str, Any]: Dictionary with items
         """
-        params = {
-            "sortKey": sort_key,
-            "page": page,
-            "pageSize": page_size,
-            "sortDirection": sort_dir,
-        }
+        params: dict[str, Union[int, SonarrSortKey, PyarrSortDirection, bool]] = {}
+        if page:
+            params["page"] = page
+        if page_size:
+            params["pageSize"] = page_size
+        if sort_key and sort_dir:
+            params["sortKey"] = sort_key
+            params["sortDirection"] = sort_dir
+        elif sort_key or sort_dir:
+            raise PyarrMissingArgument("sort_key and sort_dir  must be used together")
         if include_series:
-            params["includeSeries"] = True
+            params["includeSeries"] = include_series
+
         return self.assert_return("wanted/missing", self.ver_uri, dict, params)
 
     ## QUEUE
@@ -326,28 +330,46 @@ class SonarrAPI(BaseArrAPI):
     # GET /queue
     def get_queue(
         self,
-        page: int = 1,
-        page_size: int = 20,
-        sort_dir: PyarrSortDirection = PyarrSortDirection.DEFAULT,
-        sort_key: SonarrSortKey = SonarrSortKey.TIMELEFT,
-        include_unknown_series_items: bool = False,
-        include_series: bool = False,
-        include_episode: bool = False,
+        page: Optional[int] = None,
+        page_size: Optional[int] = None,
+        sort_key: Optional[SonarrSortKey] = None,
+        sort_dir: Optional[PyarrSortDirection] = None,
+        include_unknown_series_items: Optional[bool] = None,
+        include_series: Optional[bool] = None,
+        include_episode: Optional[bool] = None,
     ) -> dict[str, Any]:
         """Gets currently downloading info
 
+        Args:
+            page (Optional[int], optional): Page number to return. Defaults to None.
+            page_size (Optional[int], optional): Number of items per page. Defaults to None.
+            sort_key (Optional[SonarrSortKey], optional): Field to sort by. Defaults to None.
+            sort_dir (Optional[PyarrSortDirection], optional): Direction to sort the items. Defaults to None.
+            include_unknown_series_items (Optional[bool], optional): Include unknown series items. Defaults to None.
+            include_series (Optional[bool], optional): Include series. Defaults to None.
+            include_episode (Optional[bool], optional): Include episodes. Defaults to None.
+
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            dict[str, Any]: Dictionary with queue items
         """
-        params = {
-            "page": page,
-            "pageSize": page_size,
-            "sortDirection": sort_dir,
-            "sortKey": sort_key,
-            "includeUnknownSeriesItems": str(include_unknown_series_items),
-            "includeSeries": str(include_series),
-            "includeEpisode": str(include_episode),
-        }
+        params: dict[str, Union[int, bool, SonarrSortKey, PyarrSortDirection]] = {}
+
+        if page:
+            params["page"] = page
+        if page_size:
+            params["pageSize"] = page_size
+        if sort_key and sort_dir:
+            params["sortKey"] = sort_key
+            params["sortDirection"] = sort_dir
+        elif sort_key or sort_dir:
+            raise PyarrMissingArgument("sort_key and sort_dir  must be used together")
+        if include_unknown_series_items is not None:
+            params["includeUnknownSeriesItems"] = include_unknown_series_items
+        if include_series is not None:
+            params["includeSeries"] = include_series
+        if include_episode is not None:
+            params["includeEpisode"] = include_episode
+
         return self.assert_return("queue", self.ver_uri, dict, params)
 
     ## PARSE
