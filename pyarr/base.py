@@ -716,17 +716,19 @@ class BaseArrAPI(RequestHandler):
     # TAGS
 
     # GET /tag/{id}
-    def get_tag(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
+    def get_tag(
+        self, id_: Optional[int] = None
+    ) -> Union[list[dict[str, Any]], dict[str, Any]]:
         """Returns all tags or specific tag by database id
 
         Args:
             id_ (Optional[int], optional): Database id for tag. Defaults to None.
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            Union[list[dict[str, Any]], dict[str, Any]]: List of dictionaries with items
         """
         path = f"tag/{id_}" if id_ else "tag"
-        return self.assert_return(path, self.ver_uri, list)
+        return self.assert_return(path, self.ver_uri, dict if id_ else list)
 
     # GET /tag/detail/{id}
     def get_tag_detail(
@@ -738,10 +740,10 @@ class BaseArrAPI(RequestHandler):
             id_ (Optional[int], optional): Database id for tag. Defaults to None.
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            Union[list[dict[str, Any]], dict[str, Any]]: List of dictionaries with items
         """
         path = f"tag/detail/{id_}" if id_ else "tag/detail"
-        return self.assert_return(path, self.ver_uri, list if id_ is None else dict)
+        return self.assert_return(path, self.ver_uri, dict if id_ else list)
 
     # POST /tag
     def create_tag(self, label: str) -> dict[str, Any]:
@@ -771,7 +773,7 @@ class BaseArrAPI(RequestHandler):
             dict[str, Any]: Dictionary of updated items
         """
         data = {"id": id_, "label": label}
-        return self._put(f"tag/{id_}", self.ver_uri, data=data)
+        return self._put("tag", self.ver_uri, data=data)
 
     # DELETE /tag/{id}
     def del_tag(self, id_: int) -> Union[Response, dict[str, Any], dict[Any, Any]]:
@@ -788,17 +790,19 @@ class BaseArrAPI(RequestHandler):
     # DOWNLOAD CLIENT
 
     # GET /downloadclient/{id}
-    def get_download_client(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
+    def get_download_client(
+        self, id_: Optional[int] = None
+    ) -> Union[list[dict[str, Any]], dict[str, Any]]:
         """Get a list of all the download clients or a single client by its database id
 
         Args:
             id_ (Optional[int], optional): Download client database id. Defaults to None.
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            Union[list[dict[str, Any]], dict[str, Any]]: List of dictionaries with items
         """
         path = f"downloadclient/{id_}" if id_ else "downloadclient"
-        return self.assert_return(path, self.ver_uri, list)
+        return self.assert_return(path, self.ver_uri, dict if id_ else list)
 
     # GET /downloadclient/schema
     def get_download_client_schema(

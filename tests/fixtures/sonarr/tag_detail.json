@@ -1,0 +1,14 @@
+{
+    "label": "string",
+    "delayProfileIds": [],
+    "importListIds": [],
+    "notificationIds": [],
+    "restrictionIds": [
+        3
+    ],
+    "indexerIds": [],
+    "seriesIds": [
+        17
+    ],
+    "id": 1
+}

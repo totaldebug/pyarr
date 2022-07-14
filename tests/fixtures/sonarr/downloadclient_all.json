@@ -1,0 +1,126 @@
+[
+    {
+        "enable": true,
+        "protocol": "string",
+        "priority": 1,
+        "removeCompletedDownloads": true,
+        "removeFailedDownloads": true,
+        "name": "string",
+        "fields": [
+            {
+                "order": 0,
+                "name": "host",
+                "label": "Host",
+                "value": "string",
+                "type": "textbox",
+                "advanced": false
+            },
+            {
+                "order": 1,
+                "name": "port",
+                "label": "Port",
+                "value": 8112,
+                "type": "textbox",
+                "advanced": false
+            },
+            {
+                "order": 2,
+                "name": "useSsl",
+                "label": "Use SSL",
+                "helpText": "Use secure connection when connecting to Deluge",
+                "value": false,
+                "type": "checkbox",
+                "advanced": false
+            },
+            {
+                "order": 3,
+                "name": "urlBase",
+                "label": "Url Base",
+                "helpText": "Adds a prefix to the deluge json url, see http://[host]:[port]/[urlBase]/json",
+                "type": "textbox",
+                "advanced": true
+            },
+            {
+                "order": 4,
+                "name": "password",
+                "label": "Password",
+                "value": "string",
+                "type": "password",
+                "advanced": false
+            },
+            {
+                "order": 5,
+                "name": "tvCategory",
+                "label": "Category",
+                "helpText": "Adding a category specific to Sonarr avoids conflicts with unrelated non-Sonarr downloads. Using a category is optional, but strongly recommended.",
+                "value": "sonarr",
+                "type": "textbox",
+                "advanced": false
+            },
+            {
+                "order": 6,
+                "name": "tvImportedCategory",
+                "label": "Post-Import Category",
+                "helpText": "Category for Sonarr to set after it has imported the download. Sonarr will not remove torrents in that category even if seeding finished. Leave blank to keep same category.",
+                "type": "textbox",
+                "advanced": true
+            },
+            {
+                "order": 7,
+                "name": "recentTvPriority",
+                "label": "Recent Priority",
+                "helpText": "Priority to use when grabbing episodes that aired within the last 14 days",
+                "value": 0,
+                "type": "select",
+                "advanced": false,
+                "selectOptions": [
+                    {
+                        "value": 0,
+                        "name": "Last",
+                        "order": 0
+                    },
+                    {
+                        "value": 1,
+                        "name": "First",
+                        "order": 1
+                    }
+                ]
+            },
+            {
+                "order": 8,
+                "name": "olderTvPriority",
+                "label": "Older Priority",
+                "helpText": "Priority to use when grabbing episodes that aired over 14 days ago",
+                "value": 0,
+                "type": "select",
+                "advanced": false,
+                "selectOptions": [
+                    {
+                        "value": 0,
+                        "name": "Last",
+                        "order": 0
+                    },
+                    {
+                        "value": 1,
+                        "name": "First",
+                        "order": 1
+                    }
+                ]
+            },
+            {
+                "order": 9,
+                "name": "addPaused",
+                "label": "Add Paused",
+                "value": false,
+                "type": "checkbox",
+                "advanced": false
+            }
+        ],
+        "implementationName": "string",
+        "implementation": "string",
+        "configContract": "string",
+        "infoLink": "string",
+        "tags": [],
+        "id": 1
+    }
+]

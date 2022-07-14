@@ -236,7 +236,7 @@ def test_upd_episode(responses, sonarr_client):
         "https://127.0.0.1:8989/api/v3/episode/1",
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/episode_update.json"),
-        status=200,
+        status=202,
         match_querystring=True,
     )
     payload = {"monitored": True}
@@ -637,7 +637,7 @@ def test_upd_series(responses, sonarr_client):
         "https://127.0.0.1:8989/api/v3/series/1",
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/series.json"),
-        status=200,
+        status=202,
         match_querystring=True,
     )
     series = sonarr_client.get_series(1)
@@ -1419,3 +1419,137 @@ def test_get_notification_schema(responses, sonarr_client):
     with contextlib.suppress(PyarrRecordNotFound):
         data = sonarr_client.get_notification_schema(implementation="polarbear")
         assert False
+
+
+# TODO: update notification
+
+
+@pytest.mark.usefixtures
+def test_del_notification(responses, sonarr_client):
+    responses.add(
+        responses.DELETE,
+        "https://127.0.0.1:8989/api/v3/notification/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/delete.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.del_notification(id_=1)
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_get_tag(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/tag",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/tag_all.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_tag()
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/tag/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/tag.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_tag(id_=1)
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_get_tag_detail(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/tag/detail",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/tag_detail_all.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_tag_detail()
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/tag/detail/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/tag_detail.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_tag_detail(id_=1)
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_create_tag(responses, sonarr_client):
+    responses.add(
+        responses.POST,
+        "https://127.0.0.1:8989/api/v3/tag",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/tag.json"),
+        status=201,
+        match_querystring=True,
+    )
+    data = sonarr_client.create_tag(label="string")
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_upd_tag(responses, sonarr_client):
+    responses.add(
+        responses.PUT,
+        "https://127.0.0.1:8989/api/v3/tag",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/tag.json"),
+        status=202,
+        match_querystring=True,
+    )
+    data = sonarr_client.upd_tag(id_=1, label="string")
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_del_tag(responses, sonarr_client):
+    responses.add(
+        responses.DELETE,
+        "https://127.0.0.1:8989/api/v3/tag/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/delete.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.del_tag(id_=1)
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_get_download_client(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/downloadclient",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/downloadclient_all.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_download_client()
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/downloadclient/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/downloadclient.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_download_client(id_=1)
+    assert isinstance(data, dict)
