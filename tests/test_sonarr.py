@@ -1415,3 +1415,7 @@ def test_get_notification_schema(responses, sonarr_client):
         implementation=PyarrNotificationSchema.BOXCAR
     )
     assert isinstance(data, dict)
+
+    with contextlib.suppress(PyarrRecordNotFound):
+        data = sonarr_client.get_notification_schema(implementation="polarbear")
+        assert False

@@ -3,7 +3,7 @@ from typing import Any, Optional, Union
 
 from requests import Response
 
-from pyarr.exceptions import PyarrMissingArgument
+from pyarr.exceptions import PyarrMissingArgument, PyarrRecordNotFound
 from pyarr.models.common import (
     PyarrBlocklistSortKey,
     PyarrHistorySortKey,
@@ -680,6 +680,10 @@ class BaseArrAPI(RequestHandler):
                 (item for item in response if item["implementation"] == implementation),
                 None,
             )
+            if not response:
+                raise PyarrRecordNotFound(
+                    f"a record with implementation {implementation} was not found"
+                )
         return response
 
     # PUT /notification/{id}
