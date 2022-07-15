@@ -9,7 +9,10 @@ from pyarr.exceptions import (
     PyarrResourceNotFound,
 )
 from pyarr.models.common import (
+    PyarrBlocklistSortKey,
+    PyarrDownloadClientSchema,
     PyarrHistorySortKey,
+    PyarrImportListSchema,
     PyarrLogFilterKey,
     PyarrLogFilterValue,
     PyarrLogSortKey,
@@ -391,6 +394,13 @@ def test_get_wanted(responses, sonarr_client):
         sort_dir=PyarrSortDirection.ASC,
     )
     assert isinstance(data, dict)
+
+    with contextlib.suppress(PyarrMissingArgument):
+        data = sonarr_client.get_wanted(sort_key=SonarrSortKey.TIMELEFT)
+        assert False
+    with contextlib.suppress(PyarrMissingArgument):
+        data = sonarr_client.get_wanted(sort_dir=PyarrSortDirection.DEFAULT)
+        assert False
 
 
 @pytest.mark.usefixtures
@@ -911,7 +921,7 @@ def test_get_log(responses, sonarr_client):
 
     responses.add(
         responses.GET,
-        "https://127.0.0.1:8989/api/v3/log?page=10&pageSize=10&sortKey=Id&sortDirection=descending",
+        "https://127.0.0.1:8989/api/v3/log?page=10&pageSize=10&sortKey=Id&sortDirection=descending&filterKey=level&filterValue=all",
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/log.json"),
         status=200,
@@ -922,6 +932,8 @@ def test_get_log(responses, sonarr_client):
         page_size=10,
         sort_key=PyarrLogSortKey.ID,
         sort_dir=PyarrSortDirection.DESC,
+        filter_key=PyarrLogFilterKey.LEVEL,
+        filter_value=PyarrLogFilterValue.ALL,
     )
     assert isinstance(data, dict)
 
@@ -964,6 +976,22 @@ def test_get_history(responses, sonarr_client):
     data = sonarr_client.get_history(id_=1)
     assert isinstance(data, dict)
 
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/history?page=1&pageSize=10&sortKey=time&sortDirection=default",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/history.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_history(
+        page=1,
+        page_size=10,
+        sort_key=PyarrHistorySortKey.TIME,
+        sort_dir=PyarrSortDirection.DEFAULT,
+    )
+    assert isinstance(data, dict)
+
     with contextlib.suppress(PyarrMissingArgument):
         data = sonarr_client.get_history(sort_key=PyarrHistorySortKey.TIME)
         assert False
@@ -983,6 +1011,22 @@ def test_get_blocklist(responses, sonarr_client):
         match_querystring=True,
     )
     data = sonarr_client.get_blocklist()
+    assert isinstance(data, dict)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/blocklist?page=1&pageSize=10&sortKey=date&sortDirection=ascending",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/blocklist.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_blocklist(
+        page=1,
+        page_size=10,
+        sort_key=PyarrBlocklistSortKey.DATE,
+        sort_dir=PyarrSortDirection.ASC,
+    )
     assert isinstance(data, dict)
 
     with contextlib.suppress(PyarrMissingArgument):
@@ -1421,7 +1465,8 @@ def test_get_notification_schema(responses, sonarr_client):
         assert False
 
 
-# TODO: update notification
+# TODO: add_notification
+# TODO: upd_notification
 
 
 @pytest.mark.usefixtures
@@ -1553,3 +1598,125 @@ def test_get_download_client(responses, sonarr_client):
     )
     data = sonarr_client.get_download_client(id_=1)
     assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_get_download_client_schema(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/downloadclient/schema",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/download_client_schema_all.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_download_client_schema()
+    assert isinstance(data, list)
+
+    data = sonarr_client.get_download_client_schema(
+        implementation=PyarrDownloadClientSchema.ARIA2
+    )
+    assert isinstance(data, dict)
+
+    with contextlib.suppress(PyarrRecordNotFound):
+        data = sonarr_client.get_download_client_schema(implementation="polarbear")
+        assert False
+
+
+# TODO: add_download_client
+# TODO: upd_download_client
+
+
+@pytest.mark.usefixtures
+def test_del_download_client(responses, sonarr_client):
+    responses.add(
+        responses.DELETE,
+        "https://127.0.0.1:8989/api/v3/downloadclient/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/delete.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.del_download_client(id_=1)
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_get_import_list(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/importlist",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/import_list_all.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_import_list()
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/importlist/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/import_list.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_import_list(id_=1)
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_get_import_list_schema(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/importlist/schema",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/import_list_schema_all.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_import_list_schema()
+    assert isinstance(data, list)
+
+    data = sonarr_client.get_import_list_schema(
+        implementation=PyarrImportListSchema.PLEX
+    )
+    assert isinstance(data, dict)
+
+    with contextlib.suppress(PyarrRecordNotFound):
+        data = sonarr_client.get_import_list_schema(implementation="polarbear")
+        assert False
+
+
+# TODO: add_import_list
+# TODO: upd_import_list
+@pytest.mark.usefixtures
+def test_del_import_list(responses, sonarr_client):
+    responses.add(
+        responses.DELETE,
+        "https://127.0.0.1:8989/api/v3/importlist/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/delete.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.del_import_list(id_=1)
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_get_config_download_client(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/config/downloadclient",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/config_downloadclient.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_config_download_client()
+    assert isinstance(data, dict)
+
+
+# TODO: upd_config_download_client

@@ -111,3 +111,37 @@ class PyarrNotificationSchema(str, Enum):
     TRAKT = "Trakt"
     TWITTER = "Twitter"
     WEBHOOK = "Webhook"
+
+
+@enum_tools.documentation.document_enum
+class PyarrDownloadClientSchema(str, Enum):
+    """Download client schema implementations"""
+
+    ARIA2 = "Aria2"
+    DELUGE = "Deluge"
+    TORRENT_DOWNLOAD_STATION = "TorrentDownloadStation"
+    USENET_DOWNLOAD_STATION = "UsenetDownloadStation"
+    FLOOD = "Flood"
+    HADOUKEN = "Hadouken"
+    NZB_GET = "Nzbget"
+    NZB_VORTEX = "NzbVortex"
+    PNEUMATIC = "Pneumatic"
+    Q_BITTORRENT = "QBittorrent"
+    R_TORRENT = "RTorrent"
+    SABNZBD = "Sabnzbd"
+    TORRENT_BLACKHOLE = "TorrentBlackhole"
+    TRANSMISSION = "Transmission"
+    USENET_BLACKHOLE = "UsenetBlackhole"
+    U_TORRENT = "UTorrent"
+    VUZE = "Vuze"
+
+
+@enum_tools.documentation.document_enum
+class PyarrImportListSchema(str, Enum):
+    """Import List schema implementations"""
+
+    PLEX = "PlexImport"
+    SONARR = "SonarrImport"
+    TRAKT_LIST = "TraktListImport"
+    TRAKT_POPULAR = "TraktPopularImport"
+    TRAKT_USER = "TraktUserImport"

@@ -1,0 +1,37 @@
+[
+    {
+        "enableAutomaticAdd": false,
+        "shouldMonitor": "unknown",
+        "qualityProfileId": 0,
+        "languageProfileId": 0,
+        "seriesType": "standard",
+        "seasonFolder": false,
+        "listType": "plex",
+        "listOrder": 1,
+        "name": "PlexImport",
+        "fields": [
+            {
+                "order": 0,
+                "name": "accessToken",
+                "label": "Access Token",
+                "type": "textbox",
+                "advanced": false,
+                "hidden": "hidden"
+            },
+            {
+                "order": 1,
+                "name": "signIn",
+                "label": "Authenticate with Plex.tv",
+                "value": "startOAuth",
+                "type": "oAuth",
+                "advanced": false
+            }
+        ],
+        "implementationName": "Plex Watchlist",
+        "implementation": "PlexImport",
+        "configContract": "PlexListSettings",
+        "infoLink": "https://wiki.servarr.com/sonarr/supported#pleximport",
+        "tags": [],
+        "presets": []
+    }
+]

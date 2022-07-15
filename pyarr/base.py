@@ -6,7 +6,9 @@ from requests import Response
 from pyarr.exceptions import PyarrMissingArgument, PyarrRecordNotFound
 from pyarr.models.common import (
     PyarrBlocklistSortKey,
+    PyarrDownloadClientSchema,
     PyarrHistorySortKey,
+    PyarrImportListSchema,
     PyarrLogFilterKey,
     PyarrLogFilterValue,
     PyarrLogSortKey,
@@ -686,6 +688,21 @@ class BaseArrAPI(RequestHandler):
                 )
         return response
 
+    # POST /notification
+    def add_notification(self, data: dict[str, Any]) -> dict[str, Any]:
+        """Add an import list based on the schema information supplied
+
+        Note:
+            Recommended to be used in conjunction with get_notification_schema()
+
+        Args:
+            data (dict[str, Any]): dictionary with import list schema and settings
+
+        Returns:
+            dict[str, Any]: dictionary of added item
+        """
+        return self._post("notification", self.ver_uri, data=data)
+
     # PUT /notification/{id}
     def upd_notification(self, id_: int, data: dict[str, Any]) -> dict[str, Any]:
         """Edit notification by database id
@@ -806,23 +823,26 @@ class BaseArrAPI(RequestHandler):
 
     # GET /downloadclient/schema
     def get_download_client_schema(
-        self, implementation_: Optional[str] = None
+        self, implementation: Optional[PyarrDownloadClientSchema] = None
     ) -> list[dict[str, Any]]:
         """Gets the schemas for the different download Clients
 
         Args:
-            implementation_ (Optional[str], optional): Client implementation name. Defaults to None.
+            implementation (Optional[PyarrDownloadClientSchema], optional): Client implementation name. Defaults to None.
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
         response = self.assert_return("downloadclient/schema", self.ver_uri, list)
-        if implementation_:
-            return [
-                schema
-                for schema in response
-                if schema["implementation"] == implementation_
-            ]
+        if implementation:
+            response = next(
+                (item for item in response if item["implementation"] == implementation),
+                None,
+            )
+            if not response:
+                raise PyarrRecordNotFound(
+                    f"a record with implementation {implementation} was not found"
+                )
 
         return response
 
@@ -881,16 +901,46 @@ class BaseArrAPI(RequestHandler):
             list[dict[str, Any]]: List of dictionaries with items
         """
         path = f"importlist/{id_}" if id_ else "importlist"
-        return self.assert_return(path, self.ver_uri, list)
+        return self.assert_return(path, self.ver_uri, dict if id_ else list)
+
+    def get_import_list_schema(
+        self, implementation: Optional[PyarrImportListSchema] = None
+    ) -> list[dict[str, Any]]:
+        """Gets the schemas for the different import list sources
+
+        Args:
+            implementation (Optional[PyarrImportListSchema], optional): Client implementation name. Defaults to None.
+
+        Returns:
+            list[dict[str, Any]]: List of dictionaries with items
+        """
+        response = self.assert_return("importlist/schema", self.ver_uri, list)
+        if implementation:
+            response = next(
+                (item for item in response if item["implementation"] == implementation),
+                None,
+            )
+            if not response:
+                raise PyarrRecordNotFound(
+                    f"a record with implementation {implementation} was not found"
+                )
+
+        return response
 
     # POST /importlist/
-    def add_import_list(self) -> Any:
-        """This is not implemented yet
+    def add_import_list(self, data: dict[str, Any]) -> dict[str, Any]:
+        """Add an import list based on the schema information supplied
 
-        Raises:
-            NotImplementedError: Error
+        Note:
+            Recommended to be used in conjunction with get_import_list_schema()
+
+        Args:
+            data (dict[str, Any]): dictionary with import list schema and settings
+
+        Returns:
+            dict[str, Any]: dictionary of added item
         """
-        raise NotImplementedError()
+        return self._post("importlist", self.ver_uri, data=data)
 
     # PUT /importlist/{id}
     def upd_import_list(self, id_: int, data: dict[str, Any]) -> dict[str, Any]:
@@ -928,11 +978,16 @@ class BaseArrAPI(RequestHandler):
         """
         return self.assert_return("config/downloadclient", self.ver_uri, dict)
 
-    # POST /notifications
-    def add_notifications(self) -> Any:
-        """This is not implemented yet
+    def upd_config_download_client(self, data: dict[str, Any]) -> dict[str, Any]:
+        """Update download client page configurations
 
-        Raises:
-            NotImplementedError: Error
+        Note:
+            Recommended to be used in conjunction with get_config_download_client()
+
+        Args:
+            data (dict[str, Any]): data to be updated
+
+        Returns:
+            dict[str, Any]: dictionary with updated items
         """
-        raise NotImplementedError()
+        return self._put("config/downloadclient", self.ver_uri, data=data)
