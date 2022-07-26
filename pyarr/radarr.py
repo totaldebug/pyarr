@@ -503,28 +503,22 @@ class RadarrAPI(BaseArrAPI):
     # DELETE /queue/bulk
     def del_queue_bulk(
         self,
-        data: dict[str, Any],
-        remove_from_client: bool = True,
-        blacklist: bool = True,
+        id_: list[int],
+        remove_from_client: Optional[bool] = None,
+        blocklist: Optional[bool] = None,
     ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
         """Remove multiple items from queue by their IDs
 
         Args:
-            data (dict[str, Any]): Dictionary of IDs to be removed::
-
-                {
-                "ids": [
-                    0
-                ]
-                }
-
+            id_ (list[int]): Dictionary of IDs to be removed::
             remove_from_client (bool, optional): Remove the items from the client. Defaults to True.
-            blacklist (bool, optional): Add the items to the blacklist. Defaults to True.
+            blocklist (bool, optional): Add the items to the blocklist. Defaults to True.
 
         Returns:
             Response: HTTP Response
         """
-        params = {"removeFromClient": remove_from_client, "blacklist": blacklist}
+        data = {"ids": id_}
+        params = {"removeFromClient": remove_from_client, "blocklist": blocklist}
         return self._delete("queue/bulk", self.ver_uri, params=params, data=data)
 
     # POST /queue/grab/{id}
@@ -552,7 +546,7 @@ class RadarrAPI(BaseArrAPI):
             list[dict[str, Any]]: List of dictionaries with items
         """
         path = f"indexer/{id_}" if id_ else "indexer"
-        return self.assert_return(path, self.ver_uri, list)
+        return self.assert_return(path, self.ver_uri, dict if id_ else list)
 
     # PUT /indexer/{id}
     def upd_indexer(self, id_: int, data: dict[str, Any]) -> dict[str, Any]:

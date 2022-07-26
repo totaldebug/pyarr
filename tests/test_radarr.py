@@ -403,3 +403,46 @@ def test_get_queue_details(responses, radarr_client):
     )
     data = radarr_client.get_queue_status()
     assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_del_queue_bulk(responses, radarr_client):
+    responses.add(
+        responses.DELETE,
+        "https://127.0.0.1:7878/api/v3/queue/bulk",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/delete.json"),
+        status=200,
+    )
+    data = radarr_client.del_queue_bulk(
+        id_=[1, 2, 3], remove_from_client=True, blocklist=True
+    )
+    assert isinstance(data, dict)
+
+
+# TODO: force_grab_queue_item
+
+
+@pytest.mark.usefixtures
+def test_get_indexer(responses, radarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:7878/api/v3/indexer",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("radarr/indexer_all.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = radarr_client.get_indexer()
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:7878/api/v3/indexer/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("radarr/indexer.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = radarr_client.get_indexer(id_=1)
+    assert isinstance(data, dict)
