@@ -1,0 +1,66 @@
+[
+    {
+        "movieId": 1,
+        "sourceTitle": "string",
+        "languages": [
+            {
+                "id": 1,
+                "name": "English"
+            }
+        ],
+        "quality": {
+            "quality": {
+                "id": 9,
+                "name": "HDTV-1080p",
+                "source": "tv",
+                "resolution": 1080,
+                "modifier": "none"
+            },
+            "revision": {
+                "version": 1,
+                "real": 0,
+                "isRepack": false
+            }
+        },
+        "customFormats": [],
+        "qualityCutoffNotMet": false,
+        "date": "2018-01-13T15:54:23Z",
+        "eventType": "movieFileDeleted",
+        "data": {
+            "reason": "MissingFromDisk"
+        },
+        "id": 2
+    },
+    {
+        "movieId": 1,
+        "sourceTitle": "string",
+        "languages": [
+            {
+                "id": 1,
+                "name": "English"
+            }
+        ],
+        "quality": {
+            "quality": {
+                "id": 9,
+                "name": "HDTV-1080p",
+                "source": "tv",
+                "resolution": 1080,
+                "modifier": "none"
+            },
+            "revision": {
+                "version": 1,
+                "real": 0,
+                "isRepack": false
+            }
+        },
+        "customFormats": [],
+        "qualityCutoffNotMet": false,
+        "date": "2018-01-13T15:46:28Z",
+        "eventType": "movieFileDeleted",
+        "data": {
+            "reason": "MissingFromDisk"
+        },
+        "id": 1
+    }
+]

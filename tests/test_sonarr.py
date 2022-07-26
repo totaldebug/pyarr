@@ -320,7 +320,7 @@ def test_del_episode_file(responses, sonarr_client):
         responses.DELETE,
         "https://127.0.0.1:8989/api/v3/episodefile/1",
         headers={"Content-Type": "application/json"},
-        body=load_fixture("sonarr/delete.json"),
+        body=load_fixture("common/delete.json"),
         status=200,
         match_querystring=True,
     )
@@ -669,7 +669,7 @@ def test_del_series(responses, sonarr_client):
         responses.DELETE,
         "https://127.0.0.1:8989/api/v3/series/1?deleteFiles=False",
         headers={"Content-Type": "application/json"},
-        body=load_fixture("sonarr/delete.json"),
+        body=load_fixture("common/delete.json"),
         status=200,
         match_querystring=True,
     )
@@ -681,7 +681,7 @@ def test_del_series(responses, sonarr_client):
         responses.DELETE,
         "https://127.0.0.1:8989/api/v3/series/1?deleteFiles=True",
         headers={"Content-Type": "application/json"},
-        body=load_fixture("sonarr/delete.json"),
+        body=load_fixture("common/delete.json"),
         status=200,
         match_querystring=True,
     )
@@ -860,7 +860,7 @@ def test_del_root_folder(responses, sonarr_client):
         responses.DELETE,
         "https://127.0.0.1:8989/api/v3/rootfolder/1",
         headers={"Content-Type": "application/json"},
-        body=load_fixture("sonarr/delete.json"),
+        body=load_fixture("common/delete.json"),
         status=200,
         match_querystring=True,
     )
@@ -1043,7 +1043,7 @@ def test_del_blocklist(responses, sonarr_client):
         responses.DELETE,
         "https://127.0.0.1:8989/api/v3/blocklist/1",
         headers={"Content-Type": "application/json"},
-        body=load_fixture("sonarr/delete.json"),
+        body=load_fixture("common/delete.json"),
         status=200,
         match_querystring=True,
     )
@@ -1068,7 +1068,7 @@ def test_del_blocklist_bulk(responses, sonarr_client):
         responses.DELETE,
         "https://127.0.0.1:8989/api/v3/blocklist/bulk",
         headers={"Content-Type": "application/json"},
-        body=load_fixture("sonarr/delete.json"),
+        body=load_fixture("common/delete.json"),
         status=200,
         match_querystring=True,
     )
@@ -1131,7 +1131,7 @@ def test_del_quality_profile(responses, sonarr_client):
         responses.DELETE,
         "https://127.0.0.1:8989/api/v3/qualityprofile/1",
         headers={"Content-Type": "application/json"},
-        body=load_fixture("sonarr/delete.json"),
+        body=load_fixture("common/delete.json"),
         status=200,
         match_querystring=True,
     )
@@ -1243,7 +1243,7 @@ def test_del_indexer(responses, sonarr_client):
         responses.DELETE,
         "https://127.0.0.1:8989/api/v3/indexer/1",
         headers={"Content-Type": "application/json"},
-        body=load_fixture("sonarr/delete.json"),
+        body=load_fixture("common/delete.json"),
         status=200,
         match_querystring=True,
     )
@@ -1257,7 +1257,7 @@ def test_del_queue(responses, sonarr_client):
         responses.DELETE,
         "https://127.0.0.1:8989/api/v3/queue/1",
         headers={"Content-Type": "application/json"},
-        body=load_fixture("sonarr/delete.json"),
+        body=load_fixture("common/delete.json"),
         status=200,
         match_querystring=True,
     )
@@ -1267,7 +1267,7 @@ def test_del_queue(responses, sonarr_client):
         responses.DELETE,
         "https://127.0.0.1:8989/api/v3/queue/1?removeFromClient=True&blacklist=True",
         headers={"Content-Type": "application/json"},
-        body=load_fixture("sonarr/delete.json"),
+        body=load_fixture("common/delete.json"),
         status=200,
         match_querystring=True,
     )
@@ -1475,7 +1475,7 @@ def test_del_notification(responses, sonarr_client):
         responses.DELETE,
         "https://127.0.0.1:8989/api/v3/notification/1",
         headers={"Content-Type": "application/json"},
-        body=load_fixture("sonarr/delete.json"),
+        body=load_fixture("common/delete.json"),
         status=200,
         match_querystring=True,
     )
@@ -1567,7 +1567,7 @@ def test_del_tag(responses, sonarr_client):
         responses.DELETE,
         "https://127.0.0.1:8989/api/v3/tag/1",
         headers={"Content-Type": "application/json"},
-        body=load_fixture("sonarr/delete.json"),
+        body=load_fixture("common/delete.json"),
         status=200,
         match_querystring=True,
     )
@@ -1633,7 +1633,7 @@ def test_del_download_client(responses, sonarr_client):
         responses.DELETE,
         "https://127.0.0.1:8989/api/v3/downloadclient/1",
         headers={"Content-Type": "application/json"},
-        body=load_fixture("sonarr/delete.json"),
+        body=load_fixture("common/delete.json"),
         status=200,
         match_querystring=True,
     )
@@ -1697,7 +1697,7 @@ def test_del_import_list(responses, sonarr_client):
         responses.DELETE,
         "https://127.0.0.1:8989/api/v3/importlist/1",
         headers={"Content-Type": "application/json"},
-        body=load_fixture("sonarr/delete.json"),
+        body=load_fixture("common/delete.json"),
         status=200,
         match_querystring=True,
     )

@@ -62,7 +62,7 @@ class RequestHandler:
         self,
         path: str,
         ver_uri: str = "",
-        params: Union[dict[int, list[int]], dict, None] = None,
+        params: Union[dict[str, Any], list[tuple[str, Any]], None] = None,
     ) -> Union[list[dict], dict[str, Any]]:
         """Wrapper on any get requests
 

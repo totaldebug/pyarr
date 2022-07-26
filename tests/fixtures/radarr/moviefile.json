@@ -1,0 +1,50 @@
+{
+    "movieId": 17,
+    "relativePath": "string",
+    "path": "string",
+    "size": 5536497109,
+    "dateAdded": "2018-01-21T02:11:37Z",
+    "sceneName": "string",
+    "indexerFlags": 0,
+    "quality": {
+        "quality": {
+            "id": 3,
+            "name": "WEBDL-1080p",
+            "source": "webdl",
+            "resolution": 1080,
+            "modifier": "none"
+        },
+        "revision": {
+            "version": 1,
+            "real": 0,
+            "isRepack": false
+        }
+    },
+    "customFormats": [],
+    "mediaInfo": {
+        "audioBitrate": 384000,
+        "audioChannels": 5.1,
+        "audioCodec": "AC3",
+        "audioLanguages": "eng",
+        "audioStreamCount": 1,
+        "videoBitDepth": 8,
+        "videoBitrate": 0,
+        "videoCodec": "x264",
+        "videoDynamicRangeType": "",
+        "videoFps": 23.976,
+        "resolution": "1920x800",
+        "runTime": "2:10:44",
+        "scanType": "Progressive",
+        "subtitles": "eng"
+    },
+    "qualityCutoffNotMet": false,
+    "languages": [
+        {
+            "id": 1,
+            "name": "English"
+        }
+    ],
+    "releaseGroup": "string",
+    "edition": "",
+    "id": 102
+}

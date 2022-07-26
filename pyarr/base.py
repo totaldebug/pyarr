@@ -40,7 +40,7 @@ class BaseArrAPI(RequestHandler):
         path: str,
         ver_uri: str,
         typearg: type,
-        params: Optional[dict[str, Any]] = None,
+        params: Optional[Union[dict[str, Any], list[tuple[str, Any]]]] = None,
     ) -> Any:
         """Helper function to add assert to enforce typing responses
 

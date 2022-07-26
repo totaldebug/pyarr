@@ -38,3 +38,17 @@ class RadarrSortKeys(str, Enum):
     SOURCE_TITLE = "sourcetitle"
     STATUS = "status"
     TIMELEFT = "timeleft"
+
+
+@enum_tools.documentation.document_enum
+class RadarrEventType(str, Enum):
+    """Radarr event types"""
+
+    UNKNOWN = "unknown"
+    GRABBED = "grabbed"
+    DOWNLOAD_FILDER_INPORTED = "downloadFolderImported"
+    DOWNLOAD_FAILED = "downloadFailed"
+    MOVIE_FILE_DELETED = "movieFileDeleted"
+    MOVIE_FOLDER_IMPORTED = "movieFolderImported"
+    MOVIE_FILE_RENAMED = "movieFileRenamed"
+    DOWNLOAD_IGNORED = "downloadIgnored"

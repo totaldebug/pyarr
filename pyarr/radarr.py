@@ -7,7 +7,7 @@ from .base import BaseArrAPI
 from .const import PAGE, PAGE_SIZE
 from .exceptions import PyarrRecordNotFound
 from .models.common import PyarrSortDirection
-from .models.radarr import RadarrCommands, RadarrSortKeys
+from .models.radarr import RadarrCommands, RadarrEventType, RadarrSortKeys
 
 
 class RadarrAPI(BaseArrAPI):
@@ -30,17 +30,17 @@ class RadarrAPI(BaseArrAPI):
 
     def _movie_json(
         self,
-        db_id: Union[str, int],
+        id_: Union[str, int],
         quality_profile_id: int,
         root_dir: str,
         monitored: bool = True,
         search_for_movie: bool = True,
-        tmdb: bool = True,
+        tmdb: Optional[bool] = None,
     ) -> dict[str, Any]:
         """Searches for movie on tmdb and returns Movie json to add.
 
         Args:
-            db_id (Union[str, int]): imdb or tmdb id
+            id_ (Union[str, int]): imdb or tmdb id
             quality_profile_id (int): ID of the quality profile the movie will use
             root_dir (str): location of the root DIR
             monitored (bool, optional): should the movie be monitored. Defaults to True.
@@ -53,15 +53,16 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             dict[str, Any]: Dictionary containing movie information
         """
-        warn(
-            "Option tmdb is going to be deprecated and will be removed in a future release.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        if isinstance(db_id, int):
-            movie = self.lookup_movie_by_tmdb_id(db_id)[0]
+        if tmdb:
+            warn(
+                "Argument tmdb is no longer used and will be removed in a future release.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+        if isinstance(id_, int):
+            movie = self.lookup_movie(term=f"tmdb:{id_}")[0]
         else:
-            movie = self.lookup_movie_by_imdb_id(db_id)[0]
+            movie = self.lookup_movie(term=f"imdb:{id_}")[0]
 
         if not movie:
             raise PyarrRecordNotFound("Movie Doesn't Exist")
@@ -98,62 +99,78 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             Union[list[dict[str, Any]], dict[str, Any]]: List or Dictionary with items
         """
+        params = {}
+        if tmdb:
+            params["tmdbid"] = id_
+
         return self.assert_return(
             f"movie{'' if id_ is None or tmdb else f'/{id_}'}",
             self.ver_uri,
-            list if not id_ or tmdb else dict,
-            params=None if id_ is None else {"tmdbid": id_},
+            dict if id_ and not tmdb else list,
+            params=params,
         )
 
     # POST /movie
     def add_movie(
         self,
-        db_id: Union[str, int],
+        id_: Union[str, int],
         quality_profile_id: int,
         root_dir: str,
         monitored: bool = True,
         search_for_movie: bool = True,
-        tmdb: bool = True,
+        tmdb: Optional[bool] = None,
     ) -> dict[str, Any]:
         """Adds a movie to the database
 
         Args:
-            db_id (Union[str, int]): IMDB or TMDB ID
+            id_ (Union[str, int]): IMDB or TMDB ID
             quality_profile_id (int): ID of the quality profile the movie will use
             root_dir (str): Location of the root DIR
             monitored (bool, optional): Should the movie be monitored. Defaults to True.
             search_for_movie (bool, optional): Should we search for the movie. Defaults to True.
-            tmdb (bool, optional): Not in use, Deprecated. Defaults to True.
+            tmdb (Optional[bool], optional): Not in use, Deprecated. Defaults to None.
 
         Returns:
             dict[str, Any]: Dictonary with added record
         """
-        warn(
-            "Option tmdb is going to be deprecated and will be removed in a future release.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
+
+        if tmdb:
+            warn(
+                "Argument tmdb is no longer used and will be removed in a future release.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
         movie_json = self._movie_json(
-            db_id, quality_profile_id, root_dir, monitored, search_for_movie
+            id_, quality_profile_id, root_dir, monitored, search_for_movie
         )
 
         return self._post("movie", self.ver_uri, data=movie_json)
 
     # PUT /movie
     def upd_movie(
-        self, data: dict[str, Any], move_files: bool = False
+        self,
+        data: Optional[dict[Any, Any]],
+        move_files: Optional[bool] = None,
     ) -> dict[str, Any]:
         """Updates a movie in the database.
 
         Args:
             data (dict[str, Any]): Dictionary containing an object obtained from get_movie()
-            move_files (bool, optional): Have radarr move files when updating. Defaults to False.
+            move_files (Optional[bool], optional): Have radarr move files when updating. Defaults to None.
 
         Returns:
             dict[str, Any]: Dictionary with updated record
         """
-        params = {"moveFiles": move_files}
-        return self._put("movie", self.ver_uri, data=data, params=params)
+        params = {}
+        if move_files is not None:
+            params["moveFiles"] = move_files
+
+        return self._put(
+            f"movie{'/editor' if isinstance(data, list) else ''}",
+            self.ver_uri,
+            data=data,
+            params=params,
+        )
 
     # GET /movie/{id}
     def get_movie_by_movie_id(self, id_: int) -> dict[str, Any]:
@@ -180,25 +197,28 @@ class RadarrAPI(BaseArrAPI):
     def del_movie(
         self,
         id_: Union[int, list],
-        delete_files: bool = False,
-        add_exclusion: bool = False,
+        delete_files: Optional[bool] = None,
+        add_exclusion: Optional[bool] = None,
     ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
         """Delete a single movie or multiple movies by database id.
 
         Args:
             id_ (Union[int, list]): Int with single movie Id or list with multiple IDs to delete.
-            delete_files (bool, optional): Delete movie files when deleting movies. Defaults to False.
-            add_exclusion (bool, optional): Add deleted movies to List Exclusions. Defaults to False.
+            delete_files (bool, optional): Delete movie files when deleting movies. Defaults to None.
+            add_exclusion (bool, optional): Add deleted movies to List Exclusions. Defaults to None.
 
         Returns:
             Response: HTTP Response
         """
-        params: dict[str, str | list[int]] = {
-            "deleteFiles": str(delete_files),
-            "addImportExclusion": str(add_exclusion),
-        }
+        params: dict[str, Union[str, list[int], int]] = {}
+        if delete_files:
+            params["deleteFiles"] = str(delete_files)
+
+        if add_exclusion:
+            params["addImportExclusion"] = str(add_exclusion)
+
         if isinstance(id_, list):
-            params["moviIds"] = id_
+            params["movieIds"] = id_
         return self._delete(
             "movie/editor" if isinstance(id_, list) else f"movie/{id_}",
             self.ver_uri,
@@ -211,7 +231,10 @@ class RadarrAPI(BaseArrAPI):
         """Search for a movie to add to the database (Uses TMDB for search results)
 
         Args:
-            term (str): Search term to use for lookup
+            term (str): Search term to use for lookup, can also do IMDB & TMDB IDs::
+
+                radarr.lookup_movie(term="imdb:123456")
+                radarr.lookup_movie(term="tmdb:123456")
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
@@ -229,6 +252,11 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
+        warn(
+            "This method is deprecated and will be removed in a future release. use lookup_movie(term='tmdb:123456')",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         params = {"term": f"tmdb:{id_}"}
         return self.assert_return("movie/lookup", self.ver_uri, list, params)
 
@@ -242,6 +270,11 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
+        warn(
+            "This method is deprecated and will be removed in a future release. use lookup_movie(term='imdb:123456')",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         params = {"term": f"imdb:{id_}"}
         return self.assert_return("movie/lookup", self.ver_uri, list, params)
 
@@ -255,6 +288,12 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             dict[str, Any]: Dictionary containing updated record
         """
+
+        warn(
+            "This method is deprecated and will be removed in a future release. Please use upd_movie() with a list to update",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._put("movie/editor", self.ver_uri, data=data)
 
     # DELETE /movie/editor
@@ -277,6 +316,11 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             Response: HTTP Response
         """
+        warn(
+            "This method is deprecated and will be removed in a future release. Please use del_movie().",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._delete("movie/editor", self.ver_uri, data=data)
 
     # POST /movie/import
@@ -296,6 +340,7 @@ class RadarrAPI(BaseArrAPI):
     ## MOVIEFILE
 
     # GET /moviefile
+    # TODO: merge this with get_movie_file
     def get_movie_files_by_movie_id(self, id_: int) -> list[dict[str, Any]]:
         """Get a movie file object by Movie database ID.
 
@@ -305,65 +350,64 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
+
         params = {"movieid": id_}
         return self.assert_return("moviefile", self.ver_uri, list, params)
 
     # GET /moviefile
-    def get_movie_files(self, moviefile_ids: list[int]) -> list[dict[str, Any]]:
-        """Get movie file information for multiple movie files
-
-        Args:
-            moviefile_ids (list[int]): a list of movie file IDs
-
-        Returns:
-            list[dict[str, Any]]: List of dictionaries with items
-        """
-        params = {"moviefileids": moviefile_ids}
-        return self.assert_return("moviefile", self.ver_uri, list, params)
-
-    # GET /moviefile/{id}
-    def get_movie_file(self, id_: int) -> list[dict[str, Any]]:
+    def get_movie_file(self, id_: Union[int, list]) -> list[dict[str, Any]]:
         """Get movie file by database ID
 
         Args:
-            id_ (int): Movie file ID
+            id_ (int, list): Movie file ID, or multiple in a list
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
-        return self.assert_return(f"moviefile/{id_}", self.ver_uri, list)
+        if not isinstance(id_, list):
+            return self.assert_return(
+                f"moviefile/{id_}",
+                self.ver_uri,
+                dict,
+            )
+        params = [("movieFileIds", file) for file in id_]
+        return self.assert_return("moviefile", self.ver_uri, list, params=params)
 
     # DELETE /moviefile/{id}
     def del_movie_file(
-        self, id_: int
+        self, id_: Union[int, list]
     ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
         """Allows for deletion of a moviefile by its database ID.
 
         Args:
-            id_ (int): Movie file ID
+            id_ (Union[int, list]): Movie file ID
 
         Returns:
             Response: HTTP Response
         """
+
+        if isinstance(id_, list):
+            data = {"movieFileIds": id_}
         return self._delete(
-            f"moviefile/{id_}",
+            "moviefile/bulk" if isinstance(id_, list) else f"moviefile/{id_}",
             self.ver_uri,
+            data=data if isinstance(id_, list) else None,
         )
 
     # GET /history/movie
     def get_movie_history(
-        self, id_: int, event_type: Optional[int] = None
+        self, id_: int, event_type: Optional[RadarrEventType] = None
     ) -> list[dict[str, Any]]:
         """Get history for a given movie in database by its database ID
 
         Args:
             id_ (int): Database ID of movie
-            event_type (int, optional): History event type to retrieve. Defaults to None.
+            event_type (Optional[RadarrEventType], optional): History event type to retrieve. Defaults to None.
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
-        params = {"movieId": id_}
+        params: dict[str, Union[int, str]] = {"movieId": id_}
         if event_type:
             params["eventType"] = event_type
         return self.assert_return("history/movie", self.ver_uri, list, params)
