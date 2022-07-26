@@ -1,0 +1,48 @@
+{
+    "page": 1,
+    "pageSize": 10,
+    "sortKey": "timeleft",
+    "sortDirection": "ascending",
+    "totalRecords": 1,
+    "records": [
+        {
+            "movieId": 311,
+            "languages": [
+                {
+                    "id": 1,
+                    "name": "English"
+                }
+            ],
+            "quality": {
+                "quality": {
+                    "id": 7,
+                    "name": "Bluray-1080p",
+                    "source": "bluray",
+                    "resolution": 1080,
+                    "modifier": "none"
+                },
+                "revision": {
+                    "version": 1,
+                    "real": 0,
+                    "isRepack": false
+                }
+            },
+            "customFormats": [],
+            "size": 6202395598,
+            "title": "Goodfellas 1990 25th Anniversary REMASTERED BRRip x264 1080p-NPW",
+            "sizeleft": 6193674427,
+            "timeleft": "01:33:22",
+            "estimatedCompletionTime": "2022-07-26T10:34:55Z",
+            "status": "downloading",
+            "trackedDownloadStatus": "ok",
+            "trackedDownloadState": "downloading",
+            "statusMessages": [],
+            "downloadId": "202B87F7190B45F86487C7A28A49EA5A5EB939A5",
+            "protocol": "torrent",
+            "downloadClient": "deluge",
+            "indexer": "Jackett",
+            "outputPath": "/downloads/Goodfellas 1990 25th Anniversary REMASTERED BRRip x264 1080p-NPW",
+            "id": 1340002663
+        }
+    ]
+}

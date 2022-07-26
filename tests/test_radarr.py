@@ -3,8 +3,9 @@ from copyreg import add_extension
 
 import pytest
 
-from pyarr.exceptions import PyarrResourceNotFound
-from pyarr.models.radarr import RadarrEventType
+from pyarr.exceptions import PyarrMissingArgument, PyarrResourceNotFound
+from pyarr.models.common import PyarrSortDirection
+from pyarr.models.radarr import RadarrEventType, RadarrSortKeys
 
 from tests import load_fixture
 from tests.conftest import radarr_client
@@ -311,3 +312,94 @@ def test_get_movie_history(responses, radarr_client):
     )
     data = radarr_client.get_movie_history(id_=1, event_type=RadarrEventType.UNKNOWN)
     assert isinstance(data, list)
+
+
+@pytest.mark.usefixtures
+def test_get_blocklist_by_movie_id(responses, radarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:7878/api/v3/blocklist/movie?movieId=1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("radarr/movie_blocklist.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = radarr_client.get_blocklist_by_movie_id(id_=1)
+    assert isinstance(data, list)
+
+
+@pytest.mark.usefixtures
+def test_get_queue(responses, radarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:7878/api/v3/queue",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("radarr/queue.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = radarr_client.get_queue()
+    assert isinstance(data, dict)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:7878/api/v3/queue?page=1&pageSize=20&sortKey=timeleft&sortDirection=default&includeUnknownMovieItems=False",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("radarr/queue.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = radarr_client.get_queue(
+        page=1,
+        page_size=20,
+        sort_key=RadarrSortKeys.TIMELEFT,
+        sort_dir=PyarrSortDirection.DEFAULT,
+        include_unknown_movie_items=False,
+    )
+    assert isinstance(data, dict)
+
+    with contextlib.suppress(PyarrMissingArgument):
+        data = radarr_client.get_queue(sort_key=RadarrSortKeys.TIMELEFT)
+        assert False
+    with contextlib.suppress(PyarrMissingArgument):
+        data = radarr_client.get_queue(sort_dir=PyarrSortDirection.DEFAULT)
+        assert False
+
+
+@pytest.mark.usefixtures
+def test_get_queue_details(responses, radarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:7878/api/v3/queue/details",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("radarr/queue_details.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = radarr_client.get_queue_details()
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:7878/api/v3/queue/details?movieId=1&includeMovie=True",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("radarr/queue_details.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = radarr_client.get_queue_details(id_=1, include_movie=True)
+    assert isinstance(data, list)
+
+
+@pytest.mark.usefixtures
+def test_get_queue_details(responses, radarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:7878/api/v3/queue/status",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("radarr/queue_status.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = radarr_client.get_queue_status()
+    assert isinstance(data, dict)

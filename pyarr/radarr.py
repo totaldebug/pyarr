@@ -4,8 +4,7 @@ from warnings import warn
 from requests import Response
 
 from .base import BaseArrAPI
-from .const import PAGE, PAGE_SIZE
-from .exceptions import PyarrRecordNotFound
+from .exceptions import PyarrMissingArgument, PyarrRecordNotFound
 from .models.common import PyarrSortDirection
 from .models.radarr import RadarrCommands, RadarrEventType, RadarrSortKeys
 
@@ -415,7 +414,7 @@ class RadarrAPI(BaseArrAPI):
     ## BLACKLIST
 
     # GET /blacklist/movie
-    def get_blacklist_by_movie_id(
+    def get_blocklist_by_movie_id(
         self,
         id_: int,
     ) -> list[dict[str, Any]]:
@@ -428,39 +427,78 @@ class RadarrAPI(BaseArrAPI):
             list[dict[str, Any]]: List of dictionaries with items
         """
         params = {"movieId": id_}
-        return self.assert_return("blacklist/movie", self.ver_uri, list, params)
+        return self.assert_return("blocklist/movie", self.ver_uri, list, params)
 
     ## QUEUE
 
     # GET /queue
     def get_queue(
         self,
-        page: int = PAGE,
-        page_size: int = PAGE_SIZE,
-        sort_direction: PyarrSortDirection = PyarrSortDirection.ASC,
-        sort_key: RadarrSortKeys = RadarrSortKeys.TIMELEFT,
-        include_unknown_movie_items: bool = True,
+        page: Optional[int] = None,
+        page_size: Optional[int] = None,
+        sort_dir: Optional[PyarrSortDirection] = None,
+        sort_key: Optional[RadarrSortKeys] = None,
+        include_unknown_movie_items: Optional[bool] = None,
     ) -> dict[str, Any]:
         """Return a list of items in the queue
 
         Args:
-            page (int, optional): Page to be returned. Defaults to PAGE.
-            page_size (int, optional): Number of results per page. Defaults to PAGE_SIZE.
-            sort_direction (PyarrSortDirection, optional): Direction to sort. Defaults to PyarrSortDirection.ASC.
-            sort_key (RadarrSortKeys, optional): Field to sort. Defaults to RadarrSortKeys.TIME.
-            include_unknown_movie_items (bool, optional): Include unknown movie items. Defaults to True.
+            page (Optional[int], optional): Page to be returned. Defaults to None.
+            page_size (Optional[int], optional): Number of results per page. Defaults to None.
+            sort_direction (Optional[PyarrSortDirection], optional): Direction to sort. Defaults to None.
+            sort_key (Optional[RadarrSortKeys], optional): Field to sort. Defaults to None.
+            include_unknown_movie_items (Optional[bool], optional): Include unknown movie items. Defaults to None.
 
         Returns:
             dict[str, Any]: List of dictionaries with items
         """
-        params = {
-            "page": page,
-            "pageSize": page_size,
-            "sortDirection": sort_direction,
-            "sortKey": sort_key,
-            "includeUnknownMovieItems": include_unknown_movie_items,
-        }
+        params: dict[str, Union[int, PyarrSortDirection, RadarrSortKeys, bool]] = {}
+
+        if page:
+            params["page"] = page
+        if page_size:
+            params["pageSize"] = page_size
+        if sort_key and sort_dir:
+            params["sortKey"] = sort_key
+            params["sortDirection"] = sort_dir
+        elif sort_key or sort_dir:
+            raise PyarrMissingArgument("sort_key and sort_dir  must be used together")
+        if include_unknown_movie_items is not None:
+            params["includeUnknownMovieItems"] = include_unknown_movie_items
+
         return self.assert_return("queue", self.ver_uri, dict, params)
+
+    # GET /queue/details
+    def get_queue_details(
+        self,
+        id_: Optional[int] = None,
+        include_movie: Optional[bool] = None,
+    ) -> list[dict[str, Any]]:
+        """Get details of all items in queue
+
+        Args:
+            id_ (Optional[int], optional): select specific item by id. Defaults to None
+            include_movie (Optional[bool], optional): Include movie object if linked. Defaults to None.
+
+        Returns:
+            list[dict[str, Any]]: List of dictionaries with items
+        """
+        params = {}
+        if id_:
+            params["movieId"] = id_
+        if include_movie is not None:
+            params["includeMovie"] = include_movie
+
+        return self.assert_return("queue/details", self.ver_uri, list, params)
+
+    # GET /queue/status
+    def get_queue_status(self) -> dict[str, Any]:
+        """Queue item status
+
+        Returns:
+            list[dict[str, Any]]: List of dictionaries with items
+        """
+        return self.assert_return("queue/status", self.ver_uri, dict)
 
     # DELETE /queue/bulk
     def del_queue_bulk(
@@ -488,33 +526,6 @@ class RadarrAPI(BaseArrAPI):
         """
         params = {"removeFromClient": remove_from_client, "blacklist": blacklist}
         return self._delete("queue/bulk", self.ver_uri, params=params, data=data)
-
-    # GET /queue/details
-    def get_queue_details(
-        self,
-        include_movie: bool = True,
-    ) -> list[dict[str, Any]]:
-        """Get details of all items in queue
-
-        Args:
-            include_movie (bool, optional): Include movie object if linked. Defaults to True.
-
-        Returns:
-            list[dict[str, Any]]: List of dictionaries with items
-        """
-        params = {
-            "includeMovie": include_movie,
-        }
-        return self.assert_return("queue/details", self.ver_uri, list, params)
-
-    # GET /queue/status
-    def get_queue_status(self) -> list[dict[str, Any]]:
-        """Queue item status
-
-        Returns:
-            list[dict[str, Any]]: List of dictionaries with items
-        """
-        return self.assert_return("queue/status", self.ver_uri, list)
 
     # POST /queue/grab/{id}
     def force_grab_queue_item(self, id_: int) -> dict[str, Any]:
