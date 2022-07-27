@@ -117,13 +117,17 @@ class BaseArrAPI(RequestHandler):
         return self.assert_return("update", self.ver_uri, list)
 
     # GET /rootfolder
-    def get_root_folder(self) -> list[dict[str, Any]]:
-        """Get list of root folders, free space and any unmappedFolders
+    def get_root_folder(self, id_=None):
+        """Get list of root folders, or specific one with id_ with free space and any unmappedFolders
+
+        Args:
+            id_ (int): root folder id from database
 
         Returns:
              list[dict[str, Any]]: List of dictionaries with items
         """
-        return self.assert_return("rootfolder", self.ver_uri, list)
+        path = path = f"rootfolder/{id_}" if id_ else "rootfolder"
+        return self.request_get(path, self.ver_uri)
 
     # DELETE /rootfolder
     def del_root_folder(
