@@ -14,6 +14,8 @@ class RadarrCommands(str, Enum):
     REFRESH_MOVIE = "RefreshMovie"
     RENAME_MOVIE = "RenameMovie"
     RESCAN_MOVIE = "RescanMovie"
+    RENAME_FILES = "RenameFiles"
+    BACKUP = "Backup"
 
 
 @enum_tools.documentation.document_enum

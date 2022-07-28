@@ -139,7 +139,6 @@ class SonarrAPI(BaseArrAPI):
         }
         if kwargs:
             data |= kwargs
-        print(data)
         return self._post("command", self.ver_uri, data=data)
 
     ## EPISODE

@@ -3,9 +3,13 @@ from copyreg import add_extension
 
 import pytest
 
-from pyarr.exceptions import PyarrMissingArgument, PyarrResourceNotFound
+from pyarr.exceptions import (
+    PyarrMissingArgument,
+    PyarrRecordNotFound,
+    PyarrResourceNotFound,
+)
 from pyarr.models.common import PyarrSortDirection
-from pyarr.models.radarr import RadarrEventType, RadarrSortKeys
+from pyarr.models.radarr import RadarrCommands, RadarrEventType, RadarrSortKeys
 
 from tests import load_fixture
 from tests.conftest import radarr_client
@@ -29,30 +33,62 @@ def test__movie_json(responses, radarr_client):
         monitored=False,
         search_for_movie=False,
     )
-
     assert isinstance(data, dict)
-    assert data["title"] == "string"
-    assert data["rootFolderPath"] == "/"
-    assert data["qualityProfileId"] == 1
-    assert data["year"] == 2014
-    assert data["tmdbId"] == 123456
-    assert isinstance(data["images"], list)
-    assert data["titleSlug"] == "123456"
-    assert data["monitored"] == False
-    assert data["addOptions"]["searchForMovie"] == False
+
+    with contextlib.suppress(DeprecationWarning):
+        data = radarr_client._movie_json(
+            id_=123456, quality_profile_id=1, root_dir="/", tmdb=True
+        )
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:7878/api/v3/movie/lookup?term=imdb%3Att123456",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("radarr/movie_lookup.json"),
+        status=200,
+        match_querystring=True,
+    )
+
+    data = radarr_client._movie_json(
+        id_="tt123456",
+        quality_profile_id=1,
+        root_dir="/",
+        monitored=False,
+        search_for_movie=False,
+    )
+    assert isinstance(data, dict)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:7878/api/v3/movie/lookup?term=imdb%3Att123d",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("radarr/movie_lookup_blank.json"),
+        status=200,
+        match_querystring=True,
+    )
+
+    with contextlib.suppress(PyarrRecordNotFound):
+        data = radarr_client._movie_json(
+            id_="tt123d",
+            quality_profile_id=1,
+            root_dir="/",
+            monitored=False,
+            search_for_movie=False,
+        )
+        assert False
 
 
 @pytest.mark.usefixtures
-def test_add_root_folder(responses, sonarr_client):
+def test_add_root_folder(responses, radarr_client):
     responses.add(
         responses.POST,
-        "https://127.0.0.1:8989/api/v3/rootfolder",
+        "https://127.0.0.1:7878/api/v3/rootfolder",
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/rootfolder.json"),
         status=201,
         match_querystring=True,
     )
-    data = sonarr_client.add_root_folder(directory="/path/to/folder")
+    data = radarr_client.add_root_folder(directory="/path/to/folder")
     assert isinstance(data, dict)
 
 
@@ -92,7 +128,64 @@ def test_get_movie(responses, radarr_client):
     assert isinstance(data, list)
 
 
-# TODO: add_movie
+@pytest.mark.usefixtures
+def test_add_movie(responses, radarr_client):
+    responses.add(
+        responses.POST,
+        "https://127.0.0.1:7878/api/v3/movie",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("radarr/movie.json"),
+        status=201,
+        match_querystring=True,
+    )
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:7878/api/v3/movie/lookup?term=imdb%3Att123456",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("radarr/movie_lookup.json"),
+        status=200,
+        match_querystring=True,
+    )
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:7878/api/v3/movie/lookup?term=tmdb%3A123456",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("radarr/movie_lookup.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = radarr_client.add_movie(
+        id_="tt123456",
+        quality_profile_id=1,
+        root_dir="/",
+        monitored=False,
+        search_for_movie=False,
+    )
+    assert isinstance(data, dict)
+    with contextlib.suppress(DeprecationWarning):
+        data = radarr_client.add_movie(
+            id_=123456, quality_profile_id=1, root_dir="/", tmdb=True
+        )
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:7878/api/v3/movie/lookup?term=imdb%3Att123d",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("radarr/movie_lookup_blank.json"),
+        status=200,
+        match_querystring=True,
+    )
+    with contextlib.suppress(PyarrRecordNotFound):
+        data = radarr_client.add_movie(
+            id_="tt123d",
+            quality_profile_id=1,
+            root_dir="/",
+            monitored=False,
+            search_for_movie=False,
+        )
+        assert False
+
+
 # TODO: upd_movie
 
 
@@ -459,4 +552,68 @@ def test_get_indexer(responses, radarr_client):
         match_querystring=True,
     )
     data = radarr_client.get_indexer(id_=1)
+    assert isinstance(data, dict)
+
+
+# TODO: upd_indexer
+
+
+@pytest.mark.usefixtures
+def test_del_indexer(responses, radarr_client):
+    responses.add(
+        responses.DELETE,
+        "https://127.0.0.1:7878/api/v3/indexer/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/delete.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = radarr_client.del_indexer(id_=1)
+    assert isinstance(data, dict)
+
+    responses.add(
+        responses.DELETE,
+        "https://127.0.0.1:7878/api/v3/indexer/999",
+        headers={"Content-Type": "application/json"},
+        status=404,
+    )
+    with contextlib.suppress(PyarrResourceNotFound):
+        data = radarr_client.del_indexer(id_=999)
+        assert False
+
+
+@pytest.mark.usefixtures
+def test_post_command(responses, radarr_client):
+    responses.add(
+        responses.POST,
+        "https://127.0.0.1:7878/api/v3/command",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/command.json"),
+        status=201,
+        match_querystring=True,
+    )
+
+    data = radarr_client.post_command(name=RadarrCommands.DOWNLOADED_MOVIES_SCAN)
+    assert isinstance(data, dict)
+    data = radarr_client.post_command(RadarrCommands.DOWNLOADED_MOVIES_SCAN, clientId=1)
+    assert isinstance(data, dict)
+    data = radarr_client.post_command(RadarrCommands.RENAME_FILES)
+    assert isinstance(data, dict)
+    data = radarr_client.post_command(RadarrCommands.RENAME_FILES, files=[1, 2, 3])
+    assert isinstance(data, dict)
+    data = radarr_client.post_command(
+        RadarrCommands.DOWNLOADED_MOVIES_SCAN, path="/path"
+    )
+    assert isinstance(data, dict)
+    data = radarr_client.post_command(RadarrCommands.REFRESH_MOVIE, movieId=1)
+    assert isinstance(data, dict)
+    data = radarr_client.post_command(RadarrCommands.RENAME_MOVIE, movieId=1)
+    assert isinstance(data, dict)
+    data = radarr_client.post_command(RadarrCommands.RESCAN_MOVIE, movieId=1)
+    assert isinstance(data, dict)
+    data = radarr_client.post_command(RadarrCommands.RESCAN_MOVIE, movieId=1)
+    assert isinstance(data, dict)
+    data = radarr_client.post_command(RadarrCommands.MISSING_MOVIES_SEARCH)
+    assert isinstance(data, dict)
+    data = radarr_client.post_command(RadarrCommands.BACKUP)
     assert isinstance(data, dict)

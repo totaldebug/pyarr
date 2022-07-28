@@ -52,18 +52,19 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             dict[str, Any]: Dictionary containing movie information
         """
-        if tmdb:
+        if tmdb is not None:
             warn(
                 "Argument tmdb is no longer used and will be removed in a future release.",
                 DeprecationWarning,
                 stacklevel=2,
             )
         if isinstance(id_, int):
-            movie = self.lookup_movie(term=f"tmdb:{id_}")[0]
+            movies = self.lookup_movie(term=f"tmdb:{id_}")
         else:
-            movie = self.lookup_movie(term=f"imdb:{id_}")[0]
-
-        if not movie:
+            movies = self.lookup_movie(term=f"imdb:{id_}")
+        if movies:
+            movie = movies[0]
+        if not movies:
             raise PyarrRecordNotFound("Movie Doesn't Exist")
 
         return {
@@ -593,20 +594,34 @@ class RadarrAPI(BaseArrAPI):
 
     # POST /command
     # TODO: type for kwargs and response
-    def post_command(self, name: RadarrCommands, **kwargs) -> Any:
+    def post_command(
+        self, name: RadarrCommands, **kwargs: Optional[Union[int, list[int]]]
+    ) -> dict[str, Any]:
         """Performs any of the predetermined Radarr command routines.
 
         Args:
-            name (RadarrCommands): Name of the command to be run
-            **kwargs: additional parameters for specific commands
+            name (SonarrCommands): Command that should be executed
+            **kwargs: Additional parameters for specific commands. See note.
+
+        Note:
+            Required Kwargs:
+                DownloadedMoviesScan: clientid (int, Optional)
+                RenameFiles: files (list[int])
+                DownloadedMoviesScan: path (str, Optional)
+                MissingMoviesSearch
+                RefreshMovie: movieid (Optional)
+                RenameMovie: movieid (list[int])
+                RescanMovie: movieid (Optional)
+                MovieSearch: movieid (Optional)
 
         Returns:
-            JSON: Array
+            dict[str, Any]: Dictionary containing job
         """
-        data = {
+        data: dict[str, Any] = {
             "name": name,
-            **kwargs,
         }
+        if kwargs:
+            data |= kwargs
         return self._post("command", self.ver_uri, data=data)
 
     ## CUSTOM FILTERS
