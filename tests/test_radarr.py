@@ -43,6 +43,20 @@ def test__movie_json(responses, radarr_client):
 
 
 @pytest.mark.usefixtures
+def test_add_root_folder(responses, sonarr_client):
+    responses.add(
+        responses.POST,
+        "https://127.0.0.1:8989/api/v3/rootfolder",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/rootfolder.json"),
+        status=201,
+        match_querystring=True,
+    )
+    data = sonarr_client.add_root_folder(directory="/path/to/folder")
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
 def test_get_movie(responses, radarr_client):
     responses.add(
         responses.GET,

@@ -78,6 +78,22 @@ class RadarrAPI(BaseArrAPI):
             "addOptions": {"searchForMovie": search_for_movie},
         }
 
+    ## CONFIG
+    # POST /rootfolder
+    def add_root_folder(
+        self,
+        directory: str,
+    ) -> dict[str, Any]:
+        """Adds a new root folder
+
+        Args:
+            directory (str): The directory path
+
+        Returns:
+            dict[str, Any]: Dictionary containing path details
+        """
+        return self._post("rootfolder", self.ver_uri, data={"path": directory})
+
     ## MOVIE
 
     # GET /movie
