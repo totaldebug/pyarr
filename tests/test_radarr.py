@@ -1,5 +1,6 @@
 import contextlib
 from copyreg import add_extension
+from distutils.file_util import move_file
 
 import pytest
 
@@ -186,7 +187,49 @@ def test_add_movie(responses, radarr_client):
         assert False
 
 
-# TODO: upd_movie
+@pytest.mark.usefixtures
+def test_upd_movie(responses, radarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:7878/api/v3/movie/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("radarr/movie.json"),
+        status=202,
+        match_querystring=True,
+    )
+    movie = radarr_client.get_movie(1)
+    responses.add(
+        responses.PUT,
+        "https://127.0.0.1:7878/api/v3/movie",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("radarr/movie.json"),
+        status=202,
+        match_querystring=True,
+    )
+    data = radarr_client.upd_movie(data=movie)
+    assert isinstance(data, dict)
+
+    responses.add(
+        responses.PUT,
+        "https://127.0.0.1:7878/api/v3/movie?moveFiles=True",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("radarr/movie.json"),
+        status=202,
+        match_querystring=True,
+    )
+    data = radarr_client.upd_movie(data=movie, move_files=True)
+    assert isinstance(data, dict)
+
+    responses.add(
+        responses.PUT,
+        "https://127.0.0.1:7878/api/v3/movie",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("radarr/movie_all.json"),
+        status=202,
+        match_querystring=True,
+    )
+    data = radarr_client.upd_movie(data=load_fixture("radarr/movie_all.json"))
+    assert isinstance(data, list)
 
 
 @pytest.mark.usefixtures
@@ -215,7 +258,6 @@ def test_get_movie_by_movie_id(responses, radarr_client):
         assert False
 
 
-# TODO: del_movie
 @pytest.mark.usefixtures
 def test_del_movie(responses, radarr_client):
     responses.add(
@@ -361,7 +403,21 @@ def test_get_movie_file(responses, radarr_client):
     assert isinstance(data, list)
 
 
-# TODO: del_movie
+@pytest.mark.usefixtures
+def test_del_movies(responses, radarr_client):
+    responses.add(
+        responses.DELETE,
+        "https://127.0.0.1:7878/api/v3/movie/editor",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/delete.json"),
+        status=200,
+        match_querystring=True,
+    )
+    del_data = {"movieIds": [0], "deleteFIles": True, "addImportExclusion": True}
+    data = radarr_client.del_movies(data=del_data)
+    assert isinstance(data, dict)
+
+
 @pytest.mark.usefixtures
 def test_del_movie_file(responses, radarr_client):
     responses.add(

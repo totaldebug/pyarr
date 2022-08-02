@@ -188,7 +188,7 @@ class LidarrAPI(BaseArrAPI):
         Returns:
             dict[str, Any]: Dictionary of updated record
         """
-        return self._put("artist", self.ver_uri, data=data)
+        return self.assert_return_put("artist", self.ver_uri, dict, data=data)
 
     def delete_artist(
         self, id_: int
@@ -348,7 +348,7 @@ class LidarrAPI(BaseArrAPI):
         Returns:
             dict[str, Any]: Dictionary of updated record
         """
-        return self._put("album", self.ver_uri, data=data)
+        return self.assert_return_put("album", self.ver_uri, dict, data=data)
 
     def delete_album(self, id_: int) -> Union[Response, dict[str, Any], dict[Any, Any]]:
         """Delete an album with the provided ID
@@ -525,7 +525,7 @@ class LidarrAPI(BaseArrAPI):
         Returns:
             dict[str, Any]: Dictionary of updated record
         """
-        return self._put("trackfile", self.ver_uri, data=data)
+        return self.assert_return_put("trackfile", self.ver_uri, dict, data=data)
 
     # DEL /trackfile/{ids_}
     def delete_track_file(
@@ -579,7 +579,7 @@ class LidarrAPI(BaseArrAPI):
         Returns:
             dict[str, Any]: Dictionary of updated record
         """
-        return self._put("metadataprofile", self.ver_uri, data=data)
+        return self.assert_return_put("metadataprofile", self.ver_uri, dict, data=data)
 
     # GET /config/metadataProvider
     def get_metadata_provider(self) -> list[dict[str, Any]]:
@@ -603,7 +603,9 @@ class LidarrAPI(BaseArrAPI):
         Returns:
             dict[str, Any]: Dictionary of updated record
         """
-        return self._put("config/metadataProvider", self.ver_uri, data=data)
+        return self.assert_return_put(
+            "config/metadataProvider", self.ver_uri, dict, data=data
+        )
 
     # GET /queue
     def get_queue(
@@ -756,7 +758,7 @@ class LidarrAPI(BaseArrAPI):
         Returns:
             dict[str, Any]: Dictionary of updated record
         """
-        return self._put("manualimport", self.ver_uri, data=data)
+        return self.assert_return_put("manualimport", self.ver_uri, dict, data=data)
 
     # GET /retag
     def get_retag(

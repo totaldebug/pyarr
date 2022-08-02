@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Optional, Union
 
 import requests
 from requests import Response
@@ -128,9 +128,9 @@ class RequestHandler:
         self,
         path: str,
         ver_uri: str = "",
-        params: Union[dict, None] = None,
-        data: Union[dict, None] = None,
-    ) -> dict[str, Any]:
+        params: Optional[dict] = None,
+        data: Optional[Union[dict[str, Any], list[dict[str, Any]]]] = None,
+    ) -> Union[dict[str, Any], list[dict[str, Any]]]:
         """Wrapper on any put requests
 
         Args:
@@ -154,7 +154,9 @@ class RequestHandler:
             raise PyarrConnectionError(
                 "Timeout occurred while connecting to API."
             ) from exception
-        return self._return(res, dict)
+
+        response = _process_response(res)
+        return self._return(res, dict if isinstance(response, dict) else list)
 
     def _delete(
         self,

@@ -402,7 +402,7 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             dict[str, Any]: Dictionary with updated record
         """
-        return self._put(f"book/{id_}", self.ver_uri, data=data)
+        return self.assert_return_put(f"book/{id_}", self.ver_uri, dict, data=data)
 
     # DELETE /book/{id}
     def del_book(
@@ -502,7 +502,7 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             dict[str, Any]: Dictionary with updated record
         """
-        return self._put(f"author/{id_}", self.ver_uri, data=data)
+        return self.assert_return_put(f"author/{id_}", self.ver_uri, dict, data=data)
 
     # DELETE /author/{id}
     def del_author(
@@ -604,4 +604,6 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             dict[str, Any]: Dictionary of updated record
         """
-        return self._put("config/metadataProvider", self.ver_uri, data=data)
+        return self.assert_return_put(
+            "config/metadataProvider", self.ver_uri, dict, data=data
+        )

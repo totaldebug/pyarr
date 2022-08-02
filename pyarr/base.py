@@ -60,6 +60,32 @@ class BaseArrAPI(RequestHandler):
         assert isinstance(response, typearg)
         return response
 
+    def assert_return_put(
+        self,
+        path: str,
+        ver_uri: str,
+        typearg: type,
+        params: Optional[dict] = None,
+        data: Optional[Union[dict[str, Any], list[dict[str, Any]]]] = None,
+    ) -> Any:
+        """Helper function to add assert to enforce typing responses
+
+        Args:
+            path (str): Path on API
+            ver_uri (str): API Version
+            typearg (type): Python Type
+            params (Union[dict[str, Any], None], optional): Any required params. Defaults to None.
+
+        Returns:
+            Any: Any
+        """
+        if params is None:
+            response = self._put(path, ver_uri, data=data)
+        else:
+            response = self._put(path, ver_uri, params=params, data=data)
+        assert isinstance(response, typearg)
+        return response
+
     # CALENDAR
 
     # GET /calendar/
@@ -375,7 +401,10 @@ class BaseArrAPI(RequestHandler):
         Returns:
             dict[str, Any]: Dictionary of updated record
         """
-        return self._put(f"qualityprofile/{id_}", self.ver_uri, data=data)
+
+        return self.assert_return_put(
+            f"qualityprofile/{id_}", self.ver_uri, dict, data=data
+        )
 
     # DELETE /qualityprofile
     def del_quality_profile(
@@ -420,7 +449,9 @@ class BaseArrAPI(RequestHandler):
         Returns:
             dict[str, Any]: Dictionary of updated record
         """
-        return self._put(f"qualitydefinition/{id_}", self.ver_uri, data=data)
+        return self.assert_return_put(
+            f"qualitydefinition/{id_}", self.ver_uri, dict, data=data
+        )
 
     # INDEXER
 
@@ -453,7 +484,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             dict[str, Any]: Dictionary of updated record
         """
-        return self._put(f"indexer/{id_}", self.ver_uri, data=data)
+        return self.assert_return_put(f"indexer/{id_}", self.ver_uri, dict, data=data)
 
     # DELETE /indexer
     def del_indexer(self, id_: int) -> Union[Response, dict[str, Any], dict[Any, Any]]:
@@ -577,7 +608,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             dict[str, Any]: Dictionary with items
         """
-        return self._put("config/ui", self.ver_uri, data=data)
+        return self.assert_return_put("config/ui", self.ver_uri, dict, data=data)
 
     # GET /config/host
     def get_config_host(self) -> dict[str, Any]:
@@ -598,7 +629,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             dict[str, Any]: Dictionaries with items
         """
-        return self._put("config/host", self.ver_uri, data=data)
+        return self.assert_return_put("config/host", self.ver_uri, dict, data=data)
 
     # GET /config/naming
     def get_config_naming(self) -> dict[str, Any]:
@@ -619,7 +650,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             dict[str, Any]: Dictionary with items
         """
-        return self._put("config/naming", self.ver_uri, data=data)
+        return self.assert_return_put("config/naming", self.ver_uri, dict, data=data)
 
     # GET /config/mediamanagement
     def get_media_management(self) -> dict[str, Any]:
@@ -643,7 +674,9 @@ class BaseArrAPI(RequestHandler):
         Returns:
             dict[str, Any]: Dictionary with items
         """
-        return self._put("config/mediamanagement", self.ver_uri, data=data)
+        return self.assert_return_put(
+            "config/mediamanagement", self.ver_uri, dict, data=data
+        )
 
     # NOTIFICATIONS
 
@@ -714,7 +747,9 @@ class BaseArrAPI(RequestHandler):
         Returns:
             dict[str, Any]: Dictionary of updated record
         """
-        return self._put(f"notification/{id_}", self.ver_uri, data=data)
+        return self.assert_return_put(
+            f"notification/{id_}", self.ver_uri, dict, data=data
+        )
 
     # DELETE /notification/{id}
     def del_notification(
@@ -790,7 +825,7 @@ class BaseArrAPI(RequestHandler):
             dict[str, Any]: Dictionary of updated items
         """
         data = {"id": id_, "label": label}
-        return self._put("tag", self.ver_uri, data=data)
+        return self.assert_return_put("tag", self.ver_uri, dict, data=data)
 
     # DELETE /tag/{id}
     def del_tag(self, id_: int) -> Union[Response, dict[str, Any], dict[Any, Any]]:
@@ -872,7 +907,9 @@ class BaseArrAPI(RequestHandler):
         Returns:
             dict[str, Any]: dictionary of updated item
         """
-        return self._put(f"downloadclient/{id_}", self.ver_uri, data=data)
+        return self.assert_return_put(
+            f"downloadclient/{id_}", self.ver_uri, dict, data=data
+        )
 
     # DELETE /downloadclient/{id}
     def del_download_client(
@@ -953,7 +990,9 @@ class BaseArrAPI(RequestHandler):
         Returns:
             dict[str, Any]: Dictionary of updated data
         """
-        return self._put(f"importlist/{id_}", self.ver_uri, data=data)
+        return self.assert_return_put(
+            f"importlist/{id_}", self.ver_uri, dict, data=data
+        )
 
     # DELETE /importlist/{id}
     def del_import_list(
@@ -990,4 +1029,6 @@ class BaseArrAPI(RequestHandler):
         Returns:
             dict[str, Any]: dictionary with updated items
         """
-        return self._put("config/downloadclient", self.ver_uri, data=data)
+        return self.assert_return_put(
+            "config/downloadclient", self.ver_uri, dict, data=data
+        )

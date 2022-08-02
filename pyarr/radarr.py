@@ -165,13 +165,13 @@ class RadarrAPI(BaseArrAPI):
     # PUT /movie
     def upd_movie(
         self,
-        data: Optional[dict[Any, Any]],
+        data: Union[dict[Any, Any], list[dict[Any, Any]]],
         move_files: Optional[bool] = None,
-    ) -> dict[str, Any]:
+    ) -> Union[dict[str, Any], list[dict[str, Any]]]:
         """Updates a movie in the database.
 
         Args:
-            data (dict[str, Any]): Dictionary containing an object obtained from get_movie()
+            data (Union[dict[Any, Any], list[dict[Any, Any]]]): Dictionary containing an object obtained from get_movie()
             move_files (Optional[bool], optional): Have radarr move files when updating. Defaults to None.
 
         Returns:
@@ -181,9 +181,10 @@ class RadarrAPI(BaseArrAPI):
         if move_files is not None:
             params["moveFiles"] = move_files
 
-        return self._put(
+        return self.assert_return_put(
             f"movie{'/editor' if isinstance(data, list) else ''}",
             self.ver_uri,
+            dict if isinstance(data, dict) else list,
             data=data,
             params=params,
         )
@@ -310,7 +311,7 @@ class RadarrAPI(BaseArrAPI):
             DeprecationWarning,
             stacklevel=2,
         )
-        return self._put("movie/editor", self.ver_uri, data=data)
+        return self.assert_return_put("movie/editor", self.ver_uri, list, data=data)
 
     # DELETE /movie/editor
     def del_movies(
@@ -576,7 +577,7 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             dict[str, Any]: Dictionary with updated record
         """
-        return self._put(f"indexer/{id_}", self.ver_uri, data=data)
+        return self.assert_return_put(f"indexer/{id_}", self.ver_uri, dict, data=data)
 
     # DELETE /indexer/{id}
     def del_indexer(self, id_: int) -> Union[Response, dict[str, Any], dict[Any, Any]]:

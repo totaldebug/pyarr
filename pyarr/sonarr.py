@@ -222,7 +222,7 @@ class SonarrAPI(BaseArrAPI):
         Returns:
             dict[str, Any]: Dictionary with updated record
         """
-        return self._put(f"episode/{id_}", self.ver_uri, data=data)
+        return self.assert_return_put(f"episode/{id_}", self.ver_uri, dict, data=data)
 
     ## EPISODE FILE
 
@@ -301,7 +301,9 @@ class SonarrAPI(BaseArrAPI):
         Returns:
             dict[str, Any]: Dictionary with updated record
         """
-        return self._put(f"episodefile/{id_}", self.ver_uri, data=data)
+        return self.assert_return_put(
+            f"episodefile/{id_}", self.ver_uri, dict, data=data
+        )
 
     # GET /wanted/missing
     def get_wanted(
@@ -583,7 +585,7 @@ class SonarrAPI(BaseArrAPI):
         Returns:
             dict[str, Any]: Dictionary or updated record
         """
-        return self._put("series", self.ver_uri, data=data)
+        return self.assert_return_put("series", self.ver_uri, dict, data=data)
 
     # DELETE /series/{id}
     def del_series(
