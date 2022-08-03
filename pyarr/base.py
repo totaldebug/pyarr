@@ -86,6 +86,32 @@ class BaseArrAPI(RequestHandler):
         assert isinstance(response, typearg)
         return response
 
+    def assert_return_post(
+        self,
+        path: str,
+        ver_uri: str,
+        typearg: type,
+        params: Optional[dict] = None,
+        data: Optional[Union[dict[str, Any], list[dict[str, Any]]]] = None,
+    ) -> Any:
+        """Helper function to add assert to enforce typing responses
+
+        Args:
+            path (str): Path on API
+            ver_uri (str): API Version
+            typearg (type): Python Type
+            params (Union[dict[str, Any], None], optional): Any required params. Defaults to None.
+
+        Returns:
+            Any: Any
+        """
+        if params is None:
+            response = self._post(path, ver_uri, data=data)
+        else:
+            response = self._post(path, ver_uri, params=params, data=data)
+        assert isinstance(response, typearg)
+        return response
+
     # CALENDAR
 
     # GET /calendar/
@@ -734,7 +760,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             dict[str, Any]: dictionary of added item
         """
-        return self._post("notification", self.ver_uri, data=data)
+        return self.assert_return_post("notification", self.ver_uri, dict, data=data)
 
     # PUT /notification/{id}
     def upd_notification(self, id_: int, data: dict[str, Any]) -> dict[str, Any]:
@@ -808,7 +834,7 @@ class BaseArrAPI(RequestHandler):
             dict[str, Any]: Dictionary of new record
         """
         data = {"label": label}
-        return self._post("tag", self.ver_uri, data=data)
+        return self.assert_return_post("tag", self.ver_uri, dict, data=data)
 
     # PUT /tag/{id}
     def upd_tag(self, id_: int, label: str) -> dict[str, Any]:
@@ -894,7 +920,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             dict[str, Any]: dictionary of added item
         """
-        return self._post("downloadclient", self.ver_uri, data=data)
+        return self.assert_return_post("downloadclient", self.ver_uri, dict, data=data)
 
     # PUT /downloadclient/{id}
     def upd_download_client(self, id_: int, data: dict[str, Any]) -> dict[str, Any]:
@@ -977,7 +1003,7 @@ class BaseArrAPI(RequestHandler):
         Returns:
             dict[str, Any]: dictionary of added item
         """
-        return self._post("importlist", self.ver_uri, data=data)
+        return self.assert_return_post("importlist", self.ver_uri, dict, data=data)
 
     # PUT /importlist/{id}
     def upd_import_list(self, id_: int, data: dict[str, Any]) -> dict[str, Any]:

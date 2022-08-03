@@ -175,7 +175,7 @@ class ReadarrAPI(BaseArrAPI):
             "name": name,
             **kwargs,
         }
-        return self._post("command", self.ver_uri, data=data)
+        return self.assert_return_post("command", self.ver_uri, dict, data=data)
 
     ## WANTED (MISSING)
 
@@ -386,7 +386,7 @@ class ReadarrAPI(BaseArrAPI):
             author_monitor,
             author_search_for_missing_books,
         )
-        return self._post("book", self.ver_uri, data=book_json)
+        return self.assert_return_post("book", self.ver_uri, dict, data=book_json)
 
     # PUT /book/{id}
     def upd_book(self, id_: int, data: dict[str, Any]) -> dict[str, Any]:
@@ -486,7 +486,7 @@ class ReadarrAPI(BaseArrAPI):
             author_monitor,
             author_search_for_missing_books,
         )
-        return self._post("author", self.ver_uri, data=author_json)
+        return self.assert_return_post("author", self.ver_uri, dict, data=author_json)
 
     # PUT /author/{id}
     def upd_author(self, id_: int, data: dict[str, Any]) -> dict[str, Any]:
@@ -580,7 +580,9 @@ class ReadarrAPI(BaseArrAPI):
             "name": name,
             "path": directory,
         }
-        return self._post("rootFolder", self.ver_uri, data=folder_json)
+        return self.assert_return_post(
+            "rootFolder", self.ver_uri, dict, data=folder_json
+        )
 
     # GET /config/metadataProvider
     def get_metadata_provider(self) -> dict[str, Any]:

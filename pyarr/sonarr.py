@@ -86,7 +86,9 @@ class SonarrAPI(BaseArrAPI):
         Returns:
             dict[str, Any]: Dictionary containing path details
         """
-        return self._post("rootfolder", self.ver_uri, data={"path": directory})
+        return self.assert_return_post(
+            "rootfolder", self.ver_uri, dict, data={"path": directory}
+        )
 
     ## COMMAND
 
@@ -139,7 +141,7 @@ class SonarrAPI(BaseArrAPI):
         }
         if kwargs:
             data |= kwargs
-        return self._post("command", self.ver_uri, data=data)
+        return self.assert_return_post("command", self.ver_uri, dict, data=data)
 
     ## EPISODE
 
@@ -487,7 +489,7 @@ class SonarrAPI(BaseArrAPI):
             dict[str, Any]: Dictionary with download release details
         """
         data = {"guid": guid, "indexerId": indexer_id}
-        return self._post("release", self.ver_uri, data=data)
+        return self.assert_return_post("release", self.ver_uri, dict, data=data)
 
     # POST /release/push
     # TODO: find response
@@ -511,7 +513,7 @@ class SonarrAPI(BaseArrAPI):
             "protocol": protocol,
             "publishDate": publish_date.isoformat(),
         }
-        return self._post("release/push", self.ver_uri, data=data)
+        return self.assert_return_post("release/push", self.ver_uri, dict, data=data)
 
     ## SERIES
     # GET /series and /series/{id}
@@ -573,7 +575,7 @@ class SonarrAPI(BaseArrAPI):
             search_for_missing_episodes,
         )
 
-        return self._post("series", self.ver_uri, data=series_json)
+        return self.assert_return_post("series", self.ver_uri, dict, data=series_json)
 
     # PUT /series
     def upd_series(self, data: dict[str, Any]) -> dict[str, Any]:

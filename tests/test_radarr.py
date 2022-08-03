@@ -1,6 +1,7 @@
 import contextlib
 from copyreg import add_extension
 from distutils.file_util import move_file
+import json
 
 import pytest
 
@@ -222,13 +223,29 @@ def test_upd_movie(responses, radarr_client):
 
     responses.add(
         responses.PUT,
-        "https://127.0.0.1:7878/api/v3/movie",
+        "https://127.0.0.1:7878/api/v3/movie/editor",
         headers={"Content-Type": "application/json"},
         body=load_fixture("radarr/movie_all.json"),
         status=202,
         match_querystring=True,
     )
-    data = radarr_client.upd_movie(data=load_fixture("radarr/movie_all.json"))
+
+    data = radarr_client.upd_movie(
+        data=json.loads(load_fixture("radarr/movie_all.json"))
+    )
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.PUT,
+        "https://127.0.0.1:7878/api/v3/movie/editor?moveFiles=True",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("radarr/movie_all.json"),
+        status=202,
+        match_querystring=True,
+    )
+    data = radarr_client.upd_movie(
+        data=json.loads(load_fixture("radarr/movie_all.json")), move_files=True
+    )
     assert isinstance(data, list)
 
 
@@ -377,7 +394,40 @@ def test_lookup_movie_by_imdb_id(responses, radarr_client):
     assert isinstance(data, list)
 
 
-# TODO: upd_movies
+@pytest.mark.usefixtures
+def test_upd_movies(responses, radarr_client):
+
+    responses.add(
+        responses.PUT,
+        "https://127.0.0.1:7878/api/v3/movie/editor",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("radarr/movie_all.json"),
+        status=202,
+        match_querystring=True,
+    )
+    data = radarr_client.upd_movies(
+        data=json.loads(load_fixture("radarr/movie_all.json"))
+    )
+    assert isinstance(data, list)
+
+
+@pytest.mark.usefixtures
+def test_import_movies(responses, radarr_client):
+
+    responses.add(
+        responses.POST,
+        "https://127.0.0.1:7878/api/v3/movie/import",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("radarr/movie_import.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = radarr_client.import_movies(
+        data=json.loads(load_fixture("radarr/movie_import.json"))
+    )
+    assert isinstance(data, list)
+
+
 @pytest.mark.usefixtures
 def test_get_movie_file(responses, radarr_client):
     responses.add(

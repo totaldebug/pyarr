@@ -98,7 +98,7 @@ class RequestHandler:
         ver_uri: str = "",
         params: Union[dict, None] = None,
         data: Union[list[dict], dict, None] = None,
-    ) -> dict[str, Any]:
+    ) -> Union[list[dict[str, Any]], dict[str, Any]]:
         """Wrapper on any post requests
 
         Args:
@@ -122,7 +122,8 @@ class RequestHandler:
             raise PyarrConnectionError(
                 "Timeout occurred while connecting to API."
             ) from exception
-        return self._return(res, dict)
+        response = _process_response(res)
+        return self._return(res, dict if isinstance(response, dict) else list)
 
     def _put(
         self,

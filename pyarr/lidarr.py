@@ -56,7 +56,9 @@ class LidarrAPI(BaseArrAPI):
             "path": path,
         }
 
-        return self._post("rootfolder", self.ver_uri, data=folder_json)
+        return self.assert_return_post(
+            "rootfolder", self.ver_uri, dict, data=folder_json
+        )
 
     def lookup(self, term: str) -> list[dict[str, Any]]:
         """Search for an artist / album / song
@@ -177,7 +179,7 @@ class LidarrAPI(BaseArrAPI):
             artist_monitor,
             artist_search_for_missing_albums,
         )
-        return self._post("artist", self.ver_uri, data=artist_json)
+        return self.assert_return_post("artist", self.ver_uri, dict, data=artist_json)
 
     def upd_artist(self, data: dict[str, Any]) -> dict[str, Any]:
         """Update an existing artist
@@ -334,7 +336,7 @@ class LidarrAPI(BaseArrAPI):
             artist_monitor,
             artist_search_for_missing_albums,
         )
-        return self._post("album", self.ver_uri, data=album_json)
+        return self.assert_return_post("album", self.ver_uri, dict, data=album_json)
 
     def upd_album(self, data: dict[str, Any]) -> dict[str, Any]:
         """Update an album

@@ -93,7 +93,9 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             dict[str, Any]: Dictionary containing path details
         """
-        return self._post("rootfolder", self.ver_uri, data={"path": directory})
+        return self.assert_return_post(
+            "rootfolder", self.ver_uri, dict, data={"path": directory}
+        )
 
     ## MOVIE
 
@@ -160,7 +162,7 @@ class RadarrAPI(BaseArrAPI):
             id_, quality_profile_id, root_dir, monitored, search_for_movie
         )
 
-        return self._post("movie", self.ver_uri, data=movie_json)
+        return self.assert_return_post("movie", self.ver_uri, dict, data=movie_json)
 
     # PUT /movie
     def upd_movie(
@@ -180,11 +182,11 @@ class RadarrAPI(BaseArrAPI):
         params = {}
         if move_files is not None:
             params["moveFiles"] = move_files
-
+        print(type(data))
         return self.assert_return_put(
             f"movie{'/editor' if isinstance(data, list) else ''}",
             self.ver_uri,
-            dict if isinstance(data, dict) else list,
+            list if isinstance(data, list) else dict,
             data=data,
             params=params,
         )
@@ -296,7 +298,7 @@ class RadarrAPI(BaseArrAPI):
         return self.assert_return("movie/lookup", self.ver_uri, list, params)
 
     # PUT /movie/editor
-    def upd_movies(self, data: dict[str, Any]) -> dict[str, Any]:
+    def upd_movies(self, data: dict[str, Any]) -> list[dict[str, Any]]:
         """The Updates operation allows to edit properties of multiple movies at once
 
         Args:
@@ -350,9 +352,7 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
-        response = self._post("movie/import", self.ver_uri, data=data)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return_post("movie/import", self.ver_uri, list, data=data)
 
     ## MOVIEFILE
 
@@ -549,7 +549,7 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             dict[str, Any]: Dictionary with record
         """
-        return self._post(f"queue/grab/{id_}", self.ver_uri)
+        return self.assert_return_post(f"queue/grab/{id_}", self.ver_uri, dict)
 
     ## INDEXER
 
@@ -623,7 +623,7 @@ class RadarrAPI(BaseArrAPI):
         }
         if kwargs:
             data |= kwargs
-        return self._post("command", self.ver_uri, data=data)
+        return self.assert_return_post("command", self.ver_uri, dict, data=data)
 
     ## CUSTOM FILTERS
 
