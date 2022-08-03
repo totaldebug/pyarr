@@ -429,6 +429,20 @@ def test_import_movies(responses, radarr_client):
 
 
 @pytest.mark.usefixtures
+def test_get_movie_files_by_movie_id(responses, radarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:7878/api/v3/moviefile?movieId=1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("radarr/moviefiles.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = radarr_client.get_movie_files_by_movie_id(id_=1)
+    assert isinstance(data, list)
+
+
+@pytest.mark.usefixtures
 def test_get_movie_file(responses, radarr_client):
     responses.add(
         responses.GET,
@@ -605,7 +619,7 @@ def test_get_queue_details(responses, radarr_client):
 
 
 @pytest.mark.usefixtures
-def test_get_queue_details(responses, radarr_client):
+def test_get_queue_status(responses, radarr_client):
     responses.add(
         responses.GET,
         "https://127.0.0.1:7878/api/v3/queue/status",

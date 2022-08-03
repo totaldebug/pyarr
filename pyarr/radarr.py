@@ -368,7 +368,7 @@ class RadarrAPI(BaseArrAPI):
             list[dict[str, Any]]: List of dictionaries with items
         """
 
-        params = {"movieid": id_}
+        params = {"movieId": id_}
         return self.assert_return("moviefile", self.ver_uri, list, params)
 
     # GET /moviefile
