@@ -429,14 +429,14 @@ class RadarrAPI(BaseArrAPI):
             params["eventType"] = event_type
         return self.assert_return("history/movie", self.ver_uri, list, params)
 
-    ## BLACKLIST
+    ## BLOCKLIST
 
-    # GET /blacklist/movie
+    # GET /blocklist/movie
     def get_blocklist_by_movie_id(
         self,
         id_: int,
     ) -> list[dict[str, Any]]:
-        """Retrieves blacklisted releases that are tied to a given movie in the database.
+        """Retrieves blocklisted releases that are tied to a given movie in the database.
 
         Args:
             id_ (int): Movie id from Database

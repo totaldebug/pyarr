@@ -528,19 +528,18 @@ class BaseArrAPI(RequestHandler):
     # QUEUE
 
     # DELETE /queue/{id}
-    # TODO: check if blacklist has changed to blocklist
     def del_queue(
         self,
         id_: int,
         remove_from_client: Optional[bool] = None,
-        blacklist: Optional[bool] = None,
+        blocklist: Optional[bool] = None,
     ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
-        """Remove an item from the queue and blacklist it
+        """Remove an item from the queue and blocklist it
 
         Args:
             id_ (int): ID of the item to be removed
             remove_from_client (Optional[bool], optional): Remove the item from the client. Defaults to None.
-            blacklist (Optional[bool], optional): Add the item to the blacklist. Defaults to None.
+            blocklist (Optional[bool], optional): Add the item to the blocklist. Defaults to None.
 
         Returns:
             Response: HTTP Response
@@ -548,8 +547,8 @@ class BaseArrAPI(RequestHandler):
         params = {}
         if remove_from_client:
             params["removeFromClient"] = remove_from_client
-        if blacklist:
-            params["blacklist"] = blacklist
+        if blocklist:
+            params["blocklist"] = blocklist
 
         return self._delete(f"queue/{id_}", self.ver_uri, params=params)
 

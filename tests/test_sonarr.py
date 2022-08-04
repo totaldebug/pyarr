@@ -1279,13 +1279,13 @@ def test_del_queue(responses, sonarr_client):
     assert isinstance(data, dict)
     responses.add(
         responses.DELETE,
-        "https://127.0.0.1:8989/api/v3/queue/1?removeFromClient=True&blacklist=True",
+        "https://127.0.0.1:8989/api/v3/queue/1?removeFromClient=True&blocklist=True",
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/delete.json"),
         status=200,
         match_querystring=True,
     )
-    data = sonarr_client.del_queue(id_=1, remove_from_client=True, blacklist=True)
+    data = sonarr_client.del_queue(id_=1, remove_from_client=True, blocklist=True)
     assert isinstance(data, dict)
 
 
