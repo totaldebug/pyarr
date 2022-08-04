@@ -409,19 +409,19 @@ class BaseArrAPI(RequestHandler):
 
     # DELETE /queue/{id}
     def del_queue(
-        self, id_: int, remove_from_client: bool = True, blacklist: bool = True
+        self, id_: int, remove_from_client: bool = True, bocklist: bool = True
     ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
-        """Remove an item from the queue and blacklist it
+        """Remove an item from the queue and blocklist it
 
         Args:
             id_ (int): ID of the item to be removed
             remove_from_client (bool, optional): Remove the item from the client. Defaults to True.
-            blacklist (bool, optional): Add the item to the blacklist. Defaults to True.
+            blocklist (bool, optional): Add the item to the blocklist. Defaults to True.
 
         Returns:
             Response: HTTP Response
         """
-        params = {"removeFromClient": remove_from_client, "blacklist": blacklist}
+        params = {"removeFromClient": remove_from_client, "blocklist": blocklist}
         return self._delete(f"queue/{id_}", self.ver_uri, params=params)
 
     # GET /system/task/{id}
