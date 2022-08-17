@@ -262,8 +262,6 @@ def test_upd_episode(responses, sonarr_client):
     assert isinstance(data, dict)
     assert data["monitored"] == True
 
-    # TODO: Add test if incorrect data provided
-
 
 @pytest.mark.usefixtures
 def test_get_episode_files_by_series_id(responses, sonarr_client):

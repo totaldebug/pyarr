@@ -647,9 +647,6 @@ def test_del_queue_bulk(responses, radarr_client):
     assert isinstance(data, dict)
 
 
-# TODO: force_grab_queue_item
-
-
 @pytest.mark.usefixtures
 def test_get_indexer(responses, radarr_client):
     responses.add(
@@ -675,7 +672,28 @@ def test_get_indexer(responses, radarr_client):
     assert isinstance(data, dict)
 
 
-# TODO: upd_indexer
+@pytest.mark.usefixtures
+def test_upd_indexer(responses, radarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:7878/api/v3/indexer/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("radarr/indexer.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = radarr_client.get_indexer(1)
+
+    responses.add(
+        responses.PUT,
+        "https://127.0.0.1:7878/api/v3/indexer/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("radarr/indexer.json"),
+        status=202,
+        match_querystring=True,
+    )
+    data = radarr_client.upd_indexer(1, data)
+    assert isinstance(data, dict)
 
 
 @pytest.mark.usefixtures
@@ -736,4 +754,34 @@ def test_post_command(responses, radarr_client):
     data = radarr_client.post_command(RadarrCommands.MISSING_MOVIES_SEARCH)
     assert isinstance(data, dict)
     data = radarr_client.post_command(RadarrCommands.BACKUP)
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_get_custom_filter(responses, radarr_client):
+    # TODO: get filled out fixture
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:7878/api/v3/customfilter",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/blank_list.json"),
+        status=201,
+        match_querystring=True,
+    )
+    data = radarr_client.get_custom_filter()
+    assert isinstance(data, list)
+
+
+@pytest.mark.usefixtures
+def test_force_grab_queue_item(responses, radarr_client):
+    # TODO: get filled out fixture
+    responses.add(
+        responses.POST,
+        "https://127.0.0.1:7878/api/v3/queue/grab/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/blank_dict.json"),
+        status=201,
+        match_querystring=True,
+    )
+    data = radarr_client.force_grab_queue_item(id_=1)
     assert isinstance(data, dict)
