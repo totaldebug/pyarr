@@ -1,0 +1,13 @@
+{
+    "name": "teest",
+    "path": "/music/",
+    "defaultMetadataProfileId": 4,
+    "defaultQualityProfileId": 1,
+    "defaultMonitorOption": "all",
+    "defaultNewItemMonitorOption": "all",
+    "defaultTags": [],
+    "accessible": true,
+    "freeSpace": 25394282496,
+    "totalSpace": 30006984704,
+    "id": 4
+}

@@ -30,8 +30,8 @@ class RadarrAPI(BaseArrAPI):
     def _movie_json(
         self,
         id_: Union[str, int],
-        quality_profile_id: int,
         root_dir: str,
+        quality_profile_id: int,
         monitored: bool = True,
         search_for_movie: bool = True,
         tmdb: Optional[bool] = None,
@@ -40,8 +40,8 @@ class RadarrAPI(BaseArrAPI):
 
         Args:
             id_ (Union[str, int]): imdb or tmdb id
-            quality_profile_id (int): ID of the quality profile the movie will use
             root_dir (str): location of the root DIR
+            quality_profile_id (int): ID of the quality profile the movie will use
             monitored (bool, optional): should the movie be monitored. Defaults to True.
             search_for_movie (bool, optional): Should we search for the movie. Defaults to True.
             tmdb (bool, optional): Not used, deprecated. Defaults to True.
@@ -132,8 +132,8 @@ class RadarrAPI(BaseArrAPI):
     def add_movie(
         self,
         id_: Union[str, int],
-        quality_profile_id: int,
         root_dir: str,
+        quality_profile_id: int,
         monitored: bool = True,
         search_for_movie: bool = True,
         tmdb: Optional[bool] = None,
@@ -142,8 +142,8 @@ class RadarrAPI(BaseArrAPI):
 
         Args:
             id_ (Union[str, int]): IMDB or TMDB ID
-            quality_profile_id (int): ID of the quality profile the movie will use
             root_dir (str): Location of the root DIR
+            quality_profile_id (int): ID of the quality profile the movie will use
             monitored (bool, optional): Should the movie be monitored. Defaults to True.
             search_for_movie (bool, optional): Should we search for the movie. Defaults to True.
             tmdb (Optional[bool], optional): Not in use, Deprecated. Defaults to None.
@@ -159,7 +159,7 @@ class RadarrAPI(BaseArrAPI):
                 stacklevel=2,
             )
         movie_json = self._movie_json(
-            id_, quality_profile_id, root_dir, monitored, search_for_movie
+            id_, root_dir, quality_profile_id, monitored, search_for_movie
         )
 
         return self.assert_return_post("movie", self.ver_uri, dict, data=movie_json)

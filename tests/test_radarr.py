@@ -1,6 +1,4 @@
 import contextlib
-from copyreg import add_extension
-from distutils.file_util import move_file
 import json
 
 import pytest
@@ -30,8 +28,8 @@ def test__movie_json(responses, radarr_client):
 
     data = radarr_client._movie_json(
         id_=123456,
-        quality_profile_id=1,
         root_dir="/",
+        quality_profile_id=1,
         monitored=False,
         search_for_movie=False,
     )
@@ -39,7 +37,7 @@ def test__movie_json(responses, radarr_client):
 
     with contextlib.suppress(DeprecationWarning):
         data = radarr_client._movie_json(
-            id_=123456, quality_profile_id=1, root_dir="/", tmdb=True
+            id_=123456, root_dir="/", quality_profile_id=1, tmdb=True
         )
 
     responses.add(
@@ -53,8 +51,8 @@ def test__movie_json(responses, radarr_client):
 
     data = radarr_client._movie_json(
         id_="tt123456",
-        quality_profile_id=1,
         root_dir="/",
+        quality_profile_id=1,
         monitored=False,
         search_for_movie=False,
     )
@@ -72,8 +70,8 @@ def test__movie_json(responses, radarr_client):
     with contextlib.suppress(PyarrRecordNotFound):
         data = radarr_client._movie_json(
             id_="tt123d",
-            quality_profile_id=1,
             root_dir="/",
+            quality_profile_id=1,
             monitored=False,
             search_for_movie=False,
         )
@@ -158,15 +156,15 @@ def test_add_movie(responses, radarr_client):
     )
     data = radarr_client.add_movie(
         id_="tt123456",
-        quality_profile_id=1,
         root_dir="/",
+        quality_profile_id=1,
         monitored=False,
         search_for_movie=False,
     )
     assert isinstance(data, dict)
     with contextlib.suppress(DeprecationWarning):
         data = radarr_client.add_movie(
-            id_=123456, quality_profile_id=1, root_dir="/", tmdb=True
+            id_=123456, root_dir="/", quality_profile_id=1, tmdb=True
         )
 
     responses.add(
@@ -180,8 +178,8 @@ def test_add_movie(responses, radarr_client):
     with contextlib.suppress(PyarrRecordNotFound):
         data = radarr_client.add_movie(
             id_="tt123d",
-            quality_profile_id=1,
             root_dir="/",
+            quality_profile_id=1,
             monitored=False,
             search_for_movie=False,
         )

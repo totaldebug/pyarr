@@ -32,9 +32,9 @@ class LidarrAPI(BaseArrAPI):
         self,
         name: str,
         path: str,
-        defaultTags: list[int],
         qualityProfile: int,
         metadataProfile: int,
+        defaultTags: list[int] = None,
     ) -> dict[str, Any]:
         """Adds a root folder
 
@@ -48,6 +48,8 @@ class LidarrAPI(BaseArrAPI):
         Returns:
             dict[str, Any]: Dictonary with added record
         """
+        if defaultTags is None:
+            defaultTags = []
         folder_json = {
             "defaultTags": defaultTags,
             "defaultQualityProfileId": qualityProfile,
@@ -64,18 +66,54 @@ class LidarrAPI(BaseArrAPI):
         """Search for an artist / album / song
 
         Args:
-            term (str): Search term
+            term (str): Search term, can also use MusicBrainz IDs::
+
+                lidarr.lookup(term="lidarr:cc197bad-dc9c-440d-a5b5-d52ba2e14234")
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
         return self.assert_return("search", self.ver_uri, list, params={"term": term})
 
-    def get_artist(self, id_: Union[str, int, None] = None) -> list[dict[str, Any]]:
+    def lookup_artist(self, term: str) -> list[dict[str, Any]]:
+        """Search for an Artist to add to the database
+
+        Args:
+            term (str): Search term, can also use MusicBrainz IDs::
+
+                lidarr.lookup(term="lidarr:cc197bad-dc9c-440d-a5b5-d52ba2e14234")
+
+        Returns:
+            list[dict[str, Any]]: List of dictionaries with items
+        """
+
+        return self.assert_return(
+            "artist/lookup", self.ver_uri, list, params={"term": term}
+        )
+
+    def lookup_album(self, term: str) -> list[dict[str, Any]]:
+        """Search for an Album to add to the database
+
+        Args:
+            term (str): Search term, can also use MusicBrainz IDs::
+
+                lidarr.lookup(term="lidarr:1dc4c347-a1db-32aa-b14f-bc9cc507b843")
+
+        Returns:
+            list[dict[str, Any]]: List of dictionaries with items
+        """
+        return self.assert_return(
+            "album/lookup", self.ver_uri, list, params={"term": term}
+        )
+
+    def get_artist(self, id_: Optional[Union[str, int]] = None) -> list[dict[str, Any]]:
         """Get an artist by ID or get all artists
 
         Args:
-            id_ (Union[str, int, None], optional): Artist ID. Defaults to None.
+            id_ (Optional[Union[str, int]], optional): Artist ID. Defaults to None.
+
+        Note:
+            Include a string to search by MusicBrainz id.
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
@@ -85,13 +123,13 @@ class LidarrAPI(BaseArrAPI):
         return self.assert_return(
             f"artist{_path}",
             self.ver_uri,
-            list,
+            dict if id_ else list,
             params={"mbId": id_} if isinstance(id_, str) else None,
         )
 
     def _artist_json(
         self,
-        term: str,
+        id_: str,
         root_dir: str,
         quality_profile_id: Optional[int] = None,
         metadata_profile_id: Optional[int] = None,
@@ -102,7 +140,7 @@ class LidarrAPI(BaseArrAPI):
         """Method to help build the JSON for adding an artist
 
         Args:
-            term (str): Search term for artist
+            id_ (str): Lidarr or MusicBrainz ID
             root_dir (str): Root directory for music
             quality_profile_id (Optional[int], optional): Quality profile Id. Defaults to None.
             metadata_profile_id (Optional[int], optional): Metadata profile ID. Defaults to None.
@@ -131,7 +169,7 @@ class LidarrAPI(BaseArrAPI):
                     "There is no Metadata Profile setup"
                 ) from exception
 
-        artist = self.lookup_artist(term)[0]
+        artist = self.lookup_artist(term=f"lidarr:{id_}")[0]
         artist["id"] = 0
         artist["metadataProfileId"] = metadata_profile_id
         artist["qualityProfileId"] = quality_profile_id
@@ -146,7 +184,7 @@ class LidarrAPI(BaseArrAPI):
 
     def add_artist(
         self,
-        search_term: str,
+        id_: str,
         root_dir: str,
         quality_profile_id: Optional[int] = None,
         metadata_profile_id: Optional[int] = None,
@@ -158,7 +196,7 @@ class LidarrAPI(BaseArrAPI):
         by lidarr guid
 
         Args:
-            search_term (str): Artist name or album/single
+            id_ (str): Artist Lidarr or MusicBrainz ID
             root_dir (str): Directory for music to be stored
             quality_profile_id (Optional[int], optional): Quality profile ID. Defaults to None.
             metadata_profile_id (Optional[int], optional): Metadata profile ID. Defaults to None.
@@ -171,7 +209,7 @@ class LidarrAPI(BaseArrAPI):
         """
 
         artist_json = self._artist_json(
-            search_term,
+            id_,
             root_dir,
             quality_profile_id,
             metadata_profile_id,
@@ -184,8 +222,10 @@ class LidarrAPI(BaseArrAPI):
     def upd_artist(self, data: dict[str, Any]) -> dict[str, Any]:
         """Update an existing artist
 
+        note:
+
         Args:
-            data (dict[str, Any]): Data for the artist record
+            data (dict[str, Any]): Dictionary containing an object obtained from get_artist()
 
         Returns:
             dict[str, Any]: Dictionary of updated record
@@ -201,23 +241,9 @@ class LidarrAPI(BaseArrAPI):
             id_ (int): Artist ID to be deleted
 
         Returns:
-            Response: 200 / 401
+            Response: HTTP Response
         """
         return self._delete(f"artist/{id_}", self.ver_uri)
-
-    def lookup_artist(self, term: str) -> list[dict[str, Any]]:
-        """Search for an Artist to add to the database
-
-        Args:
-            term (str): Search term to use for lookup
-
-        Returns:
-            list[dict[str, Any]]: List of dictionaries with items
-        """
-
-        return self.assert_return(
-            "artist/lookup", self.ver_uri, list, params={"term": term}
-        )
 
     def get_album(
         self,
@@ -362,19 +388,6 @@ class LidarrAPI(BaseArrAPI):
             Response: 200 / 401
         """
         return self._delete(f"album/{id_}", self.ver_uri)
-
-    def lookup_album(self, term: str) -> list[dict[str, Any]]:
-        """Search for an Album to add to the database
-
-        Args:
-            term (str): Search term to use for lookup
-
-        Returns:
-            list[dict[str, Any]]: List of dictionaries with items
-        """
-        return self.assert_return(
-            "album/lookup", self.ver_uri, list, params={"term": term}
-        )
 
     # POST /command
     def post_command(self) -> Any:

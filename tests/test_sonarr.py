@@ -1375,7 +1375,28 @@ def test_get_config_ui(responses, sonarr_client):
     assert isinstance(data, dict)
 
 
-# TODO: update config ui
+@pytest.mark.usefixtures
+def test_upd_config_ui(responses, sonarr_client):
+    responses.add(
+        responses.PUT,
+        "https://127.0.0.1:8989/api/v3/config/ui",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/config_ui.json"),
+        status=200,
+        match_querystring=True,
+    )
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/config/ui",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/config_ui.json"),
+        status=200,
+        match_querystring=True,
+    )
+    payload = sonarr_client.get_config_ui()
+    data = sonarr_client.upd_config_ui(payload)
+
+    assert isinstance(data, dict)
 
 
 @pytest.mark.usefixtures
@@ -1392,7 +1413,28 @@ def test_get_config_host(responses, sonarr_client):
     assert isinstance(data, dict)
 
 
-# TODO: update config host
+@pytest.mark.usefixtures
+def test_upd_config_host(responses, sonarr_client):
+    responses.add(
+        responses.PUT,
+        "https://127.0.0.1:8989/api/v3/config/host",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/config_host.json"),
+        status=200,
+        match_querystring=True,
+    )
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/config/host",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/config_host.json"),
+        status=200,
+        match_querystring=True,
+    )
+    payload = sonarr_client.get_config_host()
+    data = sonarr_client.upd_config_host(payload)
+
+    assert isinstance(data, dict)
 
 
 @pytest.mark.usefixtures
@@ -1409,7 +1451,28 @@ def test_get_config_naming(responses, sonarr_client):
     assert isinstance(data, dict)
 
 
-# TODO: update config naming
+@pytest.mark.usefixtures
+def test_upd_config_naming(responses, sonarr_client):
+    responses.add(
+        responses.PUT,
+        "https://127.0.0.1:8989/api/v3/config/naming",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/config_naming.json"),
+        status=200,
+        match_querystring=True,
+    )
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/config/naming",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/config_naming.json"),
+        status=200,
+        match_querystring=True,
+    )
+    payload = sonarr_client.get_config_naming()
+    data = sonarr_client.upd_config_naming(payload)
+
+    assert isinstance(data, dict)
 
 
 @pytest.mark.usefixtures
@@ -1426,7 +1489,28 @@ def test_get_media_management(responses, sonarr_client):
     assert isinstance(data, dict)
 
 
-# TODO: update media management
+@pytest.mark.usefixtures
+def test_upd_media_management(responses, sonarr_client):
+    responses.add(
+        responses.PUT,
+        "https://127.0.0.1:8989/api/v3/config/mediamanagement",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/media_management.json"),
+        status=200,
+        match_querystring=True,
+    )
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/config/mediamanagement",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/media_management.json"),
+        status=200,
+        match_querystring=True,
+    )
+    payload = sonarr_client.get_media_management()
+    data = sonarr_client.upd_media_management(payload)
+
+    assert isinstance(data, dict)
 
 
 @pytest.mark.usefixtures
@@ -1703,6 +1787,8 @@ def test_get_import_list_schema(responses, sonarr_client):
 
 # TODO: add_import_list
 # TODO: upd_import_list
+
+
 @pytest.mark.usefixtures
 def test_del_import_list(responses, sonarr_client):
     responses.add(
@@ -1731,4 +1817,25 @@ def test_get_config_download_client(responses, sonarr_client):
     assert isinstance(data, dict)
 
 
-# TODO: upd_config_download_client
+@pytest.mark.usefixtures
+def test_upd_config_download_client(responses, sonarr_client):
+    responses.add(
+        responses.PUT,
+        "https://127.0.0.1:8989/api/v3/config/downloadclient",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/config_downloadclient.json"),
+        status=200,
+        match_querystring=True,
+    )
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/config/downloadclient",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/config_downloadclient.json"),
+        status=200,
+        match_querystring=True,
+    )
+    payload = sonarr_client.get_config_download_client()
+    data = sonarr_client.upd_config_download_client(payload)
+
+    assert isinstance(data, dict)

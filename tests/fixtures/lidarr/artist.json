@@ -1,0 +1,91 @@
+{
+    "artistMetadataId": 6,
+    "status": "ended",
+    "ended": true,
+    "artistName": "string",
+    "foreignArtistId": "string",
+    "tadbId": 0,
+    "discogsId": 0,
+    "overview": "string",
+    "artistType": "Person",
+    "disambiguation": "",
+    "links": [
+        {
+            "url": "string",
+            "name": "string"
+        }
+    ],
+    "lastAlbum": {
+        "artistMetadataId": 6,
+        "foreignAlbumId": "string",
+        "oldForeignAlbumIds": [],
+        "title": "string",
+        "overview": "string",
+        "disambiguation": "",
+        "releaseDate": "1977-01-01T00:00:00Z",
+        "images": [],
+        "links": [
+            {
+                "url": "string",
+                "name": "string"
+            }
+        ],
+        "genres": [
+            "string"
+        ],
+        "albumType": "Single",
+        "secondaryTypes": [],
+        "ratings": {
+            "votes": 0,
+            "value": 0
+        },
+        "cleanTitle": "string",
+        "profileId": 0,
+        "monitored": true,
+        "anyReleaseOk": true,
+        "lastInfoSync": "2022-08-08T19:45:43Z",
+        "added": "2022-03-06T19:32:33Z",
+        "addOptions": {
+            "addType": "manual",
+            "searchForNewAlbum": false
+        },
+        "artistMetadata": null,
+        "albumReleases": null,
+        "artist": null,
+        "id": 12
+    },
+    "images": [
+        {
+            "url": "/MediaCover/3/poster.jpg?lastWrite=637927957518187917",
+            "coverType": "poster",
+            "extension": ".jpg",
+            "remoteUrl": "string"
+        }
+    ],
+    "path": "/music/string",
+    "qualityProfileId": 1,
+    "metadataProfileId": 2,
+    "monitored": true,
+    "monitorNewItems": "all",
+    "rootFolderPath": "/music/",
+    "genres": [
+        "string"
+    ],
+    "cleanName": "string",
+    "sortName": "string",
+    "tags": [],
+    "added": "2022-03-06T19:32:33Z",
+    "ratings": {
+        "votes": 9,
+        "value": 8.4
+    },
+    "statistics": {
+        "albumCount": 1,
+        "trackFileCount": 0,
+        "trackCount": 4,
+        "totalTrackCount": 4,
+        "sizeOnDisk": 0,
+        "percentOfTracks": 0
+    },
+    "id": 3
+}
