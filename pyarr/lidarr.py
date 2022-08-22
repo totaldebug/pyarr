@@ -196,7 +196,7 @@ class LidarrAPI(BaseArrAPI):
         by lidarr guid
 
         Args:
-            id_ (str): Artist Lidarr or MusicBrainz ID
+            id_ (str): Artist MusicBrainz ID
             root_dir (str): Directory for music to be stored
             quality_profile_id (Optional[int], optional): Quality profile ID. Defaults to None.
             metadata_profile_id (Optional[int], optional): Metadata profile ID. Defaults to None.
@@ -272,11 +272,16 @@ class LidarrAPI(BaseArrAPI):
         if foreignAlbumId is not None:
             params["foreignAlbumId"] = foreignAlbumId
         _path = "" if isinstance(albumIds, list) or albumIds is None else f"/{albumIds}"
-        return self.assert_return(f"album{_path}", self.ver_uri, list, params=params)
+        return self.assert_return(
+            f"album{_path}",
+            self.ver_uri,
+            dict if isinstance(albumIds, int) or foreignAlbumId else list,
+            params=params,
+        )
 
     def _album_json(
         self,
-        term: str,
+        id_: str,
         root_dir: str,
         quality_profile_id: Optional[int] = None,
         metadata_profile_id: Optional[int] = None,
@@ -287,7 +292,7 @@ class LidarrAPI(BaseArrAPI):
         """Method to help build the JSON for adding an album
 
         Args:
-            term (str): Search term for the album
+            id_ (str): Album MusicBrainz ID
             root_dir (str): Director to store the album.
             quality_profile_id (Optional[int], optional): Quality profile ID. Defaults to None.
             metadata_profile_id (Optional[int], optional): Metadata profile ID. Defaults to None.
@@ -316,22 +321,22 @@ class LidarrAPI(BaseArrAPI):
                     "There is no Metadata Profile setup"
                 ) from exception
 
-        artist = self.lookup_artist(term)[0]
-        artist["id"] = 0
-        artist["metadataProfileId"] = metadata_profile_id
-        artist["qualityProfileId"] = quality_profile_id
-        artist["rootFolderPath"] = root_dir
-        artist["addOptions"] = {
+        album = self.lookup_album(term=f"lidarr:{id_}")[0]
+        album["id"] = 0
+        album["metadataProfileId"] = metadata_profile_id
+        album["qualityProfileId"] = quality_profile_id
+        album["rootFolderPath"] = root_dir
+        album["addOptions"] = {
             "monitor": artist_monitor,
             "searchForMissingAlbums": artist_search_for_missing_albums,
         }
-        artist["monitored"] = monitored
+        album["monitored"] = monitored
 
-        return artist
+        return album
 
     def add_album(
         self,
-        search_term: str,
+        id_: str,
         root_dir: str,
         quality_profile_id: Optional[int] = None,
         metadata_profile_id: Optional[int] = None,
@@ -342,7 +347,7 @@ class LidarrAPI(BaseArrAPI):
         """Adds an album to Lidarr
 
         Args:
-            search_term (str): Name of the album to search for
+            id_ (str): Album MusicBrainz ID
             root_dir (str): Location to store music
             quality_profile_id (Optional[int], optional): Quality profile ID. Defaults to None.
             metadata_profile_id (Optional[int], optional): Metadata profile ID. Defaults to None.
@@ -354,7 +359,7 @@ class LidarrAPI(BaseArrAPI):
             dict[str, Any]: Dictionary with added record
         """
         album_json = self._album_json(
-            search_term,
+            id_,
             root_dir,
             quality_profile_id,
             metadata_profile_id,
