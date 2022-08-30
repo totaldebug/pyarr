@@ -28,7 +28,7 @@ class RequestHandler:
             host_url (str): Host URL to Arr api
             api_key (str): API Key for Arr api
         """
-        self.host_url = host_url
+        self.host_url = host_url.rstrip("/")
         self.api_key = api_key
         self.session: requests.Session = requests.Session()
         self.auth: Union[HTTPBasicAuth, None] = None

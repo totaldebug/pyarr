@@ -64,20 +64,19 @@ class RadarrAPI(BaseArrAPI):
             movies = self.lookup_movie(term=f"imdb:{id_}")
         if movies:
             movie = movies[0]
-        if not movies:
+            return {
+                "title": movie["title"],
+                "rootFolderPath": root_dir,
+                "qualityProfileId": quality_profile_id,
+                "year": movie["year"],
+                "tmdbId": movie["tmdbId"],
+                "images": movie["images"],
+                "titleSlug": movie["titleSlug"],
+                "monitored": monitored,
+                "addOptions": {"searchForMovie": search_for_movie},
+            }
+        else:
             raise PyarrRecordNotFound("Movie Doesn't Exist")
-
-        return {
-            "title": movie["title"],
-            "rootFolderPath": root_dir,
-            "qualityProfileId": quality_profile_id,
-            "year": movie["year"],
-            "tmdbId": movie["tmdbId"],
-            "images": movie["images"],
-            "titleSlug": movie["titleSlug"],
-            "monitored": monitored,
-            "addOptions": {"searchForMovie": search_for_movie},
-        }
 
     ## CONFIG
     # POST /rootfolder

@@ -2,8 +2,9 @@ import contextlib
 
 import pytest
 
-from pyarr.exceptions import PyarrMissingProfile
-from pyarr.models.lidarr import LidarrArtistMonitor, LidarrCommand
+from pyarr.exceptions import PyarrMissingArgument, PyarrMissingProfile
+from pyarr.models.common import PyarrSortDirection
+from pyarr.models.lidarr import LidarrArtistMonitor, LidarrCommand, LidarrSortKey
 
 from tests import load_fixture
 
@@ -419,3 +420,54 @@ def test_post_command(responses, lidarr_client):
     assert isinstance(data, dict)
     data = lidarr_client.post_command(name=LidarrCommand.ALBUM_SEARCH)
     assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_get_wanted(responses, lidarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/wanted/missing",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/wanted_missing.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.get_wanted()
+    assert isinstance(data, dict)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/wanted/cutoff",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("lidarr/wanted_missing.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.get_wanted(missing=False)
+    assert isinstance(data, dict)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/wanted/missing?page=2&pageSize=20&sortKey=albums.title&sortDirection=ascending",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("lidarr/wanted_missing.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.get_wanted(
+        page=2,
+        page_size=20,
+        sort_key=LidarrSortKey.ALBUM_TITLE,
+        sort_dir=PyarrSortDirection.ASC,
+    )
+    assert isinstance(data, dict)
+
+    with contextlib.suppress(PyarrMissingArgument):
+        data = lidarr_client.get_wanted(sort_key=LidarrSortKey.TIMELEFT)
+        assert False
+    with contextlib.suppress(PyarrMissingArgument):
+        data = lidarr_client.get_wanted(sort_dir=PyarrSortDirection.DEFAULT)
+        assert False
+
+
+# TODO: Get_parse
