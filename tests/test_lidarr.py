@@ -3,7 +3,7 @@ import contextlib
 import pytest
 
 from pyarr.exceptions import PyarrMissingProfile
-from pyarr.models.lidarr import LidarrArtistMonitor
+from pyarr.models.lidarr import LidarrArtistMonitor, LidarrCommand
 
 from tests import load_fixture
 
@@ -324,3 +324,98 @@ def test__album_json(responses, lidarr_client):
             id_="123456-123456", root_dir="/", quality_profile_id=1
         )
         assert False
+
+
+@pytest.mark.usefixtures
+def test_add_album(responses, lidarr_client):
+    responses.add(
+        responses.POST,
+        "https://127.0.0.1:8686/api/v1/album",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("lidarr/album.json"),
+        status=201,
+        match_querystring=True,
+    )
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/album/lookup?term=lidarr%3A123456",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("lidarr/lookup.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.add_album(
+        id_="123456",
+        root_dir="/",
+        quality_profile_id=1,
+        metadata_profile_id=1,
+        monitored=False,
+        artist_monitor=LidarrArtistMonitor.LATEST_ALBUM,
+        artist_search_for_missing_albums=False,
+    )
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_upd_album(responses, lidarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/album/1?includeAllArtistAlbums=False",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("lidarr/album.json"),
+        status=202,
+        match_querystring=True,
+    )
+    album = lidarr_client.get_album(1)
+
+    responses.add(
+        responses.PUT,
+        "https://127.0.0.1:8686/api/v1/album",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("lidarr/album.json"),
+        status=202,
+        match_querystring=True,
+    )
+    data = lidarr_client.upd_album(data=album)
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_delete_album(responses, lidarr_client):
+    responses.add(
+        responses.DELETE,
+        "https://127.0.0.1:8686/api/v1/album/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/delete.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.delete_album(1)
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_post_command(responses, lidarr_client):
+    responses.add(
+        responses.POST,
+        "https://127.0.0.1:8686/api/v1/command",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/command.json"),
+        status=201,
+        match_querystring=True,
+    )
+
+    data = lidarr_client.post_command(name=LidarrCommand.DOWNLOADED_ALBUMS_SCAN)
+    assert isinstance(data, dict)
+    data = lidarr_client.post_command(name=LidarrCommand.ARTIST_SEARCH)
+    assert isinstance(data, dict)
+    data = lidarr_client.post_command(name=LidarrCommand.REFRESH_ARTIST)
+    assert isinstance(data, dict)
+    data = lidarr_client.post_command(name=LidarrCommand.REFRESH_ALBUM)
+    assert isinstance(data, dict)
+    data = lidarr_client.post_command(name=LidarrCommand.APP_UPDATE_CHECK)
+    assert isinstance(data, dict)
+    data = lidarr_client.post_command(name=LidarrCommand.MISSING_ALBUM_SEARCH)
+    assert isinstance(data, dict)
+    data = lidarr_client.post_command(name=LidarrCommand.ALBUM_SEARCH)
+    assert isinstance(data, dict)

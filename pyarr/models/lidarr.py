@@ -6,7 +6,7 @@ enum_tools.documentation.INTERACTIVE = True
 
 
 @enum_tools.documentation.document_enum
-class LidarrSortKeys(str, Enum):
+class LidarrSortKey(str, Enum):
     """Lidarr sort keys."""
 
     ALBUM_TITLE = "albums.title"
@@ -41,7 +41,7 @@ class LidarrArtistMonitor(str, Enum):
 
 
 @enum_tools.documentation.document_enum
-class LidarrCommands(str, Enum):
+class LidarrCommand(str, Enum):
     """Lidarr commands."""
 
     ALBUM_SEARCH = "AlbumSearch"

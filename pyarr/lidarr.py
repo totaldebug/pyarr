@@ -4,9 +4,9 @@ from requests import Response
 
 from .base import BaseArrAPI
 from .const import PAGE, PAGE_SIZE
-from .exceptions import PyarrError, PyarrMissingProfile
+from .exceptions import PyarrError, PyarrMissingArgument, PyarrMissingProfile
 from .models.common import PyarrSortDirection
-from .models.lidarr import LidarrArtistMonitor, LidarrSortKeys
+from .models.lidarr import LidarrArtistMonitor, LidarrCommand, LidarrSortKey
 
 
 class LidarrAPI(BaseArrAPI):
@@ -395,42 +395,53 @@ class LidarrAPI(BaseArrAPI):
         return self._delete(f"album/{id_}", self.ver_uri)
 
     # POST /command
-    def post_command(self) -> Any:
-        """This function is not implemented
+    def post_command(self, name: LidarrCommand) -> dict[str, Any]:
+        """Send a command to Lidarr
 
-        Raises:
-            NotImplementedError: Error
+        Args:
+            name (LidarrCommand): Command to be run against Lidarr
+
+        Returns:
+            dict[str, Any]: dictionary of executed command information
         """
-        raise NotImplementedError("This feature is not implemented yet.")
+        return self.assert_return_post(
+            "command", self.ver_uri, dict, data={"name": name}
+        )
 
     # GET /wanted
     def get_wanted(
         self,
         id_: Optional[int] = None,
-        sort_key: LidarrSortKeys = LidarrSortKeys.TITLE,
-        page: int = PAGE,
-        page_size: int = PAGE_SIZE,
-        sort_dir: PyarrSortDirection = PyarrSortDirection.ASC,
+        page: Optional[int] = None,
+        page_size: Optional[int] = None,
+        sort_key: Optional[LidarrSortKey] = None,
+        sort_dir: Optional[PyarrSortDirection] = None,
         missing: bool = True,
     ) -> dict[str, Any]:
         """Get wanted albums that are missing or not meeting cutoff
 
         Args:
             id_ (int | None, optional): Specific album ID to return. Defaults to None.
-            sort_key (LidarrSortKeys, optional): id, title, ratings, or quality". (Others do not apply). Defaults to LidarrSortKeys.TITLE.
-            page (int, optional): Page number to return. Defaults to 1.
-            page_size (int, optional): Number of items per page. Defaults to 10.
-            sort_dir (PyarrSortDirection, optional): Sort ascending or descending. Defaults to PyarrSortDirection.ASC.
+            page (Optional[int], optional): Page number to return. Defaults to None.
+            page_size (Optional[int], optional): Number of items per page. Defaults to None.
+            sort_key (Optional[LidarrSortKey], optional): Column to sort by. Defaults to None.
+            sort_dir (Optional[PyarrSortDirection], optional): Direction to sort the items. Defaults to None.
             missing (bool, optional): Search for missing (True) or cutoff not met (False). Defaults to True.
 
         Returns:
             dict[str, Any]: List of dictionaries with items
         """
-        params = {
-            "sortKey": sort_key.value,
-            "page": page,
-            "pageSize": page_size,
-        }
+        params: dict[str, Union[int, LidarrSortKey, PyarrSortDirection, bool]] = {}
+        if page:
+            params["page"] = page
+        if page_size:
+            params["pageSize"] = page_size
+        if sort_key and sort_dir:
+            params["sortKey"] = sort_key
+            params["sortDirection"] = sort_dir
+        elif sort_key or sort_dir:
+            raise PyarrMissingArgument("sort_key and sort_dir  must be used together")
+
         _path = "missing" if missing else "cutoff"
         return self.assert_return(
             f"wanted/{_path}{'' if id_ is None else f'/{id_}'}",
@@ -632,7 +643,7 @@ class LidarrAPI(BaseArrAPI):
         self,
         page: int = PAGE,
         page_size: int = PAGE_SIZE,
-        sort_key: LidarrSortKeys = LidarrSortKeys.TIMELEFT,
+        sort_key: LidarrSortKey = LidarrSortKey.TIMELEFT,
         unknown_artists: bool = False,
         include_artist: bool = False,
         include_album: bool = False,
@@ -642,7 +653,7 @@ class LidarrAPI(BaseArrAPI):
         Args:
             page (int, optional): Which page to load. Defaults to PAGE.
             page_size (int, optional): Number of items per page. Defaults to PAGE_SIZE.
-            sort_key (LidarrSortKeys, optional): Key to sort by. Defaults to LidarrSortKeys.TIMELEFT.
+            sort_key (LidarrSortKey, optional): Key to sort by. Defaults to LidarrSortKey.TIMELEFT.
             unknown_artists (bool, optional): Include unknown artists. Defaults to False.
             include_artist (bool, optional): Include Artists. Defaults to False.
             include_album (bool, optional): Include albums. Defaults to False.
