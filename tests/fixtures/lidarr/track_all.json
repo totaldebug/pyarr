@@ -1,0 +1,82 @@
+[
+    {
+        "artistId": 3,
+        "foreignTrackId": "0b804321-1b87-3f5e-8f2b-b81026c8707a",
+        "foreignRecordingId": "5ed4a636-2e39-446c-8895-9a1166744b2f",
+        "trackFileId": 0,
+        "albumId": 12,
+        "explicit": false,
+        "absoluteTrackNumber": 1,
+        "trackNumber": "1",
+        "title": "Bat Out of Hell (single version)",
+        "duration": 442466,
+        "mediumNumber": 1,
+        "hasFile": false,
+        "ratings": {
+            "votes": 0,
+            "value": 0
+        },
+        "grabbed": false,
+        "id": 6009
+    },
+    {
+        "artistId": 3,
+        "foreignTrackId": "e755ed89-eda8-3b83-86af-0f37fb0aebab",
+        "foreignRecordingId": "0604a84a-6611-49b9-91b9-d426f4212609",
+        "trackFileId": 0,
+        "albumId": 12,
+        "explicit": false,
+        "absoluteTrackNumber": 2,
+        "trackNumber": "2",
+        "title": "Read 'em and Weep",
+        "duration": 327560,
+        "mediumNumber": 1,
+        "hasFile": false,
+        "ratings": {
+            "votes": 0,
+            "value": 0
+        },
+        "grabbed": false,
+        "id": 6010
+    },
+    {
+        "artistId": 3,
+        "foreignTrackId": "0e57afef-a6bf-3770-89e9-4e0e691c6bdf",
+        "foreignRecordingId": "0140c7a2-edac-41c7-9747-7907d5a32d39",
+        "trackFileId": 0,
+        "albumId": 12,
+        "explicit": false,
+        "absoluteTrackNumber": 3,
+        "trackNumber": "3",
+        "title": "Lost Boys and Golden Girls",
+        "duration": 278866,
+        "mediumNumber": 1,
+        "hasFile": false,
+        "ratings": {
+            "votes": 0,
+            "value": 0
+        },
+        "grabbed": false,
+        "id": 6011
+    },
+    {
+        "artistId": 3,
+        "foreignTrackId": "8dbed555-a6de-3887-bebd-088f03498da3",
+        "foreignRecordingId": "83d088a5-2f6f-481e-9542-38d1be1c385f",
+        "trackFileId": 0,
+        "albumId": 12,
+        "explicit": false,
+        "absoluteTrackNumber": 4,
+        "trackNumber": "4",
+        "title": "Rock and Roll Dreams Come Through",
+        "duration": 389200,
+        "mediumNumber": 1,
+        "hasFile": false,
+        "ratings": {
+            "votes": 0,
+            "value": 0
+        },
+        "grabbed": false,
+        "id": 6012
+    }
+]

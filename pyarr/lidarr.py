@@ -3,8 +3,7 @@ from typing import Any, Optional, Union
 from requests import Response
 
 from .base import BaseArrAPI
-from .const import PAGE, PAGE_SIZE
-from .exceptions import PyarrError, PyarrMissingArgument, PyarrMissingProfile
+from .exceptions import PyarrMissingArgument, PyarrMissingProfile
 from .models.common import PyarrSortDirection
 from .models.lidarr import LidarrArtistMonitor, LidarrCommand, LidarrSortKey
 
@@ -263,7 +262,7 @@ class LidarrAPI(BaseArrAPI):
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
-        params: dict[str, Any] = {"includeAllArtistAlbums": str(allArtistAlbums)}
+        params: dict[str, Any] = {"includeAllArtistAlbums": allArtistAlbums}
 
         if isinstance(albumIds, list):
             params["albumids"] = albumIds
@@ -469,7 +468,7 @@ class LidarrAPI(BaseArrAPI):
         artistId: Optional[int] = None,
         albumId: Optional[int] = None,
         albumReleaseId: Optional[int] = None,
-        trackIds: Union[int, list[int], None] = None,
+        trackIds: Optional[Union[int, list[int]]] = None,
     ) -> list[dict[str, Any]]:
         """Get tracks based on provided IDs
 
@@ -477,7 +476,7 @@ class LidarrAPI(BaseArrAPI):
             artistId (Optional[int], optional): Artist ID. Defaults to None.
             albumId (Optional[int], optional): Album ID. Defaults to None.
             albumReleaseId (Optional[int], optional): Album Release ID. Defaults to None.
-            trackIds (Union[int, list[int], None], optional): Track IDs. Defaults to None.
+            trackIds (Optional[Union[int, list[int]]], optional): Track IDs. Defaults to None.
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
@@ -491,10 +490,21 @@ class LidarrAPI(BaseArrAPI):
             params["albumReleaseId"] = albumReleaseId
         if isinstance(trackIds, list):
             params["trackIds"] = trackIds
+
+        if (
+            artistId is None
+            and albumId is None
+            and albumReleaseId is None
+            and trackIds is None
+        ):
+            raise PyarrMissingArgument(
+                "One of artistId, albumId, albumReleaseId or trackIds must be provided"
+            )
+
         return self.assert_return(
             f"track{f'/{trackIds}' if isinstance(trackIds, int) else ''}",
             self.ver_uri,
-            list,
+            dict if isinstance(trackIds, int) else list,
             params=params,
         )
 
@@ -504,7 +514,7 @@ class LidarrAPI(BaseArrAPI):
         artistId: Optional[int] = None,
         albumId: Optional[int] = None,
         trackFileIds: Union[int, list[int], None] = None,
-        unmapped: bool = False,
+        unmapped: Optional[bool] = None,
     ) -> list[dict[str, Any]]:
         """Get track files based on IDs, or get all unmapped files
 
@@ -512,7 +522,7 @@ class LidarrAPI(BaseArrAPI):
             artistId (Optional[int], optional): Artist database ID. Defaults to None.
             albumId (Optional[int], optional): Album database ID. Defaults to None.
             trackFileIds (Union[int, list[int], None], optional): Specific file IDs. Defaults to None.
-            unmapped (bool, optional): Get all unmapped filterExistingFiles. Defaults to False.
+            unmapped (Optional[bool], optional): Get all unmapped filterExistingFiles. Defaults to None.
 
         Raises:
             PyarrError: Where no IDs or unmapped params provided
@@ -524,22 +534,24 @@ class LidarrAPI(BaseArrAPI):
             artistId is None
             and albumId is None
             and trackFileIds is None
-            and not unmapped
+            and unmapped is None
         ):
-            raise PyarrError(
-                "BadRequest: artistId, albumId, trackFileIds or unmapped must be provided"
+            raise PyarrMissingArgument(
+                "artistId, albumId, trackFileIds or unmapped must be provided"
             )
-        params: dict[str, Any] = {"unmapped": str(unmapped)}
+        params: dict[str, Any] = {}
         if artistId is not None:
             params["artistId"] = artistId
         if albumId is not None:
             params["albumId"] = albumId
         if isinstance(trackFileIds, list):
             params["trackFileIds"] = trackFileIds
+        if unmapped is not None:
+            params["unmapped"] = unmapped
         return self.assert_return(
             f"trackfile{f'/{trackFileIds}' if isinstance(trackFileIds, int) else ''}",
             self.ver_uri,
-            list,
+            dict if isinstance(trackFileIds, int) else list,
             params=params,
         )
 
@@ -586,19 +598,13 @@ class LidarrAPI(BaseArrAPI):
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
-        _path = f"/{id_}" if id_ else ""
-        response = self._get(f"metadataprofile{_path}", self.ver_uri)
-        assert isinstance(response, list)
-        return response
+        return self.assert_return(
+            f"metadataprofile{f'/{id_}' if id_ else ''}",
+            self.ver_uri,
+            dict if id_ else list,
+        )
 
-    # POST /metadataprofile
-    def add_metadata_profile(self) -> Any:
-        """This function is not implemented
-
-        Raises:
-            NotImplementedError: Error
-        """
-        raise NotImplementedError("This feature is not implemented yet.")
+    # TODO: POST /metadataprofile
 
     # PUT /metadataprofile
     def upd_metadata_profile(self, data: dict[str, Any]) -> dict[str, Any]:
@@ -613,13 +619,13 @@ class LidarrAPI(BaseArrAPI):
         return self.assert_return_put("metadataprofile", self.ver_uri, dict, data=data)
 
     # GET /config/metadataProvider
-    def get_metadata_provider(self) -> list[dict[str, Any]]:
+    def get_metadata_provider(self) -> dict[str, Any]:
         """Get metadata provider config (settings/metadata)
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            dict[str, Any]: Dictionary with data
         """
-        return self.assert_return("config/metadataProvider", self.ver_uri, list)
+        return self.assert_return("config/metadataProvider", self.ver_uri, dict)
 
     # PUT /config/metadataprovider
     def upd_metadata_provider(self, data: dict[str, Any]) -> dict[str, Any]:
@@ -641,34 +647,45 @@ class LidarrAPI(BaseArrAPI):
     # GET /queue
     def get_queue(
         self,
-        page: int = PAGE,
-        page_size: int = PAGE_SIZE,
-        sort_key: LidarrSortKey = LidarrSortKey.TIMELEFT,
-        unknown_artists: bool = False,
-        include_artist: bool = False,
-        include_album: bool = False,
+        page: Optional[int] = None,
+        page_size: Optional[int] = None,
+        sort_key: Optional[LidarrSortKey] = None,
+        sort_dir: Optional[PyarrSortDirection] = None,
+        unknown_artists: Optional[bool] = None,
+        include_artist: Optional[bool] = None,
+        include_album: Optional[bool] = None,
     ) -> dict[str, Any]:
         """Get the queue of download_release
 
         Args:
-            page (int, optional): Which page to load. Defaults to PAGE.
-            page_size (int, optional): Number of items per page. Defaults to PAGE_SIZE.
-            sort_key (LidarrSortKey, optional): Key to sort by. Defaults to LidarrSortKey.TIMELEFT.
-            unknown_artists (bool, optional): Include unknown artists. Defaults to False.
-            include_artist (bool, optional): Include Artists. Defaults to False.
-            include_album (bool, optional): Include albums. Defaults to False.
+            page (Optional[int], optional): Page number to return. Defaults to None.
+            page_size (Optional[int], optional): Number of items per page. Defaults to None.
+            sort_key (Optional[LidarrSortKey], optional): Column to sort by. Defaults to None.
+            sort_dir (Optional[PyarrSortDirection], optional): Direction to sort the items. Defaults to None.
+            unknown_artists (Optional[bool], optional): Include unknown artists. Defaults to None.
+            include_artist (Optional[bool], optional): Include Artists. Defaults to None.
+            include_album (Optional[bool], optional): Include albums. Defaults to None.
 
         Returns:
             dict[str, Any]: List of dictionaries with items
         """
-        params = {
-            "page": page,
-            "pageSize": page_size,
-            "sortKey": sort_key,
-            "unknownArtists": unknown_artists,
-            "includeAlbum": include_album,
-            "includeArtist": include_artist,
-        }
+        params: dict[str, Union[int, str, PyarrSortDirection, LidarrSortKey]] = {}
+        if page:
+            params["page"] = page
+        if page_size:
+            params["pageSize"] = page_size
+        if sort_key and sort_dir:
+            params["sortKey"] = sort_key
+            params["sortDirection"] = sort_dir
+        elif sort_key or sort_dir:
+            raise PyarrMissingArgument("sort_key and sort_dir  must be used together")
+
+        if unknown_artists:
+            params["unknownArtists"] = unknown_artists
+        if include_album:
+            params["includeAlbum"] = include_album
+        if include_artist:
+            params["includeArtist"] = include_artist
 
         return self.assert_return("queue", self.ver_uri, dict, params=params)
 
@@ -677,28 +694,29 @@ class LidarrAPI(BaseArrAPI):
         self,
         artistId: Optional[int] = None,
         albumIds: Union[list[int], None] = None,
-        include_artist: bool = False,
-        include_album: bool = True,
+        include_artist: Optional[bool] = None,
+        include_album: Optional[bool] = None,
     ) -> list[dict[str, Any]]:
         """Get queue details for artist or album
 
         Args:
             artistId (Optional[int], optional): Artist database ID. Defaults to None.
             albumIds (Union[list[int], None], optional): Album database ID. Defaults to None.
-            include_artist (bool, optional): Include the artist. Defaults to False.
-            include_album (bool, optional): Include the album. Defaults to True.
+            include_artist (Optional[bool], optional): Include the artist. Defaults to None.
+            include_album (Optional[bool], optional): Include the album. Defaults to None.
 
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
 
-        params: dict[str, Any] = {
-            "includeArtist": include_artist,
-            "includeAlbum": include_album,
-        }
-        if artistId is not None:
+        params: dict[str, Any] = {}
+        if include_artist:
+            params["includeArtist"] = include_artist
+        if include_album:
+            params["includeAlbum"] = include_album
+        if artistId:
             params["artistId"] = artistId
-        if albumIds is not None:
+        if albumIds:
             params["albumIds"] = albumIds
 
         return self.assert_return("queue/details", self.ver_uri, list, params=params)
@@ -717,10 +735,10 @@ class LidarrAPI(BaseArrAPI):
             list[dict[str, Any]]: List of dictionaries with items
         """
         params = {}
-        if artistId is not None:
+        if artistId:
             params["artistId"] = artistId
-        if albumId is not None:
-            params["artistId"] = albumId
+        if albumId:
+            params["albumId"] = albumId
         return self.assert_return("release", self.ver_uri, list, params=params)
 
     # GET /rename
@@ -737,7 +755,7 @@ class LidarrAPI(BaseArrAPI):
             list[dict[str, Any]]: List of dictionaries with items
         """
         params = {"artistId": artistId}
-        if albumId is not None:
+        if albumId:
             params["albumId"] = albumId
         return self.assert_return(
             "rename",
@@ -749,11 +767,11 @@ class LidarrAPI(BaseArrAPI):
     # GET /manualimport
     def get_manual_import(
         self,
-        downloadId: str,
-        artistId: int = 0,
-        folder: Optional[str] = None,
-        filterExistingFiles: bool = True,
-        replaceExistingFiles: bool = True,
+        folder: str,
+        downloadId: Optional[str] = None,
+        artistId: Optional[int] = None,
+        filterExistingFiles: Optional[bool] = None,
+        replaceExistingFiles: Optional[bool] = None,
     ) -> list[dict[str, Any]]:
         """Gets a manual import list
 
@@ -767,13 +785,16 @@ class LidarrAPI(BaseArrAPI):
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
-        params = {
-            "artistId": artistId,
-            "downloadId": downloadId,
-            "filterExistingFiles": str(filterExistingFiles),
-            "folder": folder if folder is not None else "",
-            "replaceExistingFiles": str(replaceExistingFiles),
-        }
+        params: dict[str, Union[str, int, bool]] = {"folder": folder}
+        if downloadId:
+            params["downloadId"] = downloadId
+        if artistId:
+            params["artistId"] = artistId
+        if filterExistingFiles:
+            params["filterExistingFiles"] = filterExistingFiles
+        if replaceExistingFiles:
+            params["replaceExistingFiles"] = replaceExistingFiles
+
         return self.assert_return("manualimport", self.ver_uri, list, params=params)
 
     # PUT /manualimport
@@ -793,7 +814,7 @@ class LidarrAPI(BaseArrAPI):
 
     # GET /retag
     def get_retag(
-        self, artistId: int, albumId: Optional[int] = None
+        self, artistId: Optional[int] = None, albumId: Optional[int] = None
     ) -> list[dict[str, Any]]:
         """Get Retag
 
@@ -804,8 +825,10 @@ class LidarrAPI(BaseArrAPI):
         Returns:
             list[dict[str, Any]]: List of dictionaries with items
         """
-        params = {"artistId": artistId}
-        if albumId is not None:
+        params = {}
+        if artistId:
+            params["artistId"] = artistId
+        if albumId:
             params["albumId"] = albumId
         return self.assert_return(
             "retag",

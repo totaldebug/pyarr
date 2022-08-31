@@ -1,0 +1,4 @@
+{
+    "message": "BadRequest: One of artistId, albumId, albumReleaseId or trackIds must be provided",
+    "content": "One of artistId, albumId, albumReleaseId or trackIds must be provided"
+}

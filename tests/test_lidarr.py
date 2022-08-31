@@ -470,4 +470,498 @@ def test_get_wanted(responses, lidarr_client):
         assert False
 
 
-# TODO: Get_parse
+# TODO: confirm fixture
+@pytest.mark.usefixtures
+def test_get_parse(responses, lidarr_client):
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/parse?title=test",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/blank_list.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.get_parse(title="test")
+    assert isinstance(data, list)
+
+
+@pytest.mark.usefixtures
+def test_get_tracks(responses, lidarr_client):
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/track?artistId=1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("lidarr/track_all.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.get_tracks(artistId=1)
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/track?albumId=1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("lidarr/track_all.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.get_tracks(albumId=1)
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/track?albumReleaseId=1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("lidarr/track_all.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.get_tracks(albumReleaseId=1)
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/track?trackIds=1&trackIds=2&trackIds=3",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("lidarr/track_all.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.get_tracks(trackIds=[1, 2, 3])
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/track/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("lidarr/track.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.get_tracks(trackIds=1)
+    assert isinstance(data, dict)
+
+    with contextlib.suppress(PyarrMissingArgument):
+        data = lidarr_client.get_tracks()
+        assert False
+
+
+# TODO: confirm trackfile fixtures
+@pytest.mark.usefixtures
+def test_get_track_file(responses, lidarr_client):
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/trackfile?artistId=1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("lidarr/track_all.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.get_track_file(artistId=1)
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/trackfile?albumId=1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("lidarr/track_all.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.get_track_file(albumId=1)
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/trackfile?trackFileIds=1&trackFileIds=2&trackFileIds=3",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("lidarr/track_all.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.get_track_file(trackFileIds=[1, 2, 3])
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/trackfile/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("lidarr/track.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.get_track_file(trackFileIds=1)
+    assert isinstance(data, dict)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/trackfile?unmapped=True",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("lidarr/track_all.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.get_track_file(unmapped=True)
+    assert isinstance(data, list)
+
+    with contextlib.suppress(PyarrMissingArgument):
+        data = lidarr_client.get_track_file()
+        assert False
+
+
+@pytest.mark.usefixtures
+def test_upd_track_file(responses, lidarr_client):
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/trackfile/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("lidarr/track.json"),
+        status=200,
+        match_querystring=True,
+    )
+    track = lidarr_client.get_track_file(trackFileIds=1)
+
+    responses.add(
+        responses.PUT,
+        "https://127.0.0.1:8686/api/v1/trackfile",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("lidarr/track.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.upd_track_file(data=track)
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_delete_track_file(responses, lidarr_client):
+    responses.add(
+        responses.DELETE,
+        "https://127.0.0.1:8686/api/v1/trackfile/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/delete.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.delete_track_file(1)
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_get_metadata_profile(responses, lidarr_client):
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/metadataprofile",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("lidarr/metadataprofile_all.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.get_metadata_profile()
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/metadataprofile/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("lidarr/metadataprofile.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.get_metadata_profile(id_=1)
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_upd_metadata_profile(responses, lidarr_client):
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/metadataprofile/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("lidarr/metadataprofile.json"),
+        status=200,
+        match_querystring=True,
+    )
+    profile = lidarr_client.get_metadata_profile(id_=1)
+
+    responses.add(
+        responses.PUT,
+        "https://127.0.0.1:8686/api/v1/metadataprofile",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("lidarr/metadataprofile.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.upd_metadata_profile(data=profile)
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_get_metadata_provider(responses, lidarr_client):
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/config/metadataProvider",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("lidarr/metadataprovider.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.get_metadata_provider()
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_upd_metadata_provider(responses, lidarr_client):
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/config/metadataProvider",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("lidarr/metadataprovider.json"),
+        status=200,
+        match_querystring=True,
+    )
+    provider = lidarr_client.get_metadata_provider()
+
+    responses.add(
+        responses.PUT,
+        "https://127.0.0.1:8686/api/v1/config/metadataProvider",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("lidarr/metadataprovider.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.upd_metadata_provider(data=provider)
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_get_queue(responses, lidarr_client):
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/queue",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("lidarr/queue.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.get_queue()
+    assert isinstance(data, dict)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/queue?page=1&pageSize=10&sortKey=timeleft&sortDirection=default",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("lidarr/queue.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.get_queue(
+        page=1,
+        page_size=10,
+        sort_key=LidarrSortKey.TIMELEFT,
+        sort_dir=PyarrSortDirection.DEFAULT,
+    )
+    assert isinstance(data, dict)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/queue?unknownArtists=True&includeAlbum=True&includeArtist=True",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("lidarr/queue.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.get_queue(
+        unknown_artists=True, include_album=True, include_artist=True
+    )
+    assert isinstance(data, dict)
+
+    with contextlib.suppress(PyarrMissingArgument):
+        data = lidarr_client.get_queue(sort_key=LidarrSortKey.ARTIST_ID)
+        assert False
+
+    with contextlib.suppress(PyarrMissingArgument):
+        data = lidarr_client.get_queue(sort_dir=PyarrSortDirection.ASC)
+        assert False
+
+
+# TODO: get correct fixture
+@pytest.mark.usefixtures
+def test_get_queue_details(responses, lidarr_client):
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/queue/details",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/blank_list.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.get_queue_details()
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/queue/details?includeArtist=True&includeAlbum=True&artistId=1&albumIds=1&albumIds=2",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/blank_list.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.get_queue_details(
+        include_artist=True, include_album=True, artistId=1, albumIds=[1, 2]
+    )
+    assert isinstance(data, list)
+
+
+# TODO: get correct fixture
+@pytest.mark.usefixtures
+def test_get_release(responses, lidarr_client):
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/release",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/blank_list.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.get_release()
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/release?artistId=1&albumId=1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/blank_list.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.get_release(artistId=1, albumId=1)
+    assert isinstance(data, list)
+
+
+# TODO: get correct fixture
+@pytest.mark.usefixtures
+def test_get_rename(responses, lidarr_client):
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/rename?artistId=1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/blank_list.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.get_rename(artistId=1)
+    assert isinstance(data, list)
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/rename?artistId=1&albumId=1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/blank_list.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.get_rename(artistId=1, albumId=1)
+    assert isinstance(data, list)
+
+    with contextlib.suppress(TypeError):
+        data = lidarr_client.get_rename()
+        assert False
+
+
+# TODO: get correct fixture
+@pytest.mark.usefixtures
+def test_get_manual_import(responses, lidarr_client):
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/manualimport?folder=/music/",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/blank_list.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.get_manual_import(folder="/music/")
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/manualimport?folder=/music/&downloadId=1&artistId=1&filterExistingFiles=True&replaceExistingFiles=True",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/blank_list.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.get_manual_import(
+        folder="/music/",
+        downloadId=1,
+        artistId=1,
+        filterExistingFiles=True,
+        replaceExistingFiles=True,
+    )
+    assert isinstance(data, list)
+
+
+# TODO: get correct fixture, confirm update returns dict
+@pytest.mark.usefixtures
+def test_upd_manual_import(responses, lidarr_client):
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/manualimport?folder=/music/",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/blank_list.json"),
+        status=200,
+        match_querystring=True,
+    )
+    man_import = lidarr_client.get_manual_import(folder="/music/")
+
+    responses.add(
+        responses.PUT,
+        "https://127.0.0.1:8686/api/v1/manualimport",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/blank_dict.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.upd_manual_import(data=man_import)
+    assert isinstance(data, dict)
+
+
+# TODO: get correct fixture
+@pytest.mark.usefixtures
+def test_get_manual_import(responses, lidarr_client):
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/retag",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/blank_list.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.get_retag()
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/retag?artistId=1&albumId=1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/blank_list.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_client.get_retag(artistId=1, albumId=1)
+    assert isinstance(data, list)
