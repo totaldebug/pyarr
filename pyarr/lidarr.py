@@ -35,7 +35,7 @@ class LidarrAPI(BaseArrAPI):
         metadataProfile: int,
         defaultTags: list[int] = None,
     ) -> dict[str, Any]:
-        """Adds a root folder
+        """Add a new location to store files
 
         Args:
             name (str): Name for this root folder
@@ -47,10 +47,8 @@ class LidarrAPI(BaseArrAPI):
         Returns:
             dict[str, Any]: Dictonary with added record
         """
-        if defaultTags is None:
-            defaultTags = []
         folder_json = {
-            "defaultTags": defaultTags,
+            "defaultTags": defaultTags or [],
             "defaultQualityProfileId": qualityProfile,
             "defaultMetadataProfileId": metadataProfile,
             "name": name,

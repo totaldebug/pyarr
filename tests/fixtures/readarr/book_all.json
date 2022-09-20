@@ -1,0 +1,98 @@
+[
+    {
+        "title": "string",
+        "authorTitle": "string",
+        "seriesTitle": "",
+        "disambiguation": "",
+        "authorId": 24,
+        "foreignBookId": "string",
+        "titleSlug": "string",
+        "monitored": true,
+        "anyEditionOk": true,
+        "ratings": {
+            "votes": 0,
+            "value": 0,
+            "popularity": 0
+        },
+        "releaseDate": "2022-11-29T00:00:00Z",
+        "pageCount": 0,
+        "genres": [
+            "string"
+        ],
+        "author": {
+            "authorMetadataId": 12,
+            "status": "continuing",
+            "ended": false,
+            "authorName": "string",
+            "authorNameLastFirst": "string",
+            "foreignAuthorId": "string",
+            "titleSlug": "string",
+            "overview": "string",
+            "links": [
+                {
+                    "url": "string",
+                    "name": "Goodreads"
+                }
+            ],
+            "images": [
+                {
+                    "url": "string",
+                    "coverType": "poster",
+                    "extension": ".jpg"
+                }
+            ],
+            "path": "string",
+            "qualityProfileId": 1,
+            "metadataProfileId": 1,
+            "monitored": false,
+            "monitorNewItems": "all",
+            "genres": [],
+            "cleanName": "string",
+            "sortName": "string",
+            "sortNameLastFirst": "string",
+            "tags": [],
+            "added": "2022-05-26T09:19:35Z",
+            "ratings": {
+                "votes": 280381,
+                "value": 4.03,
+                "popularity": 1129935.4300000002
+            },
+            "statistics": {
+                "bookFileCount": 0,
+                "bookCount": 0,
+                "availableBookCount": 0,
+                "totalBookCount": 0,
+                "sizeOnDisk": 0,
+                "percentOfBooks": 0
+            },
+            "id": 24
+        },
+        "images": [
+            {
+                "url": "string",
+                "coverType": "cover",
+                "extension": ".jpg"
+            }
+        ],
+        "links": [
+            {
+                "url": "string",
+                "name": "Goodreads Editions"
+            },
+            {
+                "url": "string",
+                "name": "Goodreads Book"
+            }
+        ],
+        "statistics": {
+            "bookFileCount": 0,
+            "bookCount": 0,
+            "totalBookCount": 1,
+            "sizeOnDisk": 0,
+            "percentOfBooks": 0
+        },
+        "added": "2022-09-10T16:37:29Z",
+        "grabbed": false,
+        "id": 1321
+    }
+]

@@ -15,7 +15,11 @@ class ReadarrCommands(str, Enum):
     REFRESH_AUTHOR = "RefreshAuthor"
     REFRESH_BOOK = "RefreshBook"
     RENAME_AUTHOR = "RenameAuthor"
+    RENAME_FILES = "RenameFiles"
     RESCAN_FOLDERS = "RescanFolders"
+    RSS_SYNC = "RssSync"
+    BACKUP = "Backup"
+    MISSING_BOOK_SEARCH = "MissingBookSearch"
 
 
 @enum_tools.documentation.document_enum

@@ -1,0 +1,162 @@
+[
+    {
+        "name": "eBook",
+        "upgradeAllowed": false,
+        "cutoff": 2,
+        "items": [
+            {
+                "quality": {
+                    "id": 0,
+                    "name": "Unknown Text"
+                },
+                "items": [],
+                "allowed": false
+            },
+            {
+                "quality": {
+                    "id": 1,
+                    "name": "PDF"
+                },
+                "items": [],
+                "allowed": false
+            },
+            {
+                "quality": {
+                    "id": 2,
+                    "name": "MOBI"
+                },
+                "items": [],
+                "allowed": true
+            },
+            {
+                "quality": {
+                    "id": 3,
+                    "name": "EPUB"
+                },
+                "items": [],
+                "allowed": true
+            },
+            {
+                "quality": {
+                    "id": 4,
+                    "name": "AZW3"
+                },
+                "items": [],
+                "allowed": true
+            },
+            {
+                "quality": {
+                    "id": 13,
+                    "name": "Unknown Audio"
+                },
+                "items": [],
+                "allowed": false
+            },
+            {
+                "quality": {
+                    "id": 10,
+                    "name": "MP3"
+                },
+                "items": [],
+                "allowed": false
+            },
+            {
+                "quality": {
+                    "id": 12,
+                    "name": "M4B"
+                },
+                "items": [],
+                "allowed": false
+            },
+            {
+                "quality": {
+                    "id": 11,
+                    "name": "FLAC"
+                },
+                "items": [],
+                "allowed": false
+            }
+        ],
+        "id": 1
+    },
+    {
+        "name": "Spoken",
+        "upgradeAllowed": false,
+        "cutoff": 10,
+        "items": [
+            {
+                "quality": {
+                    "id": 0,
+                    "name": "Unknown Text"
+                },
+                "items": [],
+                "allowed": false
+            },
+            {
+                "quality": {
+                    "id": 1,
+                    "name": "PDF"
+                },
+                "items": [],
+                "allowed": false
+            },
+            {
+                "quality": {
+                    "id": 2,
+                    "name": "MOBI"
+                },
+                "items": [],
+                "allowed": false
+            },
+            {
+                "quality": {
+                    "id": 3,
+                    "name": "EPUB"
+                },
+                "items": [],
+                "allowed": false
+            },
+            {
+                "quality": {
+                    "id": 4,
+                    "name": "AZW3"
+                },
+                "items": [],
+                "allowed": false
+            },
+            {
+                "quality": {
+                    "id": 13,
+                    "name": "Unknown Audio"
+                },
+                "items": [],
+                "allowed": true
+            },
+            {
+                "quality": {
+                    "id": 10,
+                    "name": "MP3"
+                },
+                "items": [],
+                "allowed": true
+            },
+            {
+                "quality": {
+                    "id": 12,
+                    "name": "M4B"
+                },
+                "items": [],
+                "allowed": true
+            },
+            {
+                "quality": {
+                    "id": 11,
+                    "name": "FLAC"
+                },
+                "items": [],
+                "allowed": true
+            }
+        ],
+        "id": 2
+    }
+]

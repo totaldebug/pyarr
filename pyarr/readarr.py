@@ -3,8 +3,7 @@ from typing import Any, Optional, Union
 from requests import Response
 
 from .base import BaseArrAPI
-from .const import PAGE, PAGE_SIZE
-from .exceptions import PyarrMissingProfile
+from .exceptions import PyarrMissingArgument, PyarrMissingProfile
 from .models.common import PyarrSortDirection
 from .models.readarr import (
     ReadarrAuthorMonitor,
@@ -28,9 +27,58 @@ class ReadarrAPI(BaseArrAPI):
         ver_uri = "/v1"
         super().__init__(host_url, api_key, ver_uri)
 
+    def lookup(self, term: str) -> list[dict[str, Any]]:
+        """Search for an author / book
+
+        Note:
+            You can also search using the Goodreads ID, work, or author, the ISBN or ASIN::
+
+            readarr.lookup(term="edition:656")
+            readarr.lookup(term="work:4912789")
+            readarr.lookup(term="author:128382")
+            readarr.lookup(term="isbn:067003469X")
+            readarr.lookup(term="asin:B00JCDK5ME")
+
+        Args:
+            term (str): Search term
+
+        Returns:
+            list[dict[str, Any]]: List of dictionaries with items
+        """
+        return self.assert_return("search", self.ver_uri, list, params={"term": term})
+
+    # GET /book/lookup
+    def lookup_book(self, term: str) -> list[dict[str, Any]]:
+        """Searches for new books using a term, goodreads ID, isbn or asin.
+
+        Args:
+            term (str): Search term::
+
+                goodreads:656
+                isbn:067003469X
+                asin:B00JCDK5ME
+
+        Returns:
+            list[dict[str, Any]]: List of dictionaries with items
+        """
+        return self.assert_return("book/lookup", self.ver_uri, list, {"term": term})
+
+    # GET /author/lookup/
+    def lookup_author(self, term: str) -> list[dict[str, Any]]:
+        """Searches for new authors using a term
+
+        Args:
+            term (str): Author name or book
+
+        Returns:
+            list[dict[str, Any]]: List of dictionaries with items
+        """
+        params = {"term": term}
+        return self.assert_return("author/lookup", self.ver_uri, list, params)
+
     def _book_json(
         self,
-        db_id: str,
+        id_: str,
         book_id_type: ReadarrBookTypes,
         root_dir: str,
         quality_profile_id: Optional[int] = None,
@@ -43,7 +91,7 @@ class ReadarrAPI(BaseArrAPI):
         """Constructs the JSON required to add a new book to Readarr
 
         Args:
-            db_id (str): Book ID from Goodreads, ISBN or ASIN
+            id_ (str): Book ID from Goodreads, ISBN or ASIN
             book_id_type (ReadarrBookTypes): Type of book ID
             root_dir (str): Root directory for books
             quality_profile_id (Optional[int], optional): Quality profile ID. Defaults to None.
@@ -61,21 +109,24 @@ class ReadarrAPI(BaseArrAPI):
         """
         if quality_profile_id is None:
             try:
-                quality_profiles = self.get_quality_profile()[0]["id"]
-                quality_profile_id = quality_profiles[0]["id"]
+                quality_profile_id = self.get_quality_profile()[0]["id"]
             except IndexError as exception:
                 raise PyarrMissingProfile(
                     "There is no Quality Profile setup"
                 ) from exception
         if metadata_profile_id is None:
             try:
-                metadata_profile_id = self.get_metadata_profile()[0]["id"]
+                metadata_profile = self.get_metadata_profile()
+                if isinstance(metadata_profile, list):
+                    metadata_profile_id = metadata_profile[0]["id"]
+                else:
+                    metadata_profile_id = metadata_profile["id"]
             except IndexError as exception:
                 raise PyarrMissingProfile(
                     "There is no Metadata Profile setup"
                 ) from exception
-        book = self.lookup_book(f"{book_id_type}:{db_id}")[0]
-
+        book = self.lookup_book(f"{book_id_type}:{id_}")[0]
+        book["author"] = {}
         book["author"]["metadataProfileId"] = metadata_profile_id
         book["author"]["qualityProfileId"] = quality_profile_id
         book["author"]["rootFolderPath"] = root_dir
@@ -125,7 +176,11 @@ class ReadarrAPI(BaseArrAPI):
                 ) from exception
         if metadata_profile_id is None:
             try:
-                metadata_profile_id = self.get_metadata_profile()[0]["id"]
+                metadata_profile = self.get_metadata_profile()
+                if isinstance(metadata_profile, list):
+                    metadata_profile_id = metadata_profile[0]["id"]
+                else:
+                    metadata_profile_id = metadata_profile["id"]
             except IndexError as exception:
                 raise PyarrMissingProfile(
                     "There is no Metadata Profile setup"
@@ -147,29 +202,39 @@ class ReadarrAPI(BaseArrAPI):
     # COMMAND
 
     # GET /command/:id
-    def get_command(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
+    def get_command(
+        self, id_: Optional[int] = None
+    ) -> Union[list[dict[str, Any]], dict[str, Any]]:
         """Queries the status of a previously started command, or all currently started commands.
 
         Args:
             id_ (Optional[int], optional): Database ID of the command. Defaults to None.
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            Union[list[dict[str, Any]], dict[str, Any]]: List of dictionaries with items
         """
         path = f"command/{id_}" if id_ else "command"
-        return self.assert_return(path, self.ver_uri, list)
+        return self.assert_return(path, self.ver_uri, dict if id_ else list)
 
     # POST /command
-    # TODO: confirm return type & Kwargs
-    def post_command(self, name: ReadarrCommands, **kwargs) -> Any:
+    def post_command(self, name: ReadarrCommands, **kwargs) -> dict[str, Any]:
         """Performs any of the predetermined Readarr command routines
 
         Args:
             name (ReadarrCommands): Command name that should be executed
             **kwargs: Additional parameters for specific commands
 
+        Note:
+            Required Kwargs:
+                AuthorSearch: authorId (int)
+                BookSearch: bookId (int)
+                RefreshAuthor: authorId (int, optional)
+                RefreshBook: bookId (int, optional)
+                RenameAuthor: authorIds (list[int], optional)
+                RenameFiles: authorId (int, optional)
+
         Returns:
-            _type_: _description_
+            dict[str, Any]: Dictionary of command run
         """
         data = {
             "name": name,
@@ -182,58 +247,67 @@ class ReadarrAPI(BaseArrAPI):
     # GET /wanted/missing
     def get_missing(
         self,
-        sort_key: ReadarrSortKeys = ReadarrSortKeys.BOOK_ID,
-        page: int = PAGE,
-        page_size: int = PAGE_SIZE,
-        sort_dir: PyarrSortDirection = PyarrSortDirection.ASC,
+        page: Optional[int] = None,
+        page_size: Optional[int] = None,
+        sort_key: Optional[ReadarrSortKeys] = None,
+        sort_dir: Optional[PyarrSortDirection] = None,
     ) -> dict[str, Any]:
         """Gets missing episode (episodes without files)
 
         Args:
-            sort_key (ReadarrSortKeys, optional): id, title, ratings, bookid, or quality. (Others do not apply). Defaults to ReadarrSortKeys.BOOK_ID.
-            page (int, optional): Page number to return. Defaults to PAGE.
-            page_size (int, optional): Number of items per page. Defaults to PAGE_SIZE.
-            sort_dir (PyarrSortDirection, optional): Direction to sort the items. Defaults to PyarrSortDirection.ASC.
+            page (int, optional): Page number to return. Defaults to None.
+            page_size (int, optional): Number of items per page. Defaults to None.
+            sort_key (ReadarrSortKeys, optional): id, title, ratings, bookid, or quality. (Others do not apply). Defaults to None.
+            sort_dir (PyarrSortDirection, optional): Direction to sort the items. Defaults to None,
 
         Returns:
             dict[str, Any]: List of dictionaries with items
         """
-        params = {
-            "sortKey": sort_key,
-            "page": page,
-            "pageSize": page_size,
-            "sortDir": sort_dir,
-        }
+        params: dict[str, Union[int, ReadarrSortKeys, PyarrSortDirection, bool]] = {}
+        if page:
+            params["page"] = page
+        if page_size:
+            params["pageSize"] = page_size
+        if sort_key and sort_dir:
+            params["sortKey"] = sort_key
+            params["sortDirection"] = sort_dir
+        elif sort_key or sort_dir:
+            raise PyarrMissingArgument("sort_key and sort_dir  must be used together")
         return self.assert_return("wanted/missing", self.ver_uri, dict, params)
 
     # GET /wanted/cutoff
     def get_cutoff(
         self,
-        sort_key: ReadarrSortKeys = ReadarrSortKeys.BOOK_ID,
-        page: int = PAGE,
-        page_size: int = PAGE_SIZE,
-        sort_dir: PyarrSortDirection = PyarrSortDirection.DESC,
-        monitored: bool = True,
+        page: Optional[int] = None,
+        page_size: Optional[int] = None,
+        sort_key: Optional[ReadarrSortKeys] = None,
+        sort_dir: Optional[PyarrSortDirection] = None,
+        monitored: bool = None,
     ) -> dict[str, Any]:
         """Get wanted items where the cutoff is unmet
 
         Args:
-            sort_key (ReadarrSortKeys, optional): id, title, ratings, bookid, or quality". (others do not apply). Defaults to ReadarrSortKeys.BOOK_ID.
-            page (int, optional): Page number to return. Defaults to PAGE.
-            page_size (int, optional):  Number of items per page. Defaults to PAGE_SIZE.
-            sort_dir (PyarrSortDirection, optional): Direction to sort. Defaults to PyarrSortDirection.DESC.
-            monitored (bool, optional): Search for monitored only. Defaults to True.
+            page (int, optional): Page number to return. Defaults to None.
+            page_size (int, optional):  Number of items per page. Defaults to None.
+            sort_key (ReadarrSortKeys, optional): id, title, ratings, bookid, or quality". (others do not apply). Defaults to None.
+            sort_dir (PyarrSortDirection, optional): Direction to sort. Defaults to None.
+            monitored (bool, optional): Search for monitored only. Defaults to None.
 
         Returns:
             dict[str, Any]: List of dictionaries with items
         """
-        params = {
-            "sortKey": sort_key,
-            "page": page,
-            "pageSize": page_size,
-            "sortDir": sort_dir,
-            "monitored": monitored,
-        }
+        params: dict[str, Union[int, ReadarrSortKeys, PyarrSortDirection, bool]] = {}
+        if page:
+            params["page"] = page
+        if page_size:
+            params["pageSize"] = page_size
+        if sort_key and sort_dir:
+            params["sortKey"] = sort_key
+            params["sortDirection"] = sort_dir
+        elif sort_key or sort_dir:
+            raise PyarrMissingArgument("sort_key and sort_dir  must be used together")
+        if monitored:
+            params["monitored"] = monitored
         return self.assert_return("wanted/cutoff", self.ver_uri, dict, params)
 
     ## QUEUE
@@ -241,82 +315,98 @@ class ReadarrAPI(BaseArrAPI):
     # GET /queue
     def get_queue(
         self,
-        page: int = PAGE,
-        page_size: int = PAGE_SIZE,
-        sort_dir: PyarrSortDirection = PyarrSortDirection.ASC,
-        sort_key: ReadarrSortKeys = ReadarrSortKeys.TIMELEFT,
-        unknown_authors: bool = False,
-        include_author: bool = False,
-        include_book: bool = False,
+        page: Optional[int] = None,
+        page_size: Optional[int] = None,
+        sort_key: Optional[ReadarrSortKeys] = None,
+        sort_dir: Optional[PyarrSortDirection] = None,
+        unknown_authors: Optional[bool] = None,
+        include_author: Optional[bool] = None,
+        include_book: Optional[bool] = None,
     ) -> dict[str, Any]:
         """Get current download information
 
         Args:
-            page (int, optional): Page number. Defaults to PAGE.
-            page_size (int, optional): Number of items per page. Defaults to PAGE_SIZE.
-            sort_dir (PyarrSortDirection, optional): Direction to sort. Defaults to PyarrSortDirection.ASC.
-            sort_key (ReadarrSortKeys, optional): Field to sort by. Defaults to ReadarrSortKeys.TIMELEFT.
-            unknown_authors (bool, optional): Include items with an unknown author. Defaults to False.
-            include_author (bool, optional): Include the author. Defaults to False.
-            include_book (bool, optional): Include the book. Defaults to False.
+            page (int, optional): Page number. Defaults to None.
+            page_size (int, optional): Number of items per page. Defaults to None.
+            sort_key (ReadarrSortKeys, optional): Field to sort by. Defaults to None.
+            sort_dir (PyarrSortDirection, optional): Direction to sort. Defaults to None.
+            unknown_authors (bool, optional): Include items with an unknown author. Defaults to None.
+            include_author (bool, optional): Include the author. Defaults to None.
+            include_book (bool, optional): Include the book. Defaults to None.
 
         Returns:
             dict[str, Any]: List of dictionaries with items
         """
-        params = {
-            "sortKey": sort_key,
-            "page": page,
-            "pageSize": page_size,
-            "sortDirection": sort_dir,
-            "includeUnknownAuthorItems": unknown_authors,
-            "includeAuthor": include_author,
-            "includeBook": include_book,
-        }
+        params: dict[str, Union[int, ReadarrSortKeys, PyarrSortDirection, bool]] = {}
+        if page:
+            params["page"] = page
+        if page_size:
+            params["pageSize"] = page_size
+        if sort_key and sort_dir:
+            params["sortKey"] = sort_key
+            params["sortDirection"] = sort_dir
+        elif sort_key or sort_dir:
+            raise PyarrMissingArgument("sort_key and sort_dir  must be used together")
+        if unknown_authors:
+            params["includeUnknownAuthorItems"] = unknown_authors
+        if include_author:
+            params["includeAuthor"] = include_author
+        if include_book:
+            params["includeBook"] = include_book
+
         return self.assert_return("queue", self.ver_uri, dict, params)
 
     # GET /metadataprofile/{id}
-    def get_metadata_profile(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
+    def get_metadata_profile(
+        self, id_: Optional[int] = None
+    ) -> Union[list[dict[str, Any]], dict[str, Any]]:
         """Gets all metadata profiles or specific one with ID
 
         Args:
             id_ (Optional[int], optional): Metadata profile id from database. Defaults to None.
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            Union[list[dict[str, Any]], dict[str, Any]]: List of dictionaries with items
         """
         path = f"metadataprofile/{id_}" if id_ else "metadataprofile"
-        return self.assert_return(path, self.ver_uri, list)
+        return self.assert_return(path, self.ver_uri, dict if id_ else list)
 
     # GET /delayprofile/{id}
-    def get_delay_profile(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
+    def get_delay_profile(
+        self, id_: Optional[int] = None
+    ) -> Union[list[dict[str, Any]], dict[str, Any]]:
         """Gets all delay profiles or specific one with ID
 
         Args:
             id_ (Optional[int], optional): Metadata profile ID from database. Defaults to None.
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            Union[list[dict[str, Any]], dict[str, Any]]: List of dictionaries with items
         """
         path = f"delayprofile/{id_}" if id_ else "delayprofile"
-        return self.assert_return(path, self.ver_uri, list)
+        return self.assert_return(path, self.ver_uri, dict if id_ else list)
 
     # GET /releaseprofile/{id}
-    def get_release_profile(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
+    def get_release_profile(
+        self, id_: Optional[int] = None
+    ) -> Union[list[dict[str, Any]], dict[str, Any]]:
         """Gets all release profiles or specific one with ID
 
         Args:
             id_ (Optional[int], optional): Release profile ID from database. Defaults to None.
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            Union[list[dict[str, Any]], dict[str, Any]]: List of dictionaries with items
         """
         path = f"releaseprofile/{id_}" if id_ else "releaseprofile"
-        return self.assert_return(path, self.ver_uri, list)
+        return self.assert_return(path, self.ver_uri, dict if id_ else list)
 
     ## BOOKS
 
     # GET /book and /book/{id}
-    def get_book(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
+    def get_book(
+        self, id_: Optional[int] = None
+    ) -> Union[list[dict[str, Any]], dict[str, Any]]:
         """Returns all books in your collection or the book with the matching
         book ID if one is found.
 
@@ -324,31 +414,15 @@ class ReadarrAPI(BaseArrAPI):
             id_ (Optional[int], optional): Database id for book. Defaults to None.
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            Union[list[dict[str, Any]], dict[str, Any]]: List of dictionaries with items
         """
         path = f"book/{id_}" if id_ else "book"
-        return self.assert_return(path, self.ver_uri, list)
-
-    # GET /book/lookup
-    def lookup_book(self, term: str) -> list[dict[str, Any]]:
-        """Searches for new books using a term, goodreads ID, isbn or asin.
-
-        Args:
-            term (str): Search term::
-
-                goodreads:656
-                isbn:067003469X
-                asin:B00JCDK5ME
-
-        Returns:
-            list[dict[str, Any]]: List of dictionaries with items
-        """
-        return self.assert_return("book/lookup", self.ver_uri, list, {"term": term})
+        return self.assert_return(path, self.ver_uri, dict if id_ else list)
 
     # POST /book
     def add_book(
         self,
-        db_id: str,
+        id_: str,
         book_id_type: ReadarrBookTypes,
         root_dir: str,
         quality_profile_id: Optional[int] = None,
@@ -361,7 +435,7 @@ class ReadarrAPI(BaseArrAPI):
         """Adds a new book and  its associated author (if not already added)
 
         Args:
-            db_id (int): goodreads, isbn, asin ID for the book
+            id_ (str): goodreads, isbn, asin ID for the book
             book_id_type (str): goodreads / isbn / asin
             root_dir (str): Directory for book to be stored
             quality_profile_id (int, optional): quality profile id. Defaults to 1.
@@ -376,7 +450,7 @@ class ReadarrAPI(BaseArrAPI):
         """
 
         book_json = self._book_json(
-            db_id,
+            id_,
             book_id_type,
             root_dir,
             quality_profile_id,
@@ -406,56 +480,50 @@ class ReadarrAPI(BaseArrAPI):
 
     # DELETE /book/{id}
     def del_book(
-        self, id_: int, delete_files: bool = False, import_list_exclusion: bool = True
+        self,
+        id_: int,
+        delete_files: Optional[bool] = None,
+        import_list_exclusion: Optional[bool] = None,
     ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
         """Delete the book with the given ID
 
         Args:
             id_ (int): Database ID for book
-            delete_files (bool, optional): If true book folder and files will be deleted. Defaults to False.
-            import_list_exclusion (bool, optional): Add an exclusion so book doesn't get re-added. Defaults to True.
+            delete_files (bool, optional): If true book folder and files will be deleted. Defaults to None.
+            import_list_exclusion (bool, optional): Add an exclusion so book doesn't get re-added. Defaults to None.
 
         Returns:
             Response: HTTP Response
         """
-        params = {
-            "deleteFiles": delete_files,
-            "addImportListExclusion": import_list_exclusion,
-        }
+        params: dict[str, bool] = {}
+        if delete_files:
+            params["deleteFiles"] = delete_files
+        if import_list_exclusion:
+            params["addImportListExclusion"] = import_list_exclusion
+
         return self._delete(f"book/{id_}", self.ver_uri, params=params)
 
     # AUTHOR
 
     # GET /author and /author/{id}
-    def get_author(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
+    def get_author(
+        self, id_: Optional[int] = None
+    ) -> Union[list[dict[str, Any]], dict[str, Any]]:
         """Returns all authors in your collection or the author with the matching ID if one is found.
 
         Args:
             id_ (Optional[int], optional): Database ID for author. Defaults to None.
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            Union[list[dict[str, Any]], dict[str, Any]]: List of dictionaries with items
         """
         path = f"author/{id_}" if id_ else "author"
-        return self.assert_return(path, self.ver_uri, list)
-
-    # GET /author/lookup/
-    def lookup_author(self, term: str) -> list[dict[str, Any]]:
-        """Searches for new authors using a term
-
-        Args:
-            term (str): Author name or book
-
-        Returns:
-            list[dict[str, Any]]: List of dictionaries with items
-        """
-        params = {"term": term}
-        return self.assert_return("author/lookup", self.ver_uri, list, params)
+        return self.assert_return(path, self.ver_uri, dict if id_ else list)
 
     # POST /author/
     def add_author(
         self,
-        search_term: str,
+        term: str,
         root_dir: str,
         quality_profile_id: Optional[int] = None,
         metadata_profile_id: Optional[int] = None,
@@ -466,7 +534,7 @@ class ReadarrAPI(BaseArrAPI):
         """Adds an authorbased on search term, must be author name or book by goodreads / isbn / asin ID
 
         Args:
-            search_term (str): Author name or Author book by ID
+            term (str): Author name or Author book by ID
             root_dir (str): Directory for book to be stored
             quality_profile_id (int, optional): Quality profile id. Defaults to 1.
             metadata_profile_id (int, optional): Metadata profile id. Defaults to 0.
@@ -478,7 +546,7 @@ class ReadarrAPI(BaseArrAPI):
             dict[str, Any]: Dictonary of added record
         """
         author_json = self._author_json(
-            search_term,
+            term,
             root_dir,
             quality_profile_id,
             metadata_profile_id,
@@ -506,22 +574,27 @@ class ReadarrAPI(BaseArrAPI):
 
     # DELETE /author/{id}
     def del_author(
-        self, id_: int, delete_files: bool = False, import_list_exclusion: bool = True
+        self,
+        id_: int,
+        delete_files: Optional[bool] = None,
+        import_list_exclusion: Optional[bool] = None,
     ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
         """Delete the author with the given ID
 
         Args:
             id_ (int): Database ID for author
-            delete_files (bool, optional): If true author folder and files will be deleted. Defaults to False.
-            import_list_exclusion (bool, optional): Add an exclusion so author doesn't get re-added. Defaults to True.
+            delete_files (bool, optional): If true author folder and files will be deleted. Defaults to None.
+            import_list_exclusion (bool, optional): Add an exclusion so author doesn't get re-added. Defaults to None.
 
         Returns:
             Response: HTTP Response
         """
-        params = {
-            "deleteFiles": delete_files,
-            "addImportListExclusion": import_list_exclusion,
-        }
+        params: dict[str, bool] = {}
+        if delete_files:
+            params["deleteFiles"] = delete_files
+        if import_list_exclusion:
+            params["addImportListExclusion"] = import_list_exclusion
+
         return self._delete(f"author/{id_}", self.ver_uri, params=params)
 
     ## LOG
@@ -541,27 +614,27 @@ class ReadarrAPI(BaseArrAPI):
     def add_root_folder(
         self,
         name: str,
-        directory: str,
+        path: str,
         is_calibre_lib: bool = False,
         calibre_host: str = "localhost",
         calibre_port: int = 8080,
         use_ssl: bool = False,
         output_profile: str = "default",
-        default_tags: Union[list, None] = None,
+        default_tags: Optional[list] = None,
         default_quality_profile_id: int = 1,
         default_metadata_profile_id: int = 1,
     ) -> dict[str, Any]:
-        """Add a new root directory to the Readarr Server
+        """Add a new location to store files
 
         Args:
             name (str): Friendly Name for folder
-            directory (str): Directory to use e.g. /books/
+            path (str): Location the files should be stored
             is_calibre_lib (bool, optional): Use Calibre Content Server. Defaults to False.
             calibre_host (str, optional): Calibre Content Server address. Defaults to "localhost".
             calibre_port (int, optional): Calibre Content Server port. Defaults to 8080.
             use_ssl (bool, optional): Calibre Content Server SSL. Defaults to False.
             output_profile (str, optional): Books to monitor. Defaults to "default".
-            default_tags (Union[list, None], optional): List of tags to apply. Defaults to None.
+            default_tags (Optional[list], optional): List of tags to apply. Defaults to None.
             default_quality_profile_id (int, optional): Quality Profile. Defaults to 1.
             default_metadata_profile_id (int, optional): Metadata Profile. Defaults to 1.
 
@@ -578,7 +651,7 @@ class ReadarrAPI(BaseArrAPI):
             "defaultQualityProfileId": default_quality_profile_id,
             "defaultMetadataProfileId": default_metadata_profile_id,
             "name": name,
-            "path": directory,
+            "path": path,
         }
         return self.assert_return_post(
             "rootFolder", self.ver_uri, dict, data=folder_json

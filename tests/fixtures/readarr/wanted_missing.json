@@ -1,0 +1,57 @@
+{
+    "page": 1,
+    "pageSize": 10,
+    "sortKey": "Books.Id",
+    "sortDirection": "default",
+    "totalRecords": 82,
+    "records": [
+        {
+            "title": "string",
+            "authorTitle": "string",
+            "seriesTitle": "",
+            "disambiguation": "string",
+            "authorId": 22,
+            "foreignBookId": "string",
+            "titleSlug": "string",
+            "monitored": true,
+            "anyEditionOk": true,
+            "ratings": {
+                "votes": 403868,
+                "value": 4.02,
+                "popularity": 1623549.3599999999
+            },
+            "releaseDate": "1961-11-01T00:00:00Z",
+            "pageCount": 146,
+            "genres": [
+                "string"
+            ],
+            "images": [
+                {
+                    "url": "string",
+                    "coverType": "cover",
+                    "extension": ".jpg"
+                }
+            ],
+            "links": [
+                {
+                    "url": "string",
+                    "name": "Goodreads Editions"
+                },
+                {
+                    "url": "string",
+                    "name": "Goodreads Book"
+                }
+            ],
+            "statistics": {
+                "bookFileCount": 0,
+                "bookCount": 1,
+                "totalBookCount": 1,
+                "sizeOnDisk": 0,
+                "percentOfBooks": 0
+            },
+            "added": "2022-05-25T09:35:57Z",
+            "grabbed": false,
+            "id": 997
+        }
+    ]
+}

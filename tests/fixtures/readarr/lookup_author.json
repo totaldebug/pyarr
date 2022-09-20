@@ -1,0 +1,89 @@
+[
+    {
+        "authorMetadataId": 0,
+        "status": "continuing",
+        "ended": false,
+        "authorName": "string",
+        "authorNameLastFirst": "string",
+        "foreignAuthorId": "1234567",
+        "titleSlug": "1234567",
+        "overview": "string",
+        "links": [
+            {
+                "url": "string",
+                "name": "Goodreads"
+            }
+        ],
+        "images": [
+            {
+                "url": "string",
+                "coverType": "poster",
+                "extension": ".jpg"
+            }
+        ],
+        "remotePoster": "string",
+        "qualityProfileId": 0,
+        "metadataProfileId": 0,
+        "monitored": false,
+        "monitorNewItems": "all",
+        "genres": [],
+        "cleanName": "string",
+        "sortName": "string",
+        "sortNameLastFirst": "string",
+        "tags": [],
+        "added": "0001-01-01T00:01:00Z",
+        "ratings": {
+            "votes": 31221602,
+            "value": 4.46,
+            "popularity": 139248344.92
+        },
+        "statistics": {
+            "bookFileCount": 0,
+            "bookCount": 0,
+            "availableBookCount": 0,
+            "totalBookCount": 0,
+            "sizeOnDisk": 0,
+            "percentOfBooks": 0
+        }
+    },
+    {
+        "authorMetadataId": 0,
+        "status": "continuing",
+        "ended": false,
+        "authorName": "string",
+        "authorNameLastFirst": "string",
+        "foreignAuthorId": "1234567",
+        "titleSlug": "1234567",
+        "overview": "",
+        "links": [
+            {
+                "url": "string",
+                "name": "Goodreads"
+            }
+        ],
+        "images": [],
+        "qualityProfileId": 0,
+        "metadataProfileId": 0,
+        "monitored": false,
+        "monitorNewItems": "all",
+        "genres": [],
+        "cleanName": "string",
+        "sortName": "string",
+        "sortNameLastFirst": "string",
+        "tags": [],
+        "added": "0001-01-01T00:01:00Z",
+        "ratings": {
+            "votes": 18032,
+            "value": 4.72,
+            "popularity": 85111.04
+        },
+        "statistics": {
+            "bookFileCount": 0,
+            "bookCount": 0,
+            "availableBookCount": 0,
+            "totalBookCount": 0,
+            "sizeOnDisk": 0,
+            "percentOfBooks": 0
+        }
+    }
+]

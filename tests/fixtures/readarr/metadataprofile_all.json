@@ -1,0 +1,23 @@
+[
+    {
+        "name": "Standard",
+        "minPopularity": 350,
+        "skipMissingDate": true,
+        "skipMissingIsbn": false,
+        "skipPartsAndSets": true,
+        "skipSeriesSecondary": false,
+        "allowedLanguages": "eng, en-US, en-GB, null",
+        "minPages": 0,
+        "id": 1
+    },
+    {
+        "name": "None",
+        "minPopularity": 10000000000,
+        "skipMissingDate": false,
+        "skipMissingIsbn": false,
+        "skipPartsAndSets": false,
+        "skipSeriesSecondary": false,
+        "minPages": 0,
+        "id": 2
+    }
+]
