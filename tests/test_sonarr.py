@@ -745,6 +745,55 @@ def test_lookup_series_by_tvdb_id(responses, sonarr_client):
     assert isinstance(data, list)
 
 
+@pytest.mark.usefixtures
+def test_get_history(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/history",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/history.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_history()
+    assert isinstance(data, dict)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/history?episodeId=1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/history.json"),
+        status=200,
+        match_querystring=True,
+    )
+
+    data = sonarr_client.get_history(id_=1)
+    assert isinstance(data, dict)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/history?page=1&pageSize=10&sortKey=time&sortDirection=default",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/history.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.get_history(
+        page=1,
+        page_size=10,
+        sort_key=PyarrHistorySortKey.TIME,
+        sort_dir=PyarrSortDirection.DEFAULT,
+    )
+    assert isinstance(data, dict)
+
+    with contextlib.suppress(PyarrMissingArgument):
+        data = sonarr_client.get_history(sort_key=PyarrHistorySortKey.TIME)
+        assert False
+    with contextlib.suppress(PyarrMissingArgument):
+        data = sonarr_client.get_history(sort_dir=PyarrSortDirection.DESC)
+        assert False
+
+
 #### BASE TESTS ####
 # These  tests are to make sure the base functions work as
 # expected for each api
@@ -960,55 +1009,6 @@ def test_get_log(responses, sonarr_client):
         assert False
     with contextlib.suppress(PyarrMissingArgument):
         data = sonarr_client.get_log(filter_value=PyarrLogFilterValue.ALL)
-        assert False
-
-
-@pytest.mark.usefixtures
-def test_get_history(responses, sonarr_client):
-    responses.add(
-        responses.GET,
-        "https://127.0.0.1:8989/api/v3/history",
-        headers={"Content-Type": "application/json"},
-        body=load_fixture("sonarr/history.json"),
-        status=200,
-        match_querystring=True,
-    )
-    data = sonarr_client.get_history()
-    assert isinstance(data, dict)
-
-    responses.add(
-        responses.GET,
-        "https://127.0.0.1:8989/api/v3/history?episodeId=1",
-        headers={"Content-Type": "application/json"},
-        body=load_fixture("sonarr/history.json"),
-        status=200,
-        match_querystring=True,
-    )
-
-    data = sonarr_client.get_history(id_=1)
-    assert isinstance(data, dict)
-
-    responses.add(
-        responses.GET,
-        "https://127.0.0.1:8989/api/v3/history?page=1&pageSize=10&sortKey=time&sortDirection=default",
-        headers={"Content-Type": "application/json"},
-        body=load_fixture("sonarr/history.json"),
-        status=200,
-        match_querystring=True,
-    )
-    data = sonarr_client.get_history(
-        page=1,
-        page_size=10,
-        sort_key=PyarrHistorySortKey.TIME,
-        sort_dir=PyarrSortDirection.DEFAULT,
-    )
-    assert isinstance(data, dict)
-
-    with contextlib.suppress(PyarrMissingArgument):
-        data = sonarr_client.get_history(sort_key=PyarrHistorySortKey.TIME)
-        assert False
-    with contextlib.suppress(PyarrMissingArgument):
-        data = sonarr_client.get_history(sort_dir=PyarrSortDirection.DESC)
         assert False
 
 
@@ -1561,8 +1561,43 @@ def test_get_notification_schema(responses, sonarr_client):
         assert False
 
 
-# TODO: add_notification
-# TODO: upd_notification
+@pytest.mark.usefixtures
+def test_add_notification(responses, sonarr_client):
+    responses.add(
+        responses.POST,
+        "https://127.0.0.1:8989/api/v3/notification",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/notification.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.add_notification(
+        data={"implementationName": "Plex Media Server"}
+    )
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_upd_notification(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/notification/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/notification.json"),
+        status=200,
+        match_querystring=True,
+    )
+    responses.add(
+        responses.PUT,
+        "https://127.0.0.1:8989/api/v3/notification/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/notification.json"),
+        status=200,
+        match_querystring=True,
+    )
+    notification = sonarr_client.get_notification(id_=1)
+    data = sonarr_client.upd_notification(id_=1, data=notification)
+    assert isinstance(data, dict)
 
 
 @pytest.mark.usefixtures
@@ -1719,8 +1754,43 @@ def test_get_download_client_schema(responses, sonarr_client):
         assert False
 
 
-# TODO: add_download_client
-# TODO: upd_download_client
+@pytest.mark.usefixtures
+def test_add_download_client(responses, sonarr_client):
+    responses.add(
+        responses.POST,
+        "https://127.0.0.1:8989/api/v3/downloadclient",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/downloadclient.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.add_download_client(
+        data={"implementationName": "Plex Media Server"}
+    )
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_upd_download_client(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/downloadclient/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/downloadclient.json"),
+        status=200,
+        match_querystring=True,
+    )
+    responses.add(
+        responses.PUT,
+        "https://127.0.0.1:8989/api/v3/downloadclient/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/downloadclient.json"),
+        status=200,
+        match_querystring=True,
+    )
+    download_client = sonarr_client.get_download_client(id_=1)
+    data = sonarr_client.upd_download_client(id_=1, data=download_client)
+    assert isinstance(data, dict)
 
 
 @pytest.mark.usefixtures
@@ -1785,8 +1855,41 @@ def test_get_import_list_schema(responses, sonarr_client):
         assert False
 
 
-# TODO: add_import_list
-# TODO: upd_import_list
+@pytest.mark.usefixtures
+def test_add_import_list(responses, sonarr_client):
+    responses.add(
+        responses.POST,
+        "https://127.0.0.1:8989/api/v3/importlist",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/import_list.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = sonarr_client.add_import_list(data={"implementationName": "Plex Watchlist"})
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_upd_import_list(responses, sonarr_client):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/importlist/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/import_list.json"),
+        status=200,
+        match_querystring=True,
+    )
+    responses.add(
+        responses.PUT,
+        "https://127.0.0.1:8989/api/v3/importlist/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("sonarr/import_list.json"),
+        status=200,
+        match_querystring=True,
+    )
+    import_list = sonarr_client.get_import_list(id_=1)
+    data = sonarr_client.upd_import_list(id_=1, data=import_list)
+    assert isinstance(data, dict)
 
 
 @pytest.mark.usefixtures

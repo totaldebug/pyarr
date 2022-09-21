@@ -119,8 +119,6 @@ class ReadarrAPI(BaseArrAPI):
                 metadata_profile = self.get_metadata_profile()
                 if isinstance(metadata_profile, list):
                     metadata_profile_id = metadata_profile[0]["id"]
-                else:
-                    metadata_profile_id = metadata_profile["id"]
             except IndexError as exception:
                 raise PyarrMissingProfile(
                     "There is no Metadata Profile setup"
@@ -179,8 +177,6 @@ class ReadarrAPI(BaseArrAPI):
                 metadata_profile = self.get_metadata_profile()
                 if isinstance(metadata_profile, list):
                     metadata_profile_id = metadata_profile[0]["id"]
-                else:
-                    metadata_profile_id = metadata_profile["id"]
             except IndexError as exception:
                 raise PyarrMissingProfile(
                     "There is no Metadata Profile setup"
