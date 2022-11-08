@@ -16,6 +16,7 @@ from pyarr.models.common import (
     PyarrSortDirection,
     PyarrTaskSortKey,
 )
+from pyarr.types import JsonDataType
 
 from .request_handler import RequestHandler
 
@@ -120,7 +121,7 @@ class BaseArrAPI(RequestHandler):
         start_date: Optional[datetime] = None,
         end_date: Optional[datetime] = None,
         unmonitored: bool = True,
-    ) -> list[dict[str, Any]]:
+    ) -> list[dict[str, JsonDataType]]:
         """Gets upcoming releases by monitored, if start/end are not
         supplied, today and tomorrow will be returned
 
@@ -130,7 +131,7 @@ class BaseArrAPI(RequestHandler):
             unmonitored (bool, optional): Include unmonitored movies. Defaults to True.
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            list[dict[str, JsonDataType]]: List of dictionaries with items
         """
         params: dict[str, Any] = {}
         if start_date:
@@ -144,59 +145,59 @@ class BaseArrAPI(RequestHandler):
     # SYSTEM
 
     # GET /system/status
-    def get_system_status(self) -> dict[str, Any]:
+    def get_system_status(self) -> dict[str, JsonDataType]:
         """Gets system status
 
         Returns:
-           dict[str, Any]: Dictionary with items
+           dict[str, JsonDataType]: Dictionary with items
         """
         return self.assert_return("system/status", self.ver_uri, dict)
 
     # GET /health
-    def get_health(self) -> list[dict[str, Any]]:
+    def get_health(self) -> list[dict[str, JsonDataType]]:
         """Get health information
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            list[dict[str, JsonDataType]]: List of dictionaries with items
         """
         return self.assert_return("health", self.ver_uri, list)
 
     # GET /metadata
     def get_metadata(
         self, id_: Optional[int] = None
-    ) -> Union[list[dict[str, Any]], dict[str, Any]]:
+    ) -> Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]:
         """Get all metadata consumer settings
 
         Args:
             id_ (Optional[int], optional): ID for specific metadata record
 
         Returns:
-             Union[list[dict[str, Any]], dict[str, Any]]: List of dictionaries with items
+             Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]: List of dictionaries with items
         """
         return self.assert_return(
             f"metadata{f'/{id_}' if id_ else ''}", self.ver_uri, dict if id_ else list
         )
 
     # GET /update
-    def get_update(self) -> list[dict[str, Any]]:
+    def get_update(self) -> list[dict[str, JsonDataType]]:
         """Will return a list of recent updated
 
         Returns:
-             list[dict[str, Any]]: List of dictionaries with items
+             list[dict[str, JsonDataType]]: List of dictionaries with items
         """
         return self.assert_return("update", self.ver_uri, list)
 
     # GET /rootfolder
     def get_root_folder(
         self, id_: Optional[int] = None
-    ) -> Union[list[dict[str, Any]], dict[str, Any]]:
+    ) -> Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]:
         """Get list of root folders, free space and any unmappedFolders
 
         Args:
             id_ (Optional[int], optional): ID of the folder to return. Defaults to None.
 
         Returns:
-             Union[list[dict[str, Any]], dict[str, Any]]: List of dictionaries with items
+             Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]: List of dictionaries with items
         """
         return self.assert_return(
             f"rootfolder{f'/{id_}' if id_ else ''}", self.ver_uri, dict if id_ else list
@@ -206,7 +207,7 @@ class BaseArrAPI(RequestHandler):
     def del_root_folder(
         self, id_: int
     ) -> Union[
-        Response, dict[str, Any], dict[Any, Any]
+        Response, dict[str, JsonDataType], dict[Any, Any]
     ]:  # sourcery skip: class-extract-method
         """Delete root folder with specified id
 
@@ -219,21 +220,21 @@ class BaseArrAPI(RequestHandler):
         return self._delete(f"rootfolder/{id_}", self.ver_uri)
 
     # GET /diskspace
-    def get_disk_space(self) -> list[dict[str, Any]]:
+    def get_disk_space(self) -> list[dict[str, JsonDataType]]:
         """Query disk usage information
             System > Status
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            list[dict[str, JsonDataType]]: List of dictionaries with items
         """
         return self.assert_return("diskspace", self.ver_uri, list)
 
     # GET /system/backup
-    def get_backup(self) -> list[dict[str, Any]]:
+    def get_backup(self) -> list[dict[str, JsonDataType]]:
         """Returns the list of available backups
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            list[dict[str, JsonDataType]]: List of dictionaries with items
         """
         return self.assert_return("system/backup", self.ver_uri, list)
 
@@ -248,7 +249,7 @@ class BaseArrAPI(RequestHandler):
         sort_dir: Optional[PyarrSortDirection] = None,
         filter_key: Optional[PyarrLogFilterKey] = None,
         filter_value: Optional[PyarrLogFilterValue] = None,
-    ) -> dict[str, Any]:
+    ) -> dict[str, JsonDataType]:
         """Gets logs from instance
 
         Args:
@@ -260,7 +261,7 @@ class BaseArrAPI(RequestHandler):
             filter_value (Optional[PyarrFilterValue], optional): Value of the filter. Defaults to None.
 
         Returns:
-            dict[str, Any]: List of dictionaries with items
+            dict[str, JsonDataType]: List of dictionaries with items
         """
         params: dict[
             str,
@@ -301,7 +302,7 @@ class BaseArrAPI(RequestHandler):
         page_size: Optional[int] = None,
         sort_key: Optional[PyarrHistorySortKey] = None,
         sort_dir: Optional[PyarrSortDirection] = None,
-    ) -> dict[str, Any]:
+    ) -> dict[str, JsonDataType]:
         """Gets history (grabs/failures/completed)
 
         Args:
@@ -311,7 +312,7 @@ class BaseArrAPI(RequestHandler):
             sort_dir (Optional[PyarrSortDirection], optional): Direction to sort the items. Defaults to None.
 
         Returns:
-           dict[str, Any]: Dictionary with items
+           dict[str, JsonDataType]: Dictionary with items
         """
         params: dict[str, Union[int, PyarrHistorySortKey, PyarrSortDirection]] = {}
 
@@ -338,7 +339,7 @@ class BaseArrAPI(RequestHandler):
         page_size: Optional[int] = None,
         sort_key: Optional[PyarrBlocklistSortKey] = None,
         sort_dir: Optional[PyarrSortDirection] = None,
-    ) -> dict[str, Any]:
+    ) -> dict[str, JsonDataType]:
         """Returns blocked releases.
 
         Args:
@@ -348,7 +349,7 @@ class BaseArrAPI(RequestHandler):
             sort_dir (Optional[PyarrSortDirection], optional): Direction to sort the items. Defaults to None.
 
         Returns:
-            dict[str, Any]: Dictionary with items
+            dict[str, JsonDataType]: Dictionary with items
         """
         params: dict[str, Union[int, PyarrBlocklistSortKey, PyarrSortDirection]] = {}
 
@@ -369,7 +370,7 @@ class BaseArrAPI(RequestHandler):
     # DELETE /blocklist
     def del_blocklist(
         self, id_: int
-    ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
+    ) -> Union[Response, dict[str, JsonDataType], dict[Any, Any]]:
         """Removes a specific release (the id provided) from the blocklist
 
         Args:
@@ -383,7 +384,7 @@ class BaseArrAPI(RequestHandler):
     # DELETE /blocklist/bulk
     def del_blocklist_bulk(
         self, ids: list[int]
-    ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
+    ) -> Union[Response, dict[str, JsonDataType], dict[Any, Any]]:
         """Delete blocked releases in bulk
 
         Args:
@@ -400,21 +401,23 @@ class BaseArrAPI(RequestHandler):
     # GET /qualityprofile/{id}
     def get_quality_profile(
         self, id_: Optional[int] = None
-    ) -> Union[list[dict[str, Any]], dict[Any, Any]]:
+    ) -> Union[list[dict[str, JsonDataType]], dict[Any, Any]]:
         """Gets all quality profiles or specific one with id
 
         Args:
             id_ (Optional[int], optional): Quality profile id from database. Defaults to None.
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            list[dict[str, JsonDataType]]: List of dictionaries with items
         """
 
         path = f"qualityprofile{f'/{id_}' if id_ else ''}"
         return self.assert_return(path, self.ver_uri, dict if id_ else list)
 
     # PUT /qualityprofile/{id}
-    def upd_quality_profile(self, id_: int, data: dict[str, Any]) -> dict[str, Any]:
+    def upd_quality_profile(
+        self, id_: int, data: dict[str, JsonDataType]
+    ) -> dict[str, JsonDataType]:
         """Update the quality profile data
 
         Note:
@@ -422,10 +425,10 @@ class BaseArrAPI(RequestHandler):
 
         Args:
             id_ (int): Profile ID to Update
-            data (dict[str, Any]): All parameters to update
+            data (dict[str, JsonDataType]): All parameters to update
 
         Returns:
-            dict[str, Any]: Dictionary of updated record
+            dict[str, JsonDataType]: Dictionary of updated record
         """
 
         return self.assert_return_put(
@@ -435,7 +438,7 @@ class BaseArrAPI(RequestHandler):
     # DELETE /qualityprofile
     def del_quality_profile(
         self, id_: int
-    ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
+    ) -> Union[Response, dict[str, JsonDataType], dict[Any, Any]]:
         """Removes a specific quality profile from the blocklist
 
         Args:
@@ -449,20 +452,22 @@ class BaseArrAPI(RequestHandler):
     # GET /qualitydefinition/{id}
     def get_quality_definition(
         self, id_: Optional[int] = None
-    ) -> Union[list[dict[str, Any]], dict[Any, Any]]:
+    ) -> Union[list[dict[str, JsonDataType]], dict[Any, Any]]:
         """Gets all quality definitions or specific one by ID
 
         Args:
             id_ (Optional[int], optional): Import list database id. Defaults to None.
 
         Returns:
-            Union[list[dict[str, Any]], dict[Any, Any]]: List of dictionaries with items
+            Union[list[dict[str, JsonDataType]], dict[Any, Any]]: List of dictionaries with items
         """
         path = f"qualitydefinition/{id_}" if id_ else "qualitydefinition"
         return self.assert_return(path, self.ver_uri, dict if id_ else list)
 
     # PUT /qualitydefinition/{id}
-    def upd_quality_definition(self, id_: int, data: dict[str, Any]) -> dict[str, Any]:
+    def upd_quality_definition(
+        self, id_: int, data: dict[str, JsonDataType]
+    ) -> dict[str, JsonDataType]:
         """Update the quality definitions.
 
         Note:
@@ -470,10 +475,10 @@ class BaseArrAPI(RequestHandler):
 
         Args:
             id_ (int): ID of definition to update
-            data (dict[str, Any]): All parameters to update
+            data (dict[str, JsonDataType]): All parameters to update
 
         Returns:
-            dict[str, Any]: Dictionary of updated record
+            dict[str, JsonDataType]: Dictionary of updated record
         """
         return self.assert_return_put(
             f"qualitydefinition/{id_}", self.ver_uri, dict, data=data
@@ -484,20 +489,22 @@ class BaseArrAPI(RequestHandler):
     # GET /indexer/{id}
     def get_indexer(
         self, id_: Optional[int] = None
-    ) -> Union[list[dict[str, Any]], dict[Any, Any]]:
+    ) -> Union[list[dict[str, JsonDataType]], dict[Any, Any]]:
         """Get all indexers or specific by id
 
         Args:
             id_ (Optional[int], optional): Database if of indexer to return. Defaults to None.
 
         Returns:
-            Union[list[dict[str, Any]], dict[Any, Any]]: List of dictionaries with items
+            Union[list[dict[str, JsonDataType]], dict[Any, Any]]: List of dictionaries with items
         """
         path = f"indexer/{id_}" if id_ else "indexer"
         return self.assert_return(path, self.ver_uri, dict if id_ else list)
 
     # PUT /indexer/{id}
-    def upd_indexer(self, id_: int, data: dict[str, Any]) -> dict[str, Any]:
+    def upd_indexer(
+        self, id_: int, data: dict[str, JsonDataType]
+    ) -> dict[str, JsonDataType]:
         """Edit a Indexer by database id
 
         Note:
@@ -505,15 +512,17 @@ class BaseArrAPI(RequestHandler):
 
         Args:
             id_ (int): Indexer database id
-            data (dict[str, Any]): Data to be updated within Indexer
+            data (dict[str, JsonDataType]): Data to be updated within Indexer
 
         Returns:
-            dict[str, Any]: Dictionary of updated record
+            dict[str, JsonDataType]: Dictionary of updated record
         """
         return self.assert_return_put(f"indexer/{id_}", self.ver_uri, dict, data=data)
 
     # DELETE /indexer
-    def del_indexer(self, id_: int) -> Union[Response, dict[str, Any], dict[Any, Any]]:
+    def del_indexer(
+        self, id_: int
+    ) -> Union[Response, dict[str, JsonDataType], dict[Any, Any]]:
         """Removes a specific indexer from the blocklist
 
         Args:
@@ -533,7 +542,7 @@ class BaseArrAPI(RequestHandler):
         id_: int,
         remove_from_client: Optional[bool] = None,
         blocklist: Optional[bool] = None,
-    ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
+    ) -> Union[Response, dict[str, JsonDataType], dict[Any, Any]]:
         """Remove an item from the queue and blocklist it
 
         Args:
@@ -560,7 +569,7 @@ class BaseArrAPI(RequestHandler):
         sort_key: Optional[PyarrTaskSortKey] = None,
         sort_dir: Optional[PyarrSortDirection] = None,
         id_: Optional[int] = None,
-    ) -> dict[Any, Any]:
+    ) -> dict[str, JsonDataType]:
         """Return a list of tasks, or specify a task ID to return single task
 
         Args:
@@ -571,7 +580,7 @@ class BaseArrAPI(RequestHandler):
             id_ (Optional[int], optional):  ID for task. Defaults to None.
 
         Returns:
-            Union[list[dict[str, Any]], dict[Any, Any]]: List of dictionaries with items
+            dict[str, JsonDataType]: List of dictionaries with items
         """
         params: dict[
             str,
@@ -597,14 +606,14 @@ class BaseArrAPI(RequestHandler):
     # GET /remotepathmapping
     def get_remote_path_mapping(
         self, id_: Optional[int] = None
-    ) -> Union[list[dict[str, Any]], dict[Any, Any]]:
+    ) -> Union[list[dict[str, JsonDataType]], dict[Any, Any]]:
         """Get remote path mappings for downloads Directory
 
         Args:
             id_ (Optional[int], optional): ID for specific record. Defaults to None.
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            list[dict[str, JsonDataType]]: List of dictionaries with items
         """
         _path = f"remotepathmapping{'' if id_ is None else f'/{id_}'}"
         return self.assert_return(_path, self.ver_uri, dict if id_ else list)
@@ -615,89 +624,93 @@ class BaseArrAPI(RequestHandler):
     # CONFIG
 
     # GET /config/ui
-    def get_config_ui(self) -> dict[str, Any]:
+    def get_config_ui(self) -> dict[str, JsonDataType]:
         """Query Radarr for UI configuration
 
         Returns:
-            dict[str, Any]: List of dictionaries with items
+            dict[str, JsonDataType]: List of dictionaries with items
         """
         return self.assert_return("config/ui", self.ver_uri, dict)
 
     # PUT /config/ui
-    def upd_config_ui(self, data: dict[str, Any]) -> dict[str, Any]:
+    def upd_config_ui(self, data: dict[str, JsonDataType]) -> dict[str, JsonDataType]:
         """Edit one or many UI settings and save to to the database
 
         Args:
-            data (dict[str, Any]): Data to be Updated.
+            data (dict[str, JsonDataType]): Data to be Updated.
 
         Returns:
-            dict[str, Any]: Dictionary with items
+            dict[str, JsonDataType]: Dictionary with items
         """
         return self.assert_return_put("config/ui", self.ver_uri, dict, data=data)
 
     # GET /config/host
-    def get_config_host(self) -> dict[str, Any]:
+    def get_config_host(self) -> dict[str, JsonDataType]:
         """Get General/Host settings.
 
         Returns:
-            dict[str, Any]: Dictionaries with items
+            dict[str, JsonDataType]: Dictionaries with items
         """
         return self.assert_return("config/host", self.ver_uri, dict)
 
     # PUT /config/host
-    def upd_config_host(self, data: dict[str, Any]) -> dict[str, Any]:
+    def upd_config_host(self, data: dict[str, JsonDataType]) -> dict[str, JsonDataType]:
         """Edit General/Host settings.
 
         Args:
-            data (dict[str, Any]): data to be updated
+            data (dict[str, JsonDataType]): data to be updated
 
         Returns:
-            dict[str, Any]: Dictionaries with items
+            dict[str, JsonDataType]: Dictionaries with items
         """
         return self.assert_return_put("config/host", self.ver_uri, dict, data=data)
 
     # GET /config/naming
-    def get_config_naming(self) -> dict[str, Any]:
+    def get_config_naming(self) -> dict[str, JsonDataType]:
         """Get Settings for file and folder naming.
 
         Returns:
-            dict[str, Any]: Dictionary with items
+            dict[str, JsonDataType]: Dictionary with items
         """
         return self.assert_return("config/naming", self.ver_uri, dict)
 
     # PUT /config/naming
-    def upd_config_naming(self, data: dict[str, Any]) -> dict[str, Any]:
+    def upd_config_naming(
+        self, data: dict[str, JsonDataType]
+    ) -> dict[str, JsonDataType]:
         """Edit Settings for file and folder naming.
 
         Args:
-            data (dict[str, Any]): data to be updated
+            data (dict[str, JsonDataType]): data to be updated
 
         Returns:
-            dict[str, Any]: Dictionary with items
+            dict[str, JsonDataType]: Dictionary with items
         """
         return self.assert_return_put("config/naming", self.ver_uri, dict, data=data)
 
     # GET /config/mediamanagement
-    def get_media_management(self) -> dict[str, Any]:
+    def get_media_management(self) -> dict[str, JsonDataType]:
         """Get media management configuration
 
         Returns:
-            dict[str, Any]: Dictionary with items
+            dict[str, JsonDataType]: Dictionary with items
         """
         return self.assert_return("config/mediamanagement", self.ver_uri, dict)
 
     # PUT /config/mediamanagement
-    def upd_media_management(self, data: dict[str, Any]) -> dict[str, Any]:
+    def upd_media_management(
+        self, data: dict[str, JsonDataType]
+    ) -> dict[str, JsonDataType]:
         """Get media management configuration
 
         Note:
             Recommended to use with get_media_management()
 
         Args:
-            data (dict[str, Any]): data to be updated
+            data (dict[str, JsonDataType]): data to be updated
 
         Returns:
-            dict[str, Any]: Dictionary with items
+            dict[str, JsonDataType]: Dictionary with items
         """
         return self.assert_return_put(
             "config/mediamanagement", self.ver_uri, dict, data=data
@@ -708,14 +721,14 @@ class BaseArrAPI(RequestHandler):
     # GET /notification
     def get_notification(
         self, id_: Optional[int] = None
-    ) -> Union[list[dict[str, Any]], dict[Any, Any]]:
+    ) -> Union[list[dict[str, JsonDataType]], dict[Any, Any]]:
         """Get a list of all notification services, or single by ID
 
         Args:
             id_ (Optional[int], optional): Notification ID. Defaults to None.
 
         Returns:
-            Union[list[dict[str, Any]], dict[Any, Any]]: List of dictionaries with items
+            Union[list[dict[str, JsonDataType]], dict[Any, Any]]: List of dictionaries with items
         """
         _path = "" if id_ is None else f"/{id_}"
         return self.assert_return(
@@ -725,14 +738,14 @@ class BaseArrAPI(RequestHandler):
     # GET /notification/schema
     def get_notification_schema(
         self, implementation: Optional[PyarrNotificationSchema] = None
-    ) -> Union[list[dict[str, Any]], dict[str, Any]]:
+    ) -> Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]:
         """Get possible notification connections
 
         Args:
             implementation (Optional[PyarrNotificationSchema], optional): notification system
 
         Returns:
-            Union[list[dict[str, Any]], dict[str, Any]]: List of dictionaries with items
+            Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]: List of dictionaries with items
         """
         response = self.assert_return("notification/schema", self.ver_uri, list)
         if implementation:
@@ -747,30 +760,34 @@ class BaseArrAPI(RequestHandler):
         return response
 
     # POST /notification
-    def add_notification(self, data: dict[str, Any]) -> dict[str, Any]:
+    def add_notification(
+        self, data: dict[str, JsonDataType]
+    ) -> dict[str, JsonDataType]:
         """Add an import list based on the schema information supplied
 
         Note:
             Recommended to be used in conjunction with get_notification_schema()
 
         Args:
-            data (dict[str, Any]): dictionary with import list schema and settings
+            data (dict[str, JsonDataType]): dictionary with import list schema and settings
 
         Returns:
-            dict[str, Any]: dictionary of added item
+            dict[str, JsonDataType]: dictionary of added item
         """
         return self.assert_return_post("notification", self.ver_uri, dict, data=data)
 
     # PUT /notification/{id}
-    def upd_notification(self, id_: int, data: dict[str, Any]) -> dict[str, Any]:
+    def upd_notification(
+        self, id_: int, data: dict[str, JsonDataType]
+    ) -> dict[str, JsonDataType]:
         """Edit notification by database id
 
         Args:
             id_ (int): Database id of notification
-            data (dict[str, Any]): data that requires updating
+            data (dict[str, JsonDataType]): data that requires updating
 
         Returns:
-            dict[str, Any]: Dictionary of updated record
+            dict[str, JsonDataType]: Dictionary of updated record
         """
         return self.assert_return_put(
             f"notification/{id_}", self.ver_uri, dict, data=data
@@ -779,7 +796,7 @@ class BaseArrAPI(RequestHandler):
     # DELETE /notification/{id}
     def del_notification(
         self, id_: int
-    ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
+    ) -> Union[Response, dict[str, JsonDataType], dict[Any, Any]]:
         """Delete a notification by its database id
 
         Args:
@@ -795,14 +812,14 @@ class BaseArrAPI(RequestHandler):
     # GET /tag/{id}
     def get_tag(
         self, id_: Optional[int] = None
-    ) -> Union[list[dict[str, Any]], dict[str, Any]]:
+    ) -> Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]:
         """Returns all tags or specific tag by database id
 
         Args:
             id_ (Optional[int], optional): Database id for tag. Defaults to None.
 
         Returns:
-            Union[list[dict[str, Any]], dict[str, Any]]: List of dictionaries with items
+            Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]: List of dictionaries with items
         """
         path = f"tag/{id_}" if id_ else "tag"
         return self.assert_return(path, self.ver_uri, dict if id_ else list)
@@ -810,33 +827,33 @@ class BaseArrAPI(RequestHandler):
     # GET /tag/detail/{id}
     def get_tag_detail(
         self, id_: Optional[int] = None
-    ) -> Union[list[dict[str, Any]], dict[str, Any]]:
+    ) -> Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]:
         """Returns all tags or specific tag by database id with detailed information
 
         Args:
             id_ (Optional[int], optional): Database id for tag. Defaults to None.
 
         Returns:
-            Union[list[dict[str, Any]], dict[str, Any]]: List of dictionaries with items
+            Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]: List of dictionaries with items
         """
         path = f"tag/detail/{id_}" if id_ else "tag/detail"
         return self.assert_return(path, self.ver_uri, dict if id_ else list)
 
     # POST /tag
-    def create_tag(self, label: str) -> dict[str, Any]:
+    def create_tag(self, label: str) -> dict[str, JsonDataType]:
         """Adds a new tag
 
         Args:
             label (str): Tag name / label
 
         Returns:
-            dict[str, Any]: Dictionary of new record
+            dict[str, JsonDataType]: Dictionary of new record
         """
         data = {"label": label}
         return self.assert_return_post("tag", self.ver_uri, dict, data=data)
 
     # PUT /tag/{id}
-    def upd_tag(self, id_: int, label: str) -> dict[str, Any]:
+    def upd_tag(self, id_: int, label: str) -> dict[str, JsonDataType]:
         """Update an existing tag
 
         Note:
@@ -847,13 +864,15 @@ class BaseArrAPI(RequestHandler):
             label (str): tag name / label
 
         Returns:
-            dict[str, Any]: Dictionary of updated items
+            dict[str, JsonDataType]: Dictionary of updated items
         """
         data = {"id": id_, "label": label}
         return self.assert_return_put("tag", self.ver_uri, dict, data=data)
 
     # DELETE /tag/{id}
-    def del_tag(self, id_: int) -> Union[Response, dict[str, Any], dict[Any, Any]]:
+    def del_tag(
+        self, id_: int
+    ) -> Union[Response, dict[str, JsonDataType], dict[Any, Any]]:
         """Delete the tag with the given ID
 
         Args:
@@ -869,14 +888,14 @@ class BaseArrAPI(RequestHandler):
     # GET /downloadclient/{id}
     def get_download_client(
         self, id_: Optional[int] = None
-    ) -> Union[list[dict[str, Any]], dict[str, Any]]:
+    ) -> Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]:
         """Get a list of all the download clients or a single client by its database id
 
         Args:
             id_ (Optional[int], optional): Download client database id. Defaults to None.
 
         Returns:
-            Union[list[dict[str, Any]], dict[str, Any]]: List of dictionaries with items
+            Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]: List of dictionaries with items
         """
         path = f"downloadclient/{id_}" if id_ else "downloadclient"
         return self.assert_return(path, self.ver_uri, dict if id_ else list)
@@ -884,14 +903,14 @@ class BaseArrAPI(RequestHandler):
     # GET /downloadclient/schema
     def get_download_client_schema(
         self, implementation: Optional[PyarrDownloadClientSchema] = None
-    ) -> list[dict[str, Any]]:
+    ) -> list[dict[str, JsonDataType]]:
         """Gets the schemas for the different download Clients
 
         Args:
             implementation (Optional[PyarrDownloadClientSchema], optional): Client implementation name. Defaults to None.
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            list[dict[str, JsonDataType]]: List of dictionaries with items
         """
         response = self.assert_return("downloadclient/schema", self.ver_uri, list)
         if implementation:
@@ -907,30 +926,34 @@ class BaseArrAPI(RequestHandler):
         return response
 
     # POST /downloadclient/
-    def add_download_client(self, data: dict[str, Any]) -> dict[str, Any]:
+    def add_download_client(
+        self, data: dict[str, JsonDataType]
+    ) -> dict[str, JsonDataType]:
         """Add a download client based on the schema information supplied
 
         Note:
             Recommended to be used in conjunction with get_download_client_schema()
 
         Args:
-            data (dict[str, Any]): dictionary with download client schema and settings
+            data (dict[str, JsonDataType]): dictionary with download client schema and settings
 
         Returns:
-            dict[str, Any]: dictionary of added item
+            dict[str, JsonDataType]: dictionary of added item
         """
         return self.assert_return_post("downloadclient", self.ver_uri, dict, data=data)
 
     # PUT /downloadclient/{id}
-    def upd_download_client(self, id_: int, data: dict[str, Any]) -> dict[str, Any]:
+    def upd_download_client(
+        self, id_: int, data: dict[str, JsonDataType]
+    ) -> dict[str, JsonDataType]:
         """Edit a downloadclient by database id
 
         Args:
             id_ (int): Download client database id
-            data (dict[str, Any]): data to be updated within download client
+            data (dict[str, JsonDataType]): data to be updated within download client
 
         Returns:
-            dict[str, Any]: dictionary of updated item
+            dict[str, v]: dictionary of updated item
         """
         return self.assert_return_put(
             f"downloadclient/{id_}", self.ver_uri, dict, data=data
@@ -939,7 +962,7 @@ class BaseArrAPI(RequestHandler):
     # DELETE /downloadclient/{id}
     def del_download_client(
         self, id_: int
-    ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
+    ) -> Union[Response, dict[str, JsonDataType], dict[Any, Any]]:
         """Delete a download client by database id
 
         Args:
@@ -953,28 +976,30 @@ class BaseArrAPI(RequestHandler):
     # IMPORT LIST
 
     # GET /importlist
-    def get_import_list(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
+    def get_import_list(
+        self, id_: Optional[int] = None
+    ) -> list[dict[str, JsonDataType]]:
         """Query for all lists or a single list by its database id
 
         Args:
             id_ (Optional[int], optional): Import list database id. Defaults to None.
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            list[dict[str, JsonDataType]]: List of dictionaries with items
         """
         path = f"importlist/{id_}" if id_ else "importlist"
         return self.assert_return(path, self.ver_uri, dict if id_ else list)
 
     def get_import_list_schema(
         self, implementation: Optional[PyarrImportListSchema] = None
-    ) -> list[dict[str, Any]]:
+    ) -> list[dict[str, JsonDataType]]:
         """Gets the schemas for the different import list sources
 
         Args:
             implementation (Optional[PyarrImportListSchema], optional): Client implementation name. Defaults to None.
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            list[dict[str, JsonDataType]]: List of dictionaries with items
         """
         response = self.assert_return("importlist/schema", self.ver_uri, list)
         if implementation:
@@ -990,30 +1015,32 @@ class BaseArrAPI(RequestHandler):
         return response
 
     # POST /importlist/
-    def add_import_list(self, data: dict[str, Any]) -> dict[str, Any]:
+    def add_import_list(self, data: dict[str, JsonDataType]) -> dict[str, JsonDataType]:
         """Add an import list based on the schema information supplied
 
         Note:
             Recommended to be used in conjunction with get_import_list_schema()
 
         Args:
-            data (dict[str, Any]): dictionary with import list schema and settings
+            data (dict[str, JsonDataType]): dictionary with import list schema and settings
 
         Returns:
-            dict[str, Any]: dictionary of added item
+            dict[str, JsonDataType]: dictionary of added item
         """
         return self.assert_return_post("importlist", self.ver_uri, dict, data=data)
 
     # PUT /importlist/{id}
-    def upd_import_list(self, id_: int, data: dict[str, Any]) -> dict[str, Any]:
+    def upd_import_list(
+        self, id_: int, data: dict[str, JsonDataType]
+    ) -> dict[str, JsonDataType]:
         """Edit an importlist
 
         Args:
             id_ (int): Import list database id
-            data (dict[str, Any]): data to be updated within the import list
+            data (dict[str, JsonDataType]): data to be updated within the import list
 
         Returns:
-            dict[str, Any]: Dictionary of updated data
+            dict[str, JsonDataType]: Dictionary of updated data
         """
         return self.assert_return_put(
             f"importlist/{id_}", self.ver_uri, dict, data=data
@@ -1022,7 +1049,7 @@ class BaseArrAPI(RequestHandler):
     # DELETE /importlist/{id}
     def del_import_list(
         self, id_: int
-    ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
+    ) -> Union[Response, dict[str, JsonDataType], dict[Any, Any]]:
         """Delete an import list
 
         Args:
@@ -1034,25 +1061,27 @@ class BaseArrAPI(RequestHandler):
         return self._delete(f"importlist/{id_}", self.ver_uri)
 
     # GET /config/downloadclient
-    def get_config_download_client(self) -> dict[str, Any]:
+    def get_config_download_client(self) -> dict[str, JsonDataType]:
         """Gets download client page configuration
 
         Returns:
-            dict[str, Any]: Dictionary of configuration
+            dict[str, JsonDataType]: Dictionary of configuration
         """
         return self.assert_return("config/downloadclient", self.ver_uri, dict)
 
-    def upd_config_download_client(self, data: dict[str, Any]) -> dict[str, Any]:
+    def upd_config_download_client(
+        self, data: dict[str, JsonDataType]
+    ) -> dict[str, JsonDataType]:
         """Update download client page configurations
 
         Note:
             Recommended to be used in conjunction with get_config_download_client()
 
         Args:
-            data (dict[str, Any]): data to be updated
+            data (dict[str, JsonDataType]): data to be updated
 
         Returns:
-            dict[str, Any]: dictionary with updated items
+            dict[str, JsonDataType]: dictionary with updated items
         """
         return self.assert_return_put(
             "config/downloadclient", self.ver_uri, dict, data=data

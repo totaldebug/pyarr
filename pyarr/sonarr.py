@@ -5,6 +5,7 @@ from warnings import warn
 from requests import Response
 
 from pyarr.exceptions import PyarrMissingArgument
+from pyarr.types import JsonDataType
 
 from .base import BaseArrAPI
 from .models.common import PyarrHistorySortKey, PyarrSortDirection
@@ -51,7 +52,7 @@ class SonarrAPI(BaseArrAPI):
         Returns:
             dict: dictionary of series data
         """
-        series = self.lookup_series_by_tvdb_id(tvdb_id)[0]
+        series: dict[str, Any] = self.lookup_series_by_tvdb_id(tvdb_id)[0]
         if not monitored and series.get("seasons"):
             for season in series["seasons"]:
                 season["monitored"] = False
@@ -77,14 +78,14 @@ class SonarrAPI(BaseArrAPI):
     def add_root_folder(
         self,
         directory: str,
-    ) -> dict[str, Any]:
+    ) -> dict[str, JsonDataType]:
         """Adds a new root folder
 
         Args:
             directory (str): The directory path
 
         Returns:
-            dict[str, Any]: Dictionary containing path details
+            dict[str, JsonDataType]: Dictionary containing path details
         """
         return self.assert_return_post(
             "rootfolder", self.ver_uri, dict, data={"path": directory}
@@ -95,14 +96,14 @@ class SonarrAPI(BaseArrAPI):
     # GET /command
     def get_command(
         self, id_: Optional[int] = None
-    ) -> Union[list[dict[str, Any]], dict[str, Any]]:
+    ) -> Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]:
         """Queries the status of a previously started command, or all currently started commands.
 
         Args:
             id_ (Optional[int], optional): Database ID of the command. Defaults to None.
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            list[dict[str, JsonDataType]]: List of dictionaries with items
         """
         path = f"command{f'/{id_}' if id_ else ''}"
         return self.assert_return(path, self.ver_uri, dict if id_ else list)
@@ -112,7 +113,7 @@ class SonarrAPI(BaseArrAPI):
     # TODO: look into DownloadedEpisodesScan and how to use it
     def post_command(
         self, name: SonarrCommands, **kwargs: Optional[Union[int, list[int]]]
-    ) -> dict[str, Any]:
+    ) -> dict[str, JsonDataType]:
         """Performs any of the predetermined Sonarr command routines
 
         Args:
@@ -134,7 +135,7 @@ class SonarrAPI(BaseArrAPI):
                 missingEpisodeSearch: None
 
         Returns:
-            dict[str, Any]: Dictionary containing job
+            dict[str, JsonDataType]: Dictionary containing job
         """
         data: dict[str, Any] = {
             "name": name,
@@ -146,7 +147,7 @@ class SonarrAPI(BaseArrAPI):
     ## EPISODE
 
     # GET /episode
-    def get_episode(self, id_: int, series: bool = False) -> dict[str, Any]:
+    def get_episode(self, id_: int, series: bool = False) -> dict[str, JsonDataType]:
         """Get get episodes by ID or series
 
         Args:
@@ -154,7 +155,7 @@ class SonarrAPI(BaseArrAPI):
             series (bool, optional): Set to true if the ID is for a Series. Defaults to false.
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            list[dict[str, JsonDataType]]: List of dictionaries with items
         """
         return self.assert_return(
             f"episode{'' if series else f'/{id_}'}",
@@ -164,7 +165,7 @@ class SonarrAPI(BaseArrAPI):
         )
 
     # GET /episode
-    def get_episodes_by_series_id(self, id_: int) -> list[dict[str, Any]]:
+    def get_episodes_by_series_id(self, id_: int) -> list[dict[str, JsonDataType]]:
         # sourcery skip: class-extract-method
         """Gets all episodes from a given series ID
 
@@ -176,7 +177,7 @@ class SonarrAPI(BaseArrAPI):
             future release. Please use get_episode()
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            list[dict[str, JsonDataType]]: List of dictionaries with items
         """
         warn(
             "This method is deprecated and will be removed in a future release. Please use get_episode()",
@@ -187,7 +188,7 @@ class SonarrAPI(BaseArrAPI):
         return self.assert_return("episode", self.ver_uri, list, params)
 
     # GET /episode/{id}
-    def get_episode_by_episode_id(self, id_: int) -> dict[str, Any]:
+    def get_episode_by_episode_id(self, id_: int) -> dict[str, JsonDataType]:
         """Gets a specific episode by database id
 
         Args:
@@ -198,7 +199,7 @@ class SonarrAPI(BaseArrAPI):
             future release. Please use get_episode()
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            list[dict[str, JsonDataType]]: List of dictionaries with items
         """
         warn(
             "This method is deprecated and will be removed in a future release. Please use get_episode()",
@@ -208,7 +209,9 @@ class SonarrAPI(BaseArrAPI):
         return self.assert_return(f"episode/{id_}", self.ver_uri, dict)
 
     # PUT /episode
-    def upd_episode(self, id_: int, data: dict[str, Any]) -> dict[str, Any]:
+    def upd_episode(
+        self, id_: int, data: dict[str, JsonDataType]
+    ) -> dict[str, JsonDataType]:
         """Update the given episodes, currently only monitored is supported
 
         Args:
@@ -222,21 +225,21 @@ class SonarrAPI(BaseArrAPI):
                 sonarr.upd_episode(1, payload)
 
         Returns:
-            dict[str, Any]: Dictionary with updated record
+            dict[str, JsonDataType]: Dictionary with updated record
         """
         return self.assert_return_put(f"episode/{id_}", self.ver_uri, dict, data=data)
 
     ## EPISODE FILE
 
     # GET /episodefile
-    def get_episode_files_by_series_id(self, id_: int) -> list[dict[str, Any]]:
+    def get_episode_files_by_series_id(self, id_: int) -> list[dict[str, JsonDataType]]:
         """Returns all episode file information for series id specified
 
         Args:
             id_ (int): Database id of series
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            list[dict[str, JsonDataType]]: List of dictionaries with items
         """
         warn(
             "This method is deprecated and will be removed in a future release. Please use get_episode_file()",
@@ -247,7 +250,9 @@ class SonarrAPI(BaseArrAPI):
         return self.assert_return("episodefile", self.ver_uri, list, params)
 
     # GET /episodefile/{id}
-    def get_episode_file(self, id_: int, series: bool = False) -> dict[str, Any]:
+    def get_episode_file(
+        self, id_: int, series: bool = False
+    ) -> dict[str, JsonDataType]:
         """Returns episode file information for specified id
 
         Args:
@@ -255,7 +260,7 @@ class SonarrAPI(BaseArrAPI):
             series (bool, optional): Set to true if the ID is for a Series. Defaults to false.
 
         Returns:
-            dict[str, Any]: Dictionary with data
+            dict[str, JsonDataType]: Dictionary with data
         """
         return self.assert_return(
             f"episodefile{'' if series else f'/{id_}'}",
@@ -267,7 +272,7 @@ class SonarrAPI(BaseArrAPI):
     # DELETE /episodefile/{id}
     def del_episode_file(
         self, id_: int
-    ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
+    ) -> Union[Response, dict[str, JsonDataType], dict[Any, Any]]:
         """Deletes the episode file with corresponding id
 
         Args:
@@ -280,13 +285,13 @@ class SonarrAPI(BaseArrAPI):
 
     # PUT /episodefile/{id}
     def upd_episode_file_quality(
-        self, id_: int, data: dict[str, Any]
-    ) -> dict[str, Any]:
+        self, id_: int, data: dict[str, JsonDataType]
+    ) -> dict[str, JsonDataType]:
         """Updates the quality of the episode file and returns the episode file
 
         Args:
             id_ (int): Database id for episode file
-            data (dict[str, Any]): data with quality::
+            data (dict[str, JsonDataType]): data with quality::
 
                 {
                     "quality": {
@@ -301,7 +306,7 @@ class SonarrAPI(BaseArrAPI):
                 }
 
         Returns:
-            dict[str, Any]: Dictionary with updated record
+            dict[str, JsonDataType]: Dictionary with updated record
         """
         return self.assert_return_put(
             f"episodefile/{id_}", self.ver_uri, dict, data=data
@@ -315,7 +320,7 @@ class SonarrAPI(BaseArrAPI):
         sort_key: Optional[SonarrSortKey] = None,
         sort_dir: Optional[PyarrSortDirection] = None,
         include_series: Optional[bool] = None,
-    ) -> dict[str, Any]:
+    ) -> dict[str, JsonDataType]:
         """Gets missing episode (episodes without files)
 
         Args:
@@ -326,7 +331,7 @@ class SonarrAPI(BaseArrAPI):
             include_series (Optional[bool], optional): Include the whole series. Defaults to None
 
         Returns:
-            dict[str, Any]: Dictionary with items
+            dict[str, JsonDataType]: Dictionary with items
         """
         params: dict[str, Union[int, SonarrSortKey, PyarrSortDirection, bool]] = {}
         if page:
@@ -355,7 +360,7 @@ class SonarrAPI(BaseArrAPI):
         include_unknown_series_items: Optional[bool] = None,
         include_series: Optional[bool] = None,
         include_episode: Optional[bool] = None,
-    ) -> dict[str, Any]:
+    ) -> dict[str, JsonDataType]:
         """Gets currently downloading info
 
         Args:
@@ -368,7 +373,7 @@ class SonarrAPI(BaseArrAPI):
             include_episode (Optional[bool], optional): Include episodes. Defaults to None.
 
         Returns:
-            dict[str, Any]: Dictionary with queue items
+            dict[str, JsonDataType]: Dictionary with queue items
         """
         params: dict[str, Union[int, bool, SonarrSortKey, PyarrSortDirection]] = {}
 
@@ -394,7 +399,7 @@ class SonarrAPI(BaseArrAPI):
 
     def get_parse_title_path(
         self, title: Optional[str] = None, path: Optional[str] = None
-    ) -> dict[str, Any]:
+    ) -> dict[str, JsonDataType]:
         """Returns the result of parsing a title or path. series and episodes will be
         returned only if the parsing matches to a specific series and one or more
         episodes. series and episodes will be formatted the same as Series and Episode
@@ -408,7 +413,7 @@ class SonarrAPI(BaseArrAPI):
             PyarrMissingArgument: If no argument is passed, error
 
         Returns:
-            dict[str, Any]: Dictionary with items
+            dict[str, JsonDataType]: Dictionary with items
         """
         if title is None and path is None:
             raise PyarrMissingArgument("A title or path must be specified")
@@ -420,7 +425,7 @@ class SonarrAPI(BaseArrAPI):
         return self.assert_return("parse", self.ver_uri, dict, params)
 
     # GET /parse
-    def get_parsed_title(self, title: str) -> dict[str, Any]:
+    def get_parsed_title(self, title: str) -> dict[str, JsonDataType]:
         """Returns the result of parsing a title. series and episodes will be
         returned only if the parsing matches to a specific series and one or more
         episodes. series and episodes will be formatted the same as Series and Episode
@@ -430,7 +435,7 @@ class SonarrAPI(BaseArrAPI):
             title (str): Title of series / episode
 
         Returns:
-            dict[str, Any]: List of dictionaries with items
+            dict[str, JsonDataType]: List of dictionaries with items
         """
         warn(
             "This method is deprecated and will be removed in a future release. Please use get_parse_title_path()",
@@ -440,7 +445,7 @@ class SonarrAPI(BaseArrAPI):
         return self.assert_return("parse", self.ver_uri, dict, {"title": title})
 
     # GET /parse
-    def get_parsed_path(self, file_path: str) -> dict[str, Any]:
+    def get_parsed_path(self, file_path: str) -> dict[str, JsonDataType]:
         """Returns the result of parsing a file path. series and episodes will be
         returned only if the parsing matches to a specific series and one or more
         episodes. series and episodes will be formatted the same as Series and Episode
@@ -450,7 +455,7 @@ class SonarrAPI(BaseArrAPI):
             file_path (str): file path of series / episode
 
         Returns:
-            dict[str, Any]: List of dictionaries with items
+            dict[str, JsonDataType]: List of dictionaries with items
         """
         warn(
             "This method is deprecated and will be removed in a future release. Please use get_parse_title_path()",
@@ -462,21 +467,21 @@ class SonarrAPI(BaseArrAPI):
     ## RELEASE
 
     # GET /release
-    def get_releases(self, id_: Optional[int] = None) -> list[dict[str, Any]]:
+    def get_releases(self, id_: Optional[int] = None) -> list[dict[str, JsonDataType]]:
         """Query indexers for latest releases.
 
         Args:
             id_ (int): Database id for episode to check
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            list[dict[str, JsonDataType]]: List of dictionaries with items
         """
         return self.assert_return(
             "release", self.ver_uri, list, {"episodeId": id_} if id_ else None
         )
 
     # POST /release
-    def download_release(self, guid: str, indexer_id: int) -> dict[str, Any]:
+    def download_release(self, guid: str, indexer_id: int) -> dict[str, JsonDataType]:
         """Adds a previously searched release to the download client, if the release is
          still in Sonarr's search cache (30 minute cache). If the release is not found
          in the cache Sonarr will return a 404.
@@ -486,7 +491,7 @@ class SonarrAPI(BaseArrAPI):
             indexer_id (int): Database id of indexer to use
 
         Returns:
-            dict[str, Any]: Dictionary with download release details
+            dict[str, JsonDataType]: Dictionary with download release details
         """
         data = {"guid": guid, "indexerId": indexer_id}
         return self.assert_return_post("release", self.ver_uri, dict, data=data)
@@ -519,7 +524,7 @@ class SonarrAPI(BaseArrAPI):
     # GET /series and /series/{id}
     def get_series(
         self, id_: Optional[int] = None
-    ) -> Union[list[dict[str, Any]], dict[str, Any]]:
+    ) -> Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]:
         """Returns all series in your collection or the series with the matching
         series ID if one is found.
 
@@ -527,7 +532,7 @@ class SonarrAPI(BaseArrAPI):
             id_ (Optional[int], optional): Database id for series. Defaults to None.
 
         Returns:
-            Union[list[dict[str, Any]], dict[str, Any]]: List of dictionaries with items, or a
+            Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]: List of dictionaries with items, or a
             dictionary with single item
         """
         path = f"series{f'/{id_}' if id_ else ''}"
@@ -544,7 +549,7 @@ class SonarrAPI(BaseArrAPI):
         ignore_episodes_with_files: bool = False,
         ignore_episodes_without_files: bool = False,
         search_for_missing_episodes: bool = False,
-    ) -> dict[str, Any]:
+    ) -> dict[str, JsonDataType]:
         """Adds a new series to your collection
 
         Note:
@@ -562,7 +567,7 @@ class SonarrAPI(BaseArrAPI):
             search_for_missing_episodes (bool, optional): Search for missing episodes to download. Defaults to False.
 
         Returns:
-            dict[str, Any]: Dictionary of added record
+            dict[str, JsonDataType]: Dictionary of added record
         """
         series_json = self._series_json(
             tvdb_id,
@@ -578,21 +583,21 @@ class SonarrAPI(BaseArrAPI):
         return self.assert_return_post("series", self.ver_uri, dict, data=series_json)
 
     # PUT /series
-    def upd_series(self, data: dict[str, Any]) -> dict[str, Any]:
+    def upd_series(self, data: dict[str, JsonDataType]) -> dict[str, JsonDataType]:
         """Update an existing series
 
         Args:
-            data (dict[str, Any]): contains data obtained by get_series()
+            data (dict[str, JsonDataType]): contains data obtained by get_series()
 
         Returns:
-            dict[str, Any]: Dictionary or updated record
+            dict[str, JsonDataType]: Dictionary or updated record
         """
         return self.assert_return_put("series", self.ver_uri, dict, data=data)
 
     # DELETE /series/{id}
     def del_series(
         self, id_: int, delete_files: bool = False
-    ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
+    ) -> Union[Response, dict[str, JsonDataType], dict[Any, Any]]:
         """Delete the series with the given ID
 
         Args:
@@ -609,7 +614,7 @@ class SonarrAPI(BaseArrAPI):
     # GET /series/lookup
     def lookup_series(
         self, term: Optional[str] = None, id_: Optional[int] = None
-    ) -> list[dict[str, Any]]:
+    ) -> list[dict[str, JsonDataType]]:
         """Searches for new shows on TheTVDB.com utilizing sonarr.tv's caching and augmentation proxy.
 
         Args:
@@ -617,7 +622,7 @@ class SonarrAPI(BaseArrAPI):
             id_ (Optional[int], optional): TVDB ID for series
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            list[dict[str, JsonDataType]]: List of dictionaries with items
         """
         if term is None and id_ is None:
             raise PyarrMissingArgument("A term or TVDB id must be included")
@@ -627,14 +632,14 @@ class SonarrAPI(BaseArrAPI):
         )
 
     # GET /series/lookup
-    def lookup_series_by_tvdb_id(self, id_: int) -> list[dict[str, Any]]:
+    def lookup_series_by_tvdb_id(self, id_: int) -> list[dict[str, JsonDataType]]:
         """Searches for new shows on TheTVDB.com utilizing sonarr.tv's caching and augmentation proxy.
 
         Args:
             id_ (int): TVDB ID
 
         Returns:
-            list[dict[str, Any]]: List of dictionaries with items
+            list[dict[str, JsonDataType]]: List of dictionaries with items
         """
         warn(
             "This method is deprecated and will be removed in a future release. Please use lookup_series()",
@@ -653,7 +658,7 @@ class SonarrAPI(BaseArrAPI):
         sort_key: Optional[PyarrHistorySortKey] = None,
         sort_dir: Optional[PyarrSortDirection] = None,
         id_: Optional[int] = None,
-    ) -> dict[str, Any]:
+    ) -> dict[str, JsonDataType]:
         """Gets history (grabs/failures/completed)
 
         Args:
@@ -664,7 +669,7 @@ class SonarrAPI(BaseArrAPI):
             id_ (Optional[int], optional): Filter to a specific episode ID. Defaults to None.
 
         Returns:
-           dict[str, Any]: Dictionary with items
+           dict[str, JsonDataType]: Dictionary with items
         """
         params: dict[str, Union[int, PyarrHistorySortKey, PyarrSortDirection]] = {}
 

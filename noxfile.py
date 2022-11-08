@@ -40,7 +40,7 @@ def test_suite(session: Session) -> None:
 def test_types(session: Session) -> None:
     """Check that typing is working as expected"""
     session.run("poetry", "install", external=True)
-    session.run("mypy", "pyarr")
+    session.run("mypy", "--show-error-codes", "pyarr")
 
 
 @nox.session(reuse_venv=True)
