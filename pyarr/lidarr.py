@@ -57,9 +57,7 @@ class LidarrAPI(BaseArrAPI):
             "path": path,
         }
 
-        return self.assert_return_post(
-            "rootfolder", self.ver_uri, dict, data=folder_json
-        )
+        return self._post("rootfolder", self.ver_uri, data=folder_json)
 
     def lookup(self, term: str) -> list[dict[str, JsonDataType]]:
         """Search for an artist / album / song
@@ -72,7 +70,7 @@ class LidarrAPI(BaseArrAPI):
         Returns:
             list[dict[str, JsonDataType]]: List of dictionaries with items
         """
-        return self.assert_return("search", self.ver_uri, list, params={"term": term})
+        return self._get("search", self.ver_uri, params={"term": term})
 
     def lookup_artist(self, term: str) -> list[dict[str, JsonDataType]]:
         """Search for an Artist to add to the database
@@ -86,9 +84,7 @@ class LidarrAPI(BaseArrAPI):
             list[dict[str, JsonDataType]]: List of dictionaries with items
         """
 
-        return self.assert_return(
-            "artist/lookup", self.ver_uri, list, params={"term": term}
-        )
+        return self._get("artist/lookup", self.ver_uri, params={"term": term})
 
     def lookup_album(self, term: str) -> list[dict[str, JsonDataType]]:
         """Search for an Album to add to the database
@@ -101,9 +97,7 @@ class LidarrAPI(BaseArrAPI):
         Returns:
             list[dict[str, JsonDataType]]: List of dictionaries with items
         """
-        return self.assert_return(
-            "album/lookup", self.ver_uri, list, params={"term": term}
-        )
+        return self._get("album/lookup", self.ver_uri, params={"term": term})
 
     def get_artist(
         self, id_: Optional[Union[str, int]] = None
@@ -121,10 +115,9 @@ class LidarrAPI(BaseArrAPI):
         """
 
         _path = "" if isinstance(id_, str) or id_ is None else f"/{id_}"
-        return self.assert_return(
+        return self._get(
             f"artist{_path}",
             self.ver_uri,
-            dict if id_ else list,
             params={"mbId": id_} if isinstance(id_, str) else None,
         )
 
@@ -218,7 +211,7 @@ class LidarrAPI(BaseArrAPI):
             artist_monitor,
             artist_search_for_missing_albums,
         )
-        return self.assert_return_post("artist", self.ver_uri, dict, data=artist_json)
+        return self._post("artist", self.ver_uri, data=artist_json)
 
     def upd_artist(self, data: dict[str, JsonDataType]) -> dict[str, JsonDataType]:
         """Update an existing artist
@@ -231,7 +224,7 @@ class LidarrAPI(BaseArrAPI):
         Returns:
             dict[str, JsonDataType]: Dictionary of updated record
         """
-        return self.assert_return_put("artist", self.ver_uri, dict, data=data)
+        return self._put("artist", self.ver_uri, data=data)
 
     def delete_artist(
         self, id_: int
@@ -273,10 +266,9 @@ class LidarrAPI(BaseArrAPI):
         if foreignAlbumId is not None:
             params["foreignAlbumId"] = foreignAlbumId
         _path = "" if isinstance(albumIds, list) or albumIds is None else f"/{albumIds}"
-        return self.assert_return(
+        return self._get(
             f"album{_path}",
             self.ver_uri,
-            dict if isinstance(albumIds, int) or foreignAlbumId else list,
             params=params,
         )
 
@@ -368,7 +360,7 @@ class LidarrAPI(BaseArrAPI):
             artist_monitor,
             artist_search_for_missing_albums,
         )
-        return self.assert_return_post("album", self.ver_uri, dict, data=album_json)
+        return self._post("album", self.ver_uri, data=album_json)
 
     def upd_album(self, data: dict[str, JsonDataType]) -> dict[str, JsonDataType]:
         """Update an album
@@ -382,7 +374,7 @@ class LidarrAPI(BaseArrAPI):
         Returns:
             dict[str, JsonDataType]: Dictionary of updated record
         """
-        return self.assert_return_put("album", self.ver_uri, dict, data=data)
+        return self._put("album", self.ver_uri, data=data)
 
     def delete_album(
         self, id_: int
@@ -407,9 +399,7 @@ class LidarrAPI(BaseArrAPI):
         Returns:
             dict[str, JsonDataType]: dictionary of executed command information
         """
-        return self.assert_return_post(
-            "command", self.ver_uri, dict, data={"name": name}
-        )
+        return self._post("command", self.ver_uri, data={"name": name})
 
     # GET /wanted
     def get_wanted(
@@ -446,10 +436,9 @@ class LidarrAPI(BaseArrAPI):
             raise PyarrMissingArgument("sort_key and sort_dir  must be used together")
 
         _path = "missing" if missing else "cutoff"
-        return self.assert_return(
+        return self._get(
             f"wanted/{_path}{'' if id_ is None else f'/{id_}'}",
             self.ver_uri,
-            dict,
             params=params,
         )
 
@@ -464,7 +453,7 @@ class LidarrAPI(BaseArrAPI):
         Returns:
             list[dict[str, JsonDataType]]: List of dictionaries with items
         """
-        return self.assert_return("parse", self.ver_uri, list, params={"title": title})
+        return self._get("parse", self.ver_uri, params={"title": title})
 
     # GET /track
     def get_tracks(
@@ -505,10 +494,9 @@ class LidarrAPI(BaseArrAPI):
                 "One of artistId, albumId, albumReleaseId or trackIds must be provided"
             )
 
-        return self.assert_return(
+        return self._get(
             f"track{f'/{trackIds}' if isinstance(trackIds, int) else ''}",
             self.ver_uri,
-            dict if isinstance(trackIds, int) else list,
             params=params,
         )
 
@@ -552,10 +540,9 @@ class LidarrAPI(BaseArrAPI):
             params["trackFileIds"] = trackFileIds
         if unmapped is not None:
             params["unmapped"] = unmapped
-        return self.assert_return(
+        return self._get(
             f"trackfile{f'/{trackFileIds}' if isinstance(trackFileIds, int) else ''}",
             self.ver_uri,
-            dict if isinstance(trackFileIds, int) else list,
             params=params,
         )
 
@@ -572,7 +559,7 @@ class LidarrAPI(BaseArrAPI):
         Returns:
             dict[str, JsonDataType]: Dictionary of updated record
         """
-        return self.assert_return_put("trackfile", self.ver_uri, dict, data=data)
+        return self._put("trackfile", self.ver_uri, data=data)
 
     # DEL /trackfile/{ids_}
     def delete_track_file(
@@ -604,10 +591,9 @@ class LidarrAPI(BaseArrAPI):
         Returns:
             list[dict[str, JsonDataType]]: List of dictionaries with items
         """
-        return self.assert_return(
+        return self._get(
             f"metadataprofile{f'/{id_}' if id_ else ''}",
             self.ver_uri,
-            dict if id_ else list,
         )
 
     # TODO: POST /metadataprofile
@@ -624,7 +610,7 @@ class LidarrAPI(BaseArrAPI):
         Returns:
             dict[str, JsonDataType]: Dictionary of updated record
         """
-        return self.assert_return_put("metadataprofile", self.ver_uri, dict, data=data)
+        return self._put("metadataprofile", self.ver_uri, data=data)
 
     # GET /config/metadataProvider
     def get_metadata_provider(self) -> dict[str, JsonDataType]:
@@ -633,7 +619,7 @@ class LidarrAPI(BaseArrAPI):
         Returns:
             dict[str, JsonDataType]: Dictionary with data
         """
-        return self.assert_return("config/metadataProvider", self.ver_uri, dict)
+        return self._get("config/metadataProvider", self.ver_uri)
 
     # PUT /config/metadataprovider
     def upd_metadata_provider(
@@ -650,9 +636,7 @@ class LidarrAPI(BaseArrAPI):
         Returns:
             dict[str, JsonDataType]: Dictionary of updated record
         """
-        return self.assert_return_put(
-            "config/metadataProvider", self.ver_uri, dict, data=data
-        )
+        return self._put("config/metadataProvider", self.ver_uri, data=data)
 
     # GET /queue
     def get_queue(
@@ -697,7 +681,7 @@ class LidarrAPI(BaseArrAPI):
         if include_artist:
             params["includeArtist"] = include_artist
 
-        return self.assert_return("queue", self.ver_uri, dict, params=params)
+        return self._get("queue", self.ver_uri, params=params)
 
     # GET /queue/details
     def get_queue_details(
@@ -729,7 +713,7 @@ class LidarrAPI(BaseArrAPI):
         if albumIds:
             params["albumIds"] = albumIds
 
-        return self.assert_return("queue/details", self.ver_uri, list, params=params)
+        return self._get("queue/details", self.ver_uri, params=params)
 
     # GET /release
     def get_release(
@@ -749,7 +733,7 @@ class LidarrAPI(BaseArrAPI):
             params["artistId"] = artistId
         if albumId:
             params["albumId"] = albumId
-        return self.assert_return("release", self.ver_uri, list, params=params)
+        return self._get("release", self.ver_uri, params=params)
 
     # GET /rename
     def get_rename(
@@ -767,10 +751,9 @@ class LidarrAPI(BaseArrAPI):
         params = {"artistId": artistId}
         if albumId:
             params["albumId"] = albumId
-        return self.assert_return(
+        return self._get(
             "rename",
             self.ver_uri,
-            list,
             params=params,
         )
 
@@ -805,7 +788,7 @@ class LidarrAPI(BaseArrAPI):
         if replaceExistingFiles:
             params["replaceExistingFiles"] = replaceExistingFiles
 
-        return self.assert_return("manualimport", self.ver_uri, list, params=params)
+        return self._get("manualimport", self.ver_uri, params=params)
 
     # PUT /manualimport
     def upd_manual_import(
@@ -822,7 +805,7 @@ class LidarrAPI(BaseArrAPI):
         Returns:
             dict[str, JsonDataType]: Dictionary of updated record
         """
-        return self.assert_return_put("manualimport", self.ver_uri, dict, data=data)
+        return self._put("manualimport", self.ver_uri, data=data)
 
     # GET /retag
     def get_retag(
@@ -842,9 +825,8 @@ class LidarrAPI(BaseArrAPI):
             params["artistId"] = artistId
         if albumId:
             params["albumId"] = albumId
-        return self.assert_return(
+        return self._get(
             "retag",
             self.ver_uri,
-            list,
             params=params,
         )

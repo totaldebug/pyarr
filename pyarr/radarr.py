@@ -96,9 +96,7 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             dict[str, JsonDataType]: Dictionary containing path details
         """
-        return self.assert_return_post(
-            "rootfolder", self.ver_uri, dict, data={"path": directory}
-        )
+        return self._post("rootfolder", self.ver_uri, data={"path": directory})
 
     ## MOVIE
 
@@ -124,10 +122,9 @@ class RadarrAPI(BaseArrAPI):
         if tmdb:
             params["tmdbid"] = id_
 
-        return self.assert_return(
+        return self._get(
             f"movie{'' if id_ is None or tmdb else f'/{id_}'}",
             self.ver_uri,
-            dict if id_ and not tmdb else list,
             params=params,
         )
 
@@ -165,7 +162,7 @@ class RadarrAPI(BaseArrAPI):
             id_, root_dir, quality_profile_id, monitored, search_for_movie
         )
 
-        return self.assert_return_post("movie", self.ver_uri, dict, data=movie_json)
+        return self._post("movie", self.ver_uri, data=movie_json)
 
     # PUT /movie
     def upd_movie(
@@ -186,10 +183,9 @@ class RadarrAPI(BaseArrAPI):
         if move_files is not None:
             params["moveFiles"] = move_files
         print(type(data))
-        return self.assert_return_put(
+        return self._put(
             f"movie{'/editor' if isinstance(data, list) else ''}",
             self.ver_uri,
-            list if isinstance(data, list) else dict,
             data=data,
             params=params,
         )
@@ -213,7 +209,7 @@ class RadarrAPI(BaseArrAPI):
             DeprecationWarning,
             stacklevel=2,
         )
-        return self.assert_return(f"movie/{id_}", self.ver_uri, dict)
+        return self._get(f"movie/{id_}", self.ver_uri)
 
     # DELETE /movie/{id}
     def del_movie(
@@ -262,7 +258,7 @@ class RadarrAPI(BaseArrAPI):
             list[dict[str, JsonDataType]]: List of dictionaries with items
         """
         params = {"term": term}
-        return self.assert_return("movie/lookup", self.ver_uri, list, params)
+        return self._get("movie/lookup", self.ver_uri, params)
 
     # GET /movie/lookup
     def lookup_movie_by_tmdb_id(self, id_: int) -> list[dict[str, JsonDataType]]:
@@ -280,7 +276,7 @@ class RadarrAPI(BaseArrAPI):
             stacklevel=2,
         )
         params = {"term": f"tmdb:{id_}"}
-        return self.assert_return("movie/lookup", self.ver_uri, list, params)
+        return self._get("movie/lookup", self.ver_uri, params)
 
     # GET /movie/lookup
     def lookup_movie_by_imdb_id(self, id_: str) -> list[dict[str, JsonDataType]]:
@@ -298,7 +294,7 @@ class RadarrAPI(BaseArrAPI):
             stacklevel=2,
         )
         params = {"term": f"imdb:{id_}"}
-        return self.assert_return("movie/lookup", self.ver_uri, list, params)
+        return self._get("movie/lookup", self.ver_uri, params)
 
     # PUT /movie/editor
     def upd_movies(
@@ -318,7 +314,7 @@ class RadarrAPI(BaseArrAPI):
             DeprecationWarning,
             stacklevel=2,
         )
-        return self.assert_return_put("movie/editor", self.ver_uri, list, data=data)
+        return self._put("movie/editor", self.ver_uri, data=data)
 
     # DELETE /movie/editor
     def del_movies(
@@ -359,7 +355,7 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             list[dict[str, JsonDataType]]: List of dictionaries with items
         """
-        return self.assert_return_post("movie/import", self.ver_uri, list, data=data)
+        return self._post("movie/import", self.ver_uri, data=data)
 
     ## MOVIEFILE
 
@@ -376,7 +372,7 @@ class RadarrAPI(BaseArrAPI):
         """
 
         params = {"movieId": id_}
-        return self.assert_return("moviefile", self.ver_uri, list, params)
+        return self._get("moviefile", self.ver_uri, params)
 
     # GET /moviefile
     def get_movie_file(self, id_: Union[int, list]) -> list[dict[str, JsonDataType]]:
@@ -389,13 +385,9 @@ class RadarrAPI(BaseArrAPI):
             list[dict[str, JsonDataType]]: List of dictionaries with items
         """
         if not isinstance(id_, list):
-            return self.assert_return(
-                f"moviefile/{id_}",
-                self.ver_uri,
-                dict,
-            )
+            return self._get(f"moviefile/{id_}", self.ver_uri)
         params = [("movieFileIds", file) for file in id_]
-        return self.assert_return("moviefile", self.ver_uri, list, params=params)
+        return self._get("moviefile", self.ver_uri, params=params)
 
     # DELETE /moviefile/{id}
     def del_movie_file(
@@ -434,7 +426,7 @@ class RadarrAPI(BaseArrAPI):
         params: dict[str, Union[int, str]] = {"movieId": id_}
         if event_type:
             params["eventType"] = event_type
-        return self.assert_return("history/movie", self.ver_uri, list, params)
+        return self._get("history/movie", self.ver_uri, params)
 
     ## BLOCKLIST
 
@@ -452,7 +444,7 @@ class RadarrAPI(BaseArrAPI):
             list[dict[str, JsonDataType]]: List of dictionaries with items
         """
         params = {"movieId": id_}
-        return self.assert_return("blocklist/movie", self.ver_uri, list, params)
+        return self._get("blocklist/movie", self.ver_uri, params)
 
     ## QUEUE
 
@@ -491,7 +483,7 @@ class RadarrAPI(BaseArrAPI):
         if include_unknown_movie_items is not None:
             params["includeUnknownMovieItems"] = include_unknown_movie_items
 
-        return self.assert_return("queue", self.ver_uri, dict, params)
+        return self._get("queue", self.ver_uri, params)
 
     # GET /queue/details
     def get_queue_details(
@@ -514,7 +506,7 @@ class RadarrAPI(BaseArrAPI):
         if include_movie is not None:
             params["includeMovie"] = include_movie
 
-        return self.assert_return("queue/details", self.ver_uri, list, params)
+        return self._get("queue/details", self.ver_uri, params)
 
     # GET /queue/status
     def get_queue_status(self) -> dict[str, JsonDataType]:
@@ -523,7 +515,7 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             list[dict[str, JsonDataType]]: List of dictionaries with items
         """
-        return self.assert_return("queue/status", self.ver_uri, dict)
+        return self._get("queue/status", self.ver_uri)
 
     # DELETE /queue/bulk
     def del_queue_bulk(
@@ -556,7 +548,7 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             dict[str, JsonDataType]: Dictionary with record
         """
-        return self.assert_return_post(f"queue/grab/{id_}", self.ver_uri, dict)
+        return self._post(f"queue/grab/{id_}", self.ver_uri)
 
     ## INDEXER
 
@@ -571,7 +563,7 @@ class RadarrAPI(BaseArrAPI):
             list[dict[str, JsonDataType]]: List of dictionaries with items
         """
         path = f"indexer/{id_}" if id_ else "indexer"
-        return self.assert_return(path, self.ver_uri, dict if id_ else list)
+        return self._get(path, self.ver_uri)
 
     # PUT /indexer/{id}
     def upd_indexer(
@@ -586,7 +578,7 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             dict[str, JsonDataType]: Dictionary with updated record
         """
-        return self.assert_return_put(f"indexer/{id_}", self.ver_uri, dict, data=data)
+        return self._put(f"indexer/{id_}", self.ver_uri, data=data)
 
     # DELETE /indexer/{id}
     def del_indexer(
@@ -634,7 +626,7 @@ class RadarrAPI(BaseArrAPI):
         }
         if kwargs:
             data |= kwargs
-        return self.assert_return_post("command", self.ver_uri, dict, data=data)
+        return self._post("command", self.ver_uri, data=data)
 
     ## CUSTOM FILTERS
 
@@ -645,4 +637,4 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             list[dict[str, JsonDataType]]: List of dictionaries with items
         """
-        return self.assert_return("customfilter", self.ver_uri, list)
+        return self._get("customfilter", self.ver_uri)

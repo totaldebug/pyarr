@@ -12,6 +12,7 @@ from .exceptions import (
     PyarrResourceNotFound,
     PyarrUnauthorizedError,
 )
+from .types import _ReturnType
 
 
 class RequestHandler:
@@ -63,7 +64,7 @@ class RequestHandler:
         path: str,
         ver_uri: str = "",
         params: Union[dict[str, Any], list[tuple[str, Any]], None] = None,
-    ) -> Union[list[dict], dict[str, Any]]:
+    ) -> _ReturnType:
         """Wrapper on any get requests
 
         Args:
@@ -86,11 +87,7 @@ class RequestHandler:
                 "Timeout occurred while connecting to API."
             ) from exception
         response = _process_response(res)
-        if isinstance(response, dict):
-            assert isinstance(response, dict)
-        else:
-            assert isinstance(response, list)
-        return response
+        return self._return(res, dict if isinstance(response, dict) else list)
 
     def _post(
         self,
@@ -98,7 +95,7 @@ class RequestHandler:
         ver_uri: str = "",
         params: Union[dict, None] = None,
         data: Union[list[dict], dict, None] = None,
-    ) -> Union[list[dict[str, Any]], dict[str, Any]]:
+    ) -> _ReturnType:
         """Wrapper on any post requests
 
         Args:
@@ -128,14 +125,16 @@ class RequestHandler:
     def _put(
         self,
         path: str,
-        ver_uri: str = "",
+        ver_uri: str,
         params: Optional[dict] = None,
         data: Optional[Union[dict[str, Any], list[dict[str, Any]]]] = None,
-    ) -> Union[dict[str, Any], list[dict[str, Any]]]:
+    ) -> _ReturnType:
         """Wrapper on any put requests
 
         Args:
             path (str): Path to API endpoint e.g. /api/manualimport
+            ver_uri (str): API Version
+            typevar (type): Python Type
             params (dict, optional): URL Parameters to send with the request. Defaults to None.
             data (dict, optional): Payload to send with request. Defaults to None.
 

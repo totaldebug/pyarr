@@ -1554,7 +1554,7 @@ def test_get_notification_schema(responses, sonarr_client):
     data = sonarr_client.get_notification_schema(
         implementation=PyarrNotificationSchema.BOXCAR
     )
-    assert isinstance(data, dict)
+    assert isinstance(data, list)
 
     with contextlib.suppress(PyarrRecordNotFound):
         data = sonarr_client.get_notification_schema(implementation="polarbear")
@@ -1747,7 +1747,7 @@ def test_get_download_client_schema(responses, sonarr_client):
     data = sonarr_client.get_download_client_schema(
         implementation=PyarrDownloadClientSchema.ARIA2
     )
-    assert isinstance(data, dict)
+    assert isinstance(data, list)
 
     with contextlib.suppress(PyarrRecordNotFound):
         data = sonarr_client.get_download_client_schema(implementation="polarbear")
@@ -1848,7 +1848,7 @@ def test_get_import_list_schema(responses, sonarr_client):
     data = sonarr_client.get_import_list_schema(
         implementation=PyarrImportListSchema.PLEX
     )
-    assert isinstance(data, dict)
+    assert isinstance(data, list)
 
     with contextlib.suppress(PyarrRecordNotFound):
         data = sonarr_client.get_import_list_schema(implementation="polarbear")

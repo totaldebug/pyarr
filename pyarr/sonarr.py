@@ -87,9 +87,7 @@ class SonarrAPI(BaseArrAPI):
         Returns:
             dict[str, JsonDataType]: Dictionary containing path details
         """
-        return self.assert_return_post(
-            "rootfolder", self.ver_uri, dict, data={"path": directory}
-        )
+        return self._post("rootfolder", self.ver_uri, data={"path": directory})
 
     ## COMMAND
 
@@ -106,7 +104,7 @@ class SonarrAPI(BaseArrAPI):
             list[dict[str, JsonDataType]]: List of dictionaries with items
         """
         path = f"command{f'/{id_}' if id_ else ''}"
-        return self.assert_return(path, self.ver_uri, dict if id_ else list)
+        return self._get(path, self.ver_uri)
 
     # POST /command
     # TODO: Add more logic to ensure correct kwargs for a command
@@ -142,7 +140,7 @@ class SonarrAPI(BaseArrAPI):
         }
         if kwargs:
             data |= kwargs
-        return self.assert_return_post("command", self.ver_uri, dict, data=data)
+        return self._post("command", self.ver_uri, data=data)
 
     ## EPISODE
 
@@ -157,10 +155,9 @@ class SonarrAPI(BaseArrAPI):
         Returns:
             list[dict[str, JsonDataType]]: List of dictionaries with items
         """
-        return self.assert_return(
+        return self._get(
             f"episode{'' if series else f'/{id_}'}",
             self.ver_uri,
-            list if series else dict,
             params={"seriesId": id_} if series else None,
         )
 
@@ -185,7 +182,7 @@ class SonarrAPI(BaseArrAPI):
             stacklevel=2,
         )
         params = {"seriesId": id_}
-        return self.assert_return("episode", self.ver_uri, list, params)
+        return self._get("episode", self.ver_uri, params)
 
     # GET /episode/{id}
     def get_episode_by_episode_id(self, id_: int) -> dict[str, JsonDataType]:
@@ -206,7 +203,7 @@ class SonarrAPI(BaseArrAPI):
             DeprecationWarning,
             stacklevel=2,
         )
-        return self.assert_return(f"episode/{id_}", self.ver_uri, dict)
+        return self._get(f"episode/{id_}", self.ver_uri)
 
     # PUT /episode
     def upd_episode(
@@ -227,7 +224,7 @@ class SonarrAPI(BaseArrAPI):
         Returns:
             dict[str, JsonDataType]: Dictionary with updated record
         """
-        return self.assert_return_put(f"episode/{id_}", self.ver_uri, dict, data=data)
+        return self._put(f"episode/{id_}", self.ver_uri, data=data)
 
     ## EPISODE FILE
 
@@ -247,7 +244,7 @@ class SonarrAPI(BaseArrAPI):
             stacklevel=2,
         )
         params = {"seriesId": id_}
-        return self.assert_return("episodefile", self.ver_uri, list, params)
+        return self._get("episodefile", self.ver_uri, params)
 
     # GET /episodefile/{id}
     def get_episode_file(
@@ -262,10 +259,9 @@ class SonarrAPI(BaseArrAPI):
         Returns:
             dict[str, JsonDataType]: Dictionary with data
         """
-        return self.assert_return(
+        return self._get(
             f"episodefile{'' if series else f'/{id_}'}",
             self.ver_uri,
-            list if series else dict,
             params={"seriesId": id_} if series else None,
         )
 
@@ -308,9 +304,7 @@ class SonarrAPI(BaseArrAPI):
         Returns:
             dict[str, JsonDataType]: Dictionary with updated record
         """
-        return self.assert_return_put(
-            f"episodefile/{id_}", self.ver_uri, dict, data=data
-        )
+        return self._put(f"episodefile/{id_}", self.ver_uri, data=data)
 
     # GET /wanted/missing
     def get_wanted(
@@ -346,7 +340,7 @@ class SonarrAPI(BaseArrAPI):
         if include_series:
             params["includeSeries"] = include_series
 
-        return self.assert_return("wanted/missing", self.ver_uri, dict, params)
+        return self._get("wanted/missing", self.ver_uri, params)
 
     ## QUEUE
 
@@ -393,7 +387,7 @@ class SonarrAPI(BaseArrAPI):
         if include_episode is not None:
             params["includeEpisode"] = include_episode
 
-        return self.assert_return("queue", self.ver_uri, dict, params)
+        return self._get("queue", self.ver_uri, params)
 
     ## PARSE
 
@@ -422,7 +416,7 @@ class SonarrAPI(BaseArrAPI):
             params["title"] = title
         if path is not None:
             params["path"] = path
-        return self.assert_return("parse", self.ver_uri, dict, params)
+        return self._get("parse", self.ver_uri, params)
 
     # GET /parse
     def get_parsed_title(self, title: str) -> dict[str, JsonDataType]:
@@ -442,7 +436,7 @@ class SonarrAPI(BaseArrAPI):
             DeprecationWarning,
             stacklevel=2,
         )
-        return self.assert_return("parse", self.ver_uri, dict, {"title": title})
+        return self._get("parse", self.ver_uri, {"title": title})
 
     # GET /parse
     def get_parsed_path(self, file_path: str) -> dict[str, JsonDataType]:
@@ -462,7 +456,7 @@ class SonarrAPI(BaseArrAPI):
             DeprecationWarning,
             stacklevel=2,
         )
-        return self.assert_return("parse", self.ver_uri, dict, {"path": file_path})
+        return self._get("parse", self.ver_uri, {"path": file_path})
 
     ## RELEASE
 
@@ -476,9 +470,7 @@ class SonarrAPI(BaseArrAPI):
         Returns:
             list[dict[str, JsonDataType]]: List of dictionaries with items
         """
-        return self.assert_return(
-            "release", self.ver_uri, list, {"episodeId": id_} if id_ else None
-        )
+        return self._get("release", self.ver_uri, {"episodeId": id_} if id_ else None)
 
     # POST /release
     def download_release(self, guid: str, indexer_id: int) -> dict[str, JsonDataType]:
@@ -494,7 +486,7 @@ class SonarrAPI(BaseArrAPI):
             dict[str, JsonDataType]: Dictionary with download release details
         """
         data = {"guid": guid, "indexerId": indexer_id}
-        return self.assert_return_post("release", self.ver_uri, dict, data=data)
+        return self._post("release", self.ver_uri, data=data)
 
     # POST /release/push
     # TODO: find response
@@ -518,7 +510,7 @@ class SonarrAPI(BaseArrAPI):
             "protocol": protocol,
             "publishDate": publish_date.isoformat(),
         }
-        return self.assert_return_post("release/push", self.ver_uri, dict, data=data)
+        return self._post("release/push", self.ver_uri, data=data)
 
     ## SERIES
     # GET /series and /series/{id}
@@ -536,7 +528,7 @@ class SonarrAPI(BaseArrAPI):
             dictionary with single item
         """
         path = f"series{f'/{id_}' if id_ else ''}"
-        return self.assert_return(path, self.ver_uri, dict if id_ else list)
+        return self._get(path, self.ver_uri)
 
     # POST /series
     def add_series(
@@ -580,7 +572,7 @@ class SonarrAPI(BaseArrAPI):
             search_for_missing_episodes,
         )
 
-        return self.assert_return_post("series", self.ver_uri, dict, data=series_json)
+        return self._post("series", self.ver_uri, data=series_json)
 
     # PUT /series
     def upd_series(self, data: dict[str, JsonDataType]) -> dict[str, JsonDataType]:
@@ -592,7 +584,7 @@ class SonarrAPI(BaseArrAPI):
         Returns:
             dict[str, JsonDataType]: Dictionary or updated record
         """
-        return self.assert_return_put("series", self.ver_uri, dict, data=data)
+        return self._put("series", self.ver_uri, data=data)
 
     # DELETE /series/{id}
     def del_series(
@@ -627,9 +619,7 @@ class SonarrAPI(BaseArrAPI):
         if term is None and id_ is None:
             raise PyarrMissingArgument("A term or TVDB id must be included")
 
-        return self.assert_return(
-            "series/lookup", self.ver_uri, list, {"term": term or f"tvdb:{id_}"}
-        )
+        return self._get("series/lookup", self.ver_uri, {"term": term or f"tvdb:{id_}"})
 
     # GET /series/lookup
     def lookup_series_by_tvdb_id(self, id_: int) -> list[dict[str, JsonDataType]]:
@@ -647,7 +637,7 @@ class SonarrAPI(BaseArrAPI):
             stacklevel=2,
         )
         params = {"term": f"tvdb:{id_}"}
-        return self.assert_return("series/lookup", self.ver_uri, list, params)
+        return self._get("series/lookup", self.ver_uri, params)
 
     # GET /history
     # Overrides base get history for ID
@@ -688,4 +678,4 @@ class SonarrAPI(BaseArrAPI):
         if id_:
             params["episodeId"] = id_
 
-        return self.assert_return("history", self.ver_uri, dict, params)
+        return self._get("history", self.ver_uri, params)

@@ -12,7 +12,7 @@ class SonarrCommands(str, Enum):
     BACKUP = "Backup"
     """No parameters required"""
     DOWNLOADED_EPISODES_SCAN = "DownloadedEpisodesScan"
-    """TBC Still need to test required parameters"""
+    """No parameters required"""
     EPISODE_SEARCH = "EpisodeSearch"
     """episodeIds (lsit[int], optional) - One or more episodeIds in a list"""
     MISSING_EPISODE_SEARCH = "missingEpisodeSearch"
