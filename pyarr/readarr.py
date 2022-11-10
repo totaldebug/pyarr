@@ -35,11 +35,11 @@ class ReadarrAPI(BaseArrAPI):
         Note:
             You can also search using the Goodreads ID, work, or author, the ISBN or ASIN::
 
-            readarr.lookup(term="edition:656")
-            readarr.lookup(term="work:4912789")
-            readarr.lookup(term="author:128382")
-            readarr.lookup(term="isbn:067003469X")
-            readarr.lookup(term="asin:B00JCDK5ME")
+                readarr.lookup(term="edition:656")
+                readarr.lookup(term="work:4912789")
+                readarr.lookup(term="author:128382")
+                readarr.lookup(term="isbn:067003469X")
+                readarr.lookup(term="asin:B00JCDK5ME")
 
         Args:
             term (str): Search term
@@ -219,7 +219,11 @@ class ReadarrAPI(BaseArrAPI):
         return self._get(path, self.ver_uri)
 
     # POST /command
-    def post_command(self, name: ReadarrCommands, **kwargs) -> dict[str, JsonDataType]:
+    def post_command(
+        self,
+        name: ReadarrCommands,
+        **kwargs: Optional[dict[str, Union[int, list[int]]]],
+    ) -> dict[str, JsonDataType]:
         """Performs any of the predetermined Readarr command routines
 
         Args:
@@ -227,21 +231,17 @@ class ReadarrAPI(BaseArrAPI):
             **kwargs: Additional parameters for specific commands
 
         Note:
-            Required Kwargs:
-                AuthorSearch: authorId (int)
-                BookSearch: bookId (int)
-                RefreshAuthor: authorId (int, optional)
-                RefreshBook: bookId (int, optional)
-                RenameAuthor: authorIds (list[int], optional)
-                RenameFiles: authorId (int, optional)
+            For available commands and required `**kwargs` see the `ReadarrCommands` model
+
 
         Returns:
             dict[str, JsonDataType]: Dictionary of command run
         """
-        data = {
+        data: dict[str, Any] = {
             "name": name,
-            **kwargs,
         }
+        if kwargs:
+            data |= kwargs
         return self._post("command", self.ver_uri, data=data)
 
     ## WANTED (MISSING)

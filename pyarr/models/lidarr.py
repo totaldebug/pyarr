@@ -1,12 +1,22 @@
+from dataclasses import dataclass
 from enum import Enum
 
-import enum_tools.documentation
 
-enum_tools.documentation.INTERACTIVE = True
+@dataclass(order=True)
+class LidarrCommand(Enum):
+    """Lidarr commands."""
+
+    ALBUM_SEARCH = "AlbumSearch"
+    APP_UPDATE_CHECK = "ApplicationUpdateCheck"
+    ARTIST_SEARCH = "ArtistSearch"
+    DOWNLOADED_ALBUMS_SCAN = "DownloadedAlbumsScan"
+    MISSING_ALBUM_SEARCH = "MissingAlbumSearch"
+    REFRESH_ALBUM = "RefreshAlbum"
+    REFRESH_ARTIST = "RefreshArtist"
 
 
-@enum_tools.documentation.document_enum
-class LidarrSortKey(str, Enum):
+@dataclass(order=True)
+class LidarrSortKey(Enum):
     """Lidarr sort keys."""
 
     ALBUM_TITLE = "albums.title"
@@ -28,8 +38,8 @@ class LidarrSortKey(str, Enum):
     TITLE = "title"
 
 
-@enum_tools.documentation.document_enum
-class LidarrArtistMonitor(str, Enum):
+@dataclass(order=True)
+class LidarrArtistMonitor(Enum):
     """Lidarr Monitor types for an artist music"""
 
     ALL_ALBUMS = "all"
@@ -38,16 +48,3 @@ class LidarrArtistMonitor(str, Enum):
     EXISTING_ALBUMS = "existing"
     FIRST_ALBUM = "first"
     LATEST_ALBUM = "latest"
-
-
-@enum_tools.documentation.document_enum
-class LidarrCommand(str, Enum):
-    """Lidarr commands."""
-
-    ALBUM_SEARCH = "AlbumSearch"
-    APP_UPDATE_CHECK = "ApplicationUpdateCheck"
-    ARTIST_SEARCH = "ArtistSearch"
-    DOWNLOADED_ALBUMS_SCAN = "DownloadedAlbumsScan"
-    MISSING_ALBUM_SEARCH = "MissingAlbumSearch"
-    REFRESH_ALBUM = "RefreshAlbum"
-    REFRESH_ARTIST = "RefreshArtist"

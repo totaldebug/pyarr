@@ -1,25 +1,53 @@
+from dataclasses import dataclass
 from enum import Enum
 
-import enum_tools.documentation
 
-enum_tools.documentation.INTERACTIVE = True
+@dataclass(order=True)
+class RadarrCommands(Enum):
+    """Radarr commands.
 
-
-@enum_tools.documentation.document_enum
-class RadarrCommands(str, Enum):
-    """Radarr commands."""
+    Note:
+        The parameters are supplied as `**kwargs` within the `post_command` method.
+    """
 
     DOWNLOADED_MOVIES_SCAN = "DownloadedMoviesScan"
+    """Scans for all clients for downloaded movies, or a single client by ID
+
+    Args:
+        clientid (int, optional): Download client ID
+    """
     MISSING_MOVIES_SEARCH = "MissingMoviesSearch"
+    """Searches for any missing movies"""
     REFRESH_MOVIE = "RefreshMovie"
+    """Refreshes all of the movies, or specific by ID
+
+    Args:
+        movieid (int, Optional): ID of Movie
+    """
     RENAME_MOVIE = "RenameMovie"
+    """Rename specific movie to correct format.
+
+    Args:
+        movieid (list[int]): ID of Movie or movies
+    """
     RESCAN_MOVIE = "RescanMovie"
+    """Rescans specific movie
+
+    Args:
+        movieid (int): ID of Movie
+    """
     RENAME_FILES = "RenameFiles"
+    """Rename files to correct format
+
+    Args:
+        movieid (int): ID of Movie
+    """
     BACKUP = "Backup"
+    """Backup the server data"""
 
 
-@enum_tools.documentation.document_enum
-class RadarrSortKeys(str, Enum):
+@dataclass(order=True)
+class RadarrSortKeys(Enum):
     """Radarr sort keys."""
 
     DATE = "date"
@@ -42,8 +70,8 @@ class RadarrSortKeys(str, Enum):
     TIMELEFT = "timeleft"
 
 
-@enum_tools.documentation.document_enum
-class RadarrEventType(str, Enum):
+@dataclass(order=True)
+class RadarrEventType(Enum):
     """Radarr event types"""
 
     UNKNOWN = "unknown"

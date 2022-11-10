@@ -108,29 +108,17 @@ class SonarrAPI(BaseArrAPI):
 
     # POST /command
     # TODO: Add more logic to ensure correct kwargs for a command
-    # TODO: look into DownloadedEpisodesScan and how to use it
     def post_command(
-        self, name: SonarrCommands, **kwargs: Optional[Union[int, list[int]]]
+        self, name: SonarrCommands, **kwargs: Optional[dict[str, Union[int, list[int]]]]
     ) -> dict[str, JsonDataType]:
         """Performs any of the predetermined Sonarr command routines
 
         Args:
             name (SonarrCommands): Command that should be executed
-            **kwargs: Additional parameters for specific commands. See note.
+            **kwargs: Additional parameters for specific commands.
 
         Note:
-            Required Kwargs:
-                RefreshSeries: seriesId (int, optional) - If not set, all series will be refreshed and scanned
-                RescanSeries: seriesId (int, optional) - If not set all series will be scanned
-                EpisodeSearch: episodeIds (lsit[int], optional) - One or more episodeIds in a list
-                SeasonSearch: seriesId (int) seasonNumber (int)
-                SeriesSearch: seriesId (int)
-                DownloadedEpisodesScan:
-                RssSync: None
-                RenameFiles: files (list[int]) - List of File IDs to rename
-                RenameSeries: seriesIds (list[int]) List of Series IDs to rename
-                Backup: None
-                missingEpisodeSearch: None
+            For available commands and required `**kwargs` see the `SonarrCommands` model
 
         Returns:
             dict[str, JsonDataType]: Dictionary containing job

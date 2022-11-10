@@ -56,3 +56,10 @@ def test_style(session: Session) -> None:
     session.run("isort", ".", "--check-only")
     session.run("autoflake", ".")
     session.run("interrogate", "pyarr")
+
+
+@nox.session(reuse_venv=True)
+def docs(session: Session) -> None:
+    """Create local copy of docs for testing"""
+    session.run("poetry", "install", external=True)
+    session.run("sphinx-build", "sphinx-docs", "build")

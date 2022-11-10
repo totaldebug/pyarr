@@ -1,12 +1,9 @@
+from dataclasses import dataclass
 from enum import Enum
 
-import enum_tools.documentation
 
-enum_tools.documentation.INTERACTIVE = True
-
-
-@enum_tools.documentation.document_enum
-class PyarrSortDirection(str, Enum):
+@dataclass(order=True)
+class PyarrSortDirection(Enum):
     """Pyarr sort direction"""
 
     ASC = "ascending"
@@ -14,12 +11,13 @@ class PyarrSortDirection(str, Enum):
     DESC = "descending"
 
 
-@enum_tools.documentation.document_enum
-class PyarrLogSortKey(str, Enum):
+@dataclass(order=True)
+class PyarrLogSortKey(Enum):
     """Log Sort Keys
 
     Note:
-        There may be more, however these are yet to be identified
+        There may be more, but these are not well documented
+        within Arr api docs.
     """
 
     ID = "Id"
@@ -31,52 +29,61 @@ class PyarrLogSortKey(str, Enum):
     EXCEPTION_TYPE = "exceptionType"
 
 
-@enum_tools.documentation.document_enum
-class PyarrBlocklistSortKey(str, Enum):
-    """Block list sort keys"""
+@dataclass(order=True)
+class PyarrBlocklistSortKey(Enum):
+    """Block list sort keys
+
+    Note:
+        There may be more, but these are not well documented
+        within Arr api docs.
+    """
 
     DATE = "date"
 
 
-@enum_tools.documentation.document_enum
-class PyarrHistorySortKey(str, Enum):
-    """history sort keys
+@dataclass(order=True)
+class PyarrHistorySortKey(Enum):
+    """History sort keys
 
     Note:
-        There may be more, however these are yet to be identified
+        There may be more, but these are not well documented
+        within Arr api docs.
     """
 
     TIME = "time"
 
 
-@enum_tools.documentation.document_enum
-class PyarrTaskSortKey(str, Enum):
+@dataclass(order=True)
+class PyarrTaskSortKey(Enum):
     """Task sort keys
 
     Note:
-        There may be more, however these are yet to be identified
+        There may be more, but these are not well documented
+        within Arr api docs.
     """
 
     TIME_LEFT = "timeleft"
 
 
-@enum_tools.documentation.document_enum
-class PyarrLogFilterKey(str, Enum):
+@dataclass(order=True)
+class PyarrLogFilterKey(Enum):
     """Log filter keys
 
     Note:
-        There may be more, however these are yet to be identified
+        There may be more, but these are not well documented
+        within Arr api docs.
     """
 
     LEVEL = "level"
 
 
-@enum_tools.documentation.document_enum
-class PyarrLogFilterValue(str, Enum):
+@dataclass(order=True)
+class PyarrLogFilterValue(Enum):
     """Log filter values
 
     Note:
-        There may be more, however these are yet to be identified
+        There may be more, but these are not well documented
+        within Arr api docs.
     """
 
     ALL = "all"
@@ -85,8 +92,8 @@ class PyarrLogFilterValue(str, Enum):
     ERROR = "error"
 
 
-@enum_tools.documentation.document_enum
-class PyarrNotificationSchema(str, Enum):
+@dataclass(order=True)
+class PyarrNotificationSchema(Enum):
     """Notification schema implementations"""
 
     BOXCAR = "Boxcar"
@@ -113,8 +120,8 @@ class PyarrNotificationSchema(str, Enum):
     WEBHOOK = "Webhook"
 
 
-@enum_tools.documentation.document_enum
-class PyarrDownloadClientSchema(str, Enum):
+@dataclass(order=True)
+class PyarrDownloadClientSchema(Enum):
     """Download client schema implementations"""
 
     ARIA2 = "Aria2"
@@ -136,8 +143,8 @@ class PyarrDownloadClientSchema(str, Enum):
     VUZE = "Vuze"
 
 
-@enum_tools.documentation.document_enum
-class PyarrImportListSchema(str, Enum):
+@dataclass(order=True)
+class PyarrImportListSchema(Enum):
     """Import List schema implementations"""
 
     PLEX = "PlexImport"

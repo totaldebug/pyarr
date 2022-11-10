@@ -1,42 +1,75 @@
+from dataclasses import dataclass
 from enum import Enum
 
-import enum_tools.documentation
 
-enum_tools.documentation.INTERACTIVE = True
+@dataclass(order=True)
+class SonarrCommands(Enum):
+    """Sonarr commands.
 
-
-@enum_tools.documentation.document_enum
-class SonarrCommands(str, Enum):
-    """Sonarr commands."""
+    Note:
+        The parameters are supplied as `**kwargs` within the `post_command` method.
+    """
 
     BACKUP = "Backup"
-    """No parameters required"""
+    """Backup of the Database"""
     DOWNLOADED_EPISODES_SCAN = "DownloadedEpisodesScan"
-    """No parameters required"""
+    """Scans downloaded episodes for state"""
     EPISODE_SEARCH = "EpisodeSearch"
-    """episodeIds (lsit[int], optional) - One or more episodeIds in a list"""
-    MISSING_EPISODE_SEARCH = "missingEpisodeSearch"
-    """No parameters required"""
-    REFRESH_SERIES = "RefreshSeries"
+    """Searches for all episondes, or specific ones in supplied list
+
+    Args:
+        episodeIds (lsit[int], optional): One or more episodeIds in a list
     """
-    seriesId (int, optional) - If not set, all series will be refreshed and scanned
+    MISSING_EPISODE_SEARCH = "missingEpisodeSearch"
+    """Searches for any missing episodes"""
+    REFRESH_SERIES = "RefreshSeries"
+    """Refreshes all series, if a `seriesId` is provided only that series will be refreshed
+
+    Args:
+        seriesId (int, optional): ID of specific series to be refreshed.
     """
     RENAME_SERIES = "RenameSeries"
-    """seriesIds (list[int]) - List of Series IDs to rename"""
+    """Renames series to the expected naming format.
+
+    Args:
+        seriesIds (list[int]): List of Series IDs to rename.
+    """
+
     RENAME_FILES = "RenameFiles"
-    """files (list[int]) - List of File IDs to rename"""
+    """Renames files to the expected naming format.
+
+    Args:
+        files (list[int]): List of File IDs to rename.
+    """
+
     RESCAN_SERIES = "RescanSeries"
-    """seriesId (int, optional) - If not set all series will be scanned"""
+    """Re-scan all series, if `seriesId` is provided only that series will be Re-scanned.
+
+    Args:
+        seriesId (int, optional): ID of series to search for.
+    """
+
     RSS_SYNC = "RssSync"
-    """No parameters required"""
+    """Synchronise RSS Feeds"""
+
     SEASON_SEARCH = "SeasonSearch"
-    """seriesId (int), seasonNumber (int) both are required"""
+    """Search for specific season.
+
+    Args:
+        seriesId (int): Series in which the season resides.
+        seasonNumber (int): Season to search for.
+    """
+
     SERIES_SEARCH = "SeriesSearch"
-    """seriesId (int) required"""
+    """Searches for specific series.
+
+    Args:
+        seriesId (int): ID of series to search for.
+    """
 
 
-@enum_tools.documentation.document_enum
-class SonarrSortKey(str, Enum):
+@dataclass(order=True)
+class SonarrSortKey(Enum):
     """Sonarr sort keys."""
 
     AIR_DATE_UTC = "airDateUtc"

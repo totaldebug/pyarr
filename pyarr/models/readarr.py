@@ -1,29 +1,65 @@
+from dataclasses import dataclass
 from enum import Enum
 
-import enum_tools.documentation
 
-enum_tools.documentation.INTERACTIVE = True
+@dataclass(order=True)
+class ReadarrCommands(Enum):
+    """Readarr commands.
 
+    Note:
+        The parameters are supplied as `**kwargs` within the `post_command` method.
+    """
 
-@enum_tools.documentation.document_enum
-class ReadarrCommands(str, Enum):
-    """Readarr commands."""
-
-    APP_UPDATE_CHECK = "ApplicationUpdateCheck"
+    APP_UPDATE_CHECK: str = "ApplicationUpdateCheck"
+    """Checks for Application updates"""
     AUTHOR_SEARCH = "AuthorSearch"
+    """Search for specific author by ID
+
+    Args:
+        authorId (int): ID for Author
+    """
     BOOK_SEARCH = "BookSearch"
+    """Search for specific Book by ID
+
+    Args:
+        bookId (int): ID for Book
+    """
     REFRESH_AUTHOR = "RefreshAuthor"
+    """Refresh all Authors, or by specific ID
+
+    Args:
+        authorId (int, optional): ID for Author
+    """
     REFRESH_BOOK = "RefreshBook"
+    """Refresh all Books, or by specific ID
+
+    Args:
+        bookId (int, optional): ID for Book
+    """
     RENAME_AUTHOR = "RenameAuthor"
+    """Rename all Authors, or by list of Ids
+
+    Args:
+        authorIds (list[int], optional): IDs for Authors
+    """
     RENAME_FILES = "RenameFiles"
+    """Rename all files, or by specific ID
+
+    Args:
+        authorId (int, optional): ID for Author
+    """
     RESCAN_FOLDERS = "RescanFolders"
+    """Rescans folders"""
     RSS_SYNC = "RssSync"
+    """Synchronise RSS Feeds"""
     BACKUP = "Backup"
+    """Backup of the Database"""
     MISSING_BOOK_SEARCH = "MissingBookSearch"
+    """Searches for any missing books"""
 
 
-@enum_tools.documentation.document_enum
-class ReadarrSortKeys(str, Enum):
+@dataclass(order=True)
+class ReadarrSortKeys(Enum):
     """Readarr sort keys."""
 
     AUTHOR_ID = "authorId"
@@ -45,8 +81,8 @@ class ReadarrSortKeys(str, Enum):
     TITLE = "title"
 
 
-@enum_tools.documentation.document_enum
-class ReadarrBookTypes(str, Enum):
+@dataclass(order=True)
+class ReadarrBookTypes(Enum):
     """Readarr book types."""
 
     ASIN = "asin"
@@ -54,11 +90,11 @@ class ReadarrBookTypes(str, Enum):
     ISBN = "isbn"
 
 
-@enum_tools.documentation.document_enum
-class ReadarrAuthorMonitor(str, Enum):
+@dataclass(order=True)
+class ReadarrAuthorMonitor(Enum):
     """Readarr author monitor options."""
 
-    ALL = "all"
+    ALL: str = "all"
     FUTURE = "future"
     MISSING = "missing"
     EXISTING = "existing"

@@ -423,7 +423,7 @@ class RadarrAPI(BaseArrAPI):
         Returns:
             list[dict[str, JsonDataType]]: List of dictionaries with items
         """
-        params: dict[str, Union[int, str]] = {"movieId": id_}
+        params: dict[str, Union[int, str, RadarrEventType]] = {"movieId": id_}
         if event_type:
             params["eventType"] = event_type
         return self._get("history/movie", self.ver_uri, params)
@@ -597,26 +597,18 @@ class RadarrAPI(BaseArrAPI):
     ## COMMAND
 
     # POST /command
-    # TODO: type for kwargs and response
     def post_command(
-        self, name: RadarrCommands, **kwargs: Optional[Union[int, list[int]]]
+        self, name: RadarrCommands, **kwargs: Optional[dict[str, Union[int, list[int]]]]
     ) -> dict[str, JsonDataType]:
         """Performs any of the predetermined Radarr command routines.
 
         Args:
-            name (SonarrCommands): Command that should be executed
+            name (RadarrCommands): Command that should be executed
             **kwargs: Additional parameters for specific commands. See note.
 
         Note:
-            Required Kwargs:
-                DownloadedMoviesScan: clientid (int, Optional)
-                RenameFiles: files (list[int])
-                DownloadedMoviesScan: path (str, Optional)
-                MissingMoviesSearch
-                RefreshMovie: movieid (Optional)
-                RenameMovie: movieid (list[int])
-                RescanMovie: movieid (Optional)
-                MovieSearch: movieid (Optional)
+            For available commands and required `**kwargs` see the `RadarrCommands` model
+
 
         Returns:
             dict[str, JsonDataType]: Dictionary containing job
