@@ -22,8 +22,10 @@ build
 .coverage
 coverage.xml
 _build
+.nox
 
 .devcontainer/*
 !.devcontainer/recommended-devcontainer.json
-!.devcontainer/recommended-Dockerfile
-!.devcontainer/example-env
+!.devcontainer/Dockerfile
+!.devcontainer/docker-compose.yml
+!.devcontainer/docker-compose.workspace.yml

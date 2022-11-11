@@ -1,0 +1,13 @@
+---
+
+version: '3'
+services:
+  workspace:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: workspace
+    volumes:
+      - ..:/workspace:cached
+    command: sleep infinity
+    network_mode: service:arrs

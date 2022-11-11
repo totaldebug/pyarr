@@ -1,6 +1,10 @@
 {
     "name": "PyArr",
-    "dockerFile": "Dockerfile",
+    "dockerComposeFile": [
+        "docker-compose.yaml",
+        "docker-compose.workspace.yaml"
+    ],
+    "service": "workspace",
     "context": "..",
     "extensions": [
         "github.vscode-pull-request-github",

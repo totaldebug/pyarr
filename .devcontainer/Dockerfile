@@ -10,6 +10,5 @@ RUN pip install --user poetry nox
 ENV PATH="${PATH}:/root/.local/bin"
 
 RUN wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O - | zsh || true
-RUN poetry completions zsh > ~/.zfunc/_poetry
 
 CMD ["zsh"]

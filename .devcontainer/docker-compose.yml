@@ -1,0 +1,57 @@
+---
+
+version: '3'
+services:
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - ../tests/arr_dbs/sonarr:/config
+    ports:
+      - 8989:8989
+    network_mode: service:arrs
+    restart: unless-stopped
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - ../tests/arr_dbs/radarr:/config
+    ports:
+      - 7878:7878
+    network_mode: service:arrs
+    restart: unless-stopped
+  readarr:
+    image: lscr.io/linuxserver/readarr:develop
+    container_name: readarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - ../tests/arr_dbs/readarr:/config
+    ports:
+      - 8787:8787
+    network_mode: service:arrs
+    restart: unless-stopped
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - ../tests/arr_dbs/lidarr:/config
+    ports:
+      - 8686:8686
+    network_mode: service:arrs
+    restart: unless-stopped
+
