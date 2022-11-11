@@ -2,7 +2,7 @@ from typing import Any, Optional, Union
 
 from requests import Response
 
-from pyarr.types import JsonDataType
+from pyarr.types import JsonArray, JsonObject
 
 from .base import BaseArrAPI
 from .exceptions import PyarrMissingArgument, PyarrMissingProfile
@@ -29,7 +29,7 @@ class ReadarrAPI(BaseArrAPI):
         ver_uri = "/v1"
         super().__init__(host_url, api_key, ver_uri)
 
-    def lookup(self, term: str) -> list[dict[str, JsonDataType]]:
+    def lookup(self, term: str) -> JsonArray:
         """Search for an author / book
 
         Note:
@@ -45,12 +45,12 @@ class ReadarrAPI(BaseArrAPI):
             term (str): Search term
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
         return self._get("search", self.ver_uri, params={"term": term})
 
     # GET /book/lookup
-    def lookup_book(self, term: str) -> list[dict[str, JsonDataType]]:
+    def lookup_book(self, term: str) -> JsonArray:
         """Searches for new books using a term, goodreads ID, isbn or asin.
 
         Args:
@@ -61,19 +61,19 @@ class ReadarrAPI(BaseArrAPI):
                 asin:B00JCDK5ME
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
         return self._get("book/lookup", self.ver_uri, {"term": term})
 
     # GET /author/lookup/
-    def lookup_author(self, term: str) -> list[dict[str, JsonDataType]]:
+    def lookup_author(self, term: str) -> JsonArray:
         """Searches for new authors using a term
 
         Args:
             term (str): Author name or book
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
         params = {"term": term}
         return self._get("author/lookup", self.ver_uri, params)
@@ -89,7 +89,7 @@ class ReadarrAPI(BaseArrAPI):
         search_for_new_book: bool = False,
         author_monitor: ReadarrAuthorMonitor = ReadarrAuthorMonitor.ALL,
         author_search_for_missing_books: bool = False,
-    ) -> dict[str, JsonDataType]:
+    ) -> JsonObject:
         """Constructs the JSON required to add a new book to Readarr
 
         Args:
@@ -107,7 +107,7 @@ class ReadarrAPI(BaseArrAPI):
             PyarrMissingProfile: Error if Metadata or Quality profile ID are incorrect
 
         Returns:
-            dict[str, JsonDataType]: Dictionary of generated record
+            JsonObject: Dictionary of generated record
         """
         if quality_profile_id is None:
             try:
@@ -151,7 +151,7 @@ class ReadarrAPI(BaseArrAPI):
         monitored: bool = True,
         author_monitor: ReadarrAuthorMonitor = ReadarrAuthorMonitor.NONE,
         search_for_missing_books: bool = False,
-    ) -> dict[str, JsonDataType]:
+    ) -> JsonObject:
         """Constructs the JSON required to add a new book to Readarr
 
         Args:
@@ -167,7 +167,7 @@ class ReadarrAPI(BaseArrAPI):
             PyarrMissingProfile: Error if Metadata or Quality profile ID are incorrect
 
         Returns:
-            dict[str, JsonDataType]: Dictionary of author data
+            JsonObject: Dictionary of author data
         """
         if quality_profile_id is None:
             try:
@@ -204,16 +204,14 @@ class ReadarrAPI(BaseArrAPI):
     # COMMAND
 
     # GET /command/:id
-    def get_command(
-        self, id_: Optional[int] = None
-    ) -> Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]:
+    def get_command(self, id_: Optional[int] = None) -> Union[JsonArray, JsonObject]:
         """Queries the status of a previously started command, or all currently started commands.
 
         Args:
             id_ (Optional[int], optional): Database ID of the command. Defaults to None.
 
         Returns:
-            Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]: List of dictionaries with items
+            Union[JsonArray, JsonObject]: List of dictionaries with items
         """
         path = f"command/{id_}" if id_ else "command"
         return self._get(path, self.ver_uri)
@@ -223,7 +221,7 @@ class ReadarrAPI(BaseArrAPI):
         self,
         name: ReadarrCommands,
         **kwargs: Optional[dict[str, Union[int, list[int]]]],
-    ) -> dict[str, JsonDataType]:
+    ) -> JsonObject:
         """Performs any of the predetermined Readarr command routines
 
         Args:
@@ -235,7 +233,7 @@ class ReadarrAPI(BaseArrAPI):
 
 
         Returns:
-            dict[str, JsonDataType]: Dictionary of command run
+            JsonObject: Dictionary of command run
         """
         data: dict[str, Any] = {
             "name": name,
@@ -253,7 +251,7 @@ class ReadarrAPI(BaseArrAPI):
         page_size: Optional[int] = None,
         sort_key: Optional[ReadarrSortKeys] = None,
         sort_dir: Optional[PyarrSortDirection] = None,
-    ) -> dict[str, JsonDataType]:
+    ) -> JsonObject:
         """Gets missing episode (episodes without files)
 
         Args:
@@ -263,7 +261,7 @@ class ReadarrAPI(BaseArrAPI):
             sort_dir (PyarrSortDirection, optional): Direction to sort the items. Defaults to None,
 
         Returns:
-            dict[str, JsonDataType]: List of dictionaries with items
+            JsonObject: List of dictionaries with items
         """
         params: dict[str, Union[int, ReadarrSortKeys, PyarrSortDirection, bool]] = {}
         if page:
@@ -285,7 +283,7 @@ class ReadarrAPI(BaseArrAPI):
         sort_key: Optional[ReadarrSortKeys] = None,
         sort_dir: Optional[PyarrSortDirection] = None,
         monitored: bool = None,
-    ) -> dict[str, JsonDataType]:
+    ) -> JsonObject:
         """Get wanted items where the cutoff is unmet
 
         Args:
@@ -296,7 +294,7 @@ class ReadarrAPI(BaseArrAPI):
             monitored (bool, optional): Search for monitored only. Defaults to None.
 
         Returns:
-            dict[str, JsonDataType]: List of dictionaries with items
+            JsonObject: List of dictionaries with items
         """
         params: dict[str, Union[int, ReadarrSortKeys, PyarrSortDirection, bool]] = {}
         if page:
@@ -324,7 +322,7 @@ class ReadarrAPI(BaseArrAPI):
         unknown_authors: Optional[bool] = None,
         include_author: Optional[bool] = None,
         include_book: Optional[bool] = None,
-    ) -> dict[str, JsonDataType]:
+    ) -> JsonObject:
         """Get current download information
 
         Args:
@@ -337,7 +335,7 @@ class ReadarrAPI(BaseArrAPI):
             include_book (bool, optional): Include the book. Defaults to None.
 
         Returns:
-            dict[str, JsonDataType]: List of dictionaries with items
+            JsonObject: List of dictionaries with items
         """
         params: dict[str, Union[int, ReadarrSortKeys, PyarrSortDirection, bool]] = {}
         if page:
@@ -361,14 +359,14 @@ class ReadarrAPI(BaseArrAPI):
     # GET /metadataprofile/{id}
     def get_metadata_profile(
         self, id_: Optional[int] = None
-    ) -> Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]:
+    ) -> Union[JsonArray, JsonObject]:
         """Gets all metadata profiles or specific one with ID
 
         Args:
             id_ (Optional[int], optional): Metadata profile id from database. Defaults to None.
 
         Returns:
-            Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]: List of dictionaries with items
+            Union[JsonArray, JsonObject]: List of dictionaries with items
         """
         path = f"metadataprofile/{id_}" if id_ else "metadataprofile"
         return self._get(path, self.ver_uri)
@@ -376,14 +374,14 @@ class ReadarrAPI(BaseArrAPI):
     # GET /delayprofile/{id}
     def get_delay_profile(
         self, id_: Optional[int] = None
-    ) -> Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]:
+    ) -> Union[JsonArray, JsonObject]:
         """Gets all delay profiles or specific one with ID
 
         Args:
             id_ (Optional[int], optional): Metadata profile ID from database. Defaults to None.
 
         Returns:
-            Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]: List of dictionaries with items
+            Union[JsonArray, JsonObject]: List of dictionaries with items
         """
         path = f"delayprofile/{id_}" if id_ else "delayprofile"
         return self._get(path, self.ver_uri)
@@ -391,14 +389,14 @@ class ReadarrAPI(BaseArrAPI):
     # GET /releaseprofile/{id}
     def get_release_profile(
         self, id_: Optional[int] = None
-    ) -> Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]:
+    ) -> Union[JsonArray, JsonObject]:
         """Gets all release profiles or specific one with ID
 
         Args:
             id_ (Optional[int], optional): Release profile ID from database. Defaults to None.
 
         Returns:
-            Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]: List of dictionaries with items
+            Union[JsonArray, JsonObject]: List of dictionaries with items
         """
         path = f"releaseprofile/{id_}" if id_ else "releaseprofile"
         return self._get(path, self.ver_uri)
@@ -406,9 +404,7 @@ class ReadarrAPI(BaseArrAPI):
     ## BOOKS
 
     # GET /book and /book/{id}
-    def get_book(
-        self, id_: Optional[int] = None
-    ) -> Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]:
+    def get_book(self, id_: Optional[int] = None) -> Union[JsonArray, JsonObject]:
         """Returns all books in your collection or the book with the matching
         book ID if one is found.
 
@@ -416,7 +412,7 @@ class ReadarrAPI(BaseArrAPI):
             id_ (Optional[int], optional): Database id for book. Defaults to None.
 
         Returns:
-            Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]: List of dictionaries with items
+            Union[JsonArray, JsonObject]: List of dictionaries with items
         """
         path = f"book/{id_}" if id_ else "book"
         return self._get(path, self.ver_uri)
@@ -433,7 +429,7 @@ class ReadarrAPI(BaseArrAPI):
         search_for_new_book: bool = False,
         author_monitor: ReadarrAuthorMonitor = ReadarrAuthorMonitor.ALL,
         author_search_for_missing_books: bool = False,
-    ) -> dict[str, JsonDataType]:
+    ) -> JsonObject:
         """Adds a new book and  its associated author (if not already added)
 
         Args:
@@ -448,7 +444,7 @@ class ReadarrAPI(BaseArrAPI):
             author_search_for_missing_books (bool, optional): search for missing books from this author. Defaults to False.
 
         Returns:
-            dict[str, JsonDataType]: Dictionary of added record
+            JsonObject: Dictionary of added record
         """
 
         book_json: dict[str, Any] = self._book_json(
@@ -465,9 +461,7 @@ class ReadarrAPI(BaseArrAPI):
         return self._post("book", self.ver_uri, data=book_json)
 
     # PUT /book/{id}
-    def upd_book(
-        self, id_: int, data: dict[str, JsonDataType]
-    ) -> dict[str, JsonDataType]:
+    def upd_book(self, id_: int, data: JsonObject) -> JsonObject:
         """Update the given book, currently only monitored is changed, all other modifications are ignored.
 
         Note:
@@ -475,10 +469,10 @@ class ReadarrAPI(BaseArrAPI):
 
         Args:
             id_ (int): Book database ID to update
-            data (dict[str, JsonDataType]): All parameters to update book
+            data (JsonObject): All parameters to update book
 
         Returns:
-            dict[str, JsonDataType]: Dictionary with updated record
+            JsonObject: Dictionary with updated record
         """
         return self._put(f"book/{id_}", self.ver_uri, data=data)
 
@@ -488,7 +482,7 @@ class ReadarrAPI(BaseArrAPI):
         id_: int,
         delete_files: Optional[bool] = None,
         import_list_exclusion: Optional[bool] = None,
-    ) -> Union[Response, dict[str, JsonDataType], dict[Any, Any]]:
+    ) -> Union[Response, JsonObject, dict[Any, Any]]:
         """Delete the book with the given ID
 
         Args:
@@ -510,16 +504,14 @@ class ReadarrAPI(BaseArrAPI):
     # AUTHOR
 
     # GET /author and /author/{id}
-    def get_author(
-        self, id_: Optional[int] = None
-    ) -> Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]:
+    def get_author(self, id_: Optional[int] = None) -> Union[JsonArray, JsonObject]:
         """Returns all authors in your collection or the author with the matching ID if one is found.
 
         Args:
             id_ (Optional[int], optional): Database ID for author. Defaults to None.
 
         Returns:
-            Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]: List of dictionaries with items
+            Union[JsonArray, JsonObject]: List of dictionaries with items
         """
         path = f"author/{id_}" if id_ else "author"
         return self._get(path, self.ver_uri)
@@ -534,7 +526,7 @@ class ReadarrAPI(BaseArrAPI):
         monitored: bool = True,
         author_monitor: ReadarrAuthorMonitor = ReadarrAuthorMonitor.NONE,
         author_search_for_missing_books: bool = False,
-    ) -> dict[str, JsonDataType]:
+    ) -> JsonObject:
         """Adds an authorbased on search term, must be author name or book by goodreads / isbn / asin ID
 
         Args:
@@ -547,7 +539,7 @@ class ReadarrAPI(BaseArrAPI):
             author_search_for_missing_books (bool, optional): Search for any missing books by the author. Defaults to False.
 
         Returns:
-            dict[str, JsonDataType]: Dictonary of added record
+            JsonObject: Dictonary of added record
         """
         author_json: dict[str, Any] = self._author_json(
             term,
@@ -561,9 +553,7 @@ class ReadarrAPI(BaseArrAPI):
         return self._post("author", self.ver_uri, data=author_json)
 
     # PUT /author/{id}
-    def upd_author(
-        self, id_: int, data: dict[str, JsonDataType]
-    ) -> dict[str, JsonDataType]:
+    def upd_author(self, id_: int, data: JsonObject) -> JsonObject:
         """Update the given author, currently only monitored is changed, all other modifications are ignored.
 
         Note:
@@ -571,10 +561,10 @@ class ReadarrAPI(BaseArrAPI):
 
         Args:
             id_ (int): Author database ID to update
-            data (dict[str, JsonDataType]): All parameters to update author
+            data (JsonObject): All parameters to update author
 
         Returns:
-            dict[str, JsonDataType]: Dictionary with updated record
+            JsonObject: Dictionary with updated record
         """
         return self._put(f"author/{id_}", self.ver_uri, data=data)
 
@@ -584,7 +574,7 @@ class ReadarrAPI(BaseArrAPI):
         id_: int,
         delete_files: Optional[bool] = None,
         import_list_exclusion: Optional[bool] = None,
-    ) -> Union[Response, dict[str, JsonDataType], dict[Any, Any]]:
+    ) -> Union[Response, JsonObject, dict[Any, Any]]:
         """Delete the author with the given ID
 
         Args:
@@ -606,11 +596,11 @@ class ReadarrAPI(BaseArrAPI):
     ## LOG
 
     # GET /log/file
-    def get_log_file(self) -> list[dict[str, JsonDataType]]:
+    def get_log_file(self) -> JsonArray:
         """Get log file
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
         return self._get("log/file", self.ver_uri)
 
@@ -629,7 +619,7 @@ class ReadarrAPI(BaseArrAPI):
         default_tags: Optional[list] = None,
         default_quality_profile_id: int = 1,
         default_metadata_profile_id: int = 1,
-    ) -> dict[str, JsonDataType]:
+    ) -> JsonObject:
         """Add a new location to store files
 
         Args:
@@ -645,7 +635,7 @@ class ReadarrAPI(BaseArrAPI):
             default_metadata_profile_id (int, optional): Metadata Profile. Defaults to 1.
 
         Returns:
-            dict[str, JsonDataType]: Dictionary of added record
+            JsonObject: Dictionary of added record
         """
         folder_json = {
             "isCalibreLibrary": is_calibre_lib,
@@ -662,25 +652,23 @@ class ReadarrAPI(BaseArrAPI):
         return self._post("rootFolder", self.ver_uri, data=folder_json)
 
     # GET /config/metadataProvider
-    def get_metadata_provider(self) -> dict[str, JsonDataType]:
+    def get_metadata_provider(self) -> JsonObject:
         """Get metadata provider from settings/metadata
 
         Returns:
-            dict[str, JsonDataType]: Dictionary of record
+            JsonObject: Dictionary of record
         """
         return self._get("config/metadataProvider", self.ver_uri)
 
     # PUT /config/metadataProvider
-    def upd_metadata_provider(
-        self, data: dict[str, JsonDataType]
-    ) -> dict[str, JsonDataType]:
+    def upd_metadata_provider(self, data: JsonObject) -> JsonObject:
         """Update the metadata provider data.
 
         Note:
             To be used in conjunction with get_metadata_provider()
 
         Args:
-            data (dict[str, JsonDataType]): All parameters to update
+            data (JsonObject): All parameters to update
 
         Returns:
             dict[str, Any]: Dictionary of updated record

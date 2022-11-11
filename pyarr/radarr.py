@@ -3,7 +3,7 @@ from warnings import warn
 
 from requests import Response
 
-from pyarr.types import JsonDataType
+from pyarr.types import JsonArray, JsonObject
 
 from .base import BaseArrAPI
 from .exceptions import PyarrMissingArgument, PyarrRecordNotFound
@@ -87,14 +87,14 @@ class RadarrAPI(BaseArrAPI):
     def add_root_folder(
         self,
         directory: str,
-    ) -> dict[str, JsonDataType]:
+    ) -> JsonObject:
         """Adds a new root folder
 
         Args:
             directory (str): The directory path
 
         Returns:
-            dict[str, JsonDataType]: Dictionary containing path details
+            JsonObject: Dictionary containing path details
         """
         return self._post("rootfolder", self.ver_uri, data={"path": directory})
 
@@ -103,9 +103,7 @@ class RadarrAPI(BaseArrAPI):
     # GET /movie
     def get_movie(
         self, id_: Optional[int] = None, tmdb: bool = False
-    ) -> Union[
-        list[dict[str, JsonDataType]], dict[str, JsonDataType]
-    ]:  # sourcery skip: class-extract-method
+    ) -> Union[JsonArray, JsonObject]:  # sourcery skip: class-extract-method
         """Returns all movies in the database, movie based on the Radarr ID or TMDB id.
 
         Note:
@@ -116,7 +114,7 @@ class RadarrAPI(BaseArrAPI):
             tmdb (bool): Use TMDB Id. Defaults to False
 
         Returns:
-            Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]: List or Dictionary with items
+            Union[JsonArray, JsonObject]: List or Dictionary with items
         """
         params = {}
         if tmdb:
@@ -137,7 +135,7 @@ class RadarrAPI(BaseArrAPI):
         monitored: bool = True,
         search_for_movie: bool = True,
         tmdb: Optional[bool] = None,
-    ) -> dict[str, JsonDataType]:
+    ) -> JsonObject:
         """Adds a movie to the database
 
         Args:
@@ -149,7 +147,7 @@ class RadarrAPI(BaseArrAPI):
             tmdb (Optional[bool], optional): Not in use, Deprecated. Defaults to None.
 
         Returns:
-            dict[str, JsonDataType]: Dictonary with added record
+            JsonObject: Dictonary with added record
         """
 
         if tmdb:
@@ -169,7 +167,7 @@ class RadarrAPI(BaseArrAPI):
         self,
         data: Union[dict[Any, Any], list[dict[Any, Any]]],
         move_files: Optional[bool] = None,
-    ) -> Union[dict[str, JsonDataType], list[dict[str, JsonDataType]]]:
+    ) -> Union[JsonObject, JsonArray]:
         """Updates a movie in the database.
 
         Args:
@@ -177,7 +175,7 @@ class RadarrAPI(BaseArrAPI):
             move_files (Optional[bool], optional): Have radarr move files when updating. Defaults to None.
 
         Returns:
-            dict[str, JsonDataType]: Dictionary with updated record
+            JsonObject: Dictionary with updated record
         """
         params = {}
         if move_files is not None:
@@ -191,7 +189,7 @@ class RadarrAPI(BaseArrAPI):
         )
 
     # GET /movie/{id}
-    def get_movie_by_movie_id(self, id_: int) -> dict[str, JsonDataType]:
+    def get_movie_by_movie_id(self, id_: int) -> JsonObject:
         """Get a movie by the Radarr database ID
 
         Args:
@@ -202,7 +200,7 @@ class RadarrAPI(BaseArrAPI):
             future release. Please use get_movie()
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
         warn(
             "This method is deprecated and will be removed in a future release. Please use get_movie()",
@@ -217,7 +215,7 @@ class RadarrAPI(BaseArrAPI):
         id_: Union[int, list],
         delete_files: Optional[bool] = None,
         add_exclusion: Optional[bool] = None,
-    ) -> Union[Response, dict[str, JsonDataType], dict[Any, Any]]:
+    ) -> Union[Response, JsonObject, dict[Any, Any]]:
         """Delete a single movie or multiple movies by database id.
 
         Args:
@@ -245,7 +243,7 @@ class RadarrAPI(BaseArrAPI):
         )
 
     # GET /movie/lookup
-    def lookup_movie(self, term: str) -> list[dict[str, JsonDataType]]:
+    def lookup_movie(self, term: str) -> JsonArray:
         """Search for a movie to add to the database (Uses TMDB for search results)
 
         Args:
@@ -255,20 +253,20 @@ class RadarrAPI(BaseArrAPI):
                 radarr.lookup_movie(term="tmdb:123456")
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
         params = {"term": term}
         return self._get("movie/lookup", self.ver_uri, params)
 
     # GET /movie/lookup
-    def lookup_movie_by_tmdb_id(self, id_: int) -> list[dict[str, JsonDataType]]:
+    def lookup_movie_by_tmdb_id(self, id_: int) -> JsonArray:
         """Search for movie by TMDB ID
 
         Args:
             id_ (str): TMDB ID
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
         warn(
             "This method is deprecated and will be removed in a future release. use lookup_movie(term='tmdb:123456')",
@@ -279,14 +277,14 @@ class RadarrAPI(BaseArrAPI):
         return self._get("movie/lookup", self.ver_uri, params)
 
     # GET /movie/lookup
-    def lookup_movie_by_imdb_id(self, id_: str) -> list[dict[str, JsonDataType]]:
+    def lookup_movie_by_imdb_id(self, id_: str) -> JsonArray:
         """Search for movie by IMDB ID
 
         Args:
             id_ (str): IMDB ID
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
         warn(
             "This method is deprecated and will be removed in a future release. use lookup_movie(term='imdb:123456')",
@@ -297,16 +295,14 @@ class RadarrAPI(BaseArrAPI):
         return self._get("movie/lookup", self.ver_uri, params)
 
     # PUT /movie/editor
-    def upd_movies(
-        self, data: dict[str, JsonDataType]
-    ) -> list[dict[str, JsonDataType]]:
+    def upd_movies(self, data: JsonObject) -> JsonArray:
         """The Updates operation allows to edit properties of multiple movies at once
 
         Args:
-            data (dict[str, JsonDataType]): Updated movie information
+            data (JsonObject): Updated movie information
 
         Returns:
-            dict[str, JsonDataType]: Dictionary containing updated record
+            JsonObject: Dictionary containing updated record
         """
 
         warn(
@@ -318,12 +314,12 @@ class RadarrAPI(BaseArrAPI):
 
     # DELETE /movie/editor
     def del_movies(
-        self, data: dict[str, JsonDataType]
-    ) -> Union[Response, dict[str, JsonDataType], dict[Any, Any]]:
+        self, data: JsonObject
+    ) -> Union[Response, JsonObject, dict[Any, Any]]:
         """The delete operation allows mass deletion of movies (and optionally files)
 
         Args:
-            data (dict[str, JsonDataType]): dictionary of movies to be deleted::
+            data (JsonObject): dictionary of movies to be deleted::
 
                 {
                     "movieIds": [
@@ -344,16 +340,14 @@ class RadarrAPI(BaseArrAPI):
         return self._delete("movie/editor", self.ver_uri, data=data)
 
     # POST /movie/import
-    def import_movies(
-        self, data: list[dict[str, JsonDataType]]
-    ) -> list[dict[str, JsonDataType]]:
+    def import_movies(self, data: JsonArray) -> JsonArray:
         """The movie import endpoint is used by the bulk import view in Radarr UI. It allows movies to be bulk added to the Radarr database.
 
         Args:
-            data (dict[str, JsonDataType]): dictionary of all movies to be imported
+            data (JsonObject): dictionary of all movies to be imported
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
         return self._post("movie/import", self.ver_uri, data=data)
 
@@ -361,28 +355,28 @@ class RadarrAPI(BaseArrAPI):
 
     # GET /moviefile
     # TODO: merge this with get_movie_file
-    def get_movie_files_by_movie_id(self, id_: int) -> list[dict[str, JsonDataType]]:
+    def get_movie_files_by_movie_id(self, id_: int) -> JsonArray:
         """Get a movie file object by Movie database ID.
 
         Args:
             id_ (int): Movie database ID
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
 
         params = {"movieId": id_}
         return self._get("moviefile", self.ver_uri, params)
 
     # GET /moviefile
-    def get_movie_file(self, id_: Union[int, list]) -> list[dict[str, JsonDataType]]:
+    def get_movie_file(self, id_: Union[int, list]) -> JsonArray:
         """Get movie file by database ID
 
         Args:
             id_ (int, list): Movie file ID, or multiple in a list
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
         if not isinstance(id_, list):
             return self._get(f"moviefile/{id_}", self.ver_uri)
@@ -392,7 +386,7 @@ class RadarrAPI(BaseArrAPI):
     # DELETE /moviefile/{id}
     def del_movie_file(
         self, id_: Union[int, list]
-    ) -> Union[Response, dict[str, JsonDataType], dict[Any, Any]]:
+    ) -> Union[Response, JsonObject, dict[Any, Any]]:
         """Allows for deletion of a moviefile by its database ID.
 
         Args:
@@ -413,7 +407,7 @@ class RadarrAPI(BaseArrAPI):
     # GET /history/movie
     def get_movie_history(
         self, id_: int, event_type: Optional[RadarrEventType] = None
-    ) -> list[dict[str, JsonDataType]]:
+    ) -> JsonArray:
         """Get history for a given movie in database by its database ID
 
         Args:
@@ -421,7 +415,7 @@ class RadarrAPI(BaseArrAPI):
             event_type (Optional[RadarrEventType], optional): History event type to retrieve. Defaults to None.
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
         params: dict[str, Union[int, str, RadarrEventType]] = {"movieId": id_}
         if event_type:
@@ -434,14 +428,14 @@ class RadarrAPI(BaseArrAPI):
     def get_blocklist_by_movie_id(
         self,
         id_: int,
-    ) -> list[dict[str, JsonDataType]]:
+    ) -> JsonArray:
         """Retrieves blocklisted releases that are tied to a given movie in the database.
 
         Args:
             id_ (int): Movie id from Database
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
         params = {"movieId": id_}
         return self._get("blocklist/movie", self.ver_uri, params)
@@ -456,7 +450,7 @@ class RadarrAPI(BaseArrAPI):
         sort_dir: Optional[PyarrSortDirection] = None,
         sort_key: Optional[RadarrSortKeys] = None,
         include_unknown_movie_items: Optional[bool] = None,
-    ) -> dict[str, JsonDataType]:
+    ) -> JsonObject:
         """Return a list of items in the queue
 
         Args:
@@ -467,7 +461,7 @@ class RadarrAPI(BaseArrAPI):
             include_unknown_movie_items (Optional[bool], optional): Include unknown movie items. Defaults to None.
 
         Returns:
-            dict[str, JsonDataType]: List of dictionaries with items
+            JsonObject: List of dictionaries with items
         """
         params: dict[str, Union[int, PyarrSortDirection, RadarrSortKeys, bool]] = {}
 
@@ -490,7 +484,7 @@ class RadarrAPI(BaseArrAPI):
         self,
         id_: Optional[int] = None,
         include_movie: Optional[bool] = None,
-    ) -> list[dict[str, JsonDataType]]:
+    ) -> JsonArray:
         """Get details of all items in queue
 
         Args:
@@ -498,7 +492,7 @@ class RadarrAPI(BaseArrAPI):
             include_movie (Optional[bool], optional): Include movie object if linked. Defaults to None.
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
         params = {}
         if id_:
@@ -509,11 +503,11 @@ class RadarrAPI(BaseArrAPI):
         return self._get("queue/details", self.ver_uri, params)
 
     # GET /queue/status
-    def get_queue_status(self) -> dict[str, JsonDataType]:
+    def get_queue_status(self) -> JsonObject:
         """Queue item status
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
         return self._get("queue/status", self.ver_uri)
 
@@ -523,7 +517,7 @@ class RadarrAPI(BaseArrAPI):
         id_: list[int],
         remove_from_client: Optional[bool] = None,
         blocklist: Optional[bool] = None,
-    ) -> Union[Response, dict[str, JsonDataType], dict[Any, Any]]:
+    ) -> Union[Response, JsonObject, dict[Any, Any]]:
         """Remove multiple items from queue by their IDs
 
         Args:
@@ -539,51 +533,47 @@ class RadarrAPI(BaseArrAPI):
         return self._delete("queue/bulk", self.ver_uri, params=params, data=data)
 
     # POST /queue/grab/{id}
-    def force_grab_queue_item(self, id_: int) -> dict[str, JsonDataType]:
+    def force_grab_queue_item(self, id_: int) -> JsonObject:
         """Perform a Radarr "force grab" on a pending queue item by its ID.
 
         Args:
             id_ (int): Queue item ID from database.
 
         Returns:
-            dict[str, JsonDataType]: Dictionary with record
+            JsonObject: Dictionary with record
         """
         return self._post(f"queue/grab/{id_}", self.ver_uri)
 
     ## INDEXER
 
     # GET /indexer and /indexer/{id}
-    def get_indexer(self, id_: Optional[int] = None) -> list[dict[str, JsonDataType]]:
+    def get_indexer(self, id_: Optional[int] = None) -> JsonArray:
         """Get all indexers or a single indexer by its database ID.
 
         Args:
             id_ (Optional[int], optional): indexer database ID. Defaults to None.
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
         path = f"indexer/{id_}" if id_ else "indexer"
         return self._get(path, self.ver_uri)
 
     # PUT /indexer/{id}
-    def upd_indexer(
-        self, id_: int, data: dict[str, JsonDataType]
-    ) -> dict[str, JsonDataType]:
+    def upd_indexer(self, id_: int, data: JsonObject) -> JsonObject:
         """Edit an indexer
 
         Args:
             id_ (int): Database ID of indexer
-            data (dict[str, JsonDataType]): information to be changed within the indexer
+            data (JsonObject): information to be changed within the indexer
 
         Returns:
-            dict[str, JsonDataType]: Dictionary with updated record
+            JsonObject: Dictionary with updated record
         """
         return self._put(f"indexer/{id_}", self.ver_uri, data=data)
 
     # DELETE /indexer/{id}
-    def del_indexer(
-        self, id_: int
-    ) -> Union[Response, dict[str, JsonDataType], dict[Any, Any]]:
+    def del_indexer(self, id_: int) -> Union[Response, JsonObject, dict[Any, Any]]:
         """Delete indexer by database ID
 
         Args:
@@ -599,7 +589,7 @@ class RadarrAPI(BaseArrAPI):
     # POST /command
     def post_command(
         self, name: RadarrCommands, **kwargs: Optional[dict[str, Union[int, list[int]]]]
-    ) -> dict[str, JsonDataType]:
+    ) -> JsonObject:
         """Performs any of the predetermined Radarr command routines.
 
         Args:
@@ -611,7 +601,7 @@ class RadarrAPI(BaseArrAPI):
 
 
         Returns:
-            dict[str, JsonDataType]: Dictionary containing job
+            JsonObject: Dictionary containing job
         """
         data: dict[str, Any] = {
             "name": name,
@@ -623,10 +613,10 @@ class RadarrAPI(BaseArrAPI):
     ## CUSTOM FILTERS
 
     # GET /customfilter
-    def get_custom_filter(self) -> list[dict[str, JsonDataType]]:
+    def get_custom_filter(self) -> JsonArray:
         """Query Radarr for custom filters
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
         return self._get("customfilter", self.ver_uri)

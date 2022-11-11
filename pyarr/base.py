@@ -16,7 +16,7 @@ from pyarr.models.common import (
     PyarrSortDirection,
     PyarrTaskSortKey,
 )
-from pyarr.types import JsonDataType
+from pyarr.types import JsonArray, JsonObject
 
 from .request_handler import RequestHandler
 
@@ -44,7 +44,7 @@ class BaseArrAPI(RequestHandler):
         start_date: Optional[datetime] = None,
         end_date: Optional[datetime] = None,
         unmonitored: bool = True,
-    ) -> list[dict[str, JsonDataType]]:
+    ) -> JsonArray:
         """Gets upcoming releases by monitored, if start/end are not
         supplied, today and tomorrow will be returned
 
@@ -54,7 +54,7 @@ class BaseArrAPI(RequestHandler):
             unmonitored (bool, optional): Include unmonitored movies. Defaults to True.
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
         params: dict[str, Any] = {}
         if start_date:
@@ -68,57 +68,55 @@ class BaseArrAPI(RequestHandler):
     # SYSTEM
 
     # GET /system/status
-    def get_system_status(self) -> dict[str, JsonDataType]:
+    def get_system_status(self) -> JsonObject:
         """Gets system status
 
         Returns:
-           dict[str, JsonDataType]: Dictionary with items
+           JsonObject: Dictionary with items
         """
         return self._get("system/status", self.ver_uri)
 
     # GET /health
-    def get_health(self) -> list[dict[str, JsonDataType]]:
+    def get_health(self) -> JsonArray:
         """Get health information
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
         return self._get("health", self.ver_uri)
 
     # GET /metadata
-    def get_metadata(
-        self, id_: Optional[int] = None
-    ) -> Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]:
+    def get_metadata(self, id_: Optional[int] = None) -> Union[JsonArray, JsonObject]:
         """Get all metadata consumer settings
 
         Args:
             id_ (Optional[int], optional): ID for specific metadata record
 
         Returns:
-             Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]: List of dictionaries with items
+             Union[JsonArray, JsonObject]: List of dictionaries with items
         """
         return self._get(f"metadata{f'/{id_}' if id_ else ''}", self.ver_uri)
 
     # GET /update
-    def get_update(self) -> list[dict[str, JsonDataType]]:
+    def get_update(self) -> JsonArray:
         """Will return a list of recent updated
 
         Returns:
-             list[dict[str, JsonDataType]]: List of dictionaries with items
+             JsonArray: List of dictionaries with items
         """
         return self._get("update", self.ver_uri)
 
     # GET /rootfolder
     def get_root_folder(
         self, id_: Optional[int] = None
-    ) -> Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]:
+    ) -> Union[JsonArray, JsonObject]:
         """Get list of root folders, free space and any unmappedFolders
 
         Args:
             id_ (Optional[int], optional): ID of the folder to return. Defaults to None.
 
         Returns:
-             Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]: List of dictionaries with items
+             Union[JsonArray, JsonObject]: List of dictionaries with items
         """
         return self._get(f"rootfolder{f'/{id_}' if id_ else ''}", self.ver_uri)
 
@@ -126,7 +124,7 @@ class BaseArrAPI(RequestHandler):
     def del_root_folder(
         self, id_: int
     ) -> Union[
-        Response, dict[str, JsonDataType], dict[Any, Any]
+        Response, JsonObject, dict[Any, Any]
     ]:  # sourcery skip: class-extract-method
         """Delete root folder with specified id
 
@@ -139,21 +137,21 @@ class BaseArrAPI(RequestHandler):
         return self._delete(f"rootfolder/{id_}", self.ver_uri)
 
     # GET /diskspace
-    def get_disk_space(self) -> list[dict[str, JsonDataType]]:
+    def get_disk_space(self) -> JsonArray:
         """Query disk usage information
             System > Status
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
         return self._get("diskspace", self.ver_uri)
 
     # GET /system/backup
-    def get_backup(self) -> list[dict[str, JsonDataType]]:
+    def get_backup(self) -> JsonArray:
         """Returns the list of available backups
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
         return self._get("system/backup", self.ver_uri)
 
@@ -168,7 +166,7 @@ class BaseArrAPI(RequestHandler):
         sort_dir: Optional[PyarrSortDirection] = None,
         filter_key: Optional[PyarrLogFilterKey] = None,
         filter_value: Optional[PyarrLogFilterValue] = None,
-    ) -> dict[str, JsonDataType]:
+    ) -> JsonObject:
         """Gets logs from instance
 
         Args:
@@ -180,7 +178,7 @@ class BaseArrAPI(RequestHandler):
             filter_value (Optional[PyarrFilterValue], optional): Value of the filter. Defaults to None.
 
         Returns:
-            dict[str, JsonDataType]: List of dictionaries with items
+            JsonObject: List of dictionaries with items
         """
         params: dict[
             str,
@@ -221,7 +219,7 @@ class BaseArrAPI(RequestHandler):
         page_size: Optional[int] = None,
         sort_key: Optional[PyarrHistorySortKey] = None,
         sort_dir: Optional[PyarrSortDirection] = None,
-    ) -> dict[str, JsonDataType]:
+    ) -> JsonObject:
         """Gets history (grabs/failures/completed)
 
         Args:
@@ -231,7 +229,7 @@ class BaseArrAPI(RequestHandler):
             sort_dir (Optional[PyarrSortDirection], optional): Direction to sort the items. Defaults to None.
 
         Returns:
-           dict[str, JsonDataType]: Dictionary with items
+           JsonObject: Dictionary with items
         """
         params: dict[str, Union[int, PyarrHistorySortKey, PyarrSortDirection]] = {}
 
@@ -258,7 +256,7 @@ class BaseArrAPI(RequestHandler):
         page_size: Optional[int] = None,
         sort_key: Optional[PyarrBlocklistSortKey] = None,
         sort_dir: Optional[PyarrSortDirection] = None,
-    ) -> dict[str, JsonDataType]:
+    ) -> JsonObject:
         """Returns blocked releases.
 
         Args:
@@ -268,7 +266,7 @@ class BaseArrAPI(RequestHandler):
             sort_dir (Optional[PyarrSortDirection], optional): Direction to sort the items. Defaults to None.
 
         Returns:
-            dict[str, JsonDataType]: Dictionary with items
+            JsonObject: Dictionary with items
         """
         params: dict[str, Union[int, PyarrBlocklistSortKey, PyarrSortDirection]] = {}
 
@@ -287,9 +285,7 @@ class BaseArrAPI(RequestHandler):
         return self._get("blocklist", self.ver_uri, params)
 
     # DELETE /blocklist
-    def del_blocklist(
-        self, id_: int
-    ) -> Union[Response, dict[str, JsonDataType], dict[Any, Any]]:
+    def del_blocklist(self, id_: int) -> Union[Response, JsonObject, dict[Any, Any]]:
         """Removes a specific release (the id provided) from the blocklist
 
         Args:
@@ -303,7 +299,7 @@ class BaseArrAPI(RequestHandler):
     # DELETE /blocklist/bulk
     def del_blocklist_bulk(
         self, ids: list[int]
-    ) -> Union[Response, dict[str, JsonDataType], dict[Any, Any]]:
+    ) -> Union[Response, JsonObject, dict[Any, Any]]:
         """Delete blocked releases in bulk
 
         Args:
@@ -320,23 +316,21 @@ class BaseArrAPI(RequestHandler):
     # GET /qualityprofile/{id}
     def get_quality_profile(
         self, id_: Optional[int] = None
-    ) -> Union[list[dict[str, JsonDataType]], dict[Any, Any]]:
+    ) -> Union[JsonArray, dict[Any, Any]]:
         """Gets all quality profiles or specific one with id
 
         Args:
             id_ (Optional[int], optional): Quality profile id from database. Defaults to None.
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
 
         path = f"qualityprofile{f'/{id_}' if id_ else ''}"
         return self._get(path, self.ver_uri)
 
     # PUT /qualityprofile/{id}
-    def upd_quality_profile(
-        self, id_: int, data: dict[str, JsonDataType]
-    ) -> dict[str, JsonDataType]:
+    def upd_quality_profile(self, id_: int, data: JsonObject) -> JsonObject:
         """Update the quality profile data
 
         Note:
@@ -344,10 +338,10 @@ class BaseArrAPI(RequestHandler):
 
         Args:
             id_ (int): Profile ID to Update
-            data (dict[str, JsonDataType]): All parameters to update
+            data (JsonObject): All parameters to update
 
         Returns:
-            dict[str, JsonDataType]: Dictionary of updated record
+            JsonObject: Dictionary of updated record
         """
 
         return self._put(f"qualityprofile/{id_}", self.ver_uri, data=data)
@@ -355,7 +349,7 @@ class BaseArrAPI(RequestHandler):
     # DELETE /qualityprofile
     def del_quality_profile(
         self, id_: int
-    ) -> Union[Response, dict[str, JsonDataType], dict[Any, Any]]:
+    ) -> Union[Response, JsonObject, dict[Any, Any]]:
         """Removes a specific quality profile from the blocklist
 
         Args:
@@ -369,22 +363,20 @@ class BaseArrAPI(RequestHandler):
     # GET /qualitydefinition/{id}
     def get_quality_definition(
         self, id_: Optional[int] = None
-    ) -> Union[list[dict[str, JsonDataType]], dict[Any, Any]]:
+    ) -> Union[JsonArray, dict[Any, Any]]:
         """Gets all quality definitions or specific one by ID
 
         Args:
             id_ (Optional[int], optional): Import list database id. Defaults to None.
 
         Returns:
-            Union[list[dict[str, JsonDataType]], dict[Any, Any]]: List of dictionaries with items
+            Union[JsonArray, dict[Any, Any]]: List of dictionaries with items
         """
         path = f"qualitydefinition/{id_}" if id_ else "qualitydefinition"
         return self._get(path, self.ver_uri)
 
     # PUT /qualitydefinition/{id}
-    def upd_quality_definition(
-        self, id_: int, data: dict[str, JsonDataType]
-    ) -> dict[str, JsonDataType]:
+    def upd_quality_definition(self, id_: int, data: JsonObject) -> JsonObject:
         """Update the quality definitions.
 
         Note:
@@ -392,10 +384,10 @@ class BaseArrAPI(RequestHandler):
 
         Args:
             id_ (int): ID of definition to update
-            data (dict[str, JsonDataType]): All parameters to update
+            data (JsonObject): All parameters to update
 
         Returns:
-            dict[str, JsonDataType]: Dictionary of updated record
+            JsonObject: Dictionary of updated record
         """
         return self._put(f"qualitydefinition/{id_}", self.ver_uri, data=data)
 
@@ -404,22 +396,20 @@ class BaseArrAPI(RequestHandler):
     # GET /indexer/{id}
     def get_indexer(
         self, id_: Optional[int] = None
-    ) -> Union[list[dict[str, JsonDataType]], dict[Any, Any]]:
+    ) -> Union[JsonArray, dict[Any, Any]]:
         """Get all indexers or specific by id
 
         Args:
             id_ (Optional[int], optional): Database if of indexer to return. Defaults to None.
 
         Returns:
-            Union[list[dict[str, JsonDataType]], dict[Any, Any]]: List of dictionaries with items
+            Union[JsonArray, dict[Any, Any]]: List of dictionaries with items
         """
         path = f"indexer/{id_}" if id_ else "indexer"
         return self._get(path, self.ver_uri)
 
     # PUT /indexer/{id}
-    def upd_indexer(
-        self, id_: int, data: dict[str, JsonDataType]
-    ) -> dict[str, JsonDataType]:
+    def upd_indexer(self, id_: int, data: JsonObject) -> JsonObject:
         """Edit a Indexer by database id
 
         Note:
@@ -427,17 +417,15 @@ class BaseArrAPI(RequestHandler):
 
         Args:
             id_ (int): Indexer database id
-            data (dict[str, JsonDataType]): Data to be updated within Indexer
+            data (JsonObject): Data to be updated within Indexer
 
         Returns:
-            dict[str, JsonDataType]: Dictionary of updated record
+            JsonObject: Dictionary of updated record
         """
         return self._put(f"indexer/{id_}", self.ver_uri, data=data)
 
     # DELETE /indexer
-    def del_indexer(
-        self, id_: int
-    ) -> Union[Response, dict[str, JsonDataType], dict[Any, Any]]:
+    def del_indexer(self, id_: int) -> Union[Response, JsonObject, dict[Any, Any]]:
         """Removes a specific indexer from the blocklist
 
         Args:
@@ -457,7 +445,7 @@ class BaseArrAPI(RequestHandler):
         id_: int,
         remove_from_client: Optional[bool] = None,
         blocklist: Optional[bool] = None,
-    ) -> Union[Response, dict[str, JsonDataType], dict[Any, Any]]:
+    ) -> Union[Response, JsonObject, dict[Any, Any]]:
         """Remove an item from the queue and blocklist it
 
         Args:
@@ -484,7 +472,7 @@ class BaseArrAPI(RequestHandler):
         sort_key: Optional[PyarrTaskSortKey] = None,
         sort_dir: Optional[PyarrSortDirection] = None,
         id_: Optional[int] = None,
-    ) -> dict[str, JsonDataType]:
+    ) -> JsonObject:
         """Return a list of tasks, or specify a task ID to return single task
 
         Args:
@@ -495,7 +483,7 @@ class BaseArrAPI(RequestHandler):
             id_ (Optional[int], optional):  ID for task. Defaults to None.
 
         Returns:
-            dict[str, JsonDataType]: List of dictionaries with items
+            JsonObject: List of dictionaries with items
         """
         params: dict[
             str,
@@ -521,14 +509,14 @@ class BaseArrAPI(RequestHandler):
     # GET /remotepathmapping
     def get_remote_path_mapping(
         self, id_: Optional[int] = None
-    ) -> Union[list[dict[str, JsonDataType]], dict[Any, Any]]:
+    ) -> Union[JsonArray, dict[Any, Any]]:
         """Get remote path mappings for downloads Directory
 
         Args:
             id_ (Optional[int], optional): ID for specific record. Defaults to None.
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
         _path = f"remotepathmapping{'' if id_ is None else f'/{id_}'}"
         return self._get(_path, self.ver_uri)
@@ -539,93 +527,89 @@ class BaseArrAPI(RequestHandler):
     # CONFIG
 
     # GET /config/ui
-    def get_config_ui(self) -> dict[str, JsonDataType]:
+    def get_config_ui(self) -> JsonObject:
         """Query Radarr for UI configuration
 
         Returns:
-            dict[str, JsonDataType]: List of dictionaries with items
+            JsonObject: List of dictionaries with items
         """
         return self._get("config/ui", self.ver_uri)
 
     # PUT /config/ui
-    def upd_config_ui(self, data: dict[str, JsonDataType]) -> dict[str, JsonDataType]:
+    def upd_config_ui(self, data: JsonObject) -> JsonObject:
         """Edit one or many UI settings and save to to the database
 
         Args:
-            data (dict[str, JsonDataType]): Data to be Updated.
+            data (JsonObject): Data to be Updated.
 
         Returns:
-            dict[str, JsonDataType]: Dictionary with items
+            JsonObject: Dictionary with items
         """
         return self._put("config/ui", self.ver_uri, data=data)
 
     # GET /config/host
-    def get_config_host(self) -> dict[str, JsonDataType]:
+    def get_config_host(self) -> JsonObject:
         """Get General/Host settings.
 
         Returns:
-            dict[str, JsonDataType]: Dictionaries with items
+            JsonObject: Dictionaries with items
         """
         return self._get("config/host", self.ver_uri)
 
     # PUT /config/host
-    def upd_config_host(self, data: dict[str, JsonDataType]) -> dict[str, JsonDataType]:
+    def upd_config_host(self, data: JsonObject) -> JsonObject:
         """Edit General/Host settings.
 
         Args:
-            data (dict[str, JsonDataType]): data to be updated
+            data (JsonObject): data to be updated
 
         Returns:
-            dict[str, JsonDataType]: Dictionaries with items
+            JsonObject: Dictionaries with items
         """
         return self._put("config/host", self.ver_uri, data=data)
 
     # GET /config/naming
-    def get_config_naming(self) -> dict[str, JsonDataType]:
+    def get_config_naming(self) -> JsonObject:
         """Get Settings for file and folder naming.
 
         Returns:
-            dict[str, JsonDataType]: Dictionary with items
+            JsonObject: Dictionary with items
         """
         return self._get("config/naming", self.ver_uri)
 
     # PUT /config/naming
-    def upd_config_naming(
-        self, data: dict[str, JsonDataType]
-    ) -> dict[str, JsonDataType]:
+    def upd_config_naming(self, data: JsonObject) -> JsonObject:
         """Edit Settings for file and folder naming.
 
         Args:
-            data (dict[str, JsonDataType]): data to be updated
+            data (JsonObject): data to be updated
 
         Returns:
-            dict[str, JsonDataType]: Dictionary with items
+            JsonObject: Dictionary with items
         """
         return self._put("config/naming", self.ver_uri, data=data)
 
     # GET /config/mediamanagement
-    def get_media_management(self) -> dict[str, JsonDataType]:
+    def get_media_management(self) -> JsonObject:
         """Get media management configuration
 
         Returns:
-            dict[str, JsonDataType]: Dictionary with items
+            JsonObject: Dictionary with items
         """
         return self._get("config/mediamanagement", self.ver_uri)
 
     # PUT /config/mediamanagement
-    def upd_media_management(
-        self, data: dict[str, JsonDataType]
-    ) -> dict[str, JsonDataType]:
+    def upd_media_management(self, data: JsonObject) -> JsonObject:
         """Get media management configuration
 
         Note:
             Recommended to use with get_media_management()
 
         Args:
-            data (dict[str, JsonDataType]): data to be updated
+            data (JsonObject): data to be updated
 
         Returns:
-            dict[str, JsonDataType]: Dictionary with items
+            JsonObject: Dictionary with items
         """
         return self._put("config/mediamanagement", self.ver_uri, data=data)
 
@@ -634,14 +618,14 @@ class BaseArrAPI(RequestHandler):
     # GET /notification
     def get_notification(
         self, id_: Optional[int] = None
-    ) -> Union[list[dict[str, JsonDataType]], dict[Any, Any]]:
+    ) -> Union[JsonArray, dict[Any, Any]]:
         """Get a list of all notification services, or single by ID
 
         Args:
             id_ (Optional[int], optional): Notification ID. Defaults to None.
 
         Returns:
-            Union[list[dict[str, JsonDataType]], dict[Any, Any]]: List of dictionaries with items
+            Union[JsonArray, dict[Any, Any]]: List of dictionaries with items
         """
         _path = "" if id_ is None else f"/{id_}"
         return self._get(f"notification{_path}", self.ver_uri)
@@ -649,18 +633,16 @@ class BaseArrAPI(RequestHandler):
     # GET /notification/schema
     def get_notification_schema(
         self, implementation: Optional[PyarrNotificationSchema] = None
-    ) -> Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]:
+    ) -> Union[JsonArray, JsonObject]:
         """Get possible notification connections
 
         Args:
             implementation (Optional[PyarrNotificationSchema], optional): notification system
 
         Returns:
-            Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]: List of dictionaries with items
+            Union[JsonArray, JsonObject]: List of dictionaries with items
         """
-        response: list[dict[str, JsonDataType]] = self._get(
-            "notification/schema", self.ver_uri
-        )
+        response: JsonArray = self._get("notification/schema", self.ver_uri)
         if implementation:
             if filter_response := [
                 item for item in response if item["implementation"] == implementation
@@ -673,41 +655,35 @@ class BaseArrAPI(RequestHandler):
         return response
 
     # POST /notification
-    def add_notification(
-        self, data: dict[str, JsonDataType]
-    ) -> dict[str, JsonDataType]:
+    def add_notification(self, data: JsonObject) -> JsonObject:
         """Add an import list based on the schema information supplied
 
         Note:
             Recommended to be used in conjunction with get_notification_schema()
 
         Args:
-            data (dict[str, JsonDataType]): dictionary with import list schema and settings
+            data (JsonObject): dictionary with import list schema and settings
 
         Returns:
-            dict[str, JsonDataType]: dictionary of added item
+            JsonObject: dictionary of added item
         """
         return self._post("notification", self.ver_uri, data=data)
 
     # PUT /notification/{id}
-    def upd_notification(
-        self, id_: int, data: dict[str, JsonDataType]
-    ) -> dict[str, JsonDataType]:
+    def upd_notification(self, id_: int, data: JsonObject) -> JsonObject:
         """Edit notification by database id
 
         Args:
             id_ (int): Database id of notification
-            data (dict[str, JsonDataType]): data that requires updating
+            data (JsonObject): data that requires updating
 
         Returns:
-            dict[str, JsonDataType]: Dictionary of updated record
+            JsonObject: Dictionary of updated record
         """
         return self._put(f"notification/{id_}", self.ver_uri, data=data)
 
     # DELETE /notification/{id}
-    def del_notification(
-        self, id_: int
-    ) -> Union[Response, dict[str, JsonDataType], dict[Any, Any]]:
+    def del_notification(self, id_: int) -> Union[Response, JsonObject, dict[Any, Any]]:
         """Delete a notification by its database id
 
         Args:
@@ -721,50 +697,46 @@ class BaseArrAPI(RequestHandler):
     # TAGS
 
     # GET /tag/{id}
-    def get_tag(
-        self, id_: Optional[int] = None
-    ) -> Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]:
+    def get_tag(self, id_: Optional[int] = None) -> Union[JsonArray, JsonObject]:
         """Returns all tags or specific tag by database id
 
         Args:
             id_ (Optional[int], optional): Database id for tag. Defaults to None.
 
         Returns:
-            Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]: List of dictionaries with items
+            Union[JsonArray, JsonObject]: List of dictionaries with items
         """
         path = f"tag/{id_}" if id_ else "tag"
         return self._get(path, self.ver_uri)
 
     # GET /tag/detail/{id}
-    def get_tag_detail(
-        self, id_: Optional[int] = None
-    ) -> Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]:
+    def get_tag_detail(self, id_: Optional[int] = None) -> Union[JsonArray, JsonObject]:
         """Returns all tags or specific tag by database id with detailed information
 
         Args:
             id_ (Optional[int], optional): Database id for tag. Defaults to None.
 
         Returns:
-            Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]: List of dictionaries with items
+            Union[JsonArray, JsonObject]: List of dictionaries with items
         """
         path = f"tag/detail/{id_}" if id_ else "tag/detail"
         return self._get(path, self.ver_uri)
 
     # POST /tag
-    def create_tag(self, label: str) -> dict[str, JsonDataType]:
+    def create_tag(self, label: str) -> JsonObject:
         """Adds a new tag
 
         Args:
             label (str): Tag name / label
 
         Returns:
-            dict[str, JsonDataType]: Dictionary of new record
+            JsonObject: Dictionary of new record
         """
         data = {"label": label}
         return self._post("tag", self.ver_uri, data=data)
 
     # PUT /tag/{id}
-    def upd_tag(self, id_: int, label: str) -> dict[str, JsonDataType]:
+    def upd_tag(self, id_: int, label: str) -> JsonObject:
         """Update an existing tag
 
         Note:
@@ -775,15 +747,13 @@ class BaseArrAPI(RequestHandler):
             label (str): tag name / label
 
         Returns:
-            dict[str, JsonDataType]: Dictionary of updated items
+            JsonObject: Dictionary of updated items
         """
         data = {"id": id_, "label": label}
         return self._put("tag", self.ver_uri, data=data)
 
     # DELETE /tag/{id}
-    def del_tag(
-        self, id_: int
-    ) -> Union[Response, dict[str, JsonDataType], dict[Any, Any]]:
+    def del_tag(self, id_: int) -> Union[Response, JsonObject, dict[Any, Any]]:
         """Delete the tag with the given ID
 
         Args:
@@ -799,14 +769,14 @@ class BaseArrAPI(RequestHandler):
     # GET /downloadclient/{id}
     def get_download_client(
         self, id_: Optional[int] = None
-    ) -> Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]:
+    ) -> Union[JsonArray, JsonObject]:
         """Get a list of all the download clients or a single client by its database id
 
         Args:
             id_ (Optional[int], optional): Download client database id. Defaults to None.
 
         Returns:
-            Union[list[dict[str, JsonDataType]], dict[str, JsonDataType]]: List of dictionaries with items
+            Union[JsonArray, JsonObject]: List of dictionaries with items
         """
         path = f"downloadclient/{id_}" if id_ else "downloadclient"
         return self._get(path, self.ver_uri)
@@ -814,18 +784,16 @@ class BaseArrAPI(RequestHandler):
     # GET /downloadclient/schema
     def get_download_client_schema(
         self, implementation: Optional[PyarrDownloadClientSchema] = None
-    ) -> list[dict[str, JsonDataType]]:
+    ) -> JsonArray:
         """Gets the schemas for the different download Clients
 
         Args:
             implementation (Optional[PyarrDownloadClientSchema], optional): Client implementation name. Defaults to None.
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
-        response: list[dict[str, JsonDataType]] = self._get(
-            "downloadclient/schema", self.ver_uri
-        )
+        response: JsonArray = self._get("downloadclient/schema", self.ver_uri)
         if implementation:
             if filter_response := [
                 item for item in response if item["implementation"] == implementation
@@ -838,31 +806,27 @@ class BaseArrAPI(RequestHandler):
         return response
 
     # POST /downloadclient/
-    def add_download_client(
-        self, data: dict[str, JsonDataType]
-    ) -> dict[str, JsonDataType]:
+    def add_download_client(self, data: JsonObject) -> JsonObject:
         """Add a download client based on the schema information supplied
 
         Note:
             Recommended to be used in conjunction with get_download_client_schema()
 
         Args:
-            data (dict[str, JsonDataType]): dictionary with download client schema and settings
+            data (JsonObject): dictionary with download client schema and settings
 
         Returns:
-            dict[str, JsonDataType]: dictionary of added item
+            JsonObject: dictionary of added item
         """
         return self._post("downloadclient", self.ver_uri, data=data)
 
     # PUT /downloadclient/{id}
-    def upd_download_client(
-        self, id_: int, data: dict[str, JsonDataType]
-    ) -> dict[str, JsonDataType]:
+    def upd_download_client(self, id_: int, data: JsonObject) -> JsonObject:
         """Edit a downloadclient by database id
 
         Args:
             id_ (int): Download client database id
-            data (dict[str, JsonDataType]): data to be updated within download client
+            data (JsonObject): data to be updated within download client
 
         Returns:
             dict[str, v]: dictionary of updated item
@@ -872,7 +836,7 @@ class BaseArrAPI(RequestHandler):
     # DELETE /downloadclient/{id}
     def del_download_client(
         self, id_: int
-    ) -> Union[Response, dict[str, JsonDataType], dict[Any, Any]]:
+    ) -> Union[Response, JsonObject, dict[Any, Any]]:
         """Delete a download client by database id
 
         Args:
@@ -886,34 +850,30 @@ class BaseArrAPI(RequestHandler):
     # IMPORT LIST
 
     # GET /importlist
-    def get_import_list(
-        self, id_: Optional[int] = None
-    ) -> list[dict[str, JsonDataType]]:
+    def get_import_list(self, id_: Optional[int] = None) -> JsonArray:
         """Query for all lists or a single list by its database id
 
         Args:
             id_ (Optional[int], optional): Import list database id. Defaults to None.
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
         path = f"importlist/{id_}" if id_ else "importlist"
         return self._get(path, self.ver_uri)
 
     def get_import_list_schema(
         self, implementation: Optional[PyarrImportListSchema] = None
-    ) -> list[dict[str, JsonDataType]]:
+    ) -> JsonArray:
         """Gets the schemas for the different import list sources
 
         Args:
             implementation (Optional[PyarrImportListSchema], optional): Client implementation name. Defaults to None.
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
-        response: list[dict[str, JsonDataType]] = self._get(
-            "importlist/schema", self.ver_uri
-        )
+        response: JsonArray = self._get("importlist/schema", self.ver_uri)
         if implementation:
             if filter_response := [
                 item for item in response if item["implementation"] == implementation
@@ -926,39 +886,35 @@ class BaseArrAPI(RequestHandler):
         return response
 
     # POST /importlist/
-    def add_import_list(self, data: dict[str, JsonDataType]) -> dict[str, JsonDataType]:
+    def add_import_list(self, data: JsonObject) -> JsonObject:
         """Add an import list based on the schema information supplied
 
         Note:
             Recommended to be used in conjunction with get_import_list_schema()
 
         Args:
-            data (dict[str, JsonDataType]): dictionary with import list schema and settings
+            data (JsonObject): dictionary with import list schema and settings
 
         Returns:
-            dict[str, JsonDataType]: dictionary of added item
+            JsonObject: dictionary of added item
         """
         return self._post("importlist", self.ver_uri, data=data)
 
     # PUT /importlist/{id}
-    def upd_import_list(
-        self, id_: int, data: dict[str, JsonDataType]
-    ) -> dict[str, JsonDataType]:
+    def upd_import_list(self, id_: int, data: JsonObject) -> JsonObject:
         """Edit an importlist
 
         Args:
             id_ (int): Import list database id
-            data (dict[str, JsonDataType]): data to be updated within the import list
+            data (JsonObject): data to be updated within the import list
 
         Returns:
-            dict[str, JsonDataType]: Dictionary of updated data
+            JsonObject: Dictionary of updated data
         """
         return self._put(f"importlist/{id_}", self.ver_uri, data=data)
 
     # DELETE /importlist/{id}
-    def del_import_list(
-        self, id_: int
-    ) -> Union[Response, dict[str, JsonDataType], dict[Any, Any]]:
+    def del_import_list(self, id_: int) -> Union[Response, JsonObject, dict[Any, Any]]:
         """Delete an import list
 
         Args:
@@ -970,26 +926,24 @@ class BaseArrAPI(RequestHandler):
         return self._delete(f"importlist/{id_}", self.ver_uri)
 
     # GET /config/downloadclient
-    def get_config_download_client(self) -> dict[str, JsonDataType]:
+    def get_config_download_client(self) -> JsonObject:
         """Gets download client page configuration
 
         Returns:
-            dict[str, JsonDataType]: Dictionary of configuration
+            JsonObject: Dictionary of configuration
         """
         return self._get("config/downloadclient", self.ver_uri)
 
-    def upd_config_download_client(
-        self, data: dict[str, JsonDataType]
-    ) -> dict[str, JsonDataType]:
+    def upd_config_download_client(self, data: JsonObject) -> JsonObject:
         """Update download client page configurations
 
         Note:
             Recommended to be used in conjunction with get_config_download_client()
 
         Args:
-            data (dict[str, JsonDataType]): data to be updated
+            data (JsonObject): data to be updated
 
         Returns:
-            dict[str, JsonDataType]: dictionary with updated items
+            JsonObject: dictionary with updated items
         """
         return self._put("config/downloadclient", self.ver_uri, data=data)

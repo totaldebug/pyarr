@@ -1,9 +1,7 @@
-from dataclasses import dataclass
 from enum import Enum
 
 
-@dataclass(order=True)
-class LidarrCommand(Enum):
+class LidarrCommand(str, Enum):
     """Lidarr commands."""
 
     ALBUM_SEARCH = "AlbumSearch"
@@ -15,8 +13,7 @@ class LidarrCommand(Enum):
     REFRESH_ARTIST = "RefreshArtist"
 
 
-@dataclass(order=True)
-class LidarrSortKey(Enum):
+class LidarrSortKey(str, Enum):
     """Lidarr sort keys."""
 
     ALBUM_TITLE = "albums.title"
@@ -38,8 +35,7 @@ class LidarrSortKey(Enum):
     TITLE = "title"
 
 
-@dataclass(order=True)
-class LidarrArtistMonitor(Enum):
+class LidarrArtistMonitor(str, Enum):
     """Lidarr Monitor types for an artist music"""
 
     ALL_ALBUMS = "all"

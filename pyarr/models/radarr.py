@@ -1,9 +1,7 @@
-from dataclasses import dataclass
 from enum import Enum
 
 
-@dataclass(order=True)
-class RadarrCommands(Enum):
+class RadarrCommands(str, Enum):
     """Radarr commands.
 
     Note:
@@ -46,8 +44,7 @@ class RadarrCommands(Enum):
     """Backup the server data"""
 
 
-@dataclass(order=True)
-class RadarrSortKeys(Enum):
+class RadarrSortKeys(str, Enum):
     """Radarr sort keys."""
 
     DATE = "date"
@@ -70,8 +67,7 @@ class RadarrSortKeys(Enum):
     TIMELEFT = "timeleft"
 
 
-@dataclass(order=True)
-class RadarrEventType(Enum):
+class RadarrEventType(str, Enum):
     """Radarr event types"""
 
     UNKNOWN = "unknown"

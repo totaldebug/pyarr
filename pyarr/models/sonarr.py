@@ -1,9 +1,7 @@
-from dataclasses import dataclass
 from enum import Enum
 
 
-@dataclass(order=True)
-class SonarrCommands(Enum):
+class SonarrCommands(str, Enum):
     """Sonarr commands.
 
     Note:
@@ -68,8 +66,7 @@ class SonarrCommands(Enum):
     """
 
 
-@dataclass(order=True)
-class SonarrSortKey(Enum):
+class SonarrSortKey(str, Enum):
     """Sonarr sort keys."""
 
     AIR_DATE_UTC = "airDateUtc"

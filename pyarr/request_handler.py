@@ -134,7 +134,6 @@ class RequestHandler:
         Args:
             path (str): Path to API endpoint e.g. /api/manualimport
             ver_uri (str): API Version
-            typevar (type): Python Type
             params (dict, optional): URL Parameters to send with the request. Defaults to None.
             data (dict, optional): Payload to send with request. Defaults to None.
 

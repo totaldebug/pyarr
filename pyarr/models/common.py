@@ -1,9 +1,7 @@
-from dataclasses import dataclass
 from enum import Enum
 
 
-@dataclass(order=True)
-class PyarrSortDirection(Enum):
+class PyarrSortDirection(str, Enum):
     """Pyarr sort direction"""
 
     ASC = "ascending"
@@ -11,8 +9,7 @@ class PyarrSortDirection(Enum):
     DESC = "descending"
 
 
-@dataclass(order=True)
-class PyarrLogSortKey(Enum):
+class PyarrLogSortKey(str, Enum):
     """Log Sort Keys
 
     Note:
@@ -29,8 +26,7 @@ class PyarrLogSortKey(Enum):
     EXCEPTION_TYPE = "exceptionType"
 
 
-@dataclass(order=True)
-class PyarrBlocklistSortKey(Enum):
+class PyarrBlocklistSortKey(str, Enum):
     """Block list sort keys
 
     Note:
@@ -41,8 +37,7 @@ class PyarrBlocklistSortKey(Enum):
     DATE = "date"
 
 
-@dataclass(order=True)
-class PyarrHistorySortKey(Enum):
+class PyarrHistorySortKey(str, Enum):
     """History sort keys
 
     Note:
@@ -53,8 +48,7 @@ class PyarrHistorySortKey(Enum):
     TIME = "time"
 
 
-@dataclass(order=True)
-class PyarrTaskSortKey(Enum):
+class PyarrTaskSortKey(str, Enum):
     """Task sort keys
 
     Note:
@@ -65,8 +59,7 @@ class PyarrTaskSortKey(Enum):
     TIME_LEFT = "timeleft"
 
 
-@dataclass(order=True)
-class PyarrLogFilterKey(Enum):
+class PyarrLogFilterKey(str, Enum):
     """Log filter keys
 
     Note:
@@ -77,8 +70,7 @@ class PyarrLogFilterKey(Enum):
     LEVEL = "level"
 
 
-@dataclass(order=True)
-class PyarrLogFilterValue(Enum):
+class PyarrLogFilterValue(str, Enum):
     """Log filter values
 
     Note:
@@ -92,8 +84,7 @@ class PyarrLogFilterValue(Enum):
     ERROR = "error"
 
 
-@dataclass(order=True)
-class PyarrNotificationSchema(Enum):
+class PyarrNotificationSchema(str, Enum):
     """Notification schema implementations"""
 
     BOXCAR = "Boxcar"
@@ -120,8 +111,7 @@ class PyarrNotificationSchema(Enum):
     WEBHOOK = "Webhook"
 
 
-@dataclass(order=True)
-class PyarrDownloadClientSchema(Enum):
+class PyarrDownloadClientSchema(str, Enum):
     """Download client schema implementations"""
 
     ARIA2 = "Aria2"
@@ -143,8 +133,7 @@ class PyarrDownloadClientSchema(Enum):
     VUZE = "Vuze"
 
 
-@dataclass(order=True)
-class PyarrImportListSchema(Enum):
+class PyarrImportListSchema(str, Enum):
     """Import List schema implementations"""
 
     PLEX = "PlexImport"

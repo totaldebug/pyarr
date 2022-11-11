@@ -275,22 +275,6 @@ all = ["pytz (>=2019.1)"]
 dates = ["pytz (>=2019.1)"]
 
 [[package]]
-name = "enum-tools"
-version = "0.9.0.post1"
-description = "Tools to expand Python's enum module."
-category = "dev"
-optional = false
-python-versions = ">=3.6"
-
-[package.dependencies]
-pygments = ">=2.6.1"
-typing-extensions = ">=3.7.4.3"
-
-[package.extras]
-sphinx = ["sphinx (>=3.2.0)", "sphinx-toolbox (>=2.16.0)"]
-all = ["sphinx (>=3.2.0)", "sphinx-toolbox (>=2.16.0)"]
-
-[[package]]
 name = "filelock"
 version = "3.7.0"
 description = "A platform independent file lock."
@@ -1170,7 +1154,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "76b78ef5b82cf91c849bf4021ece56eb8e370880691a8a662ab177223013cd30"
+content-hash = "609d695ada24ee40737304508de49c951d34a91456dadc7697cffce2d4f5e01b"
 
 [metadata.files]
 alabaster = [
@@ -1279,10 +1263,6 @@ docutils = [
 domdf-python-tools = [
     {file = "domdf_python_tools-3.3.0-py3-none-any.whl", hash = "sha256:692a33cfc4bc4270a30f18b95beb8f65bf56935d122a4bdb0af7f7760452d41c"},
     {file = "domdf_python_tools-3.3.0.tar.gz", hash = "sha256:7c588cdfa3e8bfd9617efbb4fa42652b7010c0f158c81844c862fbda5d86d9cc"},
-]
-enum-tools = [
-    {file = "enum_tools-0.9.0.post1-py3-none-any.whl", hash = "sha256:d8fd962054e7e400fa7f0a196f7607f19ef78aca4b288543ecb330f890edb60d"},
-    {file = "enum_tools-0.9.0.post1.tar.gz", hash = "sha256:e59eb1c16667400b185f8a61ac427029919be2ec48b9ca04aa1b388a42fb14d5"},
 ]
 filelock = [
     {file = "filelock-3.7.0-py3-none-any.whl", hash = "sha256:c7b5fdb219b398a5b28c8e4c1893ef5f98ece6a38c6ab2c22e26ec161556fed6"},

@@ -2,7 +2,7 @@ from typing import Any, Optional, Union
 
 from requests import Response
 
-from pyarr.types import JsonDataType
+from pyarr.types import JsonArray, JsonObject
 
 from .base import BaseArrAPI
 from .exceptions import PyarrMissingArgument, PyarrMissingProfile
@@ -36,7 +36,7 @@ class LidarrAPI(BaseArrAPI):
         qualityProfile: int,
         metadataProfile: int,
         defaultTags: list[int] = None,
-    ) -> dict[str, JsonDataType]:
+    ) -> JsonObject:
         """Add a new location to store files
 
         Args:
@@ -47,7 +47,7 @@ class LidarrAPI(BaseArrAPI):
             metadataProfile (int): Default metadata profile ID
 
         Returns:
-            dict[str, JsonDataType]: Dictonary with added record
+            JsonObject: Dictonary with added record
         """
         folder_json = {
             "defaultTags": defaultTags or [],
@@ -59,7 +59,7 @@ class LidarrAPI(BaseArrAPI):
 
         return self._post("rootfolder", self.ver_uri, data=folder_json)
 
-    def lookup(self, term: str) -> list[dict[str, JsonDataType]]:
+    def lookup(self, term: str) -> JsonArray:
         """Search for an artist / album / song
 
         Args:
@@ -68,11 +68,11 @@ class LidarrAPI(BaseArrAPI):
                 lidarr.lookup(term="lidarr:cc197bad-dc9c-440d-a5b5-d52ba2e14234")
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
         return self._get("search", self.ver_uri, params={"term": term})
 
-    def lookup_artist(self, term: str) -> list[dict[str, JsonDataType]]:
+    def lookup_artist(self, term: str) -> JsonArray:
         """Search for an Artist to add to the database
 
         Args:
@@ -81,12 +81,12 @@ class LidarrAPI(BaseArrAPI):
                 lidarr.lookup(term="lidarr:cc197bad-dc9c-440d-a5b5-d52ba2e14234")
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
 
         return self._get("artist/lookup", self.ver_uri, params={"term": term})
 
-    def lookup_album(self, term: str) -> list[dict[str, JsonDataType]]:
+    def lookup_album(self, term: str) -> JsonArray:
         """Search for an Album to add to the database
 
         Args:
@@ -95,13 +95,11 @@ class LidarrAPI(BaseArrAPI):
                 lidarr.lookup(term="lidarr:1dc4c347-a1db-32aa-b14f-bc9cc507b843")
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
         return self._get("album/lookup", self.ver_uri, params={"term": term})
 
-    def get_artist(
-        self, id_: Optional[Union[str, int]] = None
-    ) -> list[dict[str, JsonDataType]]:
+    def get_artist(self, id_: Optional[Union[str, int]] = None) -> JsonArray:
         """Get an artist by ID or get all artists
 
         Args:
@@ -111,7 +109,7 @@ class LidarrAPI(BaseArrAPI):
             Include a string to search by MusicBrainz id.
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
 
         _path = "" if isinstance(id_, str) or id_ is None else f"/{id_}"
@@ -185,7 +183,7 @@ class LidarrAPI(BaseArrAPI):
         monitored: bool = True,
         artist_monitor: LidarrArtistMonitor = LidarrArtistMonitor.ALL_ALBUMS,
         artist_search_for_missing_albums: bool = False,
-    ) -> dict[str, JsonDataType]:
+    ) -> JsonObject:
         """Adds an artist based on a search term, must be artist name or album/single
         by lidarr guid
 
@@ -199,7 +197,7 @@ class LidarrAPI(BaseArrAPI):
             artist_search_for_missing_albums (bool, optional): Search for missing albums by this artist. Defaults to False.
 
         Returns:
-            dict[str, JsonDataType]: Dictonary with added record
+            JsonObject: Dictonary with added record
         """
 
         artist_json = self._artist_json(
@@ -213,22 +211,20 @@ class LidarrAPI(BaseArrAPI):
         )
         return self._post("artist", self.ver_uri, data=artist_json)
 
-    def upd_artist(self, data: dict[str, JsonDataType]) -> dict[str, JsonDataType]:
+    def upd_artist(self, data: JsonObject) -> JsonObject:
         """Update an existing artist
 
         note:
 
         Args:
-            data (dict[str, JsonDataType]): Dictionary containing an object obtained from get_artist()
+            data (JsonObject): Dictionary containing an object obtained from get_artist()
 
         Returns:
-            dict[str, JsonDataType]: Dictionary of updated record
+            JsonObject: Dictionary of updated record
         """
         return self._put("artist", self.ver_uri, data=data)
 
-    def delete_artist(
-        self, id_: int
-    ) -> Union[Response, dict[str, JsonDataType], dict[Any, Any]]:
+    def delete_artist(self, id_: int) -> Union[Response, JsonObject, dict[Any, Any]]:
         """Delete an artist with the provided ID
 
         Args:
@@ -245,7 +241,7 @@ class LidarrAPI(BaseArrAPI):
         artistId: Optional[int] = None,
         foreignAlbumId: Optional[int] = None,
         allArtistAlbums: bool = False,
-    ) -> list[dict[str, JsonDataType]]:
+    ) -> JsonArray:
         """Get a specific album by ID, or get all albums
 
         Args:
@@ -255,7 +251,7 @@ class LidarrAPI(BaseArrAPI):
             allArtistAlbums (bool, optional): Get all artists albums. Defaults to False.
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
         params: dict[str, Any] = {"includeAllArtistAlbums": allArtistAlbums}
 
@@ -281,7 +277,7 @@ class LidarrAPI(BaseArrAPI):
         monitored: bool = True,
         artist_monitor: LidarrArtistMonitor = LidarrArtistMonitor.ALL_ALBUMS,
         artist_search_for_missing_albums: bool = False,
-    ) -> dict[str, JsonDataType]:
+    ) -> JsonObject:
         """Method to help build the JSON for adding an album
 
         Args:
@@ -297,7 +293,7 @@ class LidarrAPI(BaseArrAPI):
             PyarrMissingProfile: Error if there are no quality or metadata profiles that match
 
         Returns:
-            dict[str, JsonDataType]: Dictionary with album data
+            JsonObject: Dictionary with album data
         """
         if quality_profile_id is None:
             try:
@@ -336,7 +332,7 @@ class LidarrAPI(BaseArrAPI):
         monitored: bool = True,
         artist_monitor: LidarrArtistMonitor = LidarrArtistMonitor.ALL_ALBUMS,
         artist_search_for_missing_albums: bool = False,
-    ) -> dict[str, JsonDataType]:
+    ) -> JsonObject:
         """Adds an album to Lidarr
 
         Args:
@@ -349,9 +345,9 @@ class LidarrAPI(BaseArrAPI):
             artist_search_for_missing_albums (bool, optional): Search for any missing albums by this artist. Defaults to False.
 
         Returns:
-            dict[str, JsonDataType]: Dictionary with added record
+            JsonObject: Dictionary with added record
         """
-        album_json: dict[str, JsonDataType] = self._album_json(
+        album_json: JsonObject = self._album_json(
             id_,
             root_dir,
             quality_profile_id,
@@ -362,23 +358,21 @@ class LidarrAPI(BaseArrAPI):
         )
         return self._post("album", self.ver_uri, data=album_json)
 
-    def upd_album(self, data: dict[str, JsonDataType]) -> dict[str, JsonDataType]:
+    def upd_album(self, data: JsonObject) -> JsonObject:
         """Update an album
 
         Args:
-            data (dict[str, JsonDataType]): data to update albums
+            data (JsonObject): data to update albums
 
         Note:
             To be used in conjunction with get_album()
 
         Returns:
-            dict[str, JsonDataType]: Dictionary of updated record
+            JsonObject: Dictionary of updated record
         """
         return self._put("album", self.ver_uri, data=data)
 
-    def delete_album(
-        self, id_: int
-    ) -> Union[Response, dict[str, JsonDataType], dict[Any, Any]]:
+    def delete_album(self, id_: int) -> Union[Response, JsonObject, dict[Any, Any]]:
         """Delete an album with the provided ID
 
         Args:
@@ -390,14 +384,14 @@ class LidarrAPI(BaseArrAPI):
         return self._delete(f"album/{id_}", self.ver_uri)
 
     # POST /command
-    def post_command(self, name: LidarrCommand) -> dict[str, JsonDataType]:
+    def post_command(self, name: LidarrCommand) -> JsonObject:
         """Send a command to Lidarr
 
         Args:
             name (LidarrCommand): Command to be run against Lidarr
 
         Returns:
-            dict[str, JsonDataType]: dictionary of executed command information
+            JsonObject: dictionary of executed command information
         """
         return self._post("command", self.ver_uri, data={"name": name})
 
@@ -410,7 +404,7 @@ class LidarrAPI(BaseArrAPI):
         sort_key: Optional[LidarrSortKey] = None,
         sort_dir: Optional[PyarrSortDirection] = None,
         missing: bool = True,
-    ) -> dict[str, JsonDataType]:
+    ) -> JsonObject:
         """Get wanted albums that are missing or not meeting cutoff
 
         Args:
@@ -422,7 +416,7 @@ class LidarrAPI(BaseArrAPI):
             missing (bool, optional): Search for missing (True) or cutoff not met (False). Defaults to True.
 
         Returns:
-            dict[str, JsonDataType]: List of dictionaries with items
+            JsonObject: List of dictionaries with items
         """
         params: dict[str, Union[int, LidarrSortKey, PyarrSortDirection, bool]] = {}
         if page:
@@ -444,14 +438,14 @@ class LidarrAPI(BaseArrAPI):
 
     # GET /parse
     # TODO: Confirm response type
-    def get_parse(self, title: str) -> list[dict[str, JsonDataType]]:
+    def get_parse(self, title: str) -> JsonArray:
         """Return the music / artist with a matching filename
 
         Args:
             title (str): file
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
         return self._get("parse", self.ver_uri, params={"title": title})
 
@@ -462,7 +456,7 @@ class LidarrAPI(BaseArrAPI):
         albumId: Optional[int] = None,
         albumReleaseId: Optional[int] = None,
         trackIds: Optional[Union[int, list[int]]] = None,
-    ) -> list[dict[str, JsonDataType]]:
+    ) -> JsonArray:
         """Get tracks based on provided IDs
 
         Args:
@@ -472,7 +466,7 @@ class LidarrAPI(BaseArrAPI):
             trackIds (Optional[Union[int, list[int]]], optional): Track IDs. Defaults to None.
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
         params: dict[str, Any] = {}
         if artistId is not None:
@@ -507,7 +501,7 @@ class LidarrAPI(BaseArrAPI):
         albumId: Optional[int] = None,
         trackFileIds: Union[int, list[int], None] = None,
         unmapped: Optional[bool] = None,
-    ) -> list[dict[str, JsonDataType]]:
+    ) -> JsonArray:
         """Get track files based on IDs, or get all unmapped files
 
         Args:
@@ -520,7 +514,7 @@ class LidarrAPI(BaseArrAPI):
             PyarrError: Where no IDs or unmapped params provided
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
         if (
             artistId is None
@@ -547,24 +541,24 @@ class LidarrAPI(BaseArrAPI):
         )
 
     # PUT /trackfile/{id_}
-    def upd_track_file(self, data: dict[str, JsonDataType]) -> dict[str, JsonDataType]:
+    def upd_track_file(self, data: JsonObject) -> JsonObject:
         """Update an existing track file
 
         Note:
             To be used in conjunction with get_track_file()
 
         Args:
-            data (dict[str, JsonDataType]): Updated data for track files
+            data (JsonObject): Updated data for track files
 
         Returns:
-            dict[str, JsonDataType]: Dictionary of updated record
+            JsonObject: Dictionary of updated record
         """
         return self._put("trackfile", self.ver_uri, data=data)
 
     # DEL /trackfile/{ids_}
     def delete_track_file(
         self, ids_: Union[int, list[int]]
-    ) -> Union[Response, dict[str, JsonDataType], dict[Any, Any]]:
+    ) -> Union[Response, JsonObject, dict[Any, Any]]:
         """Delete track files. Use integer for one file or list for mass deletion.
 
         Args:
@@ -580,16 +574,14 @@ class LidarrAPI(BaseArrAPI):
         )
 
     # GET /metadataprofile/{id}
-    def get_metadata_profile(
-        self, id_: Optional[int] = None
-    ) -> list[dict[str, JsonDataType]]:
+    def get_metadata_profile(self, id_: Optional[int] = None) -> JsonArray:
         """Gets all metadata profiles or specific one with id
 
         Args:
             id_ (Optional[int], optional): Metadata profile id from database. Defaults to None.
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
         return self._get(
             f"metadataprofile{f'/{id_}' if id_ else ''}",
@@ -599,42 +591,38 @@ class LidarrAPI(BaseArrAPI):
     # TODO: POST /metadataprofile
 
     # PUT /metadataprofile
-    def upd_metadata_profile(
-        self, data: dict[str, JsonDataType]
-    ) -> dict[str, JsonDataType]:
+    def upd_metadata_profile(self, data: JsonObject) -> JsonObject:
         """Update a metadata profile
 
         Args:
-            data (dict[str, JsonDataType]): Data containing metadata profile and changes
+            data (JsonObject): Data containing metadata profile and changes
 
         Returns:
-            dict[str, JsonDataType]: Dictionary of updated record
+            JsonObject: Dictionary of updated record
         """
         return self._put("metadataprofile", self.ver_uri, data=data)
 
     # GET /config/metadataProvider
-    def get_metadata_provider(self) -> dict[str, JsonDataType]:
+    def get_metadata_provider(self) -> JsonObject:
         """Get metadata provider config (settings/metadata)
 
         Returns:
-            dict[str, JsonDataType]: Dictionary with data
+            JsonObject: Dictionary with data
         """
         return self._get("config/metadataProvider", self.ver_uri)
 
     # PUT /config/metadataprovider
-    def upd_metadata_provider(
-        self, data: dict[str, JsonDataType]
-    ) -> dict[str, JsonDataType]:
+    def upd_metadata_provider(self, data: JsonObject) -> JsonObject:
         """Update metadata provider by providing json data update
 
         Note:
             To be used in conjunction with get_metadata_provider()
 
         Args:
-            data (dict[str, JsonDataType]): Configuration data
+            data (JsonObject): Configuration data
 
         Returns:
-            dict[str, JsonDataType]: Dictionary of updated record
+            JsonObject: Dictionary of updated record
         """
         return self._put("config/metadataProvider", self.ver_uri, data=data)
 
@@ -648,7 +636,7 @@ class LidarrAPI(BaseArrAPI):
         unknown_artists: Optional[bool] = None,
         include_artist: Optional[bool] = None,
         include_album: Optional[bool] = None,
-    ) -> dict[str, JsonDataType]:
+    ) -> JsonObject:
         """Get the queue of download_release
 
         Args:
@@ -661,7 +649,7 @@ class LidarrAPI(BaseArrAPI):
             include_album (Optional[bool], optional): Include albums. Defaults to None.
 
         Returns:
-            dict[str, JsonDataType]: List of dictionaries with items
+            JsonObject: List of dictionaries with items
         """
         params: dict[str, Union[int, str, PyarrSortDirection, LidarrSortKey]] = {}
         if page:
@@ -690,7 +678,7 @@ class LidarrAPI(BaseArrAPI):
         albumIds: Union[list[int], None] = None,
         include_artist: Optional[bool] = None,
         include_album: Optional[bool] = None,
-    ) -> list[dict[str, JsonDataType]]:
+    ) -> JsonArray:
         """Get queue details for artist or album
 
         Args:
@@ -700,7 +688,7 @@ class LidarrAPI(BaseArrAPI):
             include_album (Optional[bool], optional): Include the album. Defaults to None.
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
 
         params: dict[str, Any] = {}
@@ -718,7 +706,7 @@ class LidarrAPI(BaseArrAPI):
     # GET /release
     def get_release(
         self, artistId: Optional[int] = None, albumId: Optional[int] = None
-    ) -> list[dict[str, JsonDataType]]:
+    ) -> JsonArray:
         """Search indexers for specified fields.
 
         Args:
@@ -726,7 +714,7 @@ class LidarrAPI(BaseArrAPI):
             albumId (Optional[int], optional): Album IT from Database. Defaults to None.
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
         params = {}
         if artistId:
@@ -736,9 +724,7 @@ class LidarrAPI(BaseArrAPI):
         return self._get("release", self.ver_uri, params=params)
 
     # GET /rename
-    def get_rename(
-        self, artistId: int, albumId: Optional[int] = None
-    ) -> list[dict[str, JsonDataType]]:
+    def get_rename(self, artistId: int, albumId: Optional[int] = None) -> JsonArray:
         """Get files matching specified id that are not properly renamed yet.
 
         Args:
@@ -746,7 +732,7 @@ class LidarrAPI(BaseArrAPI):
             albumId (Optional[int], optional): Album ID. Defaults to None.
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
         params = {"artistId": artistId}
         if albumId:
@@ -765,7 +751,7 @@ class LidarrAPI(BaseArrAPI):
         artistId: Optional[int] = None,
         filterExistingFiles: Optional[bool] = None,
         replaceExistingFiles: Optional[bool] = None,
-    ) -> list[dict[str, JsonDataType]]:
+    ) -> JsonArray:
         """Gets a manual import list
 
         Args:
@@ -776,7 +762,7 @@ class LidarrAPI(BaseArrAPI):
             replaceExistingFiles (bool, optional): replace files. Defaults to True.
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
         params: dict[str, Union[str, int, bool]] = {"folder": folder}
         if downloadId:
@@ -791,26 +777,24 @@ class LidarrAPI(BaseArrAPI):
         return self._get("manualimport", self.ver_uri, params=params)
 
     # PUT /manualimport
-    def upd_manual_import(
-        self, data: dict[str, JsonDataType]
-    ) -> dict[str, JsonDataType]:
+    def upd_manual_import(self, data: JsonObject) -> JsonObject:
         """Update a manual import
 
         Note:
             To be used in conjunction with get_manual_import()
 
         Args:
-            data (dict[str, JsonDataType]): Data containing changes
+            data (JsonObject): Data containing changes
 
         Returns:
-            dict[str, JsonDataType]: Dictionary of updated record
+            JsonObject: Dictionary of updated record
         """
         return self._put("manualimport", self.ver_uri, data=data)
 
     # GET /retag
     def get_retag(
         self, artistId: Optional[int] = None, albumId: Optional[int] = None
-    ) -> list[dict[str, JsonDataType]]:
+    ) -> JsonArray:
         """Get Retag
 
         Args:
@@ -818,7 +802,7 @@ class LidarrAPI(BaseArrAPI):
             albumId Optional[int], optional): ID foir the album. Defaults to None.
 
         Returns:
-            list[dict[str, JsonDataType]]: List of dictionaries with items
+            JsonArray: List of dictionaries with items
         """
         params = {}
         if artistId:

@@ -1,9 +1,7 @@
-from dataclasses import dataclass
 from enum import Enum
 
 
-@dataclass(order=True)
-class ReadarrCommands(Enum):
+class ReadarrCommands(str, Enum):
     """Readarr commands.
 
     Note:
@@ -58,8 +56,7 @@ class ReadarrCommands(Enum):
     """Searches for any missing books"""
 
 
-@dataclass(order=True)
-class ReadarrSortKeys(Enum):
+class ReadarrSortKeys(str, Enum):
     """Readarr sort keys."""
 
     AUTHOR_ID = "authorId"
@@ -81,8 +78,7 @@ class ReadarrSortKeys(Enum):
     TITLE = "title"
 
 
-@dataclass(order=True)
-class ReadarrBookTypes(Enum):
+class ReadarrBookTypes(str, Enum):
     """Readarr book types."""
 
     ASIN = "asin"
@@ -90,8 +86,7 @@ class ReadarrBookTypes(Enum):
     ISBN = "isbn"
 
 
-@dataclass(order=True)
-class ReadarrAuthorMonitor(Enum):
+class ReadarrAuthorMonitor(str, Enum):
     """Readarr author monitor options."""
 
     ALL: str = "all"
