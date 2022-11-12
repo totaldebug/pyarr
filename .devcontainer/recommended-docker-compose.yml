@@ -13,7 +13,6 @@ services:
       - ../tests/arrs/sonarr:/config
     ports:
       - 8989:8989
-    network_mode: service:arrs
     restart: unless-stopped
   radarr:
     image: lscr.io/linuxserver/radarr:latest
@@ -26,7 +25,6 @@ services:
       - ../tests/arrs/radarr:/config
     ports:
       - 7878:7878
-    network_mode: service:arrs
     restart: unless-stopped
   readarr:
     image: lscr.io/linuxserver/readarr:develop
@@ -39,7 +37,6 @@ services:
       - ../tests/arrs/readarr:/config
     ports:
       - 8787:8787
-    network_mode: service:arrs
     restart: unless-stopped
   lidarr:
     image: lscr.io/linuxserver/lidarr:latest
@@ -52,6 +49,4 @@ services:
       - ../tests/arrs/lidarr:/config
     ports:
       - 8686:8686
-    network_mode: service:arrs
     restart: unless-stopped
-

@@ -8,6 +8,5 @@ services:
       dockerfile: Dockerfile
     container_name: workspace
     volumes:
-      - ..:/workspace:cached
+      - /home/marksie1988/repos/pyarr:/workspace:cached
     command: sleep infinity
-    network_mode: service:arrs

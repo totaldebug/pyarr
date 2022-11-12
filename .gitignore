@@ -27,5 +27,14 @@ _build
 .devcontainer/*
 !.devcontainer/recommended-devcontainer.json
 !.devcontainer/Dockerfile
-!.devcontainer/docker-compose.yml
+!.devcontainer/recommended-docker-compose.yml
 !.devcontainer/docker-compose.workspace.yml
+
+tests/arrs/sonarr/*
+!tests/arrs/sonarr/config.xml
+tests/arrs/radarr/*
+!tests/arrs/radarr/config.xml
+tests/arrs/readarr/*
+!tests/arrs/readarr/config.xml
+tests/arrs/lidarr/*
+!tests/arrs/lidarr/config.xml

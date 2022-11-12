@@ -19,6 +19,7 @@ Setup your environment
 #. Fork the `repository <https://github.com/totaldebug/pyarr>`_
 #. Open the repository in VSCode
 #. Copy the .devcontainer/recommended-*** files and remove the "recommended-" text
+#. Update the renamed ``recommended-***`` files to suite your environment
 #. Press ``ctrl + shift + p`` and select ``Remote-Container: Reopen in Container``
 #. Once loaded you can begin modification of the module or Documentation
 
@@ -42,13 +43,19 @@ A few guidelines for approval:
 
 - Must follow PEP8 / Black formatting. (devcontainer is setup to reformat on save)
 - We recommend using `sourcery <https://sourcery.ai/>`_ to ensure code is most
-  efficient, this will be checked when the pull reuqest is opened.
+  efficient, this will be checked when the pull request is opened.
 - All functions must use google docstring format, the devcontainer has an
    `autodocstring <https://marketplace.visualstudio.com/items?itemName=njpwerner.autodocstring>`_
    plugin which will auto fill.
 - ``pyproject.toml`` must be updated with a new version, the new versions should
    follow `semver <http://semver.org/>`_.
 - Each feature / bugfix etc. should have its own pull request.
+
+Testing
+=======
+
+Tests can be run with the following command: ``nox -s test``. This command will check
+code style and typing compliance and will then execute ``tests``
 
 **********************
 Updating Documentation
@@ -58,6 +65,9 @@ The documentation for this project utilises `sphinx <https://www.sphinx-doc.org/
 Sphinx allows for automatic documenting of all classes / functions via DocString.
 
 To Update static pages, you can amend the ``.rst`` files in the ``sphinx-docs`` folder.
+
+To test the documentation locally use command ``nox -s docs`` this will create all HTML files
+in the ``build`` directory.
 
 All Python Class / Function documentation is updated automatically by Github Actions and
 does not require any manual changes to be made.
@@ -69,7 +79,7 @@ Pull Requests & Release
 ***********************
 
 Now that you have made the changes required for your enhancement, a pull request
-is required for the core team to review the changes, request amendements or approve
+is required for the core team to review the changes, request amendments or approve
 the work that you have completed.
 
 Pull Requests
