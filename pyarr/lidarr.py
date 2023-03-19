@@ -33,26 +33,26 @@ class LidarrAPI(BaseArrAPI):
         self,
         name: str,
         path: str,
-        qualityProfile: int,
-        metadataProfile: int,
-        defaultTags: list[int] = None,
+        default_quality_profile_id: int,
+        default_metadata_profile_id: int,
+        default_tags: list[int] = None,
     ) -> JsonObject:
         """Add a new location to store files
 
         Args:
             name (str): Name for this root folder
             path (str): Location the files should be stored
-            defaultTags (list[int]): List of default tag IDs
-            qualityProfile (int): Default quality profile ID
-            metadataProfile (int): Default metadata profile ID
+            default_quality_profile_id (int): Default quality profile ID
+            default_metadata_profile_id (int): Default metadata profile ID
+            default_tags (list[int]): List of default tag IDs
 
         Returns:
             JsonObject: Dictonary with added record
         """
         folder_json = {
-            "defaultTags": defaultTags or [],
-            "defaultQualityProfileId": qualityProfile,
-            "defaultMetadataProfileId": metadataProfile,
+            "defaultTags": default_tags or [],
+            "defaultQualityProfileId": default_quality_profile_id,
+            "defaultMetadataProfileId": default_metadata_profile_id,
             "name": name,
             "path": path,
         }
@@ -312,15 +312,14 @@ class LidarrAPI(BaseArrAPI):
 
         album: dict[str, Any] = self.lookup_album(term=f"lidarr:{id_}")[0]
         album["id"] = 0
-        album["metadataProfileId"] = metadata_profile_id
-        album["qualityProfileId"] = quality_profile_id
-        album["rootFolderPath"] = root_dir
-        album["addOptions"] = {
+        album["artist"]["metadataProfileId"] = metadata_profile_id
+        album["artist"]["qualityProfileId"] = quality_profile_id
+        album["artist"]["rootFolderPath"] = root_dir
+        album["artist"]["addOptions"] = {
             "monitor": artist_monitor,
             "searchForMissingAlbums": artist_search_for_missing_albums,
         }
         album["monitored"] = monitored
-
         return album
 
     def add_album(
@@ -814,3 +813,26 @@ class LidarrAPI(BaseArrAPI):
             self.ver_uri,
             params=params,
         )
+
+    # POST /qualityprofile
+    def add_quality_profile(
+        self, name: str, upgrades_allowed: bool, cutoff: int, items: list
+    ) -> JsonObject:
+        """Add new quality profile
+
+        Args:
+            name (str): Name of the profile
+            upgrades_allowed (bool): Are upgrades in quality allowed?
+            cutoff (int): ID of quality definition to cutoff at. Must be an allowed definition ID.
+            items (list): Add a list of items (from `get_quality_definition()`)
+
+        Returns:
+            JsonObject: An object containing the profile
+        """
+        data = {
+            "name": name,
+            "upgradeAllowed": upgrades_allowed,
+            "cutoff": cutoff,
+            "items": items,
+        }
+        return self._post("qualityprofile", self.ver_uri, data=data)

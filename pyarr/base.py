@@ -9,12 +9,12 @@ from pyarr.models.common import (
     PyarrDownloadClientSchema,
     PyarrHistorySortKey,
     PyarrImportListSchema,
+    PyarrIndexerSchema,
     PyarrLogFilterKey,
     PyarrLogFilterValue,
     PyarrLogSortKey,
     PyarrNotificationSchema,
     PyarrSortDirection,
-    PyarrTaskSortKey,
 )
 from pyarr.types import JsonArray, JsonObject
 
@@ -393,6 +393,30 @@ class BaseArrAPI(RequestHandler):
 
     # INDEXER
 
+    # GET /indexer/schema
+    def get_indexer_schema(
+        self, implementation: Optional[PyarrIndexerSchema] = None
+    ) -> Union[JsonArray, JsonObject]:
+        """Get possible indexer connections
+
+        Args:
+            implementation (Optional[PyarrIndexerSchema], optional): indexer system
+
+        Returns:
+            Union[JsonArray, JsonObject]: List of dictionaries with items
+        """
+        response: JsonArray = self._get("indexer/schema", self.ver_uri)
+        if implementation:
+            if filter_response := [
+                item for item in response if item["implementation"] == implementation
+            ]:
+                response = filter_response
+            else:
+                raise PyarrRecordNotFound(
+                    f"A record with implementation {implementation} was not found"
+                )
+        return response
+
     # GET /indexer/{id}
     def get_indexer(
         self, id_: Optional[int] = None
@@ -467,44 +491,19 @@ class BaseArrAPI(RequestHandler):
     # GET /system/task/{id}
     def get_task(
         self,
-        page: Optional[int] = None,
-        page_size: Optional[int] = None,
-        sort_key: Optional[PyarrTaskSortKey] = None,
-        sort_dir: Optional[PyarrSortDirection] = None,
         id_: Optional[int] = None,
     ) -> JsonObject:
         """Return a list of tasks, or specify a task ID to return single task
 
         Args:
-            page (Optional[int], optional): Page number to return. Defaults to None.
-            page_size (Optional[int], optional): Number of items per page. Defaults to None.
-            sort_key (Optional[PyarrTaskSortKey], optional): Field to sort by. Defaults to None.
-            sort_dir (Optional[PyarrSortDirection], optional): Direction to sort the items. Defaults to None.
             id_ (Optional[int], optional):  ID for task. Defaults to None.
 
         Returns:
             JsonObject: List of dictionaries with items
         """
-        params: dict[
-            str,
-            Union[
-                int,
-                PyarrTaskSortKey,
-                PyarrSortDirection,
-            ],
-        ] = {}
-        if page:
-            params["page"] = page
-        if page_size:
-            params["pageSize"] = page_size
-        if sort_key and sort_dir:
-            params["sortKey"] = sort_key
-            params["sortDirection"] = sort_dir
-        elif sort_key or sort_dir:
-            raise PyarrMissingArgument("sort_key and sort_dir  must be used together")
 
         path = f"system/task/{id_}" if id_ else "system/task"
-        return self._get(path, self.ver_uri, params)
+        return self._get(path, self.ver_uri)
 
     # GET /remotepathmapping
     def get_remote_path_mapping(
@@ -947,3 +946,16 @@ class BaseArrAPI(RequestHandler):
             JsonObject: dictionary with updated items
         """
         return self._put("config/downloadclient", self.ver_uri, data=data)
+
+    # GET /command
+    def get_command(self, id_: Optional[int] = None) -> Union[JsonArray, JsonObject]:
+        """Queries the status of a previously started command, or all currently started commands.
+
+        Args:
+            id_ (Optional[int], optional): Database ID of the command. Defaults to None.
+
+        Returns:
+            Union[JsonArray, JsonObject]: List of dictionaries with items
+        """
+        path = f"command{f'/{id_}' if id_ else ''}"
+        return self._get(path, self.ver_uri)

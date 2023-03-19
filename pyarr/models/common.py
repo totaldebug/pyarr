@@ -141,3 +141,19 @@ class PyarrImportListSchema(str, Enum):
     TRAKT_LIST = "TraktListImport"
     TRAKT_POPULAR = "TraktPopularImport"
     TRAKT_USER = "TraktUserImport"
+
+
+class PyarrIndexerSchema(str, Enum):
+    """Import List schema implementations"""
+
+    FILE_LIST = "FileList"
+    HD_BITS = "HDBits"
+    IP_TORRENTS = "IPTorrents"
+    NEWZNAB = "Newznab"
+    NYAA = "Nyaa"
+    OMGWTFNZBS = "Omgwtfnzbs"
+    PASS_THE_POPCORN = "PassThePopcorn"
+    RARBG = "Rarbg"
+    TORRENT_RSS_INDEXER = "TorrentRssIndexer"
+    TORRENT_POTATO = "TorrentPotato"
+    TORZNAB = "Torznab"

@@ -7,6 +7,7 @@ from requests.auth import HTTPBasicAuth
 from .exceptions import (
     PyarrAccessRestricted,
     PyarrBadGateway,
+    PyarrBadRequest,
     PyarrConnectionError,
     PyarrMethodNotAllowed,
     PyarrResourceNotFound,
@@ -115,6 +116,7 @@ class RequestHandler:
                 json=data,
                 auth=self.auth,
             )
+
         except requests.Timeout as exception:
             raise PyarrConnectionError(
                 "Timeout occurred while connecting to API."
@@ -226,6 +228,8 @@ def _process_response(
     Returns:
         JSON: Array
     """
+    if res.status_code == 400:
+        raise PyarrBadRequest(f"Bad Request, possibly a bug. {str(res.request.body)}")
     if res.status_code == 401:
         raise PyarrUnauthorizedError(
             "Unauthorized. Please ensure valid API Key is used.", {}

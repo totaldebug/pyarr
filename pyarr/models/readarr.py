@@ -78,12 +78,14 @@ class ReadarrSortKeys(str, Enum):
     TITLE = "title"
 
 
-class ReadarrBookTypes(str, Enum):
-    """Readarr book types."""
+class ReadarrSearchType(str, Enum):
+    """Readarr search types."""
 
     ASIN = "asin"
-    GOODREADS = "goodreads"
+    GOODREADS = "edition"
     ISBN = "isbn"
+    AUTHOR = "author"
+    WORK = "work"
 
 
 class ReadarrAuthorMonitor(str, Enum):

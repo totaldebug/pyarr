@@ -7,12 +7,7 @@ from pyarr.types import JsonArray, JsonObject
 from .base import BaseArrAPI
 from .exceptions import PyarrMissingArgument, PyarrMissingProfile
 from .models.common import PyarrSortDirection
-from .models.readarr import (
-    ReadarrAuthorMonitor,
-    ReadarrBookTypes,
-    ReadarrCommands,
-    ReadarrSortKeys,
-)
+from .models.readarr import ReadarrAuthorMonitor, ReadarrCommands, ReadarrSortKeys
 
 
 class ReadarrAPI(BaseArrAPI):
@@ -30,7 +25,7 @@ class ReadarrAPI(BaseArrAPI):
         super().__init__(host_url, api_key, ver_uri)
 
     def lookup(self, term: str) -> JsonArray:
-        """Search for an author / book
+        """Search for an author / book by name or Goodreads ID / ISBN / ASIN
 
         Note:
             You can also search using the Goodreads ID, work, or author, the ISBN or ASIN::
@@ -77,129 +72,6 @@ class ReadarrAPI(BaseArrAPI):
         """
         params = {"term": term}
         return self._get("author/lookup", self.ver_uri, params)
-
-    def _book_json(
-        self,
-        id_: str,
-        book_id_type: ReadarrBookTypes,
-        root_dir: str,
-        quality_profile_id: Optional[int] = None,
-        metadata_profile_id: Optional[int] = None,
-        monitored: bool = True,
-        search_for_new_book: bool = False,
-        author_monitor: ReadarrAuthorMonitor = ReadarrAuthorMonitor.ALL,
-        author_search_for_missing_books: bool = False,
-    ) -> JsonObject:
-        """Constructs the JSON required to add a new book to Readarr
-
-        Args:
-            id_ (str): Book ID from Goodreads, ISBN or ASIN
-            book_id_type (ReadarrBookTypes): Type of book ID
-            root_dir (str): Root directory for books
-            quality_profile_id (Optional[int], optional): Quality profile ID. Defaults to None.
-            metadata_profile_id (Optional[int], optional): Metadata profile ID. Defaults to None.
-            monitored (bool, optional): Monitor for book. Defaults to True.
-            search_for_new_book (bool, optional): Search for new book on adding. Defaults to False.
-            author_monitor (ReadarrAuthorMonitor, optional): Monitor the author. Defaults to ReadarrAuthorMonitor.ALL.
-            author_search_for_missing_books (bool, optional): Search for other missing books by author. Defaults to False.
-
-        Raises:
-            PyarrMissingProfile: Error if Metadata or Quality profile ID are incorrect
-
-        Returns:
-            JsonObject: Dictionary of generated record
-        """
-        if quality_profile_id is None:
-            try:
-                quality_profile_id = self.get_quality_profile()[0]["id"]
-            except IndexError as exception:
-                raise PyarrMissingProfile(
-                    "There is no Quality Profile setup"
-                ) from exception
-        if metadata_profile_id is None:
-            try:
-                metadata_profile: Union[
-                    list[dict[str, Any]], dict[str, Any]
-                ] = self.get_metadata_profile()
-                if isinstance(metadata_profile, list):
-                    metadata_profile_id = metadata_profile[0]["id"]
-            except IndexError as exception:
-                raise PyarrMissingProfile(
-                    "There is no Metadata Profile setup"
-                ) from exception
-        book: dict[str, Any] = self.lookup_book(f"{book_id_type}:{id_}")[0]
-        book["author"] = {}
-        book["author"]["metadataProfileId"] = metadata_profile_id
-        book["author"]["qualityProfileId"] = quality_profile_id
-        book["author"]["rootFolderPath"] = root_dir
-        book["author"]["addOptions"] = {
-            "monitor": author_monitor,
-            "searchForMissingBooks": author_search_for_missing_books,
-        }
-        book["monitored"] = monitored
-        book["author"]["manualAdd"] = True
-        book["addOptions"] = {"searchForNewBook": search_for_new_book}
-
-        return book
-
-    def _author_json(
-        self,
-        term: str,
-        root_dir: str,
-        quality_profile_id: Optional[int] = None,
-        metadata_profile_id: Optional[int] = None,
-        monitored: bool = True,
-        author_monitor: ReadarrAuthorMonitor = ReadarrAuthorMonitor.NONE,
-        search_for_missing_books: bool = False,
-    ) -> JsonObject:
-        """Constructs the JSON required to add a new book to Readarr
-
-        Args:
-            term (str): Search term
-            root_dir (str): Root directory for books
-            quality_profile_id (Optional[int], optional): Quality profile ID. Defaults to None.
-            metadata_profile_id (Optional[int], optional): Metadata profile ID. Defaults to None.
-            monitored (bool, optional): Monitor this author. Defaults to True.
-            author_monitor (ReadarrAuthorMonitor, optional): Monitor the author. Defaults to ReadarrAuthorMonitor.NONE.
-            search_for_missing_books (bool, optional): Search for missing books by the author. Defaults to False.
-
-        Raises:
-            PyarrMissingProfile: Error if Metadata or Quality profile ID are incorrect
-
-        Returns:
-            JsonObject: Dictionary of author data
-        """
-        if quality_profile_id is None:
-            try:
-                quality_profile_id = self.get_quality_profile()[0]["id"]
-            except IndexError as exception:
-                raise PyarrMissingProfile(
-                    "There is no Quality Profile setup"
-                ) from exception
-        if metadata_profile_id is None:
-            try:
-                metadata_profile: Union[
-                    list[dict[str, Any]], dict[str, Any]
-                ] = self.get_metadata_profile()
-                if isinstance(metadata_profile, list):
-                    metadata_profile_id = metadata_profile[0]["id"]
-            except IndexError as exception:
-                raise PyarrMissingProfile(
-                    "There is no Metadata Profile setup"
-                ) from exception
-
-        author: dict[str, Any] = self.lookup_author(term)[0]
-
-        author["metadataProfileId"] = metadata_profile_id
-        author["qualityProfileId"] = quality_profile_id
-        author["rootFolderPath"] = root_dir
-        author["addOptions"] = {
-            "monitor": author_monitor,
-            "searchForMissingBooks": search_for_missing_books,
-        }
-        author["monitored"] = monitored
-
-        return author
 
     # COMMAND
 
@@ -356,10 +228,48 @@ class ReadarrAPI(BaseArrAPI):
 
         return self._get("queue", self.ver_uri, params)
 
+    # PROFILES
+
+    # POST /qualityprofile
+    def add_quality_profile(
+        self,
+        name: str,
+        upgrades_allowed: bool,
+        cutoff: int,
+        items: list,
+        min_format_score: int,
+        cutoff_format_score: int,
+        format_items: list = [],
+    ) -> JsonObject:  # type: ignore[override]
+        """Add new quality profile
+
+        Args:
+            name (str): Name of the profile
+            upgrades_allowed (bool): Are upgrades in quality allowed?
+            cutoff (int): ID of quality definition to cutoff at. Must be an allowed definition ID.
+            items (list): Add a list of items (from `get_quality_definition()`)
+            min_format_score (int): minimum score for format.
+            cutoff_format_score (int):
+            format_items (list): custom format items. Defaults to []
+
+        Returns:
+            JsonObject: An object containing the profile
+        """
+        data = {
+            "name": name,
+            "upgradeAllowed": upgrades_allowed,
+            "cutoff": cutoff,
+            "items": items,
+            "minFormatScore": min_format_score,
+            "cutoffFormatScore": cutoff_format_score,
+            "formatItems": format_items,
+        }
+        return self._post("qualityprofile", self.ver_uri, data=data)
+
     # GET /metadataprofile/{id}
     def get_metadata_profile(
         self, id_: Optional[int] = None
-    ) -> Union[JsonArray, JsonObject]:
+    ) -> Union[JsonArray, dict[Any, Any]]:
         """Gets all metadata profiles or specific one with ID
 
         Args:
@@ -370,6 +280,61 @@ class ReadarrAPI(BaseArrAPI):
         """
         path = f"metadataprofile/{id_}" if id_ else "metadataprofile"
         return self._get(path, self.ver_uri)
+
+    # POST /metadataprofile
+    def add_metadata_profile(
+        self,
+        name: str,
+        min_popularity: int,
+        skip_missing_date: bool,
+        skip_missing_isbn: bool,
+        skip_parts_and_sets: bool,
+        skip_series_secondary: bool,
+        allowed_languages: str,
+        min_pages: int,
+    ) -> Union[JsonArray, JsonObject]:
+        """Add a metadata profile
+
+        Args:
+            name (str): Name of the profile
+            min_popularity (int): Minimum popularity
+            skip_missing_date (bool): Skip missing dates
+            skip_missing_isbn (bool): Skip missing isbn
+            skip_parts_and_sets (bool): Skip parts and sets
+            skip_series_secondary (bool): Skip series secondary
+            allowed_languages (str): List of allowed languages
+            min_pages (int): minimum pages
+
+        Returns:
+            Union[JsonArray, JsonObject]: object of added record
+        """
+        data = {
+            "name": name,
+            "minPopularity": min_popularity,
+            "skipMissingDate": skip_missing_date,
+            "skipMissingIsbn": skip_missing_isbn,
+            "skipPartsAndSets": skip_parts_and_sets,
+            "skipSeriesSecondary": skip_series_secondary,
+            "allowedLanguages": allowed_languages,
+            "minPages": min_pages,
+        }
+        return self._post("metadataprofile", self.ver_uri, data=data)
+
+    # DELETE /metadataprofile/{id}
+    def del_metadata_profile(
+        self,
+        id_: int,
+    ) -> Union[Response, JsonObject, dict[Any, Any]]:
+        """Delete the metadata profile with the given ID
+
+        Args:
+            id_ (int): Database ID for metadata profile
+
+        Returns:
+            Response: HTTP Response
+        """
+
+        return self._delete(f"metadataprofile/{id_}", self.ver_uri)
 
     # GET /delayprofile/{id}
     def get_delay_profile(
@@ -420,8 +385,7 @@ class ReadarrAPI(BaseArrAPI):
     # POST /book
     def add_book(
         self,
-        id_: str,
-        book_id_type: ReadarrBookTypes,
+        book: JsonObject,
         root_dir: str,
         quality_profile_id: Optional[int] = None,
         metadata_profile_id: Optional[int] = None,
@@ -430,35 +394,49 @@ class ReadarrAPI(BaseArrAPI):
         author_monitor: ReadarrAuthorMonitor = ReadarrAuthorMonitor.ALL,
         author_search_for_missing_books: bool = False,
     ) -> JsonObject:
-        """Adds a new book and  its associated author (if not already added)
+        """Add a new book and its associated author (if not already added).
 
         Args:
-            id_ (str): goodreads, isbn, asin ID for the book
-            book_id_type (str): goodreads / isbn / asin
-            root_dir (str): Directory for book to be stored
-            quality_profile_id (int, optional): quality profile id. Defaults to 1.
-            metadata_profile_id (int, optional): metadata profile id. Defaults to 0.
-            monitored (bool, optional): should the book be monitored. Defaults to True.
-            search_for_new_book (bool, optional): search for the book to download now. Defaults to False.
-            author_monitor (str, optional): monitor the author for new books. Defaults to "all".
-            author_search_for_missing_books (bool, optional): search for missing books from this author. Defaults to False.
+            book (JsonObject): A book object from `lookup()`
+            root_dir (str): The root directory for the books to be saved.
+            quality_profile_id (Optional[int], optional): Quality Profile. Defaults to first found profile.
+            metadata_profile_id (Optional[int], optional): Metadata Profile. Defaults to first found profile.
+            monitored (bool, optional): Monitor the book. Defaults to True.
+            search_for_new_book (bool, optional): Look for new books. Defaults to False.
+            author_monitor (ReadarrAuthorMonitor, optional): Monitor the author for books. Defaults to ReadarrAuthorMonitor.ALL.
+            author_search_for_missing_books (bool, optional): Search missing books by the author. Defaults to False.
 
         Returns:
-            JsonObject: Dictionary of added record
+            JsonObject: A copy of the added books
         """
+        if quality_profile_id is None:
+            try:
+                quality_profile_id = self.get_quality_profile()[0]["id"]
+            except IndexError as exception:
+                raise PyarrMissingProfile(
+                    "There is no Quality Profile setup"
+                ) from exception
+        if metadata_profile_id is None:
+            try:
+                metadata_profile_id = self.get_metadata_profile()[0]["id"]
+            except IndexError as exception:
+                raise PyarrMissingProfile(
+                    "There is no Metadata Profile setup"
+                ) from exception
 
-        book_json: dict[str, Any] = self._book_json(
-            id_,
-            book_id_type,
-            root_dir,
-            quality_profile_id,
-            metadata_profile_id,
-            monitored,
-            search_for_new_book,
-            author_monitor,
-            author_search_for_missing_books,
-        )
-        return self._post("book", self.ver_uri, data=book_json)
+        book["author"]["rootFolderPath"] = root_dir
+        book["author"]["metadataProfileId"] = metadata_profile_id
+        book["author"]["qualityProfileId"] = quality_profile_id
+        book["author"]["rootFolderPath"] = root_dir
+        book["author"]["addOptions"] = {
+            "monitor": author_monitor,
+            "searchForMissingBooks": author_search_for_missing_books,
+        }
+        book["monitored"] = monitored
+        book["author"]["manualAdd"] = True
+        book["addOptions"] = {"searchForNewBook": search_for_new_book}
+
+        return self._post("book", self.ver_uri, data=book)
 
     # PUT /book/{id}
     def upd_book(self, id_: int, data: JsonObject) -> JsonObject:
@@ -501,7 +479,7 @@ class ReadarrAPI(BaseArrAPI):
 
         return self._delete(f"book/{id_}", self.ver_uri, params=params)
 
-    # AUTHOR
+    # AUTHORadd_author
 
     # GET /author and /author/{id}
     def get_author(self, id_: Optional[int] = None) -> Union[JsonArray, JsonObject]:
@@ -519,7 +497,7 @@ class ReadarrAPI(BaseArrAPI):
     # POST /author/
     def add_author(
         self,
-        term: str,
+        author: JsonObject,
         root_dir: str,
         quality_profile_id: Optional[int] = None,
         metadata_profile_id: Optional[int] = None,
@@ -527,10 +505,10 @@ class ReadarrAPI(BaseArrAPI):
         author_monitor: ReadarrAuthorMonitor = ReadarrAuthorMonitor.NONE,
         author_search_for_missing_books: bool = False,
     ) -> JsonObject:
-        """Adds an authorbased on search term, must be author name or book by goodreads / isbn / asin ID
+        """Adds an author based on data from lookup, must be an author record
 
         Args:
-            term (str): Author name or Author book by ID
+            author (JsonObject): A author object from `lookup()`
             root_dir (str): Directory for book to be stored
             quality_profile_id (int, optional): Quality profile id. Defaults to 1.
             metadata_profile_id (int, optional): Metadata profile id. Defaults to 0.
@@ -541,16 +519,29 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             JsonObject: Dictonary of added record
         """
-        author_json: dict[str, Any] = self._author_json(
-            term,
-            root_dir,
-            quality_profile_id,
-            metadata_profile_id,
-            monitored,
-            author_monitor,
-            author_search_for_missing_books,
-        )
-        return self._post("author", self.ver_uri, data=author_json)
+        if quality_profile_id is None:
+            try:
+                quality_profile_id = self.get_quality_profile()[0]["id"]
+            except IndexError as exception:
+                raise PyarrMissingProfile(
+                    "There is no Quality Profile setup"
+                ) from exception
+        if metadata_profile_id is None:
+            try:
+                metadata_profile_id = self.get_metadata_profile()[0]["id"]
+            except IndexError as exception:
+                raise PyarrMissingProfile(
+                    "There is no Metadata Profile setup"
+                ) from exception
+        author["metadataProfileId"] = metadata_profile_id
+        author["qualityProfileId"] = quality_profile_id
+        author["rootFolderPath"] = root_dir
+        author["addOptions"] = {
+            "monitor": author_monitor,
+            "searchForMissingBooks": author_search_for_missing_books,
+        }
+        author["monitored"] = monitored
+        return self._post("author", self.ver_uri, data=author)
 
     # PUT /author/{id}
     def upd_author(self, id_: int, data: JsonObject) -> JsonObject:
@@ -611,28 +602,28 @@ class ReadarrAPI(BaseArrAPI):
         self,
         name: str,
         path: str,
+        default_quality_profile_id: int,
+        default_metadata_profile_id: int,
+        default_tags: Optional[list] = None,
         is_calibre_lib: bool = False,
         calibre_host: str = "localhost",
         calibre_port: int = 8080,
         use_ssl: bool = False,
         output_profile: str = "default",
-        default_tags: Optional[list] = None,
-        default_quality_profile_id: int = 1,
-        default_metadata_profile_id: int = 1,
     ) -> JsonObject:
         """Add a new location to store files
 
         Args:
             name (str): Friendly Name for folder
             path (str): Location the files should be stored
+            default_quality_profile_id (int): Quality Profile.
+            default_metadata_profile_id (int): Metadata Profile.
+            default_tags (Optional[list], optional): List of tags to apply. Defaults to None.
             is_calibre_lib (bool, optional): Use Calibre Content Server. Defaults to False.
             calibre_host (str, optional): Calibre Content Server address. Defaults to "localhost".
             calibre_port (int, optional): Calibre Content Server port. Defaults to 8080.
             use_ssl (bool, optional): Calibre Content Server SSL. Defaults to False.
             output_profile (str, optional): Books to monitor. Defaults to "default".
-            default_tags (Optional[list], optional): List of tags to apply. Defaults to None.
-            default_quality_profile_id (int, optional): Quality Profile. Defaults to 1.
-            default_metadata_profile_id (int, optional): Metadata Profile. Defaults to 1.
 
         Returns:
             JsonObject: Dictionary of added record
@@ -674,3 +665,119 @@ class ReadarrAPI(BaseArrAPI):
             dict[str, Any]: Dictionary of updated record
         """
         return self._put("config/metadataProvider", self.ver_uri, data=data)
+
+    def add_release_profile(
+        self,
+        ignored: list,
+        required: list,
+        indexerId: int = 0,
+        tags: list[int] = None,
+        enabled: bool = True,
+        includePreferredWhenRenaming: bool = False,
+    ) -> JsonObject:
+        """Add a Release Profile
+
+        Args:
+            ignored (list): List of terms in the release to ignore
+            indexerId (int): ID for preferred indexer. Defaults to 0 (any).
+            required (list): List of terms the release must include.
+            tags (list[int]): List of tag id's. Defaults to empty list
+            enabled (bool, optional): Enable release profile. Defaults to True.
+            includePreferredWhenRenaming (bool, optional): Include preferred when renaming. Defaults to False.
+
+        Returns:
+            JsonObject: Dictionary containing details of new profile
+        """
+
+        if tags is None:
+            tags = []
+
+        data: dict[str, Any] = {
+            "enabled": enabled,
+            "ignored": ignored,
+            "includePreferredWhenRenaming": includePreferredWhenRenaming,
+            "indexerId": indexerId,
+            "required": required,
+            "tags": tags,
+        }
+        return self._post(
+            "releaseprofile",
+            self.ver_uri,
+            data=data,
+        )
+
+    # DELETE /releaseprofile/{id}
+    def del_release_profile(
+        self,
+        id_: int,
+    ) -> Union[Response, JsonObject, dict[Any, Any]]:
+        """Delete the release profile with the given ID
+
+        Args:
+            id_ (int): Database ID for release profile
+
+        Returns:
+            Response: HTTP Response
+        """
+
+        return self._delete(f"releaseprofile/{id_}", self.ver_uri)
+
+    def add_delay_profile(
+        self,
+        tags: list[int],
+        preferredProtocol: str = "usenet",
+        usenetDelay: int = 0,
+        torrentDelay: int = 0,
+        bypassIfHighestQuality: bool = False,
+        bypassIfAboveCustomFormatScore: bool = False,
+        minimumCustomFormatScore: int = 0,
+    ) -> JsonObject:
+        """Add delay profile
+
+        Args:
+            tags (list[int]): List of tag IDs. Use: `get_tag`.
+            preferredProtocol (str, optional): usenet, torrent, onlyusenet, onlytorrent  . Defaults to "usenet".
+            usenetDelay (int, optional): Delay before grabbing a release. Defaults to 0.
+            torrentDelay (int, optional): Delay before grabbing a release. Defaults to 0.
+            bypassIfHighestQuality (bool, optional): Bypass delay when release has the highest enabled quality in the quality profile. Defaults to False.
+            bypassIfAboveCustomFormatScore (bool, optional): Enable bypass when release has a score higher than the configured minimum custom format score. Defaults to False.
+            minimumCustomFormatScore (int, optional): set when using `bypassIfAboveCustomFormatScore`. Defaults to 0.
+
+        Returns:
+            JsonObject: Dictonary with added item
+        """
+        data = {
+            "enableUsenet": True,
+            "enableTorrent": True,
+            "preferredProtocol": preferredProtocol,
+            "usenetDelay": usenetDelay,
+            "torrentDelay": torrentDelay,
+            "bypassIfHighestQuality": bypassIfHighestQuality,
+            "bypassIfAboveCustomFormatScore": bypassIfAboveCustomFormatScore,
+            "minimumCustomFormatScore": minimumCustomFormatScore,
+            "tags": tags,
+        }
+
+        if preferredProtocol == "onlytorrent":
+            data["preferredProtocol"] = "torrent"
+            data["enableUsenet"] = False
+        elif preferredProtocol == "onlyusenet":
+            data["preferredProtocol"] = "usenet"
+            data["enableTorrent"] = False
+        return self._post("delayprofile", self.ver_uri, data=data)
+
+    # DELETE /delayprofile/{id}
+    def del_delay_profile(
+        self,
+        id_: int,
+    ) -> Union[Response, JsonObject, dict[Any, Any]]:
+        """Delete the delay profile with the given ID
+
+        Args:
+            id_ (int): Database ID for delay profile
+
+        Returns:
+            Response: HTTP Response
+        """
+
+        return self._delete(f"delayprofile/{id_}", self.ver_uri)

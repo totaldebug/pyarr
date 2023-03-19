@@ -10,7 +10,9 @@
         "sonarr:8989",
         "radarr:7878",
         "readarr:8787",
-        "lidarr:8686"
+        "lidarr:8686",
+        "jackett:9117",
+        "deluge:8112"
     ],
     "extensions": [
         "github.vscode-pull-request-github",

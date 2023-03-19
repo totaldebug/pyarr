@@ -36,3 +36,7 @@ class PyarrRecordNotFound(PyarrError):
 
 class PyarrMissingArgument(PyarrError):
     """Missing one of multiple possible arguments"""
+
+
+class PyarrBadRequest(PyarrError):
+    """Bad Request, possible bug."""

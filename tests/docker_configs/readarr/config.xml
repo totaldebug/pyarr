@@ -1,0 +1,16 @@
+<Config>
+  <LogLevel>info</LogLevel>
+  <UrlBase></UrlBase>
+  <UpdateMechanism>Docker</UpdateMechanism>
+  <BindAddress>*</BindAddress>
+  <Port>8787</Port>
+  <SslPort>6868</SslPort>
+  <EnableSsl>False</EnableSsl>
+  <LaunchBrowser>True</LaunchBrowser>
+  <ApiKey>ccad0c53c68247ac99616747407c185b</ApiKey>
+  <AuthenticationMethod>None</AuthenticationMethod>
+  <Branch>develop</Branch>
+  <SslCertPath></SslCertPath>
+  <SslCertPassword></SslCertPassword>
+  <InstanceName>Readarr</InstanceName>
+</Config>

@@ -29,6 +29,7 @@ packages = [
 python = "^3.9"
 requests = "^2.21.0"
 types-requests = "^2.25.11"
+overrides = "^7.3.1"
 
 [tool.poetry.dev-dependencies]
 black = {version = "^22.3", allow-prereleases = true}
@@ -45,9 +46,11 @@ pytest = "^7.1.2"
 pytest-cov = "^3.0.0"
 pylint = "^2.14.3"
 responses = "^0.21.0"
-pytest-responses = "^0.5.0"
 sphinx-toolbox = "^3.1.2"
 autoflake = "^1.6.1"
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.17.1"
 
 [tool.black]
 line-length = 88

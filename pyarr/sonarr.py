@@ -30,6 +30,7 @@ class SonarrAPI(BaseArrAPI):
         self,
         tvdb_id: int,
         quality_profile_id: int,
+        language_profile_id: int,
         root_dir: str,
         season_folder: bool = True,
         monitored: bool = True,
@@ -42,6 +43,7 @@ class SonarrAPI(BaseArrAPI):
         Args:
             tvdb_id (int): TVDB id to search
             quality_profile_id (int): Database id for Quality profile
+            language_profile_id (int): Database id for language
             root_dir (str): Root directory for media
             season_folder (bool, optional): Specify if a season folder should be created. Defaults to True.
             monitored (bool, optional): Specify if the series should be monitored. Defaults to True.
@@ -52,7 +54,7 @@ class SonarrAPI(BaseArrAPI):
         Returns:
             dict: dictionary of series data
         """
-        series: dict[str, Any] = self.lookup_series_by_tvdb_id(tvdb_id)[0]
+        series: dict[str, Any] = self.lookup_series(id_=tvdb_id)[0]
         if not monitored and series.get("seasons"):
             for season in series["seasons"]:
                 season["monitored"] = False
@@ -62,6 +64,7 @@ class SonarrAPI(BaseArrAPI):
             "seasons": series["seasons"],
             "rootFolderPath": root_dir,
             "qualityProfileId": quality_profile_id,
+            "languageProfileId": language_profile_id,
             "seasonFolder": season_folder,
             "monitored": monitored,
             "tvdbId": tvdb_id,
@@ -91,19 +94,6 @@ class SonarrAPI(BaseArrAPI):
 
     ## COMMAND
 
-    # GET /command
-    def get_command(self, id_: Optional[int] = None) -> Union[JsonArray, JsonObject]:
-        """Queries the status of a previously started command, or all currently started commands.
-
-        Args:
-            id_ (Optional[int], optional): Database ID of the command. Defaults to None.
-
-        Returns:
-            Union[JsonArray, JsonObject]: List of dictionaries with items
-        """
-        path = f"command{f'/{id_}' if id_ else ''}"
-        return self._get(path, self.ver_uri)
-
     # POST /command
     # TODO: Add more logic to ensure correct kwargs for a command
     def post_command(
@@ -132,7 +122,7 @@ class SonarrAPI(BaseArrAPI):
 
     # GET /episode
     def get_episode(self, id_: int, series: bool = False) -> JsonObject:
-        """Get get episodes by ID or series
+        """Get episodes by ID or series
 
         Args:
             id_ (int): ID for Episode or Series.
@@ -511,6 +501,7 @@ class SonarrAPI(BaseArrAPI):
         self,
         tvdb_id: int,
         quality_profile_id: int,
+        language_profile_id: int,
         root_dir: str,
         season_folder: bool = True,
         monitored: bool = True,
@@ -527,6 +518,7 @@ class SonarrAPI(BaseArrAPI):
         Args:
             tvdb_id (int): TVDB Id
             quality_profile_id (int): Database id for quality profile
+            language_profile_id (int): Database id for language profile
             root_dir (str): Root folder location, full path will be created from this
             season_folder (bool, optional): Create a folder for each season. Defaults to True.
             monitored (bool, optional): Monitor this series. Defaults to True.
@@ -540,6 +532,7 @@ class SonarrAPI(BaseArrAPI):
         series_json = self._series_json(
             tvdb_id,
             quality_profile_id,
+            language_profile_id,
             root_dir,
             season_folder,
             monitored,
@@ -548,7 +541,14 @@ class SonarrAPI(BaseArrAPI):
             search_for_missing_episodes,
         )
 
-        return self._post("series", self.ver_uri, data=series_json)
+        response: dict[str, Any] = self._post("series", self.ver_uri, data=series_json)
+        for item in response:
+            if "errorMessage" in item:
+                raise Exception(item)
+            else:
+                continue
+
+        return response
 
     # PUT /series
     def upd_series(self, data: JsonObject) -> JsonObject:
@@ -600,6 +600,9 @@ class SonarrAPI(BaseArrAPI):
     # GET /series/lookup
     def lookup_series_by_tvdb_id(self, id_: int) -> JsonArray:
         """Searches for new shows on TheTVDB.com utilizing sonarr.tv's caching and augmentation proxy.
+
+        Note:
+            This method is deprecated and will be removed in a future release. Please use lookup_series()
 
         Args:
             id_ (int): TVDB ID
@@ -655,3 +658,89 @@ class SonarrAPI(BaseArrAPI):
             params["episodeId"] = id_
 
         return self._get("history", self.ver_uri, params)
+
+    # GET /languageprofile/{id}
+    def get_language_profile(
+        self, id_: Optional[int] = None
+    ) -> Union[JsonArray, dict[Any, Any]]:
+        """Gets all language profiles or specific one with id
+
+        Args:
+            id_ (Optional[int], optional): Language profile id from database. Defaults to None.
+
+        Returns:
+            Union[JsonArray, dict[Any, Any]]: List of dictionaries with items
+        """
+
+        path = f"languageprofile{f'/{id_}' if id_ else ''}"
+        return self._get(path, self.ver_uri)
+
+    # PUT /languageprofile/{id}
+    def upd_language_profile(self, id_: int, data: JsonObject) -> JsonObject:
+        """Update the language profile data
+
+        Note:
+            To be used in conjunction with get_language_profile()
+
+        Args:
+            id_ (int): Profile ID to Update
+            data (JsonObject): All parameters to update
+
+        Returns:
+            JsonObject: Dictionary of updated record
+        """
+
+        return self._put(f"languageprofile/{id_}", self.ver_uri, data=data)
+
+    # DELETE /languageprofile
+    def del_language_profile(
+        self, id_: int
+    ) -> Union[Response, JsonObject, dict[Any, Any]]:
+        """Removes a specific language profile from the blocklist
+
+        Args:
+            id_ (int): Profile ID from database
+
+        Returns:
+            Response: HTTP Response
+        """
+        return self._delete(f"languageprofile/{id_}", self.ver_uri)
+
+    # GET /languageprofile/schema/{id}
+    def get_language_profile_schema(
+        self, id_: Optional[int] = None
+    ) -> Union[JsonArray, dict[Any, Any]]:
+        """Gets all language profile schemas or specific one with id
+
+        Args:
+            id_ (Optional[int], optional): Language profile schema id from database. Defaults to None.
+
+        Returns:
+            Union[JsonArray, dict[Any, Any]]: List of dictionaries with items
+        """
+
+        path = f"languageprofile/schema{f'/{id_}' if id_ else ''}"
+        return self._get(path, self.ver_uri)
+
+    # POST /qualityprofile
+    def add_quality_profile(
+        self, name: str, upgrades_allowed: bool, cutoff: int, items: list
+    ) -> JsonObject:
+        """Add new quality profile
+
+        Args:
+            name (str): Name of the profile
+            upgrades_allowed (bool): Are upgrades in quality allowed?
+            cutoff (int): ID of quality definition to cutoff at. Must be an allowed definition ID.
+            items (list): Add a list of items (from `get_quality_definition()`)
+
+        Returns:
+            JsonObject: An object containing the profile
+        """
+        data = {
+            "name": name,
+            "upgradeAllowed": upgrades_allowed,
+            "cutoff": cutoff,
+            "items": items,
+        }
+        return self._post("qualityprofile", self.ver_uri, data=data)

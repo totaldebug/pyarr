@@ -165,13 +165,13 @@ class RadarrAPI(BaseArrAPI):
     # PUT /movie
     def upd_movie(
         self,
-        data: Union[dict[Any, Any], list[dict[Any, Any]]],
+        data: JsonObject,
         move_files: Optional[bool] = None,
-    ) -> Union[JsonObject, JsonArray]:
+    ) -> JsonObject:
         """Updates a movie in the database.
 
         Args:
-            data (Union[dict[Any, Any], list[dict[Any, Any]]]): Dictionary containing an object obtained from get_movie()
+            data (JsonObject): Dictionary containing an object obtained from get_movie()
             move_files (Optional[bool], optional): Have radarr move files when updating. Defaults to None.
 
         Returns:
@@ -182,7 +182,7 @@ class RadarrAPI(BaseArrAPI):
             params["moveFiles"] = move_files
         print(type(data))
         return self._put(
-            f"movie{'/editor' if isinstance(data, list) else ''}",
+            "movie",
             self.ver_uri,
             data=data,
             params=params,
@@ -227,14 +227,15 @@ class RadarrAPI(BaseArrAPI):
             Response: HTTP Response
         """
         params: dict[str, Union[str, list[int], int]] = {}
-        if delete_files:
-            params["deleteFiles"] = str(delete_files)
-
-        if add_exclusion:
-            params["addImportExclusion"] = str(add_exclusion)
-
         if isinstance(id_, list):
             params["movieIds"] = id_
+        if delete_files:
+            params["deleteFiles"] = delete_files
+
+        if add_exclusion:
+            params["addImportExclusion"] = add_exclusion
+
+            print(params)
         return self._delete(
             "movie/editor" if isinstance(id_, list) else f"movie/{id_}",
             self.ver_uri,
@@ -299,17 +300,18 @@ class RadarrAPI(BaseArrAPI):
         """The Updates operation allows to edit properties of multiple movies at once
 
         Args:
-            data (JsonObject): Updated movie information
+            data (JsonObject): Updated movie information::
+
+                {"movieIds":[28],"tags":[3],"applyTags":"add"}
+                {"movieIds":[28],"monitored":true}
+                {"movieIds":[28],"qualityProfileId":1}
+                {"movieIds":[28],"minimumAvailability":"inCinemas"}
+                {"movieIds":[28],"rootFolderPath":"/defaults/"}
 
         Returns:
-            JsonObject: Dictionary containing updated record
+            JsonArray: Dictionary containing updated record
         """
 
-        warn(
-            "This method is deprecated and will be removed in a future release. Please use upd_movie() with a list to update",
-            DeprecationWarning,
-            stacklevel=2,
-        )
         return self._put("movie/editor", self.ver_uri, data=data)
 
     # DELETE /movie/editor
@@ -544,46 +546,6 @@ class RadarrAPI(BaseArrAPI):
         """
         return self._post(f"queue/grab/{id_}", self.ver_uri)
 
-    ## INDEXER
-
-    # GET /indexer and /indexer/{id}
-    def get_indexer(self, id_: Optional[int] = None) -> JsonArray:
-        """Get all indexers or a single indexer by its database ID.
-
-        Args:
-            id_ (Optional[int], optional): indexer database ID. Defaults to None.
-
-        Returns:
-            JsonArray: List of dictionaries with items
-        """
-        path = f"indexer/{id_}" if id_ else "indexer"
-        return self._get(path, self.ver_uri)
-
-    # PUT /indexer/{id}
-    def upd_indexer(self, id_: int, data: JsonObject) -> JsonObject:
-        """Edit an indexer
-
-        Args:
-            id_ (int): Database ID of indexer
-            data (JsonObject): information to be changed within the indexer
-
-        Returns:
-            JsonObject: Dictionary with updated record
-        """
-        return self._put(f"indexer/{id_}", self.ver_uri, data=data)
-
-    # DELETE /indexer/{id}
-    def del_indexer(self, id_: int) -> Union[Response, JsonObject, dict[Any, Any]]:
-        """Delete indexer by database ID
-
-        Args:
-            id_ (int): DAtabase ID of the indexer
-
-        Returns:
-            Response: HTTP Response
-        """
-        return self._delete(f"indexer/{id_}", self.ver_uri)
-
     ## COMMAND
 
     # POST /command
@@ -620,3 +582,26 @@ class RadarrAPI(BaseArrAPI):
             JsonArray: List of dictionaries with items
         """
         return self._get("customfilter", self.ver_uri)
+
+    # POST /qualityprofile
+    def add_quality_profile(
+        self, name: str, upgrades_allowed: bool, cutoff: int, items: list
+    ) -> JsonObject:
+        """Add new quality profile
+
+        Args:
+            name (str): Name of the profile
+            upgrades_allowed (bool): Are upgrades in quality allowed?
+            cutoff (int): ID of quality definition to cutoff at. Must be an allowed definition ID.
+            items (list): Add a list of items (from `get_quality_definition()`)
+
+        Returns:
+            JsonObject: An object containing the profile
+        """
+        data = {
+            "name": name,
+            "upgradeAllowed": upgrades_allowed,
+            "cutoff": cutoff,
+            "items": items,
+        }
+        return self._post("qualityprofile", self.ver_uri, data=data)
