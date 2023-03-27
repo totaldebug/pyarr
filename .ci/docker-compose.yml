@@ -2,14 +2,6 @@
 
 version: '3'
 services:
-  workspace:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: workspace
-    volumes:
-      - .:/workspace:cached
-    command: sleep infinity
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
