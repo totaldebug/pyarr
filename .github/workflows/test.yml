@@ -14,16 +14,20 @@ jobs:
   code-quality:
     name: 📊 Check code quality
     runs-on: ubuntu-latest
+    env:
+      COMPOSE_FILE: .devcontainer/docker-compose.yml
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10"]
+        python-version: ["3.9", "3.10", "3.11"]
     steps:
       - uses: actions/checkout@v3
       - name: Setup Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Build docker images
+        run: docker compose -f .devcontainer/docker-compose.yml
       - name: 🧪 Check tests are passing
         run: |
           pip install poetry nox
-          nox -s test
+          nox -s test_ci
