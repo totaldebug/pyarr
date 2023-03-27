@@ -1,4 +1,6 @@
 import contextlib
+from datetime import datetime
+import random
 
 import pytest
 import responses
@@ -10,8 +12,24 @@ from pyarr.exceptions import (
     PyarrResourceNotFound,
 )
 from pyarr.lidarr import LidarrAPI
-from pyarr.models.common import PyarrSortDirection
-from pyarr.models.lidarr import LidarrArtistMonitor, LidarrCommand, LidarrSortKey
+from pyarr.models.common import (
+    PyarrBlocklistSortKey,
+    PyarrDownloadClientSchema,
+    PyarrHistorySortKey,
+    PyarrImportListSchema,
+    PyarrIndexerSchema,
+    PyarrLogFilterKey,
+    PyarrLogFilterValue,
+    PyarrLogSortKey,
+    PyarrNotificationSchema,
+    PyarrSortDirection,
+)
+from pyarr.models.lidarr import (
+    LidarrArtistMonitor,
+    LidarrCommand,
+    LidarrImportListSchema,
+    LidarrSortKey,
+)
 
 from tests import (
     LIDARR_ALBUM_TERM,
@@ -29,8 +47,8 @@ def test_add_root_folder(lidarr_client: LidarrAPI):
     data = lidarr_client.add_root_folder(
         name="test",
         path="/defaults/",
-        qualityProfile=qual_profile[0]["id"],
-        metadataProfile=meta_profile[0]["id"],
+        default_quality_profile_id=qual_profile[0]["id"],
+        default_metadata_profile_id=meta_profile[0]["id"],
     )
     assert isinstance(data, dict)
 
@@ -110,23 +128,7 @@ def test_upd_artist(lidarr_client: LidarrAPI):
 
     artist = lidarr_client.get_artist()
 
-    data = lidarr_client.upd_artist(data=artist)
-    assert isinstance(data, dict)
-
-
-def test__album_json(lidarr_client: LidarrAPI):
-    qual_profile = lidarr_client.get_quality_profile()
-    meta_profile = lidarr_client.get_metadata_profile()
-
-    data = lidarr_client._album_json(
-        id_=LIDARR_MUSICBRAINZ_ALBUM_ID,
-        root_dir="/",
-        quality_profile_id=qual_profile[0]["id"],
-        metadata_profile_id=meta_profile[0]["id"],
-        monitored=False,
-        artist_monitor=LidarrArtistMonitor.FIRST_ALBUM,
-        artist_search_for_missing_albums=False,
-    )
+    data = lidarr_client.upd_artist(data=artist[0])
     assert isinstance(data, dict)
 
 
@@ -134,16 +136,24 @@ def test_add_album(lidarr_client: LidarrAPI):
 
     qual_profile = lidarr_client.get_quality_profile()
     meta_profile = lidarr_client.get_metadata_profile()
+    items = lidarr_client.lookup(f"lidarr:{LIDARR_MUSICBRAINZ_ALBUM_ID}")
 
-    data = lidarr_client.add_album(
-        id_=LIDARR_MUSICBRAINZ_ALBUM_ID,
-        root_dir="/defaults/",
-        quality_profile_id=qual_profile[0]["id"],
-        metadata_profile_id=meta_profile[0]["id"],
-        monitored=False,
-        artist_monitor=LidarrArtistMonitor.LATEST_ALBUM,
-        artist_search_for_missing_albums=False,
-    )
+    for item in items:
+        if "album" in item:
+            album = item["album"]
+            data = lidarr_client.add_album(
+                album=album,
+                root_dir="/defaults/",
+                quality_profile_id=qual_profile[0]["id"],
+                metadata_profile_id=meta_profile[0]["id"],
+                monitored=False,
+                artist_monitor=LidarrArtistMonitor.LATEST_ALBUM,
+                artist_search_for_missing_albums=False,
+            )
+            break
+        if item == items[-1]:
+            assert False
+
     assert isinstance(data, dict)
 
 
@@ -151,7 +161,7 @@ def test_upd_album(lidarr_client: LidarrAPI):
 
     album = lidarr_client.get_album()
 
-    data = lidarr_client.upd_album(data=album[0]["id"])
+    data = lidarr_client.upd_album(data=album[0])
     assert isinstance(data, dict)
 
 
@@ -160,14 +170,11 @@ def test_get_album(lidarr_client: LidarrAPI):
     data = lidarr_client.get_album()
     assert isinstance(data, list)
 
-    data = lidarr_client.get_album(albumIds=data[0]["id"])
-    assert isinstance(data, dict)
-
     data = lidarr_client.get_album(artistId=data[0]["artistId"], allArtistAlbums=True)
     assert isinstance(data, list)
 
     data = lidarr_client.get_album(foreignAlbumId=LIDARR_MUSICBRAINZ_ARTIST_ID)
-    assert isinstance(data, dict)
+    assert isinstance(data, list)
 
 
 def test_post_command(lidarr_client: LidarrAPI):
@@ -239,11 +246,8 @@ def test_get_tracks(lidarr_client: LidarrAPI):
     data = lidarr_client.get_tracks(albumId=album[0]["id"])
     assert isinstance(data, list)
 
-    data = lidarr_client.get_tracks(albumReleaseId=1)
+    data = lidarr_client.get_tracks(albumReleaseId=album[0]["releases"][0]["id"])
     assert isinstance(data, list)
-
-    data = lidarr_client.get_tracks(trackIds=1)
-    assert isinstance(data, dict)
 
     with contextlib.suppress(PyarrMissingArgument):
         data = lidarr_client.get_tracks()
@@ -602,10 +606,471 @@ def test_get_manual_import(lidarr_mock_client: LidarrAPI):
     assert isinstance(data, list)
 
 
+def test_get_calendar(lidarr_client: LidarrAPI):
+
+    start = datetime.strptime("Nov 30 2020  1:33PM", "%b %d %Y %I:%M%p")
+    end = datetime.strptime("Dec 1 2020  1:33PM", "%b %d %Y %I:%M%p")
+    data = lidarr_client.get_calendar(start_date=start, end_date=end)
+    assert isinstance(data, list)
+
+    start = datetime.strptime("Nov 30 2020  1:33PM", "%b %d %Y %I:%M%p")
+    end = datetime.strptime("Dec 1 2020  1:33PM", "%b %d %Y %I:%M%p")
+    data = lidarr_client.get_calendar(start_date=start, end_date=end, unmonitored=False)
+    assert isinstance(data, list)
+
+
+def test_get_system_status(lidarr_client: LidarrAPI):
+
+    data = lidarr_client.get_system_status()
+    assert isinstance(data, dict)
+
+
+def test_get_health(lidarr_client: LidarrAPI):
+
+    data = lidarr_client.get_health()
+    assert isinstance(data, list)
+
+
+def test_get_metadata(lidarr_client: LidarrAPI):
+
+    data = lidarr_client.get_metadata()
+    assert isinstance(data, list)
+
+    data = lidarr_client.get_metadata(data[0]["id"])
+    assert isinstance(data, dict)
+
+
+def test_get_update(lidarr_client: LidarrAPI):
+
+    data = lidarr_client.get_update()
+    assert isinstance(data, list)
+
+
+def test_get_disk_space(lidarr_client: LidarrAPI):
+
+    data = lidarr_client.get_disk_space()
+    assert isinstance(data, list)
+
+
+def test_get_backup(lidarr_client: LidarrAPI):
+
+    data = lidarr_client.get_backup()
+    assert isinstance(data, list)
+
+
+def test_get_log(lidarr_client: LidarrAPI):
+
+    data = lidarr_client.get_log()
+    assert isinstance(data, dict)
+
+    data = lidarr_client.get_log(
+        page=10,
+        page_size=10,
+        sort_key=PyarrLogSortKey.ID,
+        sort_dir=PyarrSortDirection.DESC,
+        filter_key=PyarrLogFilterKey.LEVEL,
+        filter_value=PyarrLogFilterValue.ALL,
+    )
+    assert isinstance(data, dict)
+
+    with contextlib.suppress(PyarrMissingArgument):
+        data = lidarr_client.get_log(sort_key=PyarrLogSortKey.ID)
+        assert False
+    with contextlib.suppress(PyarrMissingArgument):
+        data = lidarr_client.get_log(sort_dir=PyarrSortDirection.DESC)
+        assert False
+    with contextlib.suppress(PyarrMissingArgument):
+        data = lidarr_client.get_log(filter_key=PyarrLogFilterKey.LEVEL)
+        assert False
+    with contextlib.suppress(PyarrMissingArgument):
+        data = lidarr_client.get_log(filter_value=PyarrLogFilterValue.ALL)
+        assert False
+
+
+def test_get_task(lidarr_client: LidarrAPI):
+
+    data = lidarr_client.get_task()
+    assert isinstance(data, list)
+
+    data = lidarr_client.get_task(id_=data[0]["id"])
+    assert isinstance(data, dict)
+
+
+def test_get_config_ui(lidarr_client: LidarrAPI):
+
+    data = lidarr_client.get_config_ui()
+    assert isinstance(data, dict)
+
+
+def test_upd_config_ui(lidarr_client: LidarrAPI):
+
+    payload = lidarr_client.get_config_ui()
+    payload["enableColorImpairedMode"] = True
+    data = lidarr_client.upd_config_ui(payload)
+    assert isinstance(data, dict)
+    assert data["enableColorImpairedMode"] == True
+
+
+def test_get_config_host(lidarr_client: LidarrAPI):
+
+    data = lidarr_client.get_config_host()
+    assert isinstance(data, dict)
+
+
+def test_upd_config_host(lidarr_client: LidarrAPI):
+
+    payload = lidarr_client.get_config_host()
+    payload["backupRetention"] = 29
+    data = lidarr_client.upd_config_host(payload)
+
+    assert isinstance(data, dict)
+    assert data["backupRetention"] == 29
+
+
+def test_get_config_naming(lidarr_client: LidarrAPI):
+
+    data = lidarr_client.get_config_naming()
+    assert isinstance(data, dict)
+
+
+def test_upd_config_naming(lidarr_client: LidarrAPI):
+
+    payload = lidarr_client.get_config_naming()
+    payload["standardTrackFormat"] = (
+        "{Album Title} - {track:00} - {Track Title} - {Album Title} ({Release Year})/{Artist Name}"
+        if payload["standardTrackFormat"]
+        == "{Album Title} ({Release Year})/{Artist Name} - {Album Title} - {track:00} - {Track Title}"
+        else "{Album Title} ({Release Year})/{Artist Name} - {Album Title} - {track:00} - {Track Title}"
+    )
+    data = lidarr_client.upd_config_naming(payload)
+
+    assert isinstance(data, dict)
+    if (
+        payload["standardTrackFormat"]
+        == "{Album Title} ({Release Year})/{Artist Name} - {Album Title} - {track:00} - {Track Title}"
+    ):
+        assert (
+            data["standardTrackFormat"]
+            == "{Album Title} - {track:00} - {Track Title} - {Album Title} ({Release Year})/{Artist Name}"
+        )
+    else:
+        assert (
+            data["standardTrackFormat"]
+            == "{Album Title} ({Release Year})/{Artist Name} - {Album Title} - {track:00} - {Track Title}"
+        )
+
+
+def test_get_media_management(lidarr_client: LidarrAPI):
+
+    data = lidarr_client.get_media_management()
+    assert isinstance(data, dict)
+
+
+def test_upd_media_management(lidarr_client: LidarrAPI):
+
+    payload = lidarr_client.get_media_management()
+    payload["recycleBinCleanupDays"] = 6
+    data = lidarr_client.upd_media_management(payload)
+
+    assert isinstance(data, dict)
+    assert data["recycleBinCleanupDays"] == 6
+
+
+def test_get_notification_schema(lidarr_client: LidarrAPI):
+
+    data = lidarr_client.get_notification_schema()
+    assert isinstance(data, list)
+
+    data = lidarr_client.get_notification_schema(
+        implementation=PyarrNotificationSchema.BOXCAR
+    )
+    assert isinstance(data, list)
+
+    with contextlib.suppress(PyarrRecordNotFound):
+        data = lidarr_client.get_notification_schema(implementation="polarbear")
+        assert False
+
+
+def test_create_tag(lidarr_client: LidarrAPI):
+
+    data = lidarr_client.create_tag(label="string")
+    assert isinstance(data, dict)
+
+
+def test_get_tag(lidarr_client: LidarrAPI):
+
+    data = lidarr_client.get_tag()
+    assert isinstance(data, list)
+
+    data = lidarr_client.get_tag(id_=data[0]["id"])
+    assert isinstance(data, dict)
+
+
+def test_get_tag_detail(lidarr_client: LidarrAPI):
+
+    data = lidarr_client.get_tag_detail()
+    assert isinstance(data, list)
+
+    data = lidarr_client.get_tag_detail(id_=data[0]["id"])
+    assert isinstance(data, dict)
+
+
+def test_upd_tag(lidarr_client: LidarrAPI):
+    tags = lidarr_client.get_tag()
+
+    data = lidarr_client.upd_tag(id_=tags[0]["id"], label="newstring")
+    assert isinstance(data, dict)
+    assert data["label"] == "newstring"
+
+
+def test_get_history(lidarr_client: LidarrAPI):
+
+    data = lidarr_client.get_history()
+    assert isinstance(data, dict)
+
+    data = lidarr_client.get_history(
+        page=1,
+        page_size=10,
+        sort_key=PyarrHistorySortKey.TIME,
+        sort_dir=PyarrSortDirection.DEFAULT,
+    )
+    assert isinstance(data, dict)
+
+    with contextlib.suppress(PyarrMissingArgument):
+        data = lidarr_client.get_history(sort_key=PyarrHistorySortKey.TIME)
+        assert False
+
+    with contextlib.suppress(PyarrMissingArgument):
+        data = lidarr_client.get_history(sort_dir=PyarrSortDirection.DESC)
+        assert False
+
+
+def test_upd_quality_profile(lidarr_client: LidarrAPI):
+
+    data = lidarr_client.get_quality_profile()
+    assert isinstance(data, list)
+
+    data = lidarr_client.upd_quality_profile(id_=data[0]["id"], data=data)
+    assert isinstance(data, dict)
+
+
+def test_get_quality_definition(lidarr_client: LidarrAPI):
+
+    data = lidarr_client.get_quality_definition()
+    assert isinstance(data, list)
+
+    data = lidarr_client.get_quality_definition(id_=data[0]["id"])
+    assert isinstance(data, dict)
+
+
+def test_upd_quality_definition(lidarr_client: LidarrAPI):
+    rand_float = round(random.uniform(100.0, 199.9))
+
+    quality_definitions = lidarr_client.get_quality_definition()
+    quality_definition = lidarr_client.get_quality_definition(
+        id_=quality_definitions[0]["id"]
+    )
+    quality_definition["maxSize"] = rand_float
+    data = lidarr_client.upd_quality_definition(
+        quality_definition["id"], quality_definition
+    )
+    assert isinstance(data, dict)
+    assert data["maxSize"] == rand_float
+
+
+def test_get_indexer_schema(lidarr_client: LidarrAPI):
+    data = lidarr_client.get_indexer_schema()
+    assert isinstance(data, list)
+    data = lidarr_client.get_indexer_schema(
+        implementation=PyarrIndexerSchema.IP_TORRENTS
+    )
+    assert isinstance(data, list)
+    assert data[0]["implementation"] == PyarrIndexerSchema.IP_TORRENTS
+
+    with contextlib.suppress(PyarrRecordNotFound):
+        data = lidarr_client.get_indexer_schema(implementation="polarbear")
+        assert False
+
+
+def test_get_remote_path_mapping(lidarr_client: LidarrAPI):
+    data = lidarr_client.get_remote_path_mapping()
+    assert isinstance(data, list)
+
+
+def test_get_notification(lidarr_client: LidarrAPI):
+    data = lidarr_client.get_notification()
+    assert isinstance(data, list)
+    # TODO: Get notification by ID (required add_notification first)
+
+
+def test_get_download_client(lidarr_client: LidarrAPI):
+    data = lidarr_client.get_download_client()
+    assert isinstance(data, list)
+    # TODO: Get download client by ID (required add_download_client first)
+
+
+def test_get_import_list(lidarr_client: LidarrAPI):
+    data = lidarr_client.get_import_list()
+    assert isinstance(data, list)
+
+
+def test_get_config_download_client(lidarr_client: LidarrAPI):
+    data = lidarr_client.get_config_download_client()
+    assert isinstance(data, dict)
+
+
+def test_upd_config_download_client(lidarr_client: LidarrAPI):
+    dc_config = lidarr_client.get_config_download_client()
+    dc_config["autoRedownloadFailed"] = False
+    data = lidarr_client.upd_config_download_client(data=dc_config)
+    assert isinstance(data, dict)
+    assert data["autoRedownloadFailed"] == False
+
+
+def test_get_download_client_schema(lidarr_client: LidarrAPI):
+
+    data = lidarr_client.get_download_client_schema()
+    assert isinstance(data, list)
+
+    data = lidarr_client.get_download_client_schema(
+        implementation=PyarrDownloadClientSchema.ARIA2
+    )
+    assert isinstance(data, list)
+
+    with contextlib.suppress(PyarrRecordNotFound):
+        data = lidarr_client.get_download_client_schema(implementation="polarbear")
+        assert False
+
+
+def test_get_import_list_schema(lidarr_client: LidarrAPI):
+
+    data = lidarr_client.get_import_list_schema()
+    assert isinstance(data, list)
+
+    data = lidarr_client.get_import_list_schema(
+        implementation=LidarrImportListSchema.HEADPHONES
+    )
+    assert isinstance(data, list)
+
+    with contextlib.suppress(PyarrRecordNotFound):
+        data = lidarr_client.get_import_list_schema(implementation="polarbear")
+        assert False
+
+
+def test_get_command(lidarr_client: LidarrAPI):
+    """Check get_command()"""
+
+    # No args
+    data = lidarr_client.get_command()
+    assert isinstance(data, list)
+
+    # When an ID is supplied
+    data = lidarr_client.get_command(data[0]["id"])
+    assert isinstance(data, dict)
+
+    # when an incorrect ID is supplied, not found response
+    with contextlib.suppress(PyarrResourceNotFound):
+        data = lidarr_client.get_command(4321)
+        assert False
+
+
+@pytest.mark.usefixtures
+@responses.activate
+def test_get_indexer(lidarr_mock_client: LidarrAPI):
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/indexer",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/indexer_all.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_mock_client.get_indexer()
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/indexer/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/indexer.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_mock_client.get_indexer(id_=1)
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+@responses.activate
+def test_upd_indexer(lidarr_mock_client: LidarrAPI):
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/indexer/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/indexer.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_mock_client.get_indexer(1)
+
+    responses.add(
+        responses.PUT,
+        "https://127.0.0.1:8686/api/v1/indexer/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/indexer.json"),
+        status=202,
+        match_querystring=True,
+    )
+    data = lidarr_mock_client.upd_indexer(1, data)
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+@responses.activate
+def test_get_blocklist(lidarr_mock_client: LidarrAPI):
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/blocklist",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/blocklist.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_mock_client.get_blocklist()
+    assert isinstance(data, dict)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8686/api/v1/blocklist?page=1&pageSize=10&sortKey=date&sortDirection=ascending",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/blocklist.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_mock_client.get_blocklist(
+        page=1,
+        page_size=10,
+        sort_key=PyarrBlocklistSortKey.DATE,
+        sort_dir=PyarrSortDirection.ASC,
+    )
+    assert isinstance(data, dict)
+    with contextlib.suppress(PyarrMissingArgument):
+        data = lidarr_mock_client.get_blocklist(sort_key=PyarrBlocklistSortKey.DATE)
+        assert False
+    with contextlib.suppress(PyarrMissingArgument):
+        data = lidarr_mock_client.get_blocklist(sort_dir=PyarrSortDirection.ASC)
+        assert False
+
+
+### DELETE BELOW HERE
+
+
 def test_delete_album(lidarr_client: LidarrAPI):
     album = lidarr_client.get_album()
     data = lidarr_client.delete_album(album[0]["id"])
-    assert isinstance(data, dict)
+    assert data.status_code == 200
 
 
 def test_delete_artist(lidarr_client: LidarrAPI):
@@ -628,6 +1093,30 @@ def test_del_root_folder(lidarr_client: LidarrAPI):
         assert False
 
 
+def test_del_quality_profile(lidarr_client: LidarrAPI):
+
+    quality_profiles = lidarr_client.get_quality_profile()
+
+    for profile in quality_profiles:
+        if profile["name"] == "music":
+
+            # Check folder can be deleted
+            data = lidarr_client.del_quality_profile(profile["id"])
+            assert data.status_code == 200
+
+    # Check that none existant doesnt throw error
+    data = lidarr_client.del_quality_profile(999)
+    assert data.status_code == 200
+
+
+def test_del_tag(lidarr_client: LidarrAPI):
+
+    tags = lidarr_client.get_tag()
+
+    data = lidarr_client.del_tag(tags[0]["id"])
+    assert data.status_code == 200
+
+
 @pytest.mark.usefixtures
 @responses.activate
 def test_delete_track_file(lidarr_mock_client: LidarrAPI):
@@ -640,4 +1129,75 @@ def test_delete_track_file(lidarr_mock_client: LidarrAPI):
         match_querystring=True,
     )
     data = lidarr_mock_client.delete_track_file(1)
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+@responses.activate
+def test_del_blocklist(lidarr_mock_client: LidarrAPI):
+    responses.add(
+        responses.DELETE,
+        "https://127.0.0.1:8686/api/v1/blocklist/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/delete.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_mock_client.del_blocklist(id_=1)
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+@responses.activate
+def test_del_blocklist_bulk(lidarr_mock_client: LidarrAPI):
+    responses.add(
+        responses.DELETE,
+        "https://127.0.0.1:8686/api/v1/blocklist/bulk",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/delete.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_mock_client.del_blocklist_bulk(ids=[1, 2, 3])
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+@responses.activate
+def test_del_indexer(lidarr_mock_client: LidarrAPI):
+    responses.add(
+        responses.DELETE,
+        "https://127.0.0.1:8686/api/v1/indexer/1",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/delete.json"),
+        status=200,
+        match_querystring=True,
+    )
+    data = lidarr_mock_client.del_indexer(id_=1)
+    assert isinstance(data, dict)
+
+    responses.add(
+        responses.DELETE,
+        "https://127.0.0.1:8686/api/v1/indexer/999",
+        headers={"Content-Type": "application/json"},
+        status=404,
+    )
+    with contextlib.suppress(PyarrResourceNotFound):
+        data = lidarr_mock_client.del_indexer(id_=999)
+        assert False
+
+
+@pytest.mark.usefixtures
+@responses.activate
+def test_del_queue(lidarr_mock_client: LidarrAPI):
+    responses.add(
+        responses.DELETE,
+        "https://127.0.0.1:8686/api/v1/queue/1?removeFromClient=True&blocklist=True",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/delete.json"),
+        status=200,
+        match_querystring=True,
+    )
+
+    data = lidarr_mock_client.del_queue(id_=1, remove_from_client=True, blocklist=True)
     assert isinstance(data, dict)

@@ -26,57 +26,6 @@ class SonarrAPI(BaseArrAPI):
 
         super().__init__(host_url, api_key, ver_uri)
 
-    def _series_json(
-        self,
-        tvdb_id: int,
-        quality_profile_id: int,
-        language_profile_id: int,
-        root_dir: str,
-        season_folder: bool = True,
-        monitored: bool = True,
-        ignore_episodes_with_files: bool = False,
-        ignore_episodes_without_files: bool = False,
-        search_for_missing_episodes: bool = False,
-    ) -> dict:
-        """Searches for new shows on trakt and returns Series JSON to add
-
-        Args:
-            tvdb_id (int): TVDB id to search
-            quality_profile_id (int): Database id for Quality profile
-            language_profile_id (int): Database id for language
-            root_dir (str): Root directory for media
-            season_folder (bool, optional): Specify if a season folder should be created. Defaults to True.
-            monitored (bool, optional): Specify if the series should be monitored. Defaults to True.
-            ignore_episodes_with_files (bool, optional): Ignore episodes that already have files. Defaults to False.
-            ignore_episodes_without_files (bool, optional): Ignore episodes that dont have any files. Defaults to False.
-            search_for_missing_episodes (bool, optional): Search for any missing episodes and download them. Defaults to False.
-
-        Returns:
-            dict: dictionary of series data
-        """
-        series: dict[str, Any] = self.lookup_series(id_=tvdb_id)[0]
-        if not monitored and series.get("seasons"):
-            for season in series["seasons"]:
-                season["monitored"] = False
-
-        return {
-            "title": series["title"],
-            "seasons": series["seasons"],
-            "rootFolderPath": root_dir,
-            "qualityProfileId": quality_profile_id,
-            "languageProfileId": language_profile_id,
-            "seasonFolder": season_folder,
-            "monitored": monitored,
-            "tvdbId": tvdb_id,
-            "images": series["images"],
-            "titleSlug": series["titleSlug"],
-            "addOptions": {
-                "ignoreEpisodesWithFiles": ignore_episodes_with_files,
-                "ignoreEpisodesWithoutFiles": ignore_episodes_without_files,
-                "searchForMissingEpisodes": search_for_missing_episodes,
-            },
-        }
-
     # POST /rootfolder
     def add_root_folder(
         self,
@@ -499,7 +448,7 @@ class SonarrAPI(BaseArrAPI):
     # POST /series
     def add_series(
         self,
-        tvdb_id: int,
+        series: JsonObject,
         quality_profile_id: int,
         language_profile_id: int,
         root_dir: str,
@@ -516,7 +465,7 @@ class SonarrAPI(BaseArrAPI):
             indeed make a "series". But it wont function properly in nzbdrone.
 
         Args:
-            tvdb_id (int): TVDB Id
+            series (JsonObject): A series object from `lookup()`
             quality_profile_id (int): Database id for quality profile
             language_profile_id (int): Database id for language profile
             root_dir (str): Root folder location, full path will be created from this
@@ -529,19 +478,22 @@ class SonarrAPI(BaseArrAPI):
         Returns:
             JsonObject: Dictionary of added record
         """
-        series_json = self._series_json(
-            tvdb_id,
-            quality_profile_id,
-            language_profile_id,
-            root_dir,
-            season_folder,
-            monitored,
-            ignore_episodes_with_files,
-            ignore_episodes_without_files,
-            search_for_missing_episodes,
-        )
+        if not monitored and series.get("seasons"):
+            for season in series["seasons"]:
+                season["monitored"] = False
 
-        response: dict[str, Any] = self._post("series", self.ver_uri, data=series_json)
+        series["rootFolderPath"] = root_dir
+        series["qualityProfileId"] = quality_profile_id
+        series["languageProfileId"] = language_profile_id
+        series["seasonFolder"] = season_folder
+        series["monitored"] = monitored
+        series["addOptions"] = {
+            "ignoreEpisodesWithFiles": ignore_episodes_with_files,
+            "ignoreEpisodesWithoutFiles": ignore_episodes_without_files,
+            "searchForMissingEpisodes": search_for_missing_episodes,
+        }
+
+        response: dict[str, Any] = self._post("series", self.ver_uri, data=series)
         for item in response:
             if "errorMessage" in item:
                 raise Exception(item)

@@ -268,9 +268,9 @@ class LidarrAPI(BaseArrAPI):
             params=params,
         )
 
-    def _album_json(
+    def add_album(
         self,
-        id_: str,
+        album: JsonObject,
         root_dir: str,
         quality_profile_id: Optional[int] = None,
         metadata_profile_id: Optional[int] = None,
@@ -278,22 +278,19 @@ class LidarrAPI(BaseArrAPI):
         artist_monitor: LidarrArtistMonitor = LidarrArtistMonitor.ALL_ALBUMS,
         artist_search_for_missing_albums: bool = False,
     ) -> JsonObject:
-        """Method to help build the JSON for adding an album
+        """Adds an album to Lidarr
 
         Args:
-            id_ (str): Album MusicBrainz ID
-            root_dir (str): Director to store the album.
+            album (JsonObject): Album record from `lookup()`
+            root_dir (str): Location to store music
             quality_profile_id (Optional[int], optional): Quality profile ID. Defaults to None.
             metadata_profile_id (Optional[int], optional): Metadata profile ID. Defaults to None.
-            monitored (bool, optional): Monitor the albums. Defaults to True.
-            artist_monitor (LidarrArtistMonitor, optional): Monitor the artist. Defaults to LidarrArtistMonitor.ALL_ALBUMS.
-            artist_search_for_missing_albums (bool, optional): Search for missing albums by the artist. Defaults to False.
-
-        Raises:
-            PyarrMissingProfile: Error if there are no quality or metadata profiles that match
+            monitored (bool, optional): Should the album be monitored. Defaults to True.
+            artist_monitor (LidarrArtistMonitor, optional): What level to monitor the artist. Defaults to LidarrArtistMonitor.ALL_ALBUMS.
+            artist_search_for_missing_albums (bool, optional): Search for any missing albums by this artist. Defaults to False.
 
         Returns:
-            JsonObject: Dictionary with album data
+            JsonObject: Dictionary with added record
         """
         if quality_profile_id is None:
             try:
@@ -310,7 +307,6 @@ class LidarrAPI(BaseArrAPI):
                     "There is no Metadata Profile setup"
                 ) from exception
 
-        album: dict[str, Any] = self.lookup_album(term=f"lidarr:{id_}")[0]
         album["id"] = 0
         album["artist"]["metadataProfileId"] = metadata_profile_id
         album["artist"]["qualityProfileId"] = quality_profile_id
@@ -320,42 +316,7 @@ class LidarrAPI(BaseArrAPI):
             "searchForMissingAlbums": artist_search_for_missing_albums,
         }
         album["monitored"] = monitored
-        return album
-
-    def add_album(
-        self,
-        id_: str,
-        root_dir: str,
-        quality_profile_id: Optional[int] = None,
-        metadata_profile_id: Optional[int] = None,
-        monitored: bool = True,
-        artist_monitor: LidarrArtistMonitor = LidarrArtistMonitor.ALL_ALBUMS,
-        artist_search_for_missing_albums: bool = False,
-    ) -> JsonObject:
-        """Adds an album to Lidarr
-
-        Args:
-            id_ (str): Album MusicBrainz ID
-            root_dir (str): Location to store music
-            quality_profile_id (Optional[int], optional): Quality profile ID. Defaults to None.
-            metadata_profile_id (Optional[int], optional): Metadata profile ID. Defaults to None.
-            monitored (bool, optional): Should the album be monitored. Defaults to True.
-            artist_monitor (LidarrArtistMonitor, optional): What level to monitor the artist. Defaults to LidarrArtistMonitor.ALL_ALBUMS.
-            artist_search_for_missing_albums (bool, optional): Search for any missing albums by this artist. Defaults to False.
-
-        Returns:
-            JsonObject: Dictionary with added record
-        """
-        album_json: JsonObject = self._album_json(
-            id_,
-            root_dir,
-            quality_profile_id,
-            metadata_profile_id,
-            monitored,
-            artist_monitor,
-            artist_search_for_missing_albums,
-        )
-        return self._post("album", self.ver_uri, data=album_json)
+        return self._post("album", self.ver_uri, data=album)
 
     def upd_album(self, data: JsonObject) -> JsonObject:
         """Update an album

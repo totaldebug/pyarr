@@ -44,31 +44,6 @@ def test_get_root_folder(sonarr_client: SonarrAPI):
     assert isinstance(data, dict)
 
 
-def test__series_json(sonarr_client: SonarrAPI):
-    data = sonarr_client._series_json(
-        tvdb_id=SONARR_TVDB,
-        quality_profile_id=1,
-        language_profile_id=1,
-        root_dir="/",
-        season_folder=False,
-        monitored=False,
-        ignore_episodes_with_files=True,
-        ignore_episodes_without_files=True,
-        search_for_missing_episodes=True,
-    )
-
-    assert isinstance(data, dict)
-    assert data["rootFolderPath"] == "/"
-    assert data["qualityProfileId"] == 1
-    assert data["seasonFolder"] == False
-    assert data["monitored"] == False
-    assert data["tvdbId"] == SONARR_TVDB
-    assert data["title"] == "Stranger Things"
-    assert data["addOptions"]["ignoreEpisodesWithFiles"] == True
-    assert data["addOptions"]["ignoreEpisodesWithoutFiles"] == True
-    assert data["addOptions"]["searchForMissingEpisodes"] == True
-
-
 def test_get_command(sonarr_client: SonarrAPI):
     """Check get_command()"""
 
@@ -186,15 +161,10 @@ def test_add_series(sonarr_client: SonarrAPI):
 
     quality_profile = sonarr_client.get_quality_profile()
     language_profile = sonarr_client.get_language_profile()
+    lookup_result = sonarr_client.lookup_series(id_=SONARR_TVDB)
 
     data = sonarr_client.add_series(
-        tvdb_id=SONARR_TVDB,
-        quality_profile_id=quality_profile[0]["id"],
-        language_profile_id=language_profile[0]["id"],
-        root_dir="/defaults/",
-    )
-    data = sonarr_client.add_series(
-        tvdb_id=81189,
+        series=lookup_result[0],
         quality_profile_id=quality_profile[0]["id"],
         language_profile_id=language_profile[0]["id"],
         root_dir="/defaults/",
@@ -203,7 +173,7 @@ def test_add_series(sonarr_client: SonarrAPI):
 
     with contextlib.suppress(Exception):
         data = sonarr_client.add_series(
-            tvdb_id=SONARR_TVDB,
+            eries=lookup_result[0],
             quality_profile_id=quality_profile[0]["id"],
             language_profile_id=language_profile[0]["id"],
             root_dir="/defaults/",

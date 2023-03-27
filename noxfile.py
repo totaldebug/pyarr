@@ -32,15 +32,15 @@ def test(session: Session) -> None:
 @nox.session(reuse_venv=True)
 def docker_test(session: Session) -> None:
     """Run the complete test suite"""
-    session.notify("test_docker_start")
+    session.notify("test_docker_up")
     session.notify("test_types")
     session.notify("test_style")
     session.notify("test_suite")
-    session.notify("test_docker_stop")
+    session.notify("test_docker_down")
 
 
 @nox.session(reuse_venv=True)
-def test_docker_start(session: Session) -> None:
+def test_docker_up(session: Session) -> None:
     session.run(
         "docker",
         "compose",
@@ -63,7 +63,7 @@ def test_docker_start(session: Session) -> None:
 
 
 @nox.session(reuse_venv=True)
-def test_docker_stop(session: Session) -> None:
+def test_docker_down(session: Session) -> None:
     session.run(
         "docker",
         "compose",

@@ -44,3 +44,17 @@ class LidarrArtistMonitor(str, Enum):
     EXISTING_ALBUMS = "existing"
     FIRST_ALBUM = "first"
     LATEST_ALBUM = "latest"
+
+
+class LidarrImportListSchema(str, Enum):
+    """Import List schema implementations"""
+
+    LIDARR = "LidarrImport"
+    HEADPHONES = "HeadphonesImport"
+    LAST_FM_TAG = "LastFmTag"
+    LAST_FM_USER = "LastFmUser"
+    LIDARR_LISTS = "LidarrLists"
+    MUSICBRAINZ_SERIES = "MusicBrainzSeries"
+    SPOTIFY_FOLLOWED_ARTISTS = "SpotifyFollowedArtists"
+    SPOTIFY_PLAYLIST = "SpotifyPlaylist"
+    SPOTIFY_SAVED_ALBUMS = "SpotifySavedAlbums"

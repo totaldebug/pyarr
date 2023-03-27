@@ -30,11 +30,14 @@ _build
 !.devcontainer/recommended-docker-compose.yml
 !.devcontainer/docker-compose.workspace.yml
 
-tests/arrs/sonarr/*
-!tests/arrs/sonarr/config.xml
-tests/arrs/radarr/*
-!tests/arrs/radarr/config.xml
-tests/arrs/readarr/*
-!tests/arrs/readarr/config.xml
-tests/arrs/lidarr/*
-!tests/arrs/lidarr/config.xml
+tests/docker_configs/sonarr/*
+!tests/docker_configs/sonarr/config.xml
+tests/docker_configs/radarr/*
+!tests/docker_configs/radarr/config.xml
+tests/docker_configs/readarr/*
+!tests/docker_configs/readarr/config.xml
+tests/docker_configs/lidarr/*
+!tests/docker_configs/lidarr/config.xml
+tests/docker_configs/deluge/*
+tests/docker_configs/jackett/*
+!tests/docker_configs/jackett/config/jackett/Jackett/ServerConfig.json

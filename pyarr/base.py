@@ -16,6 +16,7 @@ from pyarr.models.common import (
     PyarrNotificationSchema,
     PyarrSortDirection,
 )
+from pyarr.models.lidarr import LidarrImportListSchema
 from pyarr.types import JsonArray, JsonObject
 
 from .request_handler import RequestHandler
@@ -862,12 +863,15 @@ class BaseArrAPI(RequestHandler):
         return self._get(path, self.ver_uri)
 
     def get_import_list_schema(
-        self, implementation: Optional[PyarrImportListSchema] = None
+        self,
+        implementation: Optional[
+            Union[PyarrImportListSchema, LidarrImportListSchema]
+        ] = None,
     ) -> JsonArray:
         """Gets the schemas for the different import list sources
 
         Args:
-            implementation (Optional[PyarrImportListSchema], optional): Client implementation name. Defaults to None.
+            implementation (Optional[Union[PyarrImportListSchema, LidarrImportListSchema]], optional): Client implementation name. Defaults to None.
 
         Returns:
             JsonArray: List of dictionaries with items
