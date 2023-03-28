@@ -77,36 +77,6 @@ def test_docker_down(session: Session) -> None:
 
 
 @nox.session(reuse_venv=True)
-def test_ci(session: Session) -> None:
-    """Run the complete test suite"""
-    session.notify("test_ci_up")
-    session.notify("test_types")
-    session.notify("test_style")
-    session.notify("test_suite")
-
-
-@nox.session(reuse_venv=True)
-def test_ci_up(session: Session) -> None:
-    session.run(
-        "docker",
-        "compose",
-        "-f",
-        ".ci/docker-compose.yml",
-        "pull",
-        external=True,
-    )
-    session.run(
-        "docker",
-        "compose",
-        "-f",
-        ".ci/docker-compose.yml",
-        "up",
-        "-d",
-        external=True,
-    )
-
-
-@nox.session(reuse_venv=True)
 def test_suite(session: Session) -> None:
     """Run the Python-based test suite"""
     session.run("poetry", "install", external=True)

@@ -14,8 +14,7 @@ jobs:
   code-quality:
     name: 📊 Check code quality
     runs-on: ubuntu-latest
-    env:
-      COMPOSE_FILE: .devcontainer/docker-compose.yml
+
     steps:
       - uses: actions/checkout@v3
       - name: Setup Python 3.10
@@ -23,7 +22,7 @@ jobs:
         with:
           python-version: 3.10
       - name: Build docker images
-        run: docker compose -f .devcontainer/docker-compose.yml
+        run: docker compose -f .ci/docker-compose.yml
       - name: 🧪 Check tests are passing
         run: |
           pip install poetry nox

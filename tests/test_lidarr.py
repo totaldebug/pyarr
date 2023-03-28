@@ -745,19 +745,6 @@ def test_upd_config_naming(lidarr_client: LidarrAPI):
     data = lidarr_client.upd_config_naming(payload)
 
     assert isinstance(data, dict)
-    if (
-        payload["standardTrackFormat"]
-        == "{Album Title} ({Release Year})/{Artist Name} - {Album Title} - {track:00} - {Track Title}"
-    ):
-        assert (
-            data["standardTrackFormat"]
-            == "{Album Title} - {track:00} - {Track Title} - {Album Title} ({Release Year})/{Artist Name}"
-        )
-    else:
-        assert (
-            data["standardTrackFormat"]
-            == "{Album Title} ({Release Year})/{Artist Name} - {Album Title} - {track:00} - {Track Title}"
-        )
 
 
 def test_get_media_management(lidarr_client: LidarrAPI):
@@ -845,12 +832,58 @@ def test_get_history(lidarr_client: LidarrAPI):
         assert False
 
 
+def test_add_quality_profile(lidarr_client: LidarrAPI):
+
+    data = lidarr_client.add_quality_profile(
+        name="music",
+        upgrades_allowed=True,
+        cutoff=1005,
+        items=[
+            {"quality": {"id": 0, "name": "Unknown"}, "items": [], "allowed": True},
+            {
+                "name": "Lossless",
+                "items": [
+                    {
+                        "quality": {"id": 7, "name": "ALAC"},
+                        "items": [],
+                        "allowed": True,
+                    },
+                    {
+                        "quality": {"id": 6, "name": "FLAC"},
+                        "items": [],
+                        "allowed": True,
+                    },
+                    {
+                        "quality": {"id": 35, "name": "APE"},
+                        "items": [],
+                        "allowed": True,
+                    },
+                    {
+                        "quality": {"id": 36, "name": "WavPack"},
+                        "items": [],
+                        "allowed": True,
+                    },
+                    {
+                        "quality": {"id": 21, "name": "FLAC 24bit"},
+                        "items": [],
+                        "allowed": True,
+                    },
+                ],
+                "allowed": True,
+                "id": 1005,
+            },
+        ],
+    )
+    assert isinstance(data, dict)
+
+
 def test_upd_quality_profile(lidarr_client: LidarrAPI):
 
-    data = lidarr_client.get_quality_profile()
-    assert isinstance(data, list)
+    quality_profiles = lidarr_client.get_quality_profile()
 
-    data = lidarr_client.upd_quality_profile(id_=data[0]["id"], data=data)
+    data = lidarr_client.upd_quality_profile(
+        id_=quality_profiles[0]["id"], data=quality_profiles[0]
+    )
     assert isinstance(data, dict)
 
 

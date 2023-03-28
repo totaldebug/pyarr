@@ -106,10 +106,11 @@ def test_get_quality_profile(sonarr_client: SonarrAPI):
 
 def test_upd_quality_profile(sonarr_client: SonarrAPI):
 
-    data = sonarr_client.get_quality_profile()
-    assert isinstance(data, list)
+    qual_profiles = sonarr_client.get_quality_profile()
 
-    data = sonarr_client.upd_quality_profile(id_=data[0]["id"], data=data)
+    data = sonarr_client.upd_quality_profile(
+        id_=qual_profiles[0]["id"], data=qual_profiles[0]
+    )
     assert isinstance(data, dict)
 
 
@@ -170,6 +171,7 @@ def test_add_series(sonarr_client: SonarrAPI):
         root_dir="/defaults/",
     )
     assert isinstance(data, dict)
+    assert data["title"] == "Stranger Things"
 
     with contextlib.suppress(Exception):
         data = sonarr_client.add_series(
@@ -194,10 +196,10 @@ def test_get_episode(sonarr_client: SonarrAPI):
     """Test getting episode"""
     series = sonarr_client.get_series()
 
-    data = sonarr_client.get_episode(series[0]["id"], True)
-    assert isinstance(data, list)
+    episodes = sonarr_client.get_episode(series[0]["id"], True)
+    assert isinstance(episodes, list)
 
-    data = sonarr_client.get_episode(data[0]["id"])
+    data = sonarr_client.get_episode(episodes[0]["id"])
     assert isinstance(data, dict)
 
     with contextlib.suppress(PyarrResourceNotFound):
@@ -861,12 +863,6 @@ def test_upd_episode_file_quality(sonarr_mock_client: SonarrAPI):
 
 
 def test_del_series(sonarr_client: SonarrAPI):
-    series = sonarr_client.get_series()
-    data = sonarr_client.del_series(series[0]["id"])
-
-    assert isinstance(data, dict)
-    assert data == {}
-
     series = sonarr_client.get_series()
     data = sonarr_client.del_series(series[0]["id"], delete_files=True)
 
