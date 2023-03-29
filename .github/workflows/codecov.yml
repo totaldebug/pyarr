@@ -1,0 +1,16 @@
+name: Codecov
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  code-coverage:
+    name: 📊 Check code coverage
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
