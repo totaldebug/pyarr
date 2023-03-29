@@ -119,33 +119,31 @@ class LidarrAPI(BaseArrAPI):
             params={"mbId": id_} if isinstance(id_, str) else None,
         )
 
-    def _artist_json(
+    def add_artist(
         self,
-        id_: str,
+        artist: JsonObject,
         root_dir: str,
         quality_profile_id: Optional[int] = None,
         metadata_profile_id: Optional[int] = None,
         monitored: bool = True,
         artist_monitor: LidarrArtistMonitor = LidarrArtistMonitor.ALL_ALBUMS,
         artist_search_for_missing_albums: bool = False,
-    ) -> dict:
-        """Method to help build the JSON for adding an artist
+    ) -> JsonObject:
+        """Adds an artist from the lookup result
 
         Args:
-            id_ (str): Lidarr or MusicBrainz ID
-            root_dir (str): Root directory for music
-            quality_profile_id (Optional[int], optional): Quality profile Id. Defaults to None.
+            artist (JsonObject): Artist record from lookup()
+            root_dir (str): Directory for music to be stored
+            quality_profile_id (Optional[int], optional): Quality profile ID. Defaults to None.
             metadata_profile_id (Optional[int], optional): Metadata profile ID. Defaults to None.
-            monitored (bool, optional): Should this be monitored. Defaults to True.
-            artist_monitor (LidarrArtistMonitor, optional): Should the artist be monitored. Defaults to LidarrArtistMonitor.ALL_ALBUMS.
-            artist_search_for_missing_albums (bool, optional): Should we search for missing albums. Defaults to False.
-
-        Raises:
-            PyarrMissingProfile: Raised when quality or metadata profile are missing
+            monitored (bool, optional): Monitor the artist. Defaults to True.
+            artist_monitor (LidarrArtistMonitor, optional): Monitor the artist. Defaults to LidarrArtistMonitor.ALL_ALBUMS.
+            artist_search_for_missing_albums (bool, optional): Search for missing albums by this artist. Defaults to False.
 
         Returns:
-            dict[str, Any]: Dictionary with artist information
+            JsonObject: Dictonary with added record
         """
+
         if quality_profile_id is None:
             try:
                 quality_profile_id = self.get_quality_profile()[0]["id"]
@@ -161,7 +159,6 @@ class LidarrAPI(BaseArrAPI):
                     "There is no Metadata Profile setup"
                 ) from exception
 
-        artist: dict[str, Any] = self.lookup_artist(term=f"lidarr:{id_}")[0]
         artist["id"] = 0
         artist["metadataProfileId"] = metadata_profile_id
         artist["qualityProfileId"] = quality_profile_id
@@ -172,44 +169,7 @@ class LidarrAPI(BaseArrAPI):
         }
         artist["monitored"] = monitored
 
-        return artist
-
-    def add_artist(
-        self,
-        id_: str,
-        root_dir: str,
-        quality_profile_id: Optional[int] = None,
-        metadata_profile_id: Optional[int] = None,
-        monitored: bool = True,
-        artist_monitor: LidarrArtistMonitor = LidarrArtistMonitor.ALL_ALBUMS,
-        artist_search_for_missing_albums: bool = False,
-    ) -> JsonObject:
-        """Adds an artist based on a search term, must be artist name or album/single
-        by lidarr guid
-
-        Args:
-            id_ (str): Artist MusicBrainz ID
-            root_dir (str): Directory for music to be stored
-            quality_profile_id (Optional[int], optional): Quality profile ID. Defaults to None.
-            metadata_profile_id (Optional[int], optional): Metadata profile ID. Defaults to None.
-            monitored (bool, optional): Monitor the artist. Defaults to True.
-            artist_monitor (LidarrArtistMonitor, optional): Monitor the artist. Defaults to LidarrArtistMonitor.ALL_ALBUMS.
-            artist_search_for_missing_albums (bool, optional): Search for missing albums by this artist. Defaults to False.
-
-        Returns:
-            JsonObject: Dictonary with added record
-        """
-
-        artist_json = self._artist_json(
-            id_,
-            root_dir,
-            quality_profile_id,
-            metadata_profile_id,
-            monitored,
-            artist_monitor,
-            artist_search_for_missing_albums,
-        )
-        return self._post("artist", self.ver_uri, data=artist_json)
+        return self._post("artist", self.ver_uri, data=artist)
 
     def upd_artist(self, data: JsonObject) -> JsonObject:
         """Update an existing artist

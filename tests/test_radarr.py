@@ -23,7 +23,13 @@ from pyarr.models.common import (
     PyarrNotificationSchema,
     PyarrSortDirection,
 )
-from pyarr.models.radarr import RadarrCommands, RadarrEventType, RadarrSortKeys
+from pyarr.models.radarr import (
+    RadarrAvailabilityType,
+    RadarrCommands,
+    RadarrEventType,
+    RadarrMonitorType,
+    RadarrSortKeys,
+)
 from pyarr.radarr import RadarrAPI
 from pyarr.types import JsonArray, JsonObject
 
@@ -50,35 +56,6 @@ def test_get_root_folder(radarr_client: RadarrAPI):
 
     data = radarr_client.get_root_folder(data[0]["id"])
     assert isinstance(data, dict)
-
-
-def test__movie_json(radarr_client: RadarrAPI):
-    data = radarr_client._movie_json(
-        id_=RADARR_IMDB,
-        root_dir="/",
-        quality_profile_id=1,
-        monitored=False,
-        search_for_movie=False,
-    )
-    assert isinstance(data, dict)
-    assert data["rootFolderPath"] == "/"
-    assert data["qualityProfileId"] == 1
-    assert data["monitored"] == False
-
-    with contextlib.suppress(DeprecationWarning):
-        data = radarr_client._movie_json(
-            id_=RADARR_IMDB, root_dir="/", quality_profile_id=1, tmdb=True
-        )
-
-    with contextlib.suppress(PyarrRecordNotFound):
-        data = radarr_client._movie_json(
-            id_="tt123d",
-            root_dir="/",
-            quality_profile_id=1,
-            monitored=False,
-            search_for_movie=False,
-        )
-        assert False
 
 
 def test_get_command(radarr_client: RadarrAPI):
@@ -176,45 +153,19 @@ def test_lookup_movie_by_imdb_id(radarr_client: RadarrAPI):
 
 
 def test_add_movie(radarr_client: RadarrAPI):
+    quality_profiles = radarr_client.get_quality_profile()
+    movie_imdb = radarr_client.lookup_movie(term=f"imdb:{RADARR_IMDB}")
 
     data = radarr_client.add_movie(
-        id_=RADARR_IMDB,
-        root_dir="/",
-        quality_profile_id=1,
+        movie=movie_imdb[0],
+        root_dir="/defaults/",
+        quality_profile_id=quality_profiles[0]["id"],
         monitored=False,
         search_for_movie=False,
-    )
-    data = radarr_client.add_movie(
-        id_=RADARR_IMDB_LIST[0],
-        root_dir="/",
-        quality_profile_id=1,
-        monitored=False,
-        search_for_movie=False,
+        monitor=RadarrMonitorType.MOVIE_ONLY,
+        minimum_availability=RadarrAvailabilityType.ANNOUNCED,
     )
     assert isinstance(data, dict)
-    data = radarr_client.add_movie(
-        id_=RADARR_IMDB_LIST[1],
-        root_dir="/",
-        quality_profile_id=1,
-        monitored=False,
-        search_for_movie=False,
-    )
-    assert isinstance(data, dict)
-    assert isinstance(data, dict)
-    with contextlib.suppress(DeprecationWarning):
-        data = radarr_client.add_movie(
-            id_=RADARR_TMDB, root_dir="/", quality_profile_id=1, tmdb=True
-        )
-
-    with contextlib.suppress(PyarrRecordNotFound):
-        data = radarr_client.add_movie(
-            id_="tt123d",
-            root_dir="/",
-            quality_profile_id=1,
-            monitored=False,
-            search_for_movie=False,
-        )
-        assert False
 
 
 def test_get_movie(radarr_client: RadarrAPI):

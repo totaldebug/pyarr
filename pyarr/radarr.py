@@ -6,9 +6,15 @@ from requests import Response
 from pyarr.types import JsonArray, JsonObject
 
 from .base import BaseArrAPI
-from .exceptions import PyarrMissingArgument, PyarrRecordNotFound
+from .exceptions import PyarrMissingArgument
 from .models.common import PyarrSortDirection
-from .models.radarr import RadarrCommands, RadarrEventType, RadarrSortKeys
+from .models.radarr import (
+    RadarrAvailabilityType,
+    RadarrCommands,
+    RadarrEventType,
+    RadarrMonitorType,
+    RadarrSortKeys,
+)
 
 
 class RadarrAPI(BaseArrAPI):
@@ -28,59 +34,6 @@ class RadarrAPI(BaseArrAPI):
 
         ver_uri = "/v3"
         super().__init__(host_url, api_key, ver_uri)
-
-    def _movie_json(
-        self,
-        id_: Union[str, int],
-        root_dir: str,
-        quality_profile_id: int,
-        monitored: bool = True,
-        search_for_movie: bool = True,
-        tmdb: Optional[bool] = None,
-    ) -> dict:
-        """Searches for movie on tmdb and returns Movie json to add.
-
-        Args:
-            id_ (Union[str, int]): imdb or tmdb id
-            root_dir (str): location of the root DIR
-            quality_profile_id (int): ID of the quality profile the movie will use
-            monitored (bool, optional): should the movie be monitored. Defaults to True.
-            search_for_movie (bool, optional): Should we search for the movie. Defaults to True.
-            tmdb (bool, optional): Not used, deprecated. Defaults to True.
-
-        Raises:
-            PyarrRecordNotFound: Movie doesnt exist
-
-        Returns:
-            dict: Dictionary containing movie information
-        """
-        if tmdb is not None:
-            warn(
-                "Argument tmdb is no longer used and will be removed in a future release.",
-                DeprecationWarning,
-                stacklevel=2,
-            )
-        if isinstance(id_, int):
-            movies: list[dict[str, Any]] = self.lookup_movie(term=f"tmdb:{id_}")
-        else:
-            movies = self.lookup_movie(term=f"imdb:{id_}")
-        if movies:
-            movie = movies[0]
-
-            return {
-                "title": movie["title"],
-                "rootFolderPath": root_dir,
-                "qualityProfileId": quality_profile_id,
-                "year": movie["year"],
-                "tmdbId": movie["tmdbId"],
-                "images": movie["images"],
-                "titleSlug": movie["titleSlug"],
-                "monitored": monitored,
-                "addOptions": {"searchForMovie": search_for_movie},
-            }
-
-        else:
-            raise PyarrRecordNotFound("Movie Doesn't Exist")
 
     ## CONFIG
     # POST /rootfolder
@@ -129,38 +82,41 @@ class RadarrAPI(BaseArrAPI):
     # POST /movie
     def add_movie(
         self,
-        id_: Union[str, int],
+        movie: JsonObject,
         root_dir: str,
         quality_profile_id: int,
         monitored: bool = True,
         search_for_movie: bool = True,
-        tmdb: Optional[bool] = None,
+        monitor: RadarrMonitorType = RadarrMonitorType.MOVIE_ONLY,
+        minimum_availability: RadarrAvailabilityType = RadarrAvailabilityType.ANNOUNCED,
+        tags: list[int] = [],
     ) -> JsonObject:
         """Adds a movie to the database
 
         Args:
-            id_ (Union[str, int]): IMDB or TMDB ID
+            movie (JsonObject): Movie record from `lookup_movie()`
             root_dir (str): Location of the root DIR
             quality_profile_id (int): ID of the quality profile the movie will use
             monitored (bool, optional): Should the movie be monitored. Defaults to True.
             search_for_movie (bool, optional): Should we search for the movie. Defaults to True.
-            tmdb (Optional[bool], optional): Not in use, Deprecated. Defaults to None.
+            monitor (RadarrMonitorType, optional): Monitor movie or collection. Defaults to RadarrMonitorType.MOVIE_ONLY.
+            minimum_availability (RadarrAvailabilityType, optional): Availability of movie. Defaults to RadarrAvailabilityType.ANNOUNCED
+            tags (list[int], optional): List of tag id's. Defaults to [].
 
         Returns:
             JsonObject: Dictonary with added record
         """
+        movie["rootFolderPath"] = root_dir
+        movie["qualityProfileId"] = quality_profile_id
+        movie["monitored"] = monitored
+        movie["minimumAvailability"] = minimum_availability
+        movie["addOptions"] = {
+            "monitor": monitor,
+            "searchForMovie": search_for_movie,
+        }
+        movie["tags"] = tags
 
-        if tmdb:
-            warn(
-                "Argument tmdb is no longer used and will be removed in a future release.",
-                DeprecationWarning,
-                stacklevel=2,
-            )
-        movie_json = self._movie_json(
-            id_, root_dir, quality_profile_id, monitored, search_for_movie
-        )
-
-        return self._post("movie", self.ver_uri, data=movie_json)
+        return self._post("movie", self.ver_uri, data=movie)
 
     # PUT /movie
     def upd_movie(

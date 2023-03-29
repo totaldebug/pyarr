@@ -78,3 +78,19 @@ class RadarrEventType(str, Enum):
     MOVIE_FOLDER_IMPORTED = "movieFolderImported"
     MOVIE_FILE_RENAMED = "movieFileRenamed"
     DOWNLOAD_IGNORED = "downloadIgnored"
+
+
+class RadarrMonitorType(str, Enum):
+    """Radarr monitor types"""
+
+    MOVIE_ONLY = "movieOnly"
+    MOVIE_AND_COLLECTION = "movieAndCollection"
+    NONE = "none"
+
+
+class RadarrAvailabilityType(str, Enum):
+    """Radarr availability types"""
+
+    ANNOUNCED = "announced"
+    IN_CINEMAS = "inCinemas"
+    RELEASED = "released"

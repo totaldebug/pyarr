@@ -80,35 +80,26 @@ def test_lookup_album(lidarr_client: LidarrAPI):
     assert isinstance(data, list)
 
 
-def test__artist_json(lidarr_client: LidarrAPI):
-    qual_profile = lidarr_client.get_quality_profile()
-    meta_profile = lidarr_client.get_metadata_profile()
-
-    data = lidarr_client._artist_json(
-        id_=LIDARR_MUSICBRAINZ_ARTIST_ID,
-        root_dir="/",
-        quality_profile_id=qual_profile[0]["id"],
-        metadata_profile_id=meta_profile[0]["id"],
-        monitored=False,
-        artist_monitor=LidarrArtistMonitor.FIRST_ALBUM,
-        artist_search_for_missing_albums=False,
-    )
-    assert isinstance(data, dict)
-
-
 def test_add_artist(lidarr_client: LidarrAPI):
     qual_profile = lidarr_client.get_quality_profile()
     meta_profile = lidarr_client.get_metadata_profile()
+    items = lidarr_client.lookup(term=f"lidarr:{LIDARR_MUSICBRAINZ_ARTIST_ID}")
 
-    data = lidarr_client.add_artist(
-        id_=LIDARR_MUSICBRAINZ_ARTIST_ID,
-        root_dir="/",
-        quality_profile_id=qual_profile[0]["id"],
-        metadata_profile_id=meta_profile[0]["id"],
-        monitored=False,
-        artist_monitor=LidarrArtistMonitor.LATEST_ALBUM,
-        artist_search_for_missing_albums=False,
-    )
+    for item in items:
+        if "artist" in item:
+            artist = item["artist"]
+            data = lidarr_client.add_artist(
+                artist=artist,
+                root_dir="/",
+                quality_profile_id=qual_profile[0]["id"],
+                metadata_profile_id=meta_profile[0]["id"],
+                monitored=False,
+                artist_monitor=LidarrArtistMonitor.LATEST_ALBUM,
+                artist_search_for_missing_albums=False,
+            )
+            break
+        if item == items[-1]:
+            assert False
     assert isinstance(data, dict)
 
 

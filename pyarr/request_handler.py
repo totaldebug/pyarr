@@ -229,7 +229,8 @@ def _process_response(
         JSON: Array
     """
     if res.status_code == 400:
-        raise PyarrBadRequest(f"Bad Request, possibly a bug. {str(res.request.body)}")
+        raise PyarrBadRequest(f"Bad Request, possibly a bug. {str(res.content)}")
+
     if res.status_code == 401:
         raise PyarrUnauthorizedError(
             "Unauthorized. Please ensure valid API Key is used.", {}
