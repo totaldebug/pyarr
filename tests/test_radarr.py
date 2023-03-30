@@ -11,35 +11,9 @@ from pyarr.exceptions import (
     PyarrRecordNotFound,
     PyarrResourceNotFound,
 )
-from pyarr.models.common import (
-    PyarrBlocklistSortKey,
-    PyarrDownloadClientSchema,
-    PyarrHistorySortKey,
-    PyarrImportListSchema,
-    PyarrIndexerSchema,
-    PyarrLogFilterKey,
-    PyarrLogFilterValue,
-    PyarrLogSortKey,
-    PyarrNotificationSchema,
-    PyarrSortDirection,
-)
-from pyarr.models.radarr import (
-    RadarrAvailabilityType,
-    RadarrCommands,
-    RadarrEventType,
-    RadarrMonitorType,
-    RadarrSortKeys,
-)
 from pyarr.radarr import RadarrAPI
-from pyarr.types import JsonArray, JsonObject
 
-from tests import (
-    RADARR_IMDB,
-    RADARR_IMDB_LIST,
-    RADARR_MOVIE_TERM,
-    RADARR_TMDB,
-    load_fixture,
-)
+from tests import RADARR_IMDB, RADARR_MOVIE_TERM, RADARR_TMDB, load_fixture
 from tests.conftest import radarr_client, radarr_mock_client
 
 
@@ -77,23 +51,21 @@ def test_get_command(radarr_client: RadarrAPI):
 
 def test_post_command(radarr_client: RadarrAPI):
 
-    data = radarr_client.post_command(name=RadarrCommands.RESCAN_MOVIE, movieid=1)
+    data = radarr_client.post_command(name="RescanMovie", movieid=1)
     assert isinstance(data, dict)
-    data = radarr_client.post_command(name=RadarrCommands.REFRESH_MOVIE, seriesId=1)
+    data = radarr_client.post_command(name="RefreshMovie", seriesId=1)
     assert isinstance(data, dict)
-    data = radarr_client.post_command(name=RadarrCommands.MISSING_MOVIES_SEARCH)
+    data = radarr_client.post_command(name="MissingMoviesSearch")
     assert isinstance(data, dict)
-    data = radarr_client.post_command(name=RadarrCommands.DOWNLOADED_MOVIES_SCAN)
+    data = radarr_client.post_command(name="DownloadedMoviesScan")
     assert isinstance(data, dict)
-    data = radarr_client.post_command(name=RadarrCommands.RENAME_FILES, files=[1, 2, 3])
+    data = radarr_client.post_command(name="RenameFiles", files=[1, 2, 3])
     assert isinstance(data, dict)
-    data = radarr_client.post_command(name=RadarrCommands.RENAME_FILES)
+    data = radarr_client.post_command(name="RenameFiles")
     assert isinstance(data, dict)
-    data = radarr_client.post_command(
-        name=RadarrCommands.RENAME_MOVIE, seriesIds=[1, 2, 3]
-    )
+    data = radarr_client.post_command(name="RenameMovie", seriesIds=[1, 2, 3])
     assert isinstance(data, dict)
-    data = radarr_client.post_command(name=RadarrCommands.BACKUP)
+    data = radarr_client.post_command(name="Backup")
     assert isinstance(data, dict)
 
 
@@ -162,8 +134,8 @@ def test_add_movie(radarr_client: RadarrAPI):
         quality_profile_id=quality_profiles[0]["id"],
         monitored=False,
         search_for_movie=False,
-        monitor=RadarrMonitorType.MOVIE_ONLY,
-        minimum_availability=RadarrAvailabilityType.ANNOUNCED,
+        monitor="movieOnly",
+        minimum_availability="announced",
     )
     assert isinstance(data, dict)
 
@@ -234,17 +206,17 @@ def test_get_history(radarr_client: RadarrAPI):
     data = radarr_client.get_history(
         page=1,
         page_size=10,
-        sort_key=PyarrHistorySortKey.TIME,
-        sort_dir=PyarrSortDirection.DEFAULT,
+        sort_key="time",
+        sort_dir="default",
     )
     assert isinstance(data, dict)
 
     with contextlib.suppress(PyarrMissingArgument):
-        data = radarr_client.get_history(sort_key=PyarrHistorySortKey.TIME)
+        data = radarr_client.get_history(sort_key="time")
         assert False
 
     with contextlib.suppress(PyarrMissingArgument):
-        data = radarr_client.get_history(sort_dir=PyarrSortDirection.DESC)
+        data = radarr_client.get_history(sort_dir="descending")
         assert False
 
 
@@ -308,24 +280,24 @@ def test_get_log(radarr_client: RadarrAPI):
     data = radarr_client.get_log(
         page=10,
         page_size=10,
-        sort_key=PyarrLogSortKey.ID,
-        sort_dir=PyarrSortDirection.DESC,
-        filter_key=PyarrLogFilterKey.LEVEL,
-        filter_value=PyarrLogFilterValue.ALL,
+        sort_key="Id",
+        sort_dir="descending",
+        filter_key="level",
+        filter_value="all",
     )
     assert isinstance(data, dict)
 
     with contextlib.suppress(PyarrMissingArgument):
-        data = radarr_client.get_log(sort_key=PyarrLogSortKey.ID)
+        data = radarr_client.get_log(sort_key="Id")
         assert False
     with contextlib.suppress(PyarrMissingArgument):
-        data = radarr_client.get_log(sort_dir=PyarrSortDirection.DESC)
+        data = radarr_client.get_log(sort_dir="descending")
         assert False
     with contextlib.suppress(PyarrMissingArgument):
-        data = radarr_client.get_log(filter_key=PyarrLogFilterKey.LEVEL)
+        data = radarr_client.get_log(filter_key="level")
         assert False
     with contextlib.suppress(PyarrMissingArgument):
-        data = radarr_client.get_log(filter_value=PyarrLogFilterValue.ALL)
+        data = radarr_client.get_log(filter_value="all")
         assert False
 
 
@@ -425,9 +397,7 @@ def test_get_notification_schema(radarr_client: RadarrAPI):
     data = radarr_client.get_notification_schema()
     assert isinstance(data, list)
 
-    data = radarr_client.get_notification_schema(
-        implementation=PyarrNotificationSchema.BOXCAR
-    )
+    data = radarr_client.get_notification_schema(implementation="Boxcar")
     assert isinstance(data, list)
 
     with contextlib.suppress(PyarrRecordNotFound):
@@ -472,9 +442,7 @@ def test_get_download_client_schema(radarr_client: RadarrAPI):
     data = radarr_client.get_download_client_schema()
     assert isinstance(data, list)
 
-    data = radarr_client.get_download_client_schema(
-        implementation=PyarrDownloadClientSchema.ARIA2
-    )
+    data = radarr_client.get_download_client_schema(implementation="Aria2")
     assert isinstance(data, list)
 
     with contextlib.suppress(PyarrRecordNotFound):
@@ -487,9 +455,7 @@ def test_get_import_list_schema(radarr_client: RadarrAPI):
     data = radarr_client.get_import_list_schema()
     assert isinstance(data, list)
 
-    data = radarr_client.get_import_list_schema(
-        implementation=PyarrImportListSchema.PLEX
-    )
+    data = radarr_client.get_import_list_schema(implementation="PlexImport")
     assert isinstance(data, list)
 
     with contextlib.suppress(PyarrRecordNotFound):
@@ -568,11 +534,9 @@ def test_get_custom_filter(radarr_client: RadarrAPI):
 def test_get_indexer_schema(radarr_client: RadarrAPI):
     data = radarr_client.get_indexer_schema()
     assert isinstance(data, list)
-    data = radarr_client.get_indexer_schema(
-        implementation=PyarrIndexerSchema.IP_TORRENTS
-    )
+    data = radarr_client.get_indexer_schema(implementation="IPTorrents")
     assert isinstance(data, list)
-    assert data[0]["implementation"] == PyarrIndexerSchema.IP_TORRENTS
+    assert data[0]["implementation"] == "IPTorrents"
 
     with contextlib.suppress(PyarrRecordNotFound):
         data = radarr_client.get_indexer_schema(implementation="polarbear")
@@ -633,7 +597,7 @@ def test_upd_indexer(radarr_mock_client: RadarrAPI):
 
 
 # def test_add_notification(radarr_client: RadarrAPI):
-#    schema = radarr_client.get_notification_schema(implementation=PyarrNotificationSchema.EMAIL)
+#    schema = radarr_client.get_notification_schema(implementation="Email")
 #
 #    schema["name"] = "Testing123"
 #    for schema_config in schema["fields"]:
@@ -656,9 +620,7 @@ def test_get_movie_history(radarr_client: RadarrAPI):
     data = radarr_client.get_movie_history(id_=movie[0]["id"])
     assert isinstance(data, list)
 
-    data = radarr_client.get_movie_history(
-        id_=movie[0]["id"], event_type=RadarrEventType.UNKNOWN
-    )
+    data = radarr_client.get_movie_history(id_=movie[0]["id"], event_type="unknown")
     assert isinstance(data, list)
 
 
@@ -707,15 +669,15 @@ def test_get_blocklist(radarr_mock_client: RadarrAPI):
     data = radarr_mock_client.get_blocklist(
         page=1,
         page_size=10,
-        sort_key=PyarrBlocklistSortKey.DATE,
-        sort_dir=PyarrSortDirection.ASC,
+        sort_key="date",
+        sort_dir="ascending",
     )
     assert isinstance(data, dict)
     with contextlib.suppress(PyarrMissingArgument):
-        data = radarr_mock_client.get_blocklist(sort_key=PyarrBlocklistSortKey.DATE)
+        data = radarr_mock_client.get_blocklist(sort_key="date")
         assert False
     with contextlib.suppress(PyarrMissingArgument):
-        data = radarr_mock_client.get_blocklist(sort_dir=PyarrSortDirection.ASC)
+        data = radarr_mock_client.get_blocklist(sort_dir="ascending")
         assert False
 
 
@@ -744,17 +706,17 @@ def test_get_queue(radarr_mock_client: RadarrAPI):
     data = radarr_mock_client.get_queue(
         page=1,
         page_size=20,
-        sort_key=RadarrSortKeys.TIMELEFT,
-        sort_dir=PyarrSortDirection.DEFAULT,
+        sort_key="timeleft",
+        sort_dir="default",
         include_unknown_movie_items=False,
     )
     assert isinstance(data, dict)
 
     with contextlib.suppress(PyarrMissingArgument):
-        data = radarr_mock_client.get_queue(sort_key=RadarrSortKeys.TIMELEFT)
+        data = radarr_mock_client.get_queue(sort_key="timeleft")
         assert False
     with contextlib.suppress(PyarrMissingArgument):
-        data = radarr_mock_client.get_queue(sort_dir=PyarrSortDirection.DEFAULT)
+        data = radarr_mock_client.get_queue(sort_dir="default")
         assert False
 
 

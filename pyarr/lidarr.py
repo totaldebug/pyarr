@@ -126,7 +126,7 @@ class LidarrAPI(BaseArrAPI):
         quality_profile_id: Optional[int] = None,
         metadata_profile_id: Optional[int] = None,
         monitored: bool = True,
-        artist_monitor: LidarrArtistMonitor = LidarrArtistMonitor.ALL_ALBUMS,
+        artist_monitor: LidarrArtistMonitor = "all",
         artist_search_for_missing_albums: bool = False,
     ) -> JsonObject:
         """Adds an artist from the lookup result
@@ -137,7 +137,7 @@ class LidarrAPI(BaseArrAPI):
             quality_profile_id (Optional[int], optional): Quality profile ID. Defaults to None.
             metadata_profile_id (Optional[int], optional): Metadata profile ID. Defaults to None.
             monitored (bool, optional): Monitor the artist. Defaults to True.
-            artist_monitor (LidarrArtistMonitor, optional): Monitor the artist. Defaults to LidarrArtistMonitor.ALL_ALBUMS.
+            artist_monitor (LidarrArtistMonitor, optional): Monitor the artist. Defaults to "all".
             artist_search_for_missing_albums (bool, optional): Search for missing albums by this artist. Defaults to False.
 
         Returns:
@@ -235,7 +235,7 @@ class LidarrAPI(BaseArrAPI):
         quality_profile_id: Optional[int] = None,
         metadata_profile_id: Optional[int] = None,
         monitored: bool = True,
-        artist_monitor: LidarrArtistMonitor = LidarrArtistMonitor.ALL_ALBUMS,
+        artist_monitor: LidarrArtistMonitor = "all",
         artist_search_for_missing_albums: bool = False,
     ) -> JsonObject:
         """Adds an album to Lidarr
@@ -246,7 +246,7 @@ class LidarrAPI(BaseArrAPI):
             quality_profile_id (Optional[int], optional): Quality profile ID. Defaults to None.
             metadata_profile_id (Optional[int], optional): Metadata profile ID. Defaults to None.
             monitored (bool, optional): Should the album be monitored. Defaults to True.
-            artist_monitor (LidarrArtistMonitor, optional): What level to monitor the artist. Defaults to LidarrArtistMonitor.ALL_ALBUMS.
+            artist_monitor (LidarrArtistMonitor, optional): What level to monitor the artist. Defaults to "all".
             artist_search_for_missing_albums (bool, optional): Search for any missing albums by this artist. Defaults to False.
 
         Returns:

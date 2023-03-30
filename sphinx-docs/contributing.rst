@@ -18,7 +18,7 @@ Setup your environment
 
 #. Fork the `repository <https://github.com/totaldebug/pyarr>`_
 #. Open the repository in VSCode
-#. Copy the .devcontainer/recommended-*** files and remove the "recommended-" text
+#. Copy the ``.devcontainer/recommended-***`` files and remove the "recommended-" text
 #. Update the renamed ``recommended-***`` files to suite your environment
 #. Press ``ctrl + shift + p`` and select ``Remote-Container: Reopen in Container``
 #. Once loaded you can begin modification of the module or Documentation
@@ -37,6 +37,7 @@ prior to the pull request being submitted.
 If you are not using devcontainer please register the pre-commit-config:
 
 .. code:: bash
+   
    poetry run pre-commit install
 
 A few guidelines for approval:

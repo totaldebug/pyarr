@@ -391,7 +391,7 @@ class ReadarrAPI(BaseArrAPI):
         metadata_profile_id: Optional[int] = None,
         monitored: bool = True,
         search_for_new_book: bool = False,
-        author_monitor: ReadarrAuthorMonitor = ReadarrAuthorMonitor.ALL,
+        author_monitor: ReadarrAuthorMonitor = "all",
         author_search_for_missing_books: bool = False,
     ) -> JsonObject:
         """Add a new book and its associated author (if not already added).
@@ -403,7 +403,7 @@ class ReadarrAPI(BaseArrAPI):
             metadata_profile_id (Optional[int], optional): Metadata Profile. Defaults to first found profile.
             monitored (bool, optional): Monitor the book. Defaults to True.
             search_for_new_book (bool, optional): Look for new books. Defaults to False.
-            author_monitor (ReadarrAuthorMonitor, optional): Monitor the author for books. Defaults to ReadarrAuthorMonitor.ALL.
+            author_monitor (ReadarrAuthorMonitor, optional): Monitor the author for books. Defaults to "all".
             author_search_for_missing_books (bool, optional): Search missing books by the author. Defaults to False.
 
         Returns:
@@ -502,7 +502,7 @@ class ReadarrAPI(BaseArrAPI):
         quality_profile_id: Optional[int] = None,
         metadata_profile_id: Optional[int] = None,
         monitored: bool = True,
-        author_monitor: ReadarrAuthorMonitor = ReadarrAuthorMonitor.NONE,
+        author_monitor: ReadarrAuthorMonitor = "none",
         author_search_for_missing_books: bool = False,
     ) -> JsonObject:
         """Adds an author based on data from lookup, must be an author record
@@ -513,7 +513,7 @@ class ReadarrAPI(BaseArrAPI):
             quality_profile_id (int, optional): Quality profile id. Defaults to 1.
             metadata_profile_id (int, optional): Metadata profile id. Defaults to 0.
             monitored (bool, optional): Should the author be monitored. Defaults to True.
-            author_monitor (ReadarrAuthorMonitor, optional): What level  should the author be monitored. Defaults to "ReadarrAuthorMonitor.NONE".
+            author_monitor (ReadarrAuthorMonitor, optional): What level  should the author be monitored. Defaults to "none".
             author_search_for_missing_books (bool, optional): Search for any missing books by the author. Defaults to False.
 
         Returns:

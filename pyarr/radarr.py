@@ -13,7 +13,7 @@ from .models.radarr import (
     RadarrCommands,
     RadarrEventType,
     RadarrMonitorType,
-    RadarrSortKeys,
+    RadarrSortKey,
 )
 
 
@@ -87,8 +87,8 @@ class RadarrAPI(BaseArrAPI):
         quality_profile_id: int,
         monitored: bool = True,
         search_for_movie: bool = True,
-        monitor: RadarrMonitorType = RadarrMonitorType.MOVIE_ONLY,
-        minimum_availability: RadarrAvailabilityType = RadarrAvailabilityType.ANNOUNCED,
+        monitor: RadarrMonitorType = "movieOnly",
+        minimum_availability: RadarrAvailabilityType = "announced",
         tags: list[int] = [],
     ) -> JsonObject:
         """Adds a movie to the database
@@ -99,8 +99,8 @@ class RadarrAPI(BaseArrAPI):
             quality_profile_id (int): ID of the quality profile the movie will use
             monitored (bool, optional): Should the movie be monitored. Defaults to True.
             search_for_movie (bool, optional): Should we search for the movie. Defaults to True.
-            monitor (RadarrMonitorType, optional): Monitor movie or collection. Defaults to RadarrMonitorType.MOVIE_ONLY.
-            minimum_availability (RadarrAvailabilityType, optional): Availability of movie. Defaults to RadarrAvailabilityType.ANNOUNCED
+            monitor (RadarrMonitorType, optional): Monitor movie or collection. Defaults to "movieOnly".
+            minimum_availability (RadarrAvailabilityType, optional): Availability of movie. Defaults to "announced"
             tags (list[int], optional): List of tag id's. Defaults to [].
 
         Returns:
@@ -406,7 +406,7 @@ class RadarrAPI(BaseArrAPI):
         page: Optional[int] = None,
         page_size: Optional[int] = None,
         sort_dir: Optional[PyarrSortDirection] = None,
-        sort_key: Optional[RadarrSortKeys] = None,
+        sort_key: Optional[RadarrSortKey] = None,
         include_unknown_movie_items: Optional[bool] = None,
     ) -> JsonObject:
         """Return a list of items in the queue
@@ -415,13 +415,13 @@ class RadarrAPI(BaseArrAPI):
             page (Optional[int], optional): Page to be returned. Defaults to None.
             page_size (Optional[int], optional): Number of results per page. Defaults to None.
             sort_direction (Optional[PyarrSortDirection], optional): Direction to sort. Defaults to None.
-            sort_key (Optional[RadarrSortKeys], optional): Field to sort. Defaults to None.
+            sort_key (Optional[RadarrSortKey], optional): Field to sort. Defaults to None.
             include_unknown_movie_items (Optional[bool], optional): Include unknown movie items. Defaults to None.
 
         Returns:
             JsonObject: List of dictionaries with items
         """
-        params: dict[str, Union[int, PyarrSortDirection, RadarrSortKeys, bool]] = {}
+        params: dict[str, Union[int, PyarrSortDirection, RadarrSortKey, bool]] = {}
 
         if page:
             params["page"] = page

@@ -1,92 +1,101 @@
-from enum import Enum
+from typing import Literal
 
+SonarrCommands = Literal[
+    "Backup",
+    "DownloadedEpisodesScan",
+    "EpisodeSearch",
+    "missingEpisodeSearch",
+    "RefreshSeries",
+    "RenameSeries",
+    "RenameFiles",
+    "RescanSeries",
+    "RssSync",
+    "SeasonSearch",
+    "SeriesSearch",
+]
+"""Sonarr commands.
 
-class SonarrCommands(str, Enum):
-    """Sonarr commands.
+Note:
+    The parameters are supplied as `**kwargs` within the `post_command` method.
 
-    Note:
-        The parameters are supplied as `**kwargs` within the `post_command` method.
-    """
+Backup:
+    Backup of the Database
 
-    BACKUP = "Backup"
-    """Backup of the Database"""
-    DOWNLOADED_EPISODES_SCAN = "DownloadedEpisodesScan"
-    """Scans downloaded episodes for state"""
-    EPISODE_SEARCH = "EpisodeSearch"
-    """Searches for all episondes, or specific ones in supplied list
+DownloadedEpisodesScan:
+    Scans downloaded episodes for state
+
+EpisodeSearch:
+    Searches for all episondes, or specific ones in supplied list
 
     Args:
         episodeIds (lsit[int], optional): One or more episodeIds in a list
-    """
-    MISSING_EPISODE_SEARCH = "missingEpisodeSearch"
-    """Searches for any missing episodes"""
-    REFRESH_SERIES = "RefreshSeries"
-    """Refreshes all series, if a `seriesId` is provided only that series will be refreshed
+
+missingEpisodeSearch:
+    Searches for any missing episodes
+
+RefreshSeries:
+    Refreshes all series, if a `seriesId` is provided only that series will be refreshed
 
     Args:
         seriesId (int, optional): ID of specific series to be refreshed.
-    """
-    RENAME_SERIES = "RenameSeries"
-    """Renames series to the expected naming format.
+
+RenameSeries:
+    Renames series to the expected naming format.
 
     Args:
         seriesIds (list[int]): List of Series IDs to rename.
-    """
 
-    RENAME_FILES = "RenameFiles"
-    """Renames files to the expected naming format.
+RenameFiles:
+    Renames files to the expected naming format.
 
     Args:
         files (list[int]): List of File IDs to rename.
-    """
 
-    RESCAN_SERIES = "RescanSeries"
-    """Re-scan all series, if `seriesId` is provided only that series will be Re-scanned.
+RescanSeries:
+    Re-scan all series, if `seriesId` is provided only that series will be Re-scanned.
 
     Args:
         seriesId (int, optional): ID of series to search for.
-    """
 
-    RSS_SYNC = "RssSync"
-    """Synchronise RSS Feeds"""
+RssSync:
+    Synchronise RSS Feeds
 
-    SEASON_SEARCH = "SeasonSearch"
-    """Search for specific season.
+SeasonSearch:
+    Search for specific season.
 
     Args:
         seriesId (int): Series in which the season resides.
         seasonNumber (int): Season to search for.
-    """
 
-    SERIES_SEARCH = "SeriesSearch"
-    """Searches for specific series.
+SeriesSearch:
+    Searches for specific series.
 
     Args:
         seriesId (int): ID of series to search for.
-    """
+"""
 
 
-class SonarrSortKey(str, Enum):
-    """Sonarr sort keys."""
-
-    AIR_DATE_UTC = "airDateUtc"
-    DATE = "date"
-    DOWNLOAD_CLIENT = "downloadClient"
-    EPISODE = "episode"
-    EPISODE_ID = "episodeId"
-    EPISODE_TITLE = "episode.title"
-    ID = "id"
-    INDEXER = "indexer"
-    LANGUAGE = "language"
-    MESSAGE = "message"
-    PATH = "path"
-    PROGRESS = "progress"
-    PROTOCOL = "protocol"
-    QUALITY = "quality"
-    RATINGS = "ratings"
-    SERIES_ID = "seriesId"
-    SERIES_TITLE = "series.sortTitle"
-    SIZE = "size"
-    SOURCE_TITLE = "sourcetitle"
-    STATUS = "status"
-    TIMELEFT = "timeleft"
+#: Sonarr sort keys.
+SonarrSortKey = Literal[
+    "airDateUtc",
+    "date",
+    "downloadClient",
+    "episode",
+    "episodeId",
+    "episode.title",
+    "id",
+    "indexer",
+    "language",
+    "message",
+    "path",
+    "progress",
+    "protocol",
+    "quality",
+    "ratings",
+    "seriesId",
+    "series.sortTitle",
+    "size",
+    "sourcetitle",
+    "status",
+    "timeleft",
+]

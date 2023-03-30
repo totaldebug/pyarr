@@ -1,159 +1,128 @@
-from enum import Enum
+from typing import Literal
+
+#: Pyarr sort direction
+PyarrSortDirection = Literal["ascending", "default", "descending"]
 
 
-class PyarrSortDirection(str, Enum):
-    """Pyarr sort direction"""
+PyarrLogSortKey = Literal[
+    "Id", "level", "time", "logger", "message", "exception", "exceptionType"
+]
+"""Log Sort Keys
 
-    ASC = "ascending"
-    DEFAULT = "default"
-    DESC = "descending"
-
-
-class PyarrLogSortKey(str, Enum):
-    """Log Sort Keys
-
-    Note:
-        There may be more, but these are not well documented
-        within Arr api docs.
-    """
-
-    ID = "Id"
-    LEVEL = "level"
-    TIME = "time"
-    LOGGER = "logger"
-    MESSAGE = "message"
-    EXCEPTION = "exception"
-    EXCEPTION_TYPE = "exceptionType"
+Note:
+    There may be more, but these are not well documented
+    within Arr api docs.
+"""
 
 
-class PyarrBlocklistSortKey(str, Enum):
-    """Block list sort keys
+PyarrBlocklistSortKey = Literal["date"]
+"""Block list sort keys
 
-    Note:
-        There may be more, but these are not well documented
-        within Arr api docs.
-    """
+Note:
+    There may be more, but these are not well documented
+    within Arr api docs.
+"""
 
-    DATE = "date"
+PyarrHistorySortKey = Literal["time"]
+"""History sort keys
 
+Note:
+    There may be more, but these are not well documented
+    within Arr api docs.
+"""
 
-class PyarrHistorySortKey(str, Enum):
-    """History sort keys
+PyarrTaskSortKey = Literal["timeleft"]
+"""Task sort keys
 
-    Note:
-        There may be more, but these are not well documented
-        within Arr api docs.
-    """
+Note:
+    There may be more, but these are not well documented
+    within Arr api docs.
+"""
 
-    TIME = "time"
+PyarrLogFilterKey = Literal["level"]
+"""Log filter keys
 
+Note:
+    There may be more, but these are not well documented
+    within Arr api docs.
+"""
 
-class PyarrTaskSortKey(str, Enum):
-    """Task sort keys
+PyarrLogFilterValue = Literal["all", "info", "warn", "error"]
+"""Log filter values
 
-    Note:
-        There may be more, but these are not well documented
-        within Arr api docs.
-    """
-
-    TIME_LEFT = "timeleft"
-
-
-class PyarrLogFilterKey(str, Enum):
-    """Log filter keys
-
-    Note:
-        There may be more, but these are not well documented
-        within Arr api docs.
-    """
-
-    LEVEL = "level"
+Note:
+    There may be more, but these are not well documented
+    within Arr api docs.
+"""
 
 
-class PyarrLogFilterValue(str, Enum):
-    """Log filter values
+#: Notification schema implementations
+PyarrNotificationSchema = Literal[
+    "Boxcar",
+    "CustomScript",
+    "Discord",
+    "Email",
+    "MediaBrowser",
+    "Gotify",
+    "Join",
+    "Xbmc",
+    "MailGun",
+    "PlexHomeTheater",
+    "PlexClient",
+    "PlexServer",
+    "Prowl",
+    "PushBullet",
+    "Pushover",
+    "SendGrid",
+    "Slack",
+    "SynologyIndexer",
+    "Telegram",
+    "Trakt",
+    "Twitter",
+    "Webhook",
+]
 
-    Note:
-        There may be more, but these are not well documented
-        within Arr api docs.
-    """
+#: Download client schema implementations
+PyarrDownloadClientSchema = Literal[
+    "Aria2",
+    "Deluge",
+    "TorrentDownloadStation",
+    "UsenetDownloadStation",
+    "Flood",
+    "Hadouken",
+    "Nzbget",
+    "NzbVortex",
+    "Pneumatic",
+    "QBittorrent",
+    "RTorrent",
+    "Sabnzbd",
+    "TorrentBlackhole",
+    "Transmission",
+    "UsenetBlackhole",
+    "UTorrent",
+    "Vuze",
+]
 
-    ALL = "all"
-    INFO = "info"
-    WARN = "warn"
-    ERROR = "error"
+#: Import List schema implementations
+PyarrImportListSchema = Literal[
+    "PlexImport",
+    "SonarrImport",
+    "TraktListImport",
+    "TraktPopularImport",
+    "TraktUserImport",
+]
 
-
-class PyarrNotificationSchema(str, Enum):
-    """Notification schema implementations"""
-
-    BOXCAR = "Boxcar"
-    CUSTOM = "CustomScript"
-    DISCORD = "Discord"
-    EMAIL = "Email"
-    MEDIA_BROWSER = "MediaBrowser"
-    GOTIFY = "Gotify"
-    JOIN = "Join"
-    XBMC = "Xbmc"
-    MAILGUN = "MailGun"
-    PLEX_THEATER = "PlexHomeTheater"
-    PLEX_CLIENT = "PlexClient"
-    PLEX_SERVER = "PlexServer"
-    PROWL = "Prowl"
-    PUSH_BULLET = "PushBullet"
-    PUSHOVER = "Pushover"
-    SAND_GRID = "SendGrid"
-    SLACK = "Slack"
-    SYNOLOGY_INDEXER = "SynologyIndexer"
-    TELEGRAM = "Telegram"
-    TRAKT = "Trakt"
-    TWITTER = "Twitter"
-    WEBHOOK = "Webhook"
-
-
-class PyarrDownloadClientSchema(str, Enum):
-    """Download client schema implementations"""
-
-    ARIA2 = "Aria2"
-    DELUGE = "Deluge"
-    TORRENT_DOWNLOAD_STATION = "TorrentDownloadStation"
-    USENET_DOWNLOAD_STATION = "UsenetDownloadStation"
-    FLOOD = "Flood"
-    HADOUKEN = "Hadouken"
-    NZB_GET = "Nzbget"
-    NZB_VORTEX = "NzbVortex"
-    PNEUMATIC = "Pneumatic"
-    Q_BITTORRENT = "QBittorrent"
-    R_TORRENT = "RTorrent"
-    SABNZBD = "Sabnzbd"
-    TORRENT_BLACKHOLE = "TorrentBlackhole"
-    TRANSMISSION = "Transmission"
-    USENET_BLACKHOLE = "UsenetBlackhole"
-    U_TORRENT = "UTorrent"
-    VUZE = "Vuze"
-
-
-class PyarrImportListSchema(str, Enum):
-    """Import List schema implementations"""
-
-    PLEX = "PlexImport"
-    SONARR = "SonarrImport"
-    TRAKT_LIST = "TraktListImport"
-    TRAKT_POPULAR = "TraktPopularImport"
-    TRAKT_USER = "TraktUserImport"
-
-
-class PyarrIndexerSchema(str, Enum):
-    """Import List schema implementations"""
-
-    FILE_LIST = "FileList"
-    HD_BITS = "HDBits"
-    IP_TORRENTS = "IPTorrents"
-    NEWZNAB = "Newznab"
-    NYAA = "Nyaa"
-    OMGWTFNZBS = "Omgwtfnzbs"
-    PASS_THE_POPCORN = "PassThePopcorn"
-    RARBG = "Rarbg"
-    TORRENT_RSS_INDEXER = "TorrentRssIndexer"
-    TORRENT_POTATO = "TorrentPotato"
-    TORZNAB = "Torznab"
+#: Indexer schema implementations
+PyarrIndexerSchema = Literal[
+    "FileList",
+    "HDBits",
+    "IPTorrents",
+    "Newznab",
+    "Nyaa",
+    "Omgwtfnzbs",
+    "PassThePopcorn",
+    "Rarbg",
+    "TorrentRssIndexer",
+    "TorrentPotato",
+    "Torznab",
+]

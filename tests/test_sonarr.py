@@ -10,20 +10,6 @@ from pyarr.exceptions import (
     PyarrRecordNotFound,
     PyarrResourceNotFound,
 )
-from pyarr.models.common import (
-    PyarrBlocklistSortKey,
-    PyarrDownloadClientSchema,
-    PyarrHistorySortKey,
-    PyarrImportListSchema,
-    PyarrIndexerSchema,
-    PyarrLogFilterKey,
-    PyarrLogFilterValue,
-    PyarrLogSortKey,
-    PyarrNotificationSchema,
-    PyarrSortDirection,
-    PyarrTaskSortKey,
-)
-from pyarr.models.sonarr import SonarrCommands, SonarrSortKey
 from pyarr.sonarr import SonarrAPI
 
 from tests import SONARR_TVDB, load_fixture
@@ -63,35 +49,31 @@ def test_get_command(sonarr_client: SonarrAPI):
 
 def test_post_command(sonarr_client: SonarrAPI):
 
-    data = sonarr_client.post_command(name=SonarrCommands.REFRESH_SERIES)
+    data = sonarr_client.post_command(name="RefreshSeries")
     assert isinstance(data, dict)
-    data = sonarr_client.post_command(SonarrCommands.REFRESH_SERIES, seriesId=1)
+    data = sonarr_client.post_command("RefreshSeries", seriesId=1)
     assert isinstance(data, dict)
-    data = sonarr_client.post_command(SonarrCommands.RESCAN_SERIES)
+    data = sonarr_client.post_command("RescanSeries")
     assert isinstance(data, dict)
-    data = sonarr_client.post_command(SonarrCommands.RESCAN_SERIES, seriesId=1)
+    data = sonarr_client.post_command("RescanSeries", seriesId=1)
     assert isinstance(data, dict)
-    data = sonarr_client.post_command(
-        SonarrCommands.EPISODE_SEARCH, episodeIds=[1, 2, 3]
-    )
+    data = sonarr_client.post_command("EpisodeSearch", episodeIds=[1, 2, 3])
     assert isinstance(data, dict)
-    data = sonarr_client.post_command(
-        SonarrCommands.SEASON_SEARCH, seriesId=1, seasonNumber=1
-    )
+    data = sonarr_client.post_command("SeasonSearch", seriesId=1, seasonNumber=1)
     assert isinstance(data, dict)
-    data = sonarr_client.post_command(SonarrCommands.SERIES_SEARCH, seriesId=1)
+    data = sonarr_client.post_command("SeriesSearch", seriesId=1)
     assert isinstance(data, dict)
-    data = sonarr_client.post_command(SonarrCommands.DOWNLOADED_EPISODES_SCAN)
+    data = sonarr_client.post_command("DownloadedEpisodesScan")
     assert isinstance(data, dict)
-    data = sonarr_client.post_command(SonarrCommands.RSS_SYNC)
+    data = sonarr_client.post_command("RssSync")
     assert isinstance(data, dict)
-    data = sonarr_client.post_command(SonarrCommands.RENAME_FILES, files=[1, 2, 3])
+    data = sonarr_client.post_command("RenameFiles", files=[1, 2, 3])
     assert isinstance(data, dict)
-    data = sonarr_client.post_command(SonarrCommands.RENAME_SERIES, seriesIds=[1, 2, 3])
+    data = sonarr_client.post_command("RenameSeries", seriesIds=[1, 2, 3])
     assert isinstance(data, dict)
-    data = sonarr_client.post_command(SonarrCommands.BACKUP)
+    data = sonarr_client.post_command("Backup")
     assert isinstance(data, dict)
-    data = sonarr_client.post_command(SonarrCommands.MISSING_EPISODE_SEARCH)
+    data = sonarr_client.post_command("missingEpisodeSearch")
     assert isinstance(data, dict)
 
 
@@ -280,17 +262,17 @@ def test_get_wanted(sonarr_client: SonarrAPI):
     data = sonarr_client.get_wanted(
         page=2,
         page_size=20,
-        sort_key=SonarrSortKey.SERIES_TITLE,
-        sort_dir=PyarrSortDirection.ASC,
+        sort_key="series.sortTitle",
+        sort_dir="ascending",
     )
     assert isinstance(data, dict)
 
     with contextlib.suppress(PyarrMissingArgument):
-        data = sonarr_client.get_wanted(sort_key=SonarrSortKey.TIMELEFT)
+        data = sonarr_client.get_wanted(sort_key="timeleft")
         assert False
 
     with contextlib.suppress(PyarrMissingArgument):
-        data = sonarr_client.get_wanted(sort_dir=PyarrSortDirection.DEFAULT)
+        data = sonarr_client.get_wanted(sort_dir="default")
         assert False
 
 
@@ -307,18 +289,18 @@ def test_get_history(sonarr_client: SonarrAPI):
     data = sonarr_client.get_history(
         page=1,
         page_size=10,
-        sort_key=PyarrHistorySortKey.TIME,
-        sort_dir=PyarrSortDirection.DEFAULT,
+        sort_key="time",
+        sort_dir="default",
         id_=episodes[0]["id"],
     )
     assert isinstance(data, dict)
 
     with contextlib.suppress(PyarrMissingArgument):
-        data = sonarr_client.get_history(sort_key=PyarrHistorySortKey.TIME)
+        data = sonarr_client.get_history(sort_key="time")
         assert False
 
     with contextlib.suppress(PyarrMissingArgument):
-        data = sonarr_client.get_history(sort_dir=PyarrSortDirection.DESC)
+        data = sonarr_client.get_history(sort_dir="descending")
         assert False
 
 
@@ -338,11 +320,9 @@ def test_get_calendar(sonarr_client: SonarrAPI):
 def test_get_indexer_schema(sonarr_client: SonarrAPI):
     data = sonarr_client.get_indexer_schema()
     assert isinstance(data, list)
-    data = sonarr_client.get_indexer_schema(
-        implementation=PyarrIndexerSchema.IP_TORRENTS
-    )
+    data = sonarr_client.get_indexer_schema(implementation="IPTorrents")
     assert isinstance(data, list)
-    assert data[0]["implementation"] == PyarrIndexerSchema.IP_TORRENTS
+    assert data[0]["implementation"] == "IPTorrents"
 
     with contextlib.suppress(PyarrRecordNotFound):
         data = sonarr_client.get_indexer_schema(implementation="polarbear")
@@ -449,24 +429,24 @@ def test_get_log(sonarr_client: SonarrAPI):
     data = sonarr_client.get_log(
         page=10,
         page_size=10,
-        sort_key=PyarrLogSortKey.ID,
-        sort_dir=PyarrSortDirection.DESC,
-        filter_key=PyarrLogFilterKey.LEVEL,
-        filter_value=PyarrLogFilterValue.ALL,
+        sort_key="Id",
+        sort_dir="descending",
+        filter_key="level",
+        filter_value="all",
     )
     assert isinstance(data, dict)
 
     with contextlib.suppress(PyarrMissingArgument):
-        data = sonarr_client.get_log(sort_key=PyarrLogSortKey.ID)
+        data = sonarr_client.get_log(sort_key="Id")
         assert False
     with contextlib.suppress(PyarrMissingArgument):
-        data = sonarr_client.get_log(sort_dir=PyarrSortDirection.DESC)
+        data = sonarr_client.get_log(sort_dir="descending")
         assert False
     with contextlib.suppress(PyarrMissingArgument):
-        data = sonarr_client.get_log(filter_key=PyarrLogFilterKey.LEVEL)
+        data = sonarr_client.get_log(filter_key="level")
         assert False
     with contextlib.suppress(PyarrMissingArgument):
-        data = sonarr_client.get_log(filter_value=PyarrLogFilterValue.ALL)
+        data = sonarr_client.get_log(filter_value="all")
         assert False
 
 
@@ -554,9 +534,7 @@ def test_get_notification_schema(sonarr_client: SonarrAPI):
     data = sonarr_client.get_notification_schema()
     assert isinstance(data, list)
 
-    data = sonarr_client.get_notification_schema(
-        implementation=PyarrNotificationSchema.BOXCAR
-    )
+    data = sonarr_client.get_notification_schema(implementation="Boxcar")
     assert isinstance(data, list)
 
     with contextlib.suppress(PyarrRecordNotFound):
@@ -601,9 +579,7 @@ def test_get_download_client_schema(sonarr_client: SonarrAPI):
     data = sonarr_client.get_download_client_schema()
     assert isinstance(data, list)
 
-    data = sonarr_client.get_download_client_schema(
-        implementation=PyarrDownloadClientSchema.ARIA2
-    )
+    data = sonarr_client.get_download_client_schema(implementation="Aria2")
     assert isinstance(data, list)
 
     with contextlib.suppress(PyarrRecordNotFound):
@@ -616,9 +592,7 @@ def test_get_import_list_schema(sonarr_client: SonarrAPI):
     data = sonarr_client.get_import_list_schema()
     assert isinstance(data, list)
 
-    data = sonarr_client.get_import_list_schema(
-        implementation=PyarrImportListSchema.PLEX
-    )
+    data = sonarr_client.get_import_list_schema(implementation="PlexImport")
     assert isinstance(data, list)
 
     with contextlib.suppress(PyarrRecordNotFound):
@@ -683,8 +657,8 @@ def test_get_queue(sonarr_mock_client: SonarrAPI):
     data = sonarr_mock_client.get_queue(
         page=1,
         page_size=20,
-        sort_key=SonarrSortKey.TIMELEFT,
-        sort_dir=PyarrSortDirection.DEFAULT,
+        sort_key="timeleft",
+        sort_dir="default",
         include_unknown_series_items=True,
         include_series=True,
         include_episode=True,
@@ -692,10 +666,10 @@ def test_get_queue(sonarr_mock_client: SonarrAPI):
     assert isinstance(data, dict)
 
     with contextlib.suppress(PyarrMissingArgument):
-        data = sonarr_mock_client.get_queue(sort_key=SonarrSortKey.TIMELEFT)
+        data = sonarr_mock_client.get_queue(sort_key="timeleft")
         assert False
     with contextlib.suppress(PyarrMissingArgument):
-        data = sonarr_mock_client.get_queue(sort_dir=PyarrSortDirection.DEFAULT)
+        data = sonarr_mock_client.get_queue(sort_dir="default")
         assert False
 
 
@@ -724,15 +698,15 @@ def test_get_blocklist(sonarr_mock_client: SonarrAPI):
     data = sonarr_mock_client.get_blocklist(
         page=1,
         page_size=10,
-        sort_key=PyarrBlocklistSortKey.DATE,
-        sort_dir=PyarrSortDirection.ASC,
+        sort_key="date",
+        sort_dir="ascending",
     )
     assert isinstance(data, dict)
     with contextlib.suppress(PyarrMissingArgument):
-        data = sonarr_mock_client.get_blocklist(sort_key=PyarrBlocklistSortKey.DATE)
+        data = sonarr_mock_client.get_blocklist(sort_key="date")
         assert False
     with contextlib.suppress(PyarrMissingArgument):
-        data = sonarr_mock_client.get_blocklist(sort_dir=PyarrSortDirection.ASC)
+        data = sonarr_mock_client.get_blocklist(sort_dir="ascending")
         assert False
 
 

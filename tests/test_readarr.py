@@ -3,26 +3,13 @@ import contextlib
 import pytest
 import responses
 
-from pyarr.exceptions import (
-    PyarrMissingArgument,
-    PyarrMissingProfile,
-    PyarrResourceNotFound,
-)
-from pyarr.models.common import PyarrSortDirection
-from pyarr.models.readarr import (
-    ReadarrAuthorMonitor,
-    ReadarrCommands,
-    ReadarrSearchType,
-    ReadarrSortKeys,
-)
+from pyarr.exceptions import PyarrMissingArgument, PyarrResourceNotFound
 from pyarr.readarr import ReadarrAPI
 
 from tests import (
-    READARR_ASIN_ID,
     READARR_AUTHOR_ID,
     READARR_AUTHOR_TERM,
     READARR_GOODREADS_ID,
-    READARR_ISBN_ID,
     load_fixture,
 )
 
@@ -68,29 +55,27 @@ def test_get_command(readarr_client: ReadarrAPI):
 
 def test_post_command(readarr_client: ReadarrAPI):
 
-    data = readarr_client.post_command(name=ReadarrCommands.APP_UPDATE_CHECK)
+    data = readarr_client.post_command(name="ApplicationUpdateCheck")
     assert isinstance(data, dict)
-    data = readarr_client.post_command(ReadarrCommands.AUTHOR_SEARCH, authorId=1)
+    data = readarr_client.post_command("AuthorSearch", authorId=1)
     assert isinstance(data, dict)
-    data = readarr_client.post_command(ReadarrCommands.BOOK_SEARCH, bookId=1)
+    data = readarr_client.post_command("BookSearch", bookId=1)
     assert isinstance(data, dict)
-    data = readarr_client.post_command(ReadarrCommands.REFRESH_AUTHOR, authorId=1)
+    data = readarr_client.post_command("RefreshAuthor", authorId=1)
     assert isinstance(data, dict)
-    data = readarr_client.post_command(ReadarrCommands.REFRESH_BOOK, bookId=1)
+    data = readarr_client.post_command("RefreshBook", bookId=1)
     assert isinstance(data, dict)
-    data = readarr_client.post_command(
-        ReadarrCommands.RENAME_AUTHOR, authorIds=[1, 2, 3]
-    )
+    data = readarr_client.post_command("RenameAuthor", authorIds=[1, 2, 3])
     assert isinstance(data, dict)
-    data = readarr_client.post_command(ReadarrCommands.RESCAN_FOLDERS)
+    data = readarr_client.post_command("RescanFolders")
     assert isinstance(data, dict)
-    data = readarr_client.post_command(ReadarrCommands.RSS_SYNC)
+    data = readarr_client.post_command("RssSync")
     assert isinstance(data, dict)
-    data = readarr_client.post_command(ReadarrCommands.BACKUP)
+    data = readarr_client.post_command("Backup")
     assert isinstance(data, dict)
-    data = readarr_client.post_command(ReadarrCommands.MISSING_BOOK_SEARCH)
+    data = readarr_client.post_command("MissingBookSearch")
     assert isinstance(data, dict)
-    data = readarr_client.post_command(ReadarrCommands.RENAME_FILES, authorId=1)
+    data = readarr_client.post_command("RenameFiles", authorId=1)
     assert isinstance(data, dict)
 
 
@@ -104,12 +89,12 @@ def test_get_quality_profile(readarr_client: ReadarrAPI):
 
 
 def test_lookup(readarr_client: ReadarrAPI):
-    data = readarr_client.lookup(term=f"goodreads:{READARR_GOODREADS_ID}")
+    data = readarr_client.lookup(term=f"edition:{READARR_GOODREADS_ID}")
     assert isinstance(data, list)
 
 
 def test_lookup_book(readarr_client: ReadarrAPI):
-    data = readarr_client.lookup_book(term=f"goodreads:{READARR_GOODREADS_ID}")
+    data = readarr_client.lookup_book(term=f"edition:{READARR_GOODREADS_ID}")
     assert isinstance(data, list)
 
 
@@ -122,9 +107,7 @@ def test_add_book(readarr_client: ReadarrAPI):
     qual_profile = readarr_client.get_quality_profile()
     meta_profile = readarr_client.get_metadata_profile()
 
-    items = readarr_client.lookup(
-        f"{ReadarrSearchType.GOODREADS}:{READARR_GOODREADS_ID}"
-    )
+    items = readarr_client.lookup(f"edition:{READARR_GOODREADS_ID}")
     for item in items:
         if "book" in item:
             book = item["book"]
@@ -243,16 +226,16 @@ def test_get_missing(readarr_client: ReadarrAPI):
     data = readarr_client.get_missing(
         page=1,
         page_size=20,
-        sort_key=ReadarrSortKeys.BOOK_ID,
-        sort_dir=PyarrSortDirection.ASC,
+        sort_key="Books.Id",
+        sort_dir="ascending",
     )
     assert isinstance(data, dict)
 
     with contextlib.suppress(PyarrMissingArgument):
-        data = readarr_client.get_missing(sort_key=ReadarrSortKeys.TIMELEFT)
+        data = readarr_client.get_missing(sort_key="timeleft")
         assert False
     with contextlib.suppress(PyarrMissingArgument):
-        data = readarr_client.get_missing(sort_dir=PyarrSortDirection.DEFAULT)
+        data = readarr_client.get_missing(sort_dir="default")
         assert False
 
 
@@ -264,17 +247,17 @@ def test_get_cutoff(readarr_client: ReadarrAPI):
     data = readarr_client.get_cutoff(
         page=1,
         page_size=20,
-        sort_key=ReadarrSortKeys.BOOK_ID,
-        sort_dir=PyarrSortDirection.ASC,
+        sort_key="Books.Id",
+        sort_dir="ascending",
         monitored=True,
     )
     assert isinstance(data, dict)
 
     with contextlib.suppress(PyarrMissingArgument):
-        data = readarr_client.get_cutoff(sort_key=ReadarrSortKeys.TIMELEFT)
+        data = readarr_client.get_cutoff(sort_key="timeleft")
         assert False
     with contextlib.suppress(PyarrMissingArgument):
-        data = readarr_client.get_cutoff(sort_dir=PyarrSortDirection.DEFAULT)
+        data = readarr_client.get_cutoff(sort_dir="default")
         assert False
 
 
@@ -302,7 +285,7 @@ def test_add_author(readarr_client: ReadarrAPI):
     qual_profile = readarr_client.get_quality_profile()
     meta_profile = readarr_client.get_metadata_profile()
 
-    items = readarr_client.lookup(f"{ReadarrSearchType.AUTHOR}:{READARR_AUTHOR_ID}")
+    items = readarr_client.lookup(f"author:{READARR_AUTHOR_ID}")
     for item in items:
         if "author" in item:
             author = item["author"]
@@ -397,8 +380,8 @@ def test_get_queue(readarr_mock_client: ReadarrAPI):
     data = readarr_mock_client.get_queue(
         page=2,
         page_size=20,
-        sort_key=ReadarrSortKeys.BOOK_ID,
-        sort_dir=PyarrSortDirection.ASC,
+        sort_key="Books.Id",
+        sort_dir="ascending",
         unknown_authors=True,
         include_author=True,
         include_book=True,
@@ -406,10 +389,10 @@ def test_get_queue(readarr_mock_client: ReadarrAPI):
     assert isinstance(data, dict)
 
     with contextlib.suppress(PyarrMissingArgument):
-        data = readarr_mock_client.get_queue(sort_key=ReadarrSortKeys.TIMELEFT)
+        data = readarr_mock_client.get_queue(sort_key="timeleft")
         assert False
     with contextlib.suppress(PyarrMissingArgument):
-        data = readarr_mock_client.get_queue(sort_dir=PyarrSortDirection.DEFAULT)
+        data = readarr_mock_client.get_queue(sort_dir="default")
         assert False
 
 

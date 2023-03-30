@@ -1,100 +1,101 @@
-from enum import Enum
+from typing import Literal
 
+ReadarrCommands = Literal[
+    "ApplicationUpdateCheck",
+    "AuthorSearch",
+    "BookSearch",
+    "RefreshAuthor",
+    "RefreshBook",
+    "RenameAuthor",
+    "RenameFiles",
+    "RescanFolders",
+    "RssSync",
+    "Backup",
+    "MissingBookSearch",
+]
+"""Readarr commands.
 
-class ReadarrCommands(str, Enum):
-    """Readarr commands.
+Note:
+    The parameters are supplied as `**kwargs` within the `post_command` method.
 
-    Note:
-        The parameters are supplied as `**kwargs` within the `post_command` method.
-    """
+ApplicationUpdateCheck:
+    Checks for Application updates
 
-    APP_UPDATE_CHECK: str = "ApplicationUpdateCheck"
-    """Checks for Application updates"""
-    AUTHOR_SEARCH = "AuthorSearch"
-    """Search for specific author by ID
+AuthorSearch:
+    Search for specific author by ID
 
     Args:
         authorId (int): ID for Author
-    """
-    BOOK_SEARCH = "BookSearch"
-    """Search for specific Book by ID
+
+BookSearch:
+    Search for specific Book by ID
 
     Args:
         bookId (int): ID for Book
-    """
-    REFRESH_AUTHOR = "RefreshAuthor"
-    """Refresh all Authors, or by specific ID
+
+RefreshAuthor:
+    Refresh all Authors, or by specific ID
 
     Args:
         authorId (int, optional): ID for Author
-    """
-    REFRESH_BOOK = "RefreshBook"
-    """Refresh all Books, or by specific ID
+
+RefreshBook:
+    Refresh all Books, or by specific ID
 
     Args:
         bookId (int, optional): ID for Book
-    """
-    RENAME_AUTHOR = "RenameAuthor"
-    """Rename all Authors, or by list of Ids
+
+RenameAuthor:
+    Rename all Authors, or by list of Ids
 
     Args:
         authorIds (list[int], optional): IDs for Authors
-    """
-    RENAME_FILES = "RenameFiles"
-    """Rename all files, or by specific ID
+
+RenameFiles:
+    Rename all files, or by specific ID
 
     Args:
         authorId (int, optional): ID for Author
-    """
-    RESCAN_FOLDERS = "RescanFolders"
-    """Rescans folders"""
-    RSS_SYNC = "RssSync"
-    """Synchronise RSS Feeds"""
-    BACKUP = "Backup"
-    """Backup of the Database"""
-    MISSING_BOOK_SEARCH = "MissingBookSearch"
-    """Searches for any missing books"""
+
+RescanFolders:
+    Rescans folders
+
+RssSync:
+    Synchronise RSS Feeds
+Backup:
+    Backup of the Database
+
+MissingBookSearch:
+    Searches for any missing books
+"""
+
+#: Readarr sort keys.
+ReadarrSortKeys = Literal[
+    "authorId",
+    "Books.Id",
+    "books.releaseDate",
+    "downloadClient",
+    "id",
+    "indexer",
+    "message",
+    "path",
+    "progress",
+    "protocol",
+    "quality",
+    "ratings",
+    "size",
+    "sourcetitle",
+    "status",
+    "timeleft",
+    "title",
+]
 
 
-class ReadarrSortKeys(str, Enum):
-    """Readarr sort keys."""
-
-    AUTHOR_ID = "authorId"
-    BOOK_ID = "Books.Id"
-    DATE = "books.releaseDate"
-    DOWNLOAD_CLIENT = "downloadClient"
-    ID = "id"
-    INDEXER = "indexer"
-    MESSAGE = "message"
-    PATH = "path"
-    PROGRESS = "progress"
-    PROTOCOL = "protocol"
-    QUALITY = "quality"
-    RATINGS = "ratings"
-    SIZE = "size"
-    SOURCE_TITLE = "sourcetitle"
-    STATUS = "status"
-    TIMELEFT = "timeleft"
-    TITLE = "title"
+#: Readarr search types.
+ReadarrSearchType = Literal["asin", "edition", "isbn", "author", "work"]
 
 
-class ReadarrSearchType(str, Enum):
-    """Readarr search types."""
-
-    ASIN = "asin"
-    GOODREADS = "edition"
-    ISBN = "isbn"
-    AUTHOR = "author"
-    WORK = "work"
-
-
-class ReadarrAuthorMonitor(str, Enum):
-    """Readarr author monitor options."""
-
-    ALL: str = "all"
-    FUTURE = "future"
-    MISSING = "missing"
-    EXISTING = "existing"
-    FIRST_BOOK = "first"
-    LATEST_BOOK = "latest"
-    NONE = "none"
+#: Readarr author monitor options.
+ReadarrAuthorMonitor = Literal[
+    "all", "future", "missing", "existing", "first", "latest", "none"
+]

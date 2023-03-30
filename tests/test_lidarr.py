@@ -7,29 +7,10 @@ import responses
 
 from pyarr.exceptions import (
     PyarrMissingArgument,
-    PyarrMissingProfile,
     PyarrRecordNotFound,
     PyarrResourceNotFound,
 )
 from pyarr.lidarr import LidarrAPI
-from pyarr.models.common import (
-    PyarrBlocklistSortKey,
-    PyarrDownloadClientSchema,
-    PyarrHistorySortKey,
-    PyarrImportListSchema,
-    PyarrIndexerSchema,
-    PyarrLogFilterKey,
-    PyarrLogFilterValue,
-    PyarrLogSortKey,
-    PyarrNotificationSchema,
-    PyarrSortDirection,
-)
-from pyarr.models.lidarr import (
-    LidarrArtistMonitor,
-    LidarrCommand,
-    LidarrImportListSchema,
-    LidarrSortKey,
-)
 
 from tests import (
     LIDARR_ALBUM_TERM,
@@ -94,7 +75,7 @@ def test_add_artist(lidarr_client: LidarrAPI):
                 quality_profile_id=qual_profile[0]["id"],
                 metadata_profile_id=meta_profile[0]["id"],
                 monitored=False,
-                artist_monitor=LidarrArtistMonitor.LATEST_ALBUM,
+                artist_monitor="latest",
                 artist_search_for_missing_albums=False,
             )
             break
@@ -138,7 +119,7 @@ def test_add_album(lidarr_client: LidarrAPI):
                 quality_profile_id=qual_profile[0]["id"],
                 metadata_profile_id=meta_profile[0]["id"],
                 monitored=False,
-                artist_monitor=LidarrArtistMonitor.LATEST_ALBUM,
+                artist_monitor="latest",
                 artist_search_for_missing_albums=False,
             )
             break
@@ -170,19 +151,19 @@ def test_get_album(lidarr_client: LidarrAPI):
 
 def test_post_command(lidarr_client: LidarrAPI):
 
-    data = lidarr_client.post_command(name=LidarrCommand.DOWNLOADED_ALBUMS_SCAN)
+    data = lidarr_client.post_command(name="DownloadedAlbumsScan")
     assert isinstance(data, dict)
-    data = lidarr_client.post_command(name=LidarrCommand.ARTIST_SEARCH)
+    data = lidarr_client.post_command(name="ArtistSearch")
     assert isinstance(data, dict)
-    data = lidarr_client.post_command(name=LidarrCommand.REFRESH_ARTIST)
+    data = lidarr_client.post_command(name="RefreshArtist")
     assert isinstance(data, dict)
-    data = lidarr_client.post_command(name=LidarrCommand.REFRESH_ALBUM)
+    data = lidarr_client.post_command(name="RefreshAlbum")
     assert isinstance(data, dict)
-    data = lidarr_client.post_command(name=LidarrCommand.APP_UPDATE_CHECK)
+    data = lidarr_client.post_command(name="ApplicationUpdateCheck")
     assert isinstance(data, dict)
-    data = lidarr_client.post_command(name=LidarrCommand.MISSING_ALBUM_SEARCH)
+    data = lidarr_client.post_command(name="MissingAlbumSearch")
     assert isinstance(data, dict)
-    data = lidarr_client.post_command(name=LidarrCommand.ALBUM_SEARCH)
+    data = lidarr_client.post_command(name="AlbumSearch")
     assert isinstance(data, dict)
 
 
@@ -197,16 +178,16 @@ def test_get_wanted(lidarr_client: LidarrAPI):
     data = lidarr_client.get_wanted(
         page=1,
         page_size=20,
-        sort_key=LidarrSortKey.ALBUM_TITLE,
-        sort_dir=PyarrSortDirection.ASC,
+        sort_key="albums.title",
+        sort_dir="ascending",
     )
     assert isinstance(data, dict)
 
     with contextlib.suppress(PyarrMissingArgument):
-        data = lidarr_client.get_wanted(sort_key=LidarrSortKey.TIMELEFT)
+        data = lidarr_client.get_wanted(sort_key="timeleft")
         assert False
     with contextlib.suppress(PyarrMissingArgument):
-        data = lidarr_client.get_wanted(sort_dir=PyarrSortDirection.DEFAULT)
+        data = lidarr_client.get_wanted(sort_dir="default")
         assert False
 
 
@@ -392,8 +373,8 @@ def test_get_queue(lidarr_mock_client: LidarrAPI):
     data = lidarr_mock_client.get_queue(
         page=1,
         page_size=10,
-        sort_key=LidarrSortKey.TIMELEFT,
-        sort_dir=PyarrSortDirection.DEFAULT,
+        sort_key="timeleft",
+        sort_dir="default",
     )
     assert isinstance(data, dict)
 
@@ -411,11 +392,11 @@ def test_get_queue(lidarr_mock_client: LidarrAPI):
     assert isinstance(data, dict)
 
     with contextlib.suppress(PyarrMissingArgument):
-        data = lidarr_mock_client.get_queue(sort_key=LidarrSortKey.ARTIST_ID)
+        data = lidarr_mock_client.get_queue(sort_key="artistId")
         assert False
 
     with contextlib.suppress(PyarrMissingArgument):
-        data = lidarr_mock_client.get_queue(sort_dir=PyarrSortDirection.ASC)
+        data = lidarr_mock_client.get_queue(sort_dir="ascending")
         assert False
 
 
@@ -657,24 +638,24 @@ def test_get_log(lidarr_client: LidarrAPI):
     data = lidarr_client.get_log(
         page=10,
         page_size=10,
-        sort_key=PyarrLogSortKey.ID,
-        sort_dir=PyarrSortDirection.DESC,
-        filter_key=PyarrLogFilterKey.LEVEL,
-        filter_value=PyarrLogFilterValue.ALL,
+        sort_key="Id",
+        sort_dir="descending",
+        filter_key="level",
+        filter_value="all",
     )
     assert isinstance(data, dict)
 
     with contextlib.suppress(PyarrMissingArgument):
-        data = lidarr_client.get_log(sort_key=PyarrLogSortKey.ID)
+        data = lidarr_client.get_log(sort_key="Id")
         assert False
     with contextlib.suppress(PyarrMissingArgument):
-        data = lidarr_client.get_log(sort_dir=PyarrSortDirection.DESC)
+        data = lidarr_client.get_log(sort_dir="descending")
         assert False
     with contextlib.suppress(PyarrMissingArgument):
-        data = lidarr_client.get_log(filter_key=PyarrLogFilterKey.LEVEL)
+        data = lidarr_client.get_log(filter_key="level")
         assert False
     with contextlib.suppress(PyarrMissingArgument):
-        data = lidarr_client.get_log(filter_value=PyarrLogFilterValue.ALL)
+        data = lidarr_client.get_log(filter_value="all")
         assert False
 
 
@@ -759,9 +740,7 @@ def test_get_notification_schema(lidarr_client: LidarrAPI):
     data = lidarr_client.get_notification_schema()
     assert isinstance(data, list)
 
-    data = lidarr_client.get_notification_schema(
-        implementation=PyarrNotificationSchema.BOXCAR
-    )
+    data = lidarr_client.get_notification_schema(implementation="Boxcar")
     assert isinstance(data, list)
 
     with contextlib.suppress(PyarrRecordNotFound):
@@ -809,17 +788,17 @@ def test_get_history(lidarr_client: LidarrAPI):
     data = lidarr_client.get_history(
         page=1,
         page_size=10,
-        sort_key=PyarrHistorySortKey.TIME,
-        sort_dir=PyarrSortDirection.DEFAULT,
+        sort_key="time",
+        sort_dir="default",
     )
     assert isinstance(data, dict)
 
     with contextlib.suppress(PyarrMissingArgument):
-        data = lidarr_client.get_history(sort_key=PyarrHistorySortKey.TIME)
+        data = lidarr_client.get_history(sort_key="time")
         assert False
 
     with contextlib.suppress(PyarrMissingArgument):
-        data = lidarr_client.get_history(sort_dir=PyarrSortDirection.DESC)
+        data = lidarr_client.get_history(sort_dir="descending")
         assert False
 
 
@@ -905,11 +884,9 @@ def test_upd_quality_definition(lidarr_client: LidarrAPI):
 def test_get_indexer_schema(lidarr_client: LidarrAPI):
     data = lidarr_client.get_indexer_schema()
     assert isinstance(data, list)
-    data = lidarr_client.get_indexer_schema(
-        implementation=PyarrIndexerSchema.IP_TORRENTS
-    )
+    data = lidarr_client.get_indexer_schema(implementation="IPTorrents")
     assert isinstance(data, list)
-    assert data[0]["implementation"] == PyarrIndexerSchema.IP_TORRENTS
+    assert data[0]["implementation"] == "IPTorrents"
 
     with contextlib.suppress(PyarrRecordNotFound):
         data = lidarr_client.get_indexer_schema(implementation="polarbear")
@@ -956,9 +933,7 @@ def test_get_download_client_schema(lidarr_client: LidarrAPI):
     data = lidarr_client.get_download_client_schema()
     assert isinstance(data, list)
 
-    data = lidarr_client.get_download_client_schema(
-        implementation=PyarrDownloadClientSchema.ARIA2
-    )
+    data = lidarr_client.get_download_client_schema(implementation="Aria2")
     assert isinstance(data, list)
 
     with contextlib.suppress(PyarrRecordNotFound):
@@ -971,9 +946,7 @@ def test_get_import_list_schema(lidarr_client: LidarrAPI):
     data = lidarr_client.get_import_list_schema()
     assert isinstance(data, list)
 
-    data = lidarr_client.get_import_list_schema(
-        implementation=LidarrImportListSchema.HEADPHONES
-    )
+    data = lidarr_client.get_import_list_schema(implementation="HeadphonesImport")
     assert isinstance(data, list)
 
     with contextlib.suppress(PyarrRecordNotFound):
@@ -1076,15 +1049,15 @@ def test_get_blocklist(lidarr_mock_client: LidarrAPI):
     data = lidarr_mock_client.get_blocklist(
         page=1,
         page_size=10,
-        sort_key=PyarrBlocklistSortKey.DATE,
-        sort_dir=PyarrSortDirection.ASC,
+        sort_key="date",
+        sort_dir="ascending",
     )
     assert isinstance(data, dict)
     with contextlib.suppress(PyarrMissingArgument):
-        data = lidarr_mock_client.get_blocklist(sort_key=PyarrBlocklistSortKey.DATE)
+        data = lidarr_mock_client.get_blocklist(sort_key="date")
         assert False
     with contextlib.suppress(PyarrMissingArgument):
-        data = lidarr_mock_client.get_blocklist(sort_dir=PyarrSortDirection.ASC)
+        data = lidarr_mock_client.get_blocklist(sort_dir="ascending")
         assert False
 
 
