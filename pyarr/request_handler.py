@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Optional, Union
 
 import requests
 from requests import Response
@@ -7,11 +7,13 @@ from requests.auth import HTTPBasicAuth
 from .exceptions import (
     PyarrAccessRestricted,
     PyarrBadGateway,
+    PyarrBadRequest,
     PyarrConnectionError,
     PyarrMethodNotAllowed,
     PyarrResourceNotFound,
     PyarrUnauthorizedError,
 )
+from .types import _ReturnType
 
 
 class RequestHandler:
@@ -28,7 +30,7 @@ class RequestHandler:
             host_url (str): Host URL to Arr api
             api_key (str): API Key for Arr api
         """
-        self.host_url = host_url
+        self.host_url = host_url.rstrip("/")
         self.api_key = api_key
         self.session: requests.Session = requests.Session()
         self.auth: Union[HTTPBasicAuth, None] = None
@@ -62,8 +64,8 @@ class RequestHandler:
         self,
         path: str,
         ver_uri: str = "",
-        params: Union[dict[int, list[int]], dict, None] = None,
-    ) -> Union[list[dict], dict[str, Any]]:
+        params: Union[dict[str, Any], list[tuple[str, Any]], None] = None,
+    ) -> _ReturnType:
         """Wrapper on any get requests
 
         Args:
@@ -86,11 +88,7 @@ class RequestHandler:
                 "Timeout occurred while connecting to API."
             ) from exception
         response = _process_response(res)
-        if isinstance(response, dict):
-            assert isinstance(response, dict)
-        else:
-            assert isinstance(response, list)
-        return response
+        return self._return(res, dict if isinstance(response, dict) else list)
 
     def _post(
         self,
@@ -98,7 +96,7 @@ class RequestHandler:
         ver_uri: str = "",
         params: Union[dict, None] = None,
         data: Union[list[dict], dict, None] = None,
-    ) -> dict[str, Any]:
+    ) -> _ReturnType:
         """Wrapper on any post requests
 
         Args:
@@ -118,23 +116,26 @@ class RequestHandler:
                 json=data,
                 auth=self.auth,
             )
+
         except requests.Timeout as exception:
             raise PyarrConnectionError(
                 "Timeout occurred while connecting to API."
             ) from exception
-        return self._return(res, dict)
+        response = _process_response(res)
+        return self._return(res, dict if isinstance(response, dict) else list)
 
     def _put(
         self,
         path: str,
-        ver_uri: str = "",
-        params: Union[dict, None] = None,
-        data: Union[dict, None] = None,
-    ) -> dict[str, Any]:
+        ver_uri: str,
+        params: Optional[dict] = None,
+        data: Optional[Union[dict[str, Any], list[dict[str, Any]]]] = None,
+    ) -> _ReturnType:
         """Wrapper on any put requests
 
         Args:
             path (str): Path to API endpoint e.g. /api/manualimport
+            ver_uri (str): API Version
             params (dict, optional): URL Parameters to send with the request. Defaults to None.
             data (dict, optional): Payload to send with request. Defaults to None.
 
@@ -154,7 +155,9 @@ class RequestHandler:
             raise PyarrConnectionError(
                 "Timeout occurred while connecting to API."
             ) from exception
-        return self._return(res, dict)
+
+        response = _process_response(res)
+        return self._return(res, dict if isinstance(response, dict) else list)
 
     def _delete(
         self,
@@ -225,6 +228,9 @@ def _process_response(
     Returns:
         JSON: Array
     """
+    if res.status_code == 400:
+        raise PyarrBadRequest(f"Bad Request, possibly a bug. {str(res.content)}")
+
     if res.status_code == 401:
         raise PyarrUnauthorizedError(
             "Unauthorized. Please ensure valid API Key is used.", {}

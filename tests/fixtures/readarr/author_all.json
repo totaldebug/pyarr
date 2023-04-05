@@ -1,0 +1,82 @@
+[
+    {
+        "authorMetadataId": 1,
+        "status": "continuing",
+        "ended": false,
+        "authorName": "string",
+        "authorNameLastFirst": "string",
+        "foreignAuthorId": "string",
+        "titleSlug": "string",
+        "overview": "",
+        "links": [
+            {
+                "url": "string",
+                "name": "Goodreads"
+            }
+        ],
+        "lastBook": {
+            "authorMetadataId": 1,
+            "foreignBookId": "string",
+            "titleSlug": "string",
+            "title": "string",
+            "releaseDate": "2020-11-22T00:00:00Z",
+            "links": [
+                {
+                    "url": "string",
+                    "name": "Goodreads Editions"
+                }
+            ],
+            "genres": [],
+            "relatedBooks": [
+                123456
+            ],
+            "ratings": {
+                "votes": 98,
+                "value": 4.54,
+                "popularity": 444.92
+            },
+            "cleanTitle": "",
+            "monitored": true,
+            "anyEditionOk": true,
+            "lastInfoSync": "2022-09-16T11:12:53Z",
+            "added": "2021-11-14T21:41:33Z",
+            "addOptions": {
+                "addType": "manual",
+                "searchForNewBook": false
+            },
+            "authorMetadata": null,
+            "author": null,
+            "editions": null,
+            "bookFiles": null,
+            "seriesLinks": null,
+            "id": 392
+        },
+        "images": [],
+        "path": "string",
+        "qualityProfileId": 1,
+        "metadataProfileId": 1,
+        "monitored": false,
+        "monitorNewItems": "all",
+        "rootFolderPath": "string",
+        "genres": [],
+        "cleanName": "string",
+        "sortName": "string",
+        "sortNameLastFirst": "string",
+        "tags": [],
+        "added": "2021-08-15T19:50:13Z",
+        "ratings": {
+            "votes": 110,
+            "value": 4.57,
+            "popularity": 502.70000000000005
+        },
+        "statistics": {
+            "bookFileCount": 0,
+            "bookCount": 1,
+            "availableBookCount": 0,
+            "totalBookCount": 1,
+            "sizeOnDisk": 0,
+            "percentOfBooks": 0
+        },
+        "id": 1
+    }
+]

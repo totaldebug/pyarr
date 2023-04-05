@@ -1,0 +1,64 @@
+{
+    "artistId": 3,
+    "foreignTrackId": "string",
+    "foreignRecordingId": "string",
+    "trackFileId": 0,
+    "albumId": 12,
+    "explicit": false,
+    "absoluteTrackNumber": 1,
+    "trackNumber": "1",
+    "title": "string",
+    "duration": 442466,
+    "mediumNumber": 1,
+    "hasFile": false,
+    "artist": {
+        "artistMetadataId": 6,
+        "status": "ended",
+        "ended": true,
+        "artistName": "string",
+        "foreignArtistId": "string",
+        "tadbId": 0,
+        "discogsId": 0,
+        "overview": "string",
+        "artistType": "Person",
+        "disambiguation": "",
+        "links": [
+            {
+                "url": "string",
+                "coverType": "poster",
+                "extension": ".jpg"
+            }
+        ],
+        "path": "string",
+        "qualityProfileId": 1,
+        "metadataProfileId": 2,
+        "monitored": true,
+        "monitorNewItems": "all",
+        "genres": [
+            "string"
+        ],
+        "cleanName": "string",
+        "sortName": "string",
+        "tags": [],
+        "added": "2022-03-06T19:32:33Z",
+        "ratings": {
+            "votes": 9,
+            "value": 8.4
+        },
+        "statistics": {
+            "albumCount": 0,
+            "trackFileCount": 0,
+            "trackCount": 0,
+            "totalTrackCount": 0,
+            "sizeOnDisk": 0,
+            "percentOfTracks": 0
+        },
+        "id": 3
+    },
+    "ratings": {
+        "votes": 0,
+        "value": 0
+    },
+    "grabbed": false,
+    "id": 6009
+}

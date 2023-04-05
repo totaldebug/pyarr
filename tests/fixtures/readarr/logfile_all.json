@@ -1,0 +1,16 @@
+[
+    {
+        "filename": "Readarr.txt",
+        "lastWriteTime": "2022-09-20T11:49:10Z",
+        "contentsUrl": "/api/v1//Readarr.txt",
+        "downloadUrl": "/logfile/Readarr.txt",
+        "id": 8
+    },
+    {
+        "filename": "Readarr.0.txt",
+        "lastWriteTime": "2022-09-20T09:49:05Z",
+        "contentsUrl": "/api/v1//Readarr.0.txt",
+        "downloadUrl": "/logfile/Readarr.0.txt",
+        "id": 7
+    }
+]

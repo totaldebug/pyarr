@@ -1,0 +1,406 @@
+{
+    "enableRss": true,
+    "enableAutomaticSearch": true,
+    "enableInteractiveSearch": true,
+    "supportsRss": true,
+    "supportsSearch": true,
+    "protocol": "torrent",
+    "priority": 25,
+    "downloadClientId": 0,
+    "name": "string",
+    "fields": [
+        {
+            "order": 0,
+            "name": "baseUrl",
+            "label": "URL",
+            "value": "string",
+            "type": "textbox",
+            "advanced": false
+        },
+        {
+            "order": 1,
+            "name": "apiPath",
+            "label": "API Path",
+            "helpText": "Path to the api, usually /api",
+            "value": "/api",
+            "type": "textbox",
+            "advanced": true
+        },
+        {
+            "order": 2,
+            "name": "multiLanguages",
+            "label": "Multi Languages",
+            "helpText": "What languages are normally in a multi release on this indexer?",
+            "value": [],
+            "type": "select",
+            "advanced": true,
+            "selectOptions": [
+                {
+                    "value": -2,
+                    "name": "Original",
+                    "order": 0,
+                    "dividerAfter": true
+                },
+                {
+                    "value": 31,
+                    "name": "Arabic",
+                    "order": 0,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 34,
+                    "name": "Bengali",
+                    "order": 0,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 29,
+                    "name": "Bulgarian",
+                    "order": 0,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 10,
+                    "name": "Chinese",
+                    "order": 0,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 25,
+                    "name": "Czech",
+                    "order": 0,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 6,
+                    "name": "Danish",
+                    "order": 0,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 7,
+                    "name": "Dutch",
+                    "order": 0,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 1,
+                    "name": "English",
+                    "order": 0,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 16,
+                    "name": "Finnish",
+                    "order": 0,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 19,
+                    "name": "Flemish",
+                    "order": 0,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 2,
+                    "name": "French",
+                    "order": 0,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 4,
+                    "name": "German",
+                    "order": 0,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 20,
+                    "name": "Greek",
+                    "order": 0,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 23,
+                    "name": "Hebrew",
+                    "order": 0,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 26,
+                    "name": "Hindi",
+                    "order": 0,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 22,
+                    "name": "Hungarian",
+                    "order": 0,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 9,
+                    "name": "Icelandic",
+                    "order": 0,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 5,
+                    "name": "Italian",
+                    "order": 0,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 8,
+                    "name": "Japanese",
+                    "order": 0,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 21,
+                    "name": "Korean",
+                    "order": 0,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 24,
+                    "name": "Lithuanian",
+                    "order": 0,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 15,
+                    "name": "Norwegian",
+                    "order": 0,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 33,
+                    "name": "Persian",
+                    "order": 0,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 12,
+                    "name": "Polish",
+                    "order": 0,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 18,
+                    "name": "Portuguese",
+                    "order": 0,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 30,
+                    "name": "Portuguese (Brazil)",
+                    "order": 0,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 27,
+                    "name": "Romanian",
+                    "order": 0,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 11,
+                    "name": "Russian",
+                    "order": 0,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 3,
+                    "name": "Spanish",
+                    "order": 0,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 14,
+                    "name": "Swedish",
+                    "order": 0,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 28,
+                    "name": "Thai",
+                    "order": 0,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 17,
+                    "name": "Turkish",
+                    "order": 0,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 32,
+                    "name": "Ukrainian",
+                    "order": 0,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 13,
+                    "name": "Vietnamese",
+                    "order": 0,
+                    "dividerAfter": false
+                }
+            ]
+        },
+        {
+            "order": 3,
+            "name": "apiKey",
+            "label": "API Key",
+            "value": "string",
+            "type": "textbox",
+            "advanced": false
+        },
+        {
+            "order": 4,
+            "name": "categories",
+            "label": "Categories",
+            "helpText": "Drop down list; at least one category must be selected.",
+            "value": [
+                2000,
+                2010,
+                2020,
+                2030,
+                2035,
+                2040,
+                2045,
+                2050,
+                2060
+            ],
+            "type": "select",
+            "advanced": false,
+            "selectOptionsProviderAction": "newznabCategories"
+        },
+        {
+            "order": 5,
+            "name": "additionalParameters",
+            "label": "Additional Parameters",
+            "helpText": "Additional Newznab parameters",
+            "type": "textbox",
+            "advanced": true
+        },
+        {
+            "order": 6,
+            "name": "removeYear",
+            "label": "Remove year from search string",
+            "helpText": "Should Radarr remove the year after the title when searching this indexer?",
+            "value": false,
+            "type": "checkbox",
+            "advanced": true
+        },
+        {
+            "order": 7,
+            "name": "minimumSeeders",
+            "label": "Minimum Seeders",
+            "helpText": "Minimum number of seeders required.",
+            "value": 1,
+            "type": "number",
+            "advanced": true
+        },
+        {
+            "order": 8,
+            "name": "seedCriteria.seedRatio",
+            "label": "Seed Ratio",
+            "helpText": "The ratio a torrent should reach before stopping, empty is download client's default",
+            "type": "textbox",
+            "advanced": true
+        },
+        {
+            "order": 9,
+            "name": "seedCriteria.seedTime",
+            "label": "Seed Time",
+            "unit": "minutes",
+            "helpText": "The time a torrent should be seeded before stopping, empty is download client's default",
+            "type": "number",
+            "advanced": true
+        },
+        {
+            "order": 10,
+            "name": "requiredFlags",
+            "label": "Required Flags",
+            "helpText": "What indexer flags are required?",
+            "helpLink": "https://wiki.servarr.com/radarr/settings#indexer-flags",
+            "value": [],
+            "type": "tagSelect",
+            "advanced": true,
+            "selectOptions": [
+                {
+                    "value": 1,
+                    "name": "G Freeleech",
+                    "order": 1,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 2,
+                    "name": "G Halfleech",
+                    "order": 2,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 4,
+                    "name": "G DoubleUpload",
+                    "order": 4,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 8,
+                    "name": "PTP Golden",
+                    "order": 8,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 16,
+                    "name": "PTP Approved",
+                    "order": 16,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 32,
+                    "name": "HDB Internal",
+                    "order": 32,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 64,
+                    "name": "AHD Internal",
+                    "order": 64,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 128,
+                    "name": "G Scene",
+                    "order": 128,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 256,
+                    "name": "G Freeleech75",
+                    "order": 256,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 512,
+                    "name": "G Freeleech25",
+                    "order": 512,
+                    "dividerAfter": false
+                },
+                {
+                    "value": 1024,
+                    "name": "AHD UserRelease",
+                    "order": 1024,
+                    "dividerAfter": false
+                }
+            ]
+        }
+    ],
+    "implementationName": "Torznab",
+    "implementation": "Torznab",
+    "configContract": "TorznabSettings",
+    "infoLink": "https://wiki.servarr.com/radarr/supported#torznab",
+    "tags": [],
+    "id": 2
+}

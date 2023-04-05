@@ -10,7 +10,16 @@
    :caption: Modules
    :titlesonly:
 
-   sonarr
-   radarr
-   readarr
-   lidarr
+   modules/sonarr
+   modules/radarr
+   modules/readarr
+   modules/lidarr
+
+.. toctree::
+   :caption: Models
+
+   models/common
+   models/sonarr
+   models/radarr
+   models/readarr
+   models/lidarr

@@ -1,0 +1,17 @@
+{
+    "name": "books",
+    "path": "/books/",
+    "defaultMetadataProfileId": 1,
+    "defaultQualityProfileId": 1,
+    "defaultMonitorOption": "all",
+    "defaultNewItemMonitorOption": "all",
+    "defaultTags": [],
+    "isCalibreLibrary": false,
+    "port": 0,
+    "outputProfile": "default",
+    "useSsl": false,
+    "accessible": true,
+    "freeSpace": 25373036544,
+    "totalSpace": 30006984704,
+    "id": 1
+}

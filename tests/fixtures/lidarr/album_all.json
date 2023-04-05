@@ -1,0 +1,234 @@
+[
+    {
+        "title": "string",
+        "disambiguation": "",
+        "overview": "",
+        "artistId": 7,
+        "foreignAlbumId": "string",
+        "monitored": true,
+        "anyReleaseOk": true,
+        "profileId": 1,
+        "duration": 8926398,
+        "albumType": "Album",
+        "secondaryTypes": [],
+        "mediumCount": 2,
+        "ratings": {
+            "votes": 0,
+            "value": 0
+        },
+        "releaseDate": "2008-01-01T00:00:00Z",
+        "releases": [
+            {
+                "id": 2439,
+                "albumId": 100,
+                "foreignReleaseId": "string",
+                "title": "string",
+                "status": "Official",
+                "duration": 8926398,
+                "trackCount": 20,
+                "media": [
+                    {
+                        "mediumNumber": 2,
+                        "mediumName": "string",
+                        "mediumFormat": "CD"
+                    }
+                ],
+                "mediumCount": 2,
+                "disambiguation": "string",
+                "country": [
+                    "string"
+                ],
+                "label": [
+                    "string"
+                ],
+                "format": "2xCD",
+                "monitored": true
+            }
+        ],
+        "genres": [],
+        "media": [
+            {
+                "mediumNumber": 2,
+                "mediumName": "string",
+                "mediumFormat": "string"
+            }
+        ],
+        "artist": {
+            "artistMetadataId": 1,
+            "status": "continuing",
+            "ended": false,
+            "artistName": "string",
+            "foreignArtistId": "string",
+            "tadbId": 0,
+            "discogsId": 0,
+            "overview": "string",
+            "artistType": "Group",
+            "disambiguation": "",
+            "links": [
+                {
+                    "url": "string",
+                    "name": "string"
+                }
+            ],
+            "images": [
+                {
+                    "url": "string",
+                    "coverType": "poster",
+                    "extension": ".jpg"
+                }
+            ],
+            "path": "/music/string",
+            "qualityProfileId": 1,
+            "metadataProfileId": 1,
+            "monitored": true,
+            "monitorNewItems": "all",
+            "genres": [
+                "string"
+            ],
+            "cleanName": "string",
+            "sortName": "string",
+            "tags": [],
+            "added": "2022-03-07T13:55:42Z",
+            "ratings": {
+                "votes": 66,
+                "value": 8.3
+            },
+            "statistics": {
+                "albumCount": 0,
+                "trackFileCount": 0,
+                "trackCount": 0,
+                "totalTrackCount": 0,
+                "sizeOnDisk": 0,
+                "percentOfTracks": 0
+            },
+            "id": 7
+        },
+        "images": [],
+        "links": [],
+        "statistics": {
+            "trackFileCount": 0,
+            "trackCount": 20,
+            "totalTrackCount": 20,
+            "sizeOnDisk": 0,
+            "percentOfTracks": 0
+        },
+        "grabbed": false,
+        "id": 100
+    },
+    {
+        "title": "string",
+        "disambiguation": "",
+        "overview": "",
+        "artistId": 7,
+        "foreignAlbumId": "string",
+        "monitored": true,
+        "anyReleaseOk": true,
+        "profileId": 1,
+        "duration": 8926398,
+        "albumType": "Album",
+        "secondaryTypes": [],
+        "mediumCount": 2,
+        "ratings": {
+            "votes": 0,
+            "value": 0
+        },
+        "releaseDate": "2008-01-01T00:00:00Z",
+        "releases": [
+            {
+                "id": 2439,
+                "albumId": 100,
+                "foreignReleaseId": "string",
+                "title": "string",
+                "status": "Official",
+                "duration": 8926398,
+                "trackCount": 20,
+                "media": [
+                    {
+                        "mediumNumber": 2,
+                        "mediumName": "string",
+                        "mediumFormat": "CD"
+                    }
+                ],
+                "mediumCount": 2,
+                "disambiguation": "string",
+                "country": [
+                    "string"
+                ],
+                "label": [
+                    "string"
+                ],
+                "format": "2xCD",
+                "monitored": true
+            }
+        ],
+        "genres": [],
+        "media": [
+            {
+                "mediumNumber": 2,
+                "mediumName": "string",
+                "mediumFormat": "string"
+            }
+        ],
+        "artist": {
+            "artistMetadataId": 1,
+            "status": "continuing",
+            "ended": false,
+            "artistName": "string",
+            "foreignArtistId": "string",
+            "tadbId": 0,
+            "discogsId": 0,
+            "overview": "string",
+            "artistType": "Group",
+            "disambiguation": "",
+            "links": [
+                {
+                    "url": "string",
+                    "name": "string"
+                }
+            ],
+            "images": [
+                {
+                    "url": "string",
+                    "coverType": "poster",
+                    "extension": ".jpg"
+                }
+            ],
+            "path": "/music/string",
+            "qualityProfileId": 1,
+            "metadataProfileId": 1,
+            "monitored": true,
+            "monitorNewItems": "all",
+            "genres": [
+                "string"
+            ],
+            "cleanName": "string",
+            "sortName": "string",
+            "tags": [],
+            "added": "2022-03-07T13:55:42Z",
+            "ratings": {
+                "votes": 66,
+                "value": 8.3
+            },
+            "statistics": {
+                "albumCount": 0,
+                "trackFileCount": 0,
+                "trackCount": 0,
+                "totalTrackCount": 0,
+                "sizeOnDisk": 0,
+                "percentOfTracks": 0
+            },
+            "id": 7
+        },
+        "images": [],
+        "links": [],
+        "statistics": {
+            "trackFileCount": 0,
+            "trackCount": 20,
+            "totalTrackCount": 20,
+            "sizeOnDisk": 0,
+            "percentOfTracks": 0
+        },
+        "grabbed": false,
+        "id": 101
+    }
+]

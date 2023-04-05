@@ -1,0 +1,116 @@
+[
+    {
+        "foreignId": "guid",
+        "artist": {
+            "artistMetadataId": 0,
+            "status": "string",
+            "ended": true,
+            "artistName": "string",
+            "foreignArtistId": "guid",
+            "tadbId": 0,
+            "discogsId": 0,
+            "overview": "string",
+            "artistType": "Group",
+            "disambiguation": "string",
+            "links": [
+                {
+                    "url": "string",
+                    "name": "string"
+                },
+                {
+                    "url": "string",
+                    "name": "string"
+                },
+                {
+                    "url": "string",
+                    "name": "string"
+                }
+            ],
+            "images": [],
+            "qualityProfileId": 0,
+            "metadataProfileId": 0,
+            "monitored": false,
+            "monitorNewItems": "all",
+            "genres": [
+                "string"
+            ],
+            "tags": [],
+            "added": "0001-01-01T00:01:00Z",
+            "ratings": {
+                "votes": 0,
+                "value": 0
+            },
+            "statistics": {
+                "albumCount": 0,
+                "trackFileCount": 0,
+                "trackCount": 0,
+                "totalTrackCount": 0,
+                "sizeOnDisk": 0,
+                "percentOfTracks": 0
+            }
+        },
+        "id": 1
+    },
+    {
+        "foreignId": "guid",
+        "artist": {
+            "artistMetadataId": 0,
+            "status": "string",
+            "ended": false,
+            "artistName": "string",
+            "foreignArtistId": "guid",
+            "tadbId": 0,
+            "discogsId": 0,
+            "overview": "",
+            "artistType": "Group",
+            "disambiguation": "string",
+            "links": [
+                {
+                    "url": "string",
+                    "name": "string"
+                },
+                {
+                    "url": "string",
+                    "name": "string"
+                },
+                {
+                    "url": "string",
+                    "name": "string"
+                },
+                {
+                    "url": "string",
+                    "name": "string"
+                },
+                {
+                    "url": "string",
+                    "name": "string"
+                },
+                {
+                    "url": "string",
+                    "name": "string"
+                }
+            ],
+            "images": [],
+            "qualityProfileId": 0,
+            "metadataProfileId": 0,
+            "monitored": false,
+            "monitorNewItems": "all",
+            "genres": [],
+            "tags": [],
+            "added": "0001-01-01T00:01:00Z",
+            "ratings": {
+                "votes": 0,
+                "value": 0
+            },
+            "statistics": {
+                "albumCount": 0,
+                "trackFileCount": 0,
+                "trackCount": 0,
+                "totalTrackCount": 0,
+                "sizeOnDisk": 0,
+                "percentOfTracks": 0
+            }
+        },
+        "id": 2
+    }
+]

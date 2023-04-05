@@ -1,0 +1,43 @@
+[
+    {
+        "title": "string",
+        "authorTitle": "string",
+        "seriesTitle": "",
+        "disambiguation": "",
+        "authorId": 0,
+        "foreignBookId": "12345678",
+        "titleSlug": "12345678",
+        "monitored": false,
+        "anyEditionOk": true,
+        "ratings": {
+            "votes": 8085,
+            "value": 4.74,
+            "popularity": 38322.9
+        },
+        "releaseDate": "2015-07-03T23:00:00Z",
+        "pageCount": 30,
+        "genres": [
+            "string"
+        ],
+        "images": [
+            {
+                "url": "string",
+                "coverType": "cover",
+                "extension": ".jpg"
+            }
+        ],
+        "links": [
+            {
+                "url": "string",
+                "name": "Goodreads Editions"
+            },
+            {
+                "url": "string",
+                "name": "Goodreads Book"
+            }
+        ],
+        "added": "0001-01-01T00:01:00Z",
+        "remoteCover": "string",
+        "grabbed": false
+    }
+]

@@ -1,0 +1,10 @@
+{
+    "name": "None",
+    "minPopularity": 10000000000,
+    "skipMissingDate": false,
+    "skipMissingIsbn": false,
+    "skipPartsAndSets": false,
+    "skipSeriesSecondary": false,
+    "minPages": 0,
+    "id": 2
+}

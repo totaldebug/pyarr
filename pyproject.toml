@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyarr"
-version = "4.1.0"
+version = "4.2.0"
 description = "Synchronous Sonarr, Radarr, Lidarr and Readarr API's for Python"
 authors = ["Steven Marks <marksie1988@users.noreply.github.com>"]
 license = "MIT"
@@ -27,20 +27,29 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.9"
-requests = "^2.21.0"
-types-requests = "^2.25.11"
+requests = "^2.28.2"
+types-requests = "^2.28.11.17"
+overrides = "^7.3.1"
 
-[tool.poetry.dev-dependencies]
-black = {version = "^22.3", allow-prereleases = true}
-flake8 = "^3.8.4"
-isort = "^5.10.0"
+[tool.poetry.group.dev.dependencies]
+black = {version = "^22.12.0", allow-prereleases = true}
+flake8 = "^3.9.2"
+isort = "^5.12.0"
 mypy = "^0.910"
-pre-commit = "^2.15.0"
+pre-commit = "^2.21.0"
 interrogate = "^1.5.0"
-Sphinx = "^4.3.2"
-sphinx-argparse = "^0.3.1"
+Sphinx = "^4.5.0"
+sphinx-argparse = "^0.3.2"
 sphinx-autobuild = "^2021.3.14"
-sphinx-rtd-theme = "^1.0.0"
+sphinx-rtd-theme = "^1.2.0"
+pytest = "^7.2.2"
+pytest-cov = "^3.0.0"
+pylint = "^2.17.1"
+responses = "^0.21.0"
+autoflake = "^1.7.8"
+ipykernel = "^6.22.0"
+sphinx-toolbox = "^3.4.0"
+enum-tools = "^0.9.0.post1"
 
 [tool.black]
 line-length = 88
@@ -55,6 +64,7 @@ exclude = '''
     | \.hg
     | \.mypy_cache
     | \.tox
+    | \.nox
     | \.venv
     | _build
     | buck-out
@@ -86,6 +96,12 @@ forced_separate = [
 ]
 combine_as_imports = true
 
+[tool.autoflake]
+check = true
+remove-unused-variables = true
+remove-all-unused-imports = true
+remove-duplicate-keys = true
+
 [tool.interrogate]
 ignore-init-method = true
 ignore-init-module = false
@@ -98,12 +114,12 @@ ignore-nested-functions = false
 ignore-nested-classes = true
 ignore-setters = false
 fail-under = 100
-exclude = ["setup.py", "sphinx-docs", "build", ".devcontainer"]
+exclude = ["setup.py", "sphinx-docs", "build", ".devcontainer", ".nox"]
 ignore-regex = ["^get$", "^mock_.*", ".*BaseClass.*"]
 verbose = 0
 quiet = false
 color = true
 
 [build-system]
-requires = ["poetry>=0.12"]
+requires = ["poetry-core>=1.4.0"]
 build-backend = "poetry.masonry.api"

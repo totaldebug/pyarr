@@ -1,0 +1,15 @@
+{
+    "enabled": true,
+    "required": "daa",
+    "ignored": "ddd",
+    "preferred": [
+        {
+            "key": "qwe",
+            "value": 3
+        }
+    ],
+    "includePreferredWhenRenaming": false,
+    "indexerId": 0,
+    "tags": [],
+    "id": 1
+}

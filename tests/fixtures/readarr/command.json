@@ -1,0 +1,30 @@
+{
+    "name": "RefreshMonitoredDownloads",
+    "commandName": "Refresh Monitored Downloads",
+    "message": "Completed",
+    "body": {
+        "sendUpdatesToClient": false,
+        "updateScheduledTask": true,
+        "completionMessage": "Completed",
+        "requiresDiskAccess": false,
+        "isExclusive": false,
+        "isTypeExclusive": false,
+        "name": "RefreshMonitoredDownloads",
+        "lastExecutionTime": "2022-09-16T10:52:26Z",
+        "lastStartTime": "2022-09-16T10:52:26Z",
+        "trigger": "scheduled",
+        "suppressMessages": false
+    },
+    "priority": "low",
+    "status": "completed",
+    "queued": "2022-09-16T10:53:56Z",
+    "started": "2022-09-16T10:53:56Z",
+    "ended": "2022-09-16T10:53:56Z",
+    "duration": "00:00:00.0213480",
+    "trigger": "scheduled",
+    "stateChangeTime": "2022-09-16T10:53:56Z",
+    "sendUpdatesToClient": false,
+    "updateScheduledTask": true,
+    "lastExecutionTime": "2022-09-16T10:52:26Z",
+    "id": 883340
+}

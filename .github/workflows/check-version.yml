@@ -1,4 +1,4 @@
-name: pr
+name: Check Version has been updated
 
 on:
   pull_request:
@@ -30,27 +30,3 @@ jobs:
         uses: dudo/tag_check@v1.1.1
         with:
           git_tag_prefix: v
-  code-quality:
-    name: 📊 Check code quality
-    runs-on: ubuntu-latest
-    steps:
-      - name: Getting your configuration from GitHub
-        uses: actions/checkout@v1
-      - name: Setup Python
-        uses: actions/setup-python@v1
-        with:
-          python-version: 3.9
-      - name: Run image
-        uses: abatilo/actions-poetry@v2.0.0
-      - name: Install dependencies with Poetry
-        run: poetry install
-      - name: 📦 Check imports
-        run: poetry run isort --diff pyarr
-      - name: 🏴 Check Black formatting
-        run: poetry run black --check pyarr
-      - name: ❄️ Check flake8 formatting
-        run: poetry run flake8 pyarr
-      - name: Check static type
-        run: poetry run mypy pyarr
-      - name: Check docstrings
-        run: poetry run interrogate pyarr

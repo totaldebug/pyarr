@@ -1,0 +1,194 @@
+[
+    {
+        "title": "string",
+        "originalTitle": "string",
+        "originalLanguage": {
+            "id": 1,
+            "name": "English"
+        },
+        "alternateTitles": [
+            {
+                "sourceType": "tmdb",
+                "movieId": 0,
+                "title": "string",
+                "sourceId": 0,
+                "votes": 0,
+                "voteCount": 0,
+                "language": {
+                    "id": 1,
+                    "name": "English"
+                }
+            },
+            {
+                "sourceType": "tmdb",
+                "movieId": 0,
+                "title": "string",
+                "sourceId": 0,
+                "votes": 0,
+                "voteCount": 0,
+                "language": {
+                    "id": 11,
+                    "name": "Russian"
+                }
+            },
+            {
+                "sourceType": "tmdb",
+                "movieId": 0,
+                "title": "string",
+                "sourceId": 0,
+                "votes": 0,
+                "voteCount": 0,
+                "language": {
+                    "id": 1,
+                    "name": "English"
+                }
+            },
+            {
+                "sourceType": "tmdb",
+                "movieId": 0,
+                "title": "string",
+                "sourceId": 0,
+                "votes": 0,
+                "voteCount": 0,
+                "language": {
+                    "id": 1,
+                    "name": "English"
+                }
+            },
+            {
+                "sourceType": "tmdb",
+                "movieId": 0,
+                "title": "string",
+                "sourceId": 0,
+                "votes": 0,
+                "voteCount": 0,
+                "language": {
+                    "id": 16,
+                    "name": "Finnish"
+                }
+            },
+            {
+                "sourceType": "tmdb",
+                "movieId": 0,
+                "title": "string",
+                "sourceId": 0,
+                "votes": 0,
+                "voteCount": 0,
+                "language": {
+                    "id": 2,
+                    "name": "French"
+                }
+            },
+            {
+                "sourceType": "tmdb",
+                "movieId": 0,
+                "title": "string",
+                "sourceId": 0,
+                "votes": 0,
+                "voteCount": 0,
+                "language": {
+                    "id": 18,
+                    "name": "Portuguese"
+                }
+            },
+            {
+                "sourceType": "tmdb",
+                "movieId": 0,
+                "title": "string",
+                "sourceId": 0,
+                "votes": 0,
+                "voteCount": 0,
+                "language": {
+                    "id": 1,
+                    "name": "English"
+                }
+            },
+            {
+                "sourceType": "tmdb",
+                "movieId": 0,
+                "title": "string",
+                "sourceId": 0,
+                "votes": 0,
+                "voteCount": 0,
+                "language": {
+                    "id": 1,
+                    "name": "English"
+                }
+            }
+        ],
+        "secondaryYearSourceId": 0,
+        "sortTitle": "string",
+        "sizeOnDisk": 0,
+        "status": "released",
+        "overview": "string",
+        "inCinemas": "2002-03-10T00:00:00Z",
+        "physicalRelease": "2002-09-26T00:00:00Z",
+        "digitalRelease": "2005-04-22T00:00:00Z",
+        "images": [
+            {
+                "coverType": "poster",
+                "url": "string"
+            },
+            {
+                "coverType": "fanart",
+                "url": "string"
+            }
+        ],
+        "website": "string",
+        "year": 2002,
+        "hasFile": false,
+        "youTubeTrailerId": "string",
+        "studio": "string",
+        "path": "/movies/string",
+        "qualityProfileId": 1,
+        "monitored": true,
+        "minimumAvailability": "announced",
+        "isAvailable": true,
+        "folderName": "/movies/string",
+        "runtime": 81,
+        "cleanTitle": "string",
+        "imdbId": "string",
+        "tmdbId": 425,
+        "titleSlug": "425",
+        "certification": "U",
+        "genres": [
+            "Animation",
+            "Comedy",
+            "Family"
+        ],
+        "added": "2022-08-03T08:21:06Z",
+        "addOptions": {
+            "searchForMovie": false,
+            "ignoreEpisodesWithFiles": false,
+            "ignoreEpisodesWithoutFiles": false
+        },
+        "ratings": {
+            "imdb": {
+                "votes": 476521,
+                "value": 7.5,
+                "type": "user"
+            },
+            "tmdb": {
+                "votes": 11238,
+                "value": 7.334,
+                "type": "user"
+            },
+            "metacritic": {
+                "votes": 0,
+                "value": 61,
+                "type": "user"
+            },
+            "rottenTomatoes": {
+                "votes": 0,
+                "value": 77,
+                "type": "user"
+            }
+        },
+        "collection": {
+            "name": "string",
+            "tmdbId": 8354,
+            "images": []
+        },
+        "id": 313
+    }
+]
