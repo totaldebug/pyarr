@@ -30,11 +30,8 @@ jobs:
         run: |
           export UID=$(id -u)
           export GID=$(id -g)
-      - name: Build docker images
-        uses: docker/compose@v1
-        with:
-          file: .ci/docker-compose.yml
-          command: up -d
+      - name: Run containers
+        run: docker-compose -f .ci/docker-compose.yml up
       - name: 🧪 Check tests are passing
         run: |
           pip install poetry nox
