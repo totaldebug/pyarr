@@ -16,8 +16,6 @@ services:
     image: lscr.io/linuxserver/radarr:latest
     container_name: radarr
     environment:
-      - PUID=${UID}
-      - PGID=${GID}
       - TZ=Europe/London
     volumes:
       - ./tests/docker_configs/radarr:/config:rw
@@ -28,8 +26,6 @@ services:
     image: lscr.io/linuxserver/readarr:develop
     container_name: readarr
     environment:
-      - PUID=${UID}
-      - PGID=${GID}
       - TZ=Europe/London
     volumes:
       - ./tests/docker_configs/readarr:/config:rw
@@ -40,8 +36,6 @@ services:
     image: lscr.io/linuxserver/lidarr:latest
     container_name: lidarr
     environment:
-      - PUID=${UID}
-      - PGID=${GID}
       - TZ=Europe/London
     volumes:
       - ./tests/docker_configs/lidarr:/config:rw
@@ -52,8 +46,6 @@ services:
     image: lscr.io/linuxserver/deluge:latest
     container_name: deluge
     environment:
-      - PUID=${UID}
-      - PGID=${GID}
       - TZ=Europe/London
     volumes:
       - ./tests/docker_configs/deluge/config:/config:rw
@@ -64,8 +56,6 @@ services:
     image: lscr.io/linuxserver/jackett:latest
     container_name: jackett
     environment:
-      - PUID=${UID}
-      - PGID=${GID}
       - TZ=Europe/London
     volumes:
       - ./tests/docker_configs/jackett/config/jackett:/config:rw
