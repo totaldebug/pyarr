@@ -28,7 +28,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Build docker images
         run: |
-          docker-compose --file .ci/docker-compose.yml
+          docker compose -f .ci/docker-compose.yml up
       - name: 🧪 Check tests are passing
         run: |
           pip install poetry nox
