@@ -36,7 +36,7 @@ jobs:
       - name: check ports are mapped
         run: docker ps
       - name: check one of the containers is up
-        run: curl http://localhost:7878
+        run: curl http://radarr:7878
       - name: 🧪 Check tests are passing
         run: |
           pip install poetry nox
