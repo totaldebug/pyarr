@@ -6,11 +6,9 @@ services:
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
     environment:
-      - PUID=${UID}
-      - PGID=${GID}
       - TZ=Europe/London
     volumes:
-      - ./tests/docker_configs/sonarr/config.xml:/config/config.xml:rw
+      - ./tests/docker_configs/sonarr:/config:rw
     ports:
       - 8989:8989
     restart: unless-stopped
@@ -22,7 +20,7 @@ services:
       - PGID=${GID}
       - TZ=Europe/London
     volumes:
-      - ./tests/docker_configs/radarr/config.xml:/config/config.xml:rw
+      - ./tests/docker_configs/radarr:/config:rw
     ports:
       - 7878:7878
     restart: unless-stopped
@@ -34,7 +32,7 @@ services:
       - PGID=${GID}
       - TZ=Europe/London
     volumes:
-      - ./tests/docker_configs/readarr/config.xml:/config/config.xml:rw
+      - ./tests/docker_configs/readarr:/config:rw
     ports:
       - 8787:8787
     restart: unless-stopped
@@ -46,7 +44,7 @@ services:
       - PGID=${GID}
       - TZ=Europe/London
     volumes:
-      - ./tests/docker_configs/lidarr/config.xml:/config/config.xml:rw
+      - ./tests/docker_configs/lidarr:/config:rw
     ports:
       - 8686:8686
     restart: unless-stopped
