@@ -237,8 +237,8 @@ class ReadarrAPI(BaseArrAPI):
         upgrades_allowed: bool,
         cutoff: int,
         items: list,
-        min_format_score: int,
-        cutoff_format_score: int,
+        min_format_score: int = 0,
+        cutoff_format_score: int = 0,
         format_items: list = [],
     ) -> JsonObject:  # type: ignore[override]
         """Add new quality profile
@@ -248,8 +248,8 @@ class ReadarrAPI(BaseArrAPI):
             upgrades_allowed (bool): Are upgrades in quality allowed?
             cutoff (int): ID of quality definition to cutoff at. Must be an allowed definition ID.
             items (list): Add a list of items (from `get_quality_definition()`)
-            min_format_score (int): minimum score for format.
-            cutoff_format_score (int):
+            min_format_score (int): minimum score for format. Defaults to 0
+            cutoff_format_score (int): cutoff format score. Defaults to 0
             format_items (list): custom format items. Defaults to []
 
         Returns:

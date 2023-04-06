@@ -4,6 +4,7 @@ import random
 
 import pytest
 import responses
+from responses import matchers
 
 from pyarr.exceptions import (
     PyarrMissingArgument,
@@ -198,11 +199,11 @@ def test_get_parse(lidarr_mock_client):
 
     responses.add(
         responses.GET,
-        "https://127.0.0.1:8686/api/v1/parse?title=test",
+        "https://127.0.0.1:8686/api/v1/parse",
+        match=[matchers.query_string_matcher("title=test")],
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/blank_list.json"),
         status=200,
-        match_querystring=True,
     )
     data = lidarr_mock_client.get_parse(title="test")
     assert isinstance(data, list)
@@ -232,33 +233,37 @@ def test_get_track_file(lidarr_mock_client: LidarrAPI):
 
     responses.add(
         responses.GET,
-        "https://127.0.0.1:8686/api/v1/trackfile?artistId=1",
+        "https://127.0.0.1:8686/api/v1/trackfile",
+        match=[matchers.query_string_matcher("artistId=1")],
         headers={"Content-Type": "application/json"},
         body=load_fixture("lidarr/track_all.json"),
         status=200,
-        match_querystring=True,
     )
     data = lidarr_mock_client.get_track_file(artistId=1)
     assert isinstance(data, list)
 
     responses.add(
         responses.GET,
-        "https://127.0.0.1:8686/api/v1/trackfile?albumId=1",
+        "https://127.0.0.1:8686/api/v1/trackfile",
+        match=[matchers.query_string_matcher("albumId=1")],
         headers={"Content-Type": "application/json"},
         body=load_fixture("lidarr/track_all.json"),
         status=200,
-        match_querystring=True,
     )
     data = lidarr_mock_client.get_track_file(albumId=1)
     assert isinstance(data, list)
 
     responses.add(
         responses.GET,
-        "https://127.0.0.1:8686/api/v1/trackfile?trackFileIds=1&trackFileIds=2&trackFileIds=3",
+        "https://127.0.0.1:8686/api/v1/trackfile",
+        match=[
+            matchers.query_string_matcher(
+                "trackFileIds=1&trackFileIds=2&trackFileIds=3"
+            )
+        ],
         headers={"Content-Type": "application/json"},
         body=load_fixture("lidarr/track_all.json"),
         status=200,
-        match_querystring=True,
     )
     data = lidarr_mock_client.get_track_file(trackFileIds=[1, 2, 3])
     assert isinstance(data, list)
@@ -269,18 +274,17 @@ def test_get_track_file(lidarr_mock_client: LidarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("lidarr/track.json"),
         status=200,
-        match_querystring=True,
     )
     data = lidarr_mock_client.get_track_file(trackFileIds=1)
     assert isinstance(data, dict)
 
     responses.add(
         responses.GET,
-        "https://127.0.0.1:8686/api/v1/trackfile?unmapped=True",
+        "https://127.0.0.1:8686/api/v1/trackfile",
+        match=[matchers.query_string_matcher("unmapped=True")],
         headers={"Content-Type": "application/json"},
         body=load_fixture("lidarr/track_all.json"),
         status=200,
-        match_querystring=True,
     )
     data = lidarr_mock_client.get_track_file(unmapped=True)
     assert isinstance(data, list)
@@ -300,7 +304,6 @@ def test_upd_track_file(lidarr_mock_client: LidarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("lidarr/track.json"),
         status=200,
-        match_querystring=True,
     )
     track = lidarr_mock_client.get_track_file(trackFileIds=1)
 
@@ -310,7 +313,6 @@ def test_upd_track_file(lidarr_mock_client: LidarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("lidarr/track.json"),
         status=200,
-        match_querystring=True,
     )
     data = lidarr_mock_client.upd_track_file(data=track)
     assert isinstance(data, dict)
@@ -357,18 +359,21 @@ def test_get_queue(lidarr_mock_client: LidarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("lidarr/queue.json"),
         status=200,
-        match_querystring=True,
     )
     data = lidarr_mock_client.get_queue()
     assert isinstance(data, dict)
 
     responses.add(
         responses.GET,
-        "https://127.0.0.1:8686/api/v1/queue?page=1&pageSize=10&sortKey=timeleft&sortDirection=default",
+        "https://127.0.0.1:8686/api/v1/queue",
+        match=[
+            matchers.query_string_matcher(
+                "page=1&pageSize=10&sortKey=timeleft&sortDirection=default"
+            )
+        ],
         headers={"Content-Type": "application/json"},
         body=load_fixture("lidarr/queue.json"),
         status=200,
-        match_querystring=True,
     )
     data = lidarr_mock_client.get_queue(
         page=1,
@@ -380,11 +385,15 @@ def test_get_queue(lidarr_mock_client: LidarrAPI):
 
     responses.add(
         responses.GET,
-        "https://127.0.0.1:8686/api/v1/queue?unknownArtists=True&includeAlbum=True&includeArtist=True",
+        "https://127.0.0.1:8686/api/v1/queue",
+        match=[
+            matchers.query_string_matcher(
+                "unknownArtists=True&includeAlbum=True&includeArtist=True"
+            )
+        ],
         headers={"Content-Type": "application/json"},
         body=load_fixture("lidarr/queue.json"),
         status=200,
-        match_querystring=True,
     )
     data = lidarr_mock_client.get_queue(
         unknown_artists=True, include_album=True, include_artist=True
@@ -411,18 +420,21 @@ def test_get_queue_details(lidarr_mock_client: LidarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/blank_list.json"),
         status=200,
-        match_querystring=True,
     )
     data = lidarr_mock_client.get_queue_details()
     assert isinstance(data, list)
 
     responses.add(
         responses.GET,
-        "https://127.0.0.1:8686/api/v1/queue/details?includeArtist=True&includeAlbum=True&artistId=1&albumIds=1&albumIds=2",
+        "https://127.0.0.1:8686/api/v1/queue/details",
+        match=[
+            matchers.query_string_matcher(
+                "includeArtist=True&includeAlbum=True&artistId=1&albumIds=1&albumIds=2"
+            )
+        ],
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/blank_list.json"),
         status=200,
-        match_querystring=True,
     )
     data = lidarr_mock_client.get_queue_details(
         include_artist=True, include_album=True, artistId=1, albumIds=[1, 2]
@@ -441,18 +453,17 @@ def test_get_release(lidarr_mock_client: LidarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/blank_list.json"),
         status=200,
-        match_querystring=True,
     )
     data = lidarr_mock_client.get_release()
     assert isinstance(data, list)
 
     responses.add(
         responses.GET,
-        "https://127.0.0.1:8686/api/v1/release?artistId=1&albumId=1",
+        "https://127.0.0.1:8686/api/v1/release",
+        match=[matchers.query_string_matcher("artistId=1&albumId=1")],
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/blank_list.json"),
         status=200,
-        match_querystring=True,
     )
     data = lidarr_mock_client.get_release(artistId=1, albumId=1)
     assert isinstance(data, list)
@@ -465,21 +476,21 @@ def test_get_rename(lidarr_mock_client: LidarrAPI):
 
     responses.add(
         responses.GET,
-        "https://127.0.0.1:8686/api/v1/rename?artistId=1",
+        "https://127.0.0.1:8686/api/v1/rename",
+        match=[matchers.query_string_matcher("artistId=1")],
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/blank_list.json"),
         status=200,
-        match_querystring=True,
     )
     data = lidarr_mock_client.get_rename(artistId=1)
     assert isinstance(data, list)
     responses.add(
         responses.GET,
-        "https://127.0.0.1:8686/api/v1/rename?artistId=1&albumId=1",
+        "https://127.0.0.1:8686/api/v1/rename",
+        match=[matchers.query_string_matcher("artistId=1&albumId=1")],
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/blank_list.json"),
         status=200,
-        match_querystring=True,
     )
     data = lidarr_mock_client.get_rename(artistId=1, albumId=1)
     assert isinstance(data, list)
@@ -496,22 +507,26 @@ def test_get_manual_import(lidarr_mock_client: LidarrAPI):
 
     responses.add(
         responses.GET,
-        "https://127.0.0.1:8686/api/v1/manualimport?folder=/music/",
+        "https://127.0.0.1:8686/api/v1/manualimport",
+        match=[matchers.query_string_matcher("folder=/music/")],
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/blank_list.json"),
         status=200,
-        match_querystring=True,
     )
     data = lidarr_mock_client.get_manual_import(folder="/music/")
     assert isinstance(data, list)
 
     responses.add(
         responses.GET,
-        "https://127.0.0.1:8686/api/v1/manualimport?folder=/music/&downloadId=1&artistId=1&filterExistingFiles=True&replaceExistingFiles=True",
+        "https://127.0.0.1:8686/api/v1/manualimport",
+        match=[
+            matchers.query_string_matcher(
+                "folder=/music/&downloadId=1&artistId=1&filterExistingFiles=True&replaceExistingFiles=True"
+            )
+        ],
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/blank_list.json"),
         status=200,
-        match_querystring=True,
     )
     data = lidarr_mock_client.get_manual_import(
         folder="/music/",
@@ -530,11 +545,11 @@ def test_upd_manual_import(lidarr_mock_client: LidarrAPI):
 
     responses.add(
         responses.GET,
-        "https://127.0.0.1:8686/api/v1/manualimport?folder=/music/",
+        "https://127.0.0.1:8686/api/v1/manualimport",
+        match=[matchers.query_string_matcher("folder=/music/")],
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/blank_list.json"),
         status=200,
-        match_querystring=True,
     )
     man_import = lidarr_mock_client.get_manual_import(folder="/music/")
 
@@ -544,7 +559,6 @@ def test_upd_manual_import(lidarr_mock_client: LidarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/blank_dict.json"),
         status=200,
-        match_querystring=True,
     )
     data = lidarr_mock_client.upd_manual_import(data=man_import)
     assert isinstance(data, dict)
@@ -561,18 +575,17 @@ def test_get_manual_import(lidarr_mock_client: LidarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/blank_list.json"),
         status=200,
-        match_querystring=True,
     )
     data = lidarr_mock_client.get_retag()
     assert isinstance(data, list)
 
     responses.add(
         responses.GET,
-        "https://127.0.0.1:8686/api/v1/retag?artistId=1&albumId=1",
+        "https://127.0.0.1:8686/api/v1/retag",
+        match=[matchers.query_string_matcher("artistId=1&albumId=1")],
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/blank_list.json"),
         status=200,
-        match_querystring=True,
     )
     data = lidarr_mock_client.get_retag(artistId=1, albumId=1)
     assert isinstance(data, list)
@@ -981,7 +994,6 @@ def test_get_indexer(lidarr_mock_client: LidarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/indexer_all.json"),
         status=200,
-        match_querystring=True,
     )
     data = lidarr_mock_client.get_indexer()
     assert isinstance(data, list)
@@ -992,7 +1004,6 @@ def test_get_indexer(lidarr_mock_client: LidarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/indexer.json"),
         status=200,
-        match_querystring=True,
     )
     data = lidarr_mock_client.get_indexer(id_=1)
     assert isinstance(data, dict)
@@ -1008,7 +1019,6 @@ def test_upd_indexer(lidarr_mock_client: LidarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/indexer.json"),
         status=200,
-        match_querystring=True,
     )
     data = lidarr_mock_client.get_indexer(1)
 
@@ -1018,7 +1028,6 @@ def test_upd_indexer(lidarr_mock_client: LidarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/indexer.json"),
         status=202,
-        match_querystring=True,
     )
     data = lidarr_mock_client.upd_indexer(1, data)
     assert isinstance(data, dict)
@@ -1033,18 +1042,21 @@ def test_get_blocklist(lidarr_mock_client: LidarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/blocklist.json"),
         status=200,
-        match_querystring=True,
     )
     data = lidarr_mock_client.get_blocklist()
     assert isinstance(data, dict)
 
     responses.add(
         responses.GET,
-        "https://127.0.0.1:8686/api/v1/blocklist?page=1&pageSize=10&sortKey=date&sortDirection=ascending",
+        "https://127.0.0.1:8686/api/v1/blocklist",
+        match=[
+            matchers.query_string_matcher(
+                "page=1&pageSize=10&sortKey=date&sortDirection=ascending"
+            )
+        ],
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/blocklist.json"),
         status=200,
-        match_querystring=True,
     )
     data = lidarr_mock_client.get_blocklist(
         page=1,
@@ -1123,7 +1135,6 @@ def test_delete_track_file(lidarr_mock_client: LidarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/delete.json"),
         status=200,
-        match_querystring=True,
     )
     data = lidarr_mock_client.delete_track_file(1)
     assert isinstance(data, dict)
@@ -1138,7 +1149,6 @@ def test_del_blocklist(lidarr_mock_client: LidarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/delete.json"),
         status=200,
-        match_querystring=True,
     )
     data = lidarr_mock_client.del_blocklist(id_=1)
     assert isinstance(data, dict)
@@ -1153,7 +1163,6 @@ def test_del_blocklist_bulk(lidarr_mock_client: LidarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/delete.json"),
         status=200,
-        match_querystring=True,
     )
     data = lidarr_mock_client.del_blocklist_bulk(ids=[1, 2, 3])
     assert isinstance(data, dict)
@@ -1168,7 +1177,6 @@ def test_del_indexer(lidarr_mock_client: LidarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/delete.json"),
         status=200,
-        match_querystring=True,
     )
     data = lidarr_mock_client.del_indexer(id_=1)
     assert isinstance(data, dict)
@@ -1189,11 +1197,11 @@ def test_del_indexer(lidarr_mock_client: LidarrAPI):
 def test_del_queue(lidarr_mock_client: LidarrAPI):
     responses.add(
         responses.DELETE,
-        "https://127.0.0.1:8686/api/v1/queue/1?removeFromClient=True&blocklist=True",
+        "https://127.0.0.1:8686/api/v1/queue/1",
+        match=[matchers.query_string_matcher("removeFromClient=True&blocklist=True")],
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/delete.json"),
         status=200,
-        match_querystring=True,
     )
 
     data = lidarr_mock_client.del_queue(id_=1, remove_from_client=True, blocklist=True)
