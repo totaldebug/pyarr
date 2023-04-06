@@ -10,7 +10,7 @@ services:
       - PGID=123
       - TZ=Europe/London
     volumes:
-      - ../tests/docker_configs/sonarr/config.xml:/conifg/config.xml:rw
+      - ../tests/docker_configs/sonarr/config.xml:/config/config.xml:rw
     ports:
       - 8989:8989
     restart: unless-stopped
