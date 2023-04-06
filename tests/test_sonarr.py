@@ -4,6 +4,7 @@ import random
 
 import pytest
 import responses
+from responses import matchers
 
 from pyarr.exceptions import (
     PyarrMissingArgument,
@@ -180,6 +181,7 @@ def test_get_episode(sonarr_client: SonarrAPI):
 
     episodes = sonarr_client.get_episode(series[0]["id"], True)
     assert isinstance(episodes, list)
+    assert episodes[0]["id"]
 
     data = sonarr_client.get_episode(episodes[0]["id"])
     assert isinstance(data, dict)
@@ -339,7 +341,6 @@ def test_get_indexer(sonarr_mock_client: SonarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/indexer_all.json"),
         status=200,
-        match_querystring=True,
     )
     data = sonarr_mock_client.get_indexer()
     assert isinstance(data, list)
@@ -350,7 +351,6 @@ def test_get_indexer(sonarr_mock_client: SonarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/indexer.json"),
         status=200,
-        match_querystring=True,
     )
     data = sonarr_mock_client.get_indexer(id_=1)
     assert isinstance(data, dict)
@@ -366,7 +366,6 @@ def test_upd_indexer(sonarr_mock_client: SonarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/indexer.json"),
         status=200,
-        match_querystring=True,
     )
     data = sonarr_mock_client.get_indexer(1)
 
@@ -376,7 +375,6 @@ def test_upd_indexer(sonarr_mock_client: SonarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/indexer.json"),
         status=202,
-        match_querystring=True,
     )
     data = sonarr_mock_client.upd_indexer(1, data)
     assert isinstance(data, dict)
@@ -641,18 +639,21 @@ def test_get_queue(sonarr_mock_client: SonarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/queue.json"),
         status=200,
-        match_querystring=True,
     )
     data = sonarr_mock_client.get_queue()
     assert isinstance(data, dict)
 
     responses.add(
         responses.GET,
-        "https://127.0.0.1:8989/api/v3/queue?page=1&pageSize=20&sortKey=timeleft&sortDirection=default&includeUnknownSeriesItems=True&includeSeries=True&includeEpisode=True",
+        "https://127.0.0.1:8989/api/v3/queue",
+        match=[
+            matchers.query_string_matcher(
+                "page=1&pageSize=20&sortKey=timeleft&sortDirection=default&includeUnknownSeriesItems=True&includeSeries=True&includeEpisode=True"
+            )
+        ],
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/queue.json"),
         status=200,
-        match_querystring=True,
     )
     data = sonarr_mock_client.get_queue(
         page=1,
@@ -682,18 +683,21 @@ def test_get_blocklist(sonarr_mock_client: SonarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/blocklist.json"),
         status=200,
-        match_querystring=True,
     )
     data = sonarr_mock_client.get_blocklist()
     assert isinstance(data, dict)
 
     responses.add(
         responses.GET,
-        "https://127.0.0.1:8989/api/v3/blocklist?page=1&pageSize=10&sortKey=date&sortDirection=ascending",
+        "https://127.0.0.1:8989/api/v3/blocklist",
+        match=[
+            matchers.query_string_matcher(
+                "page=1&pageSize=10&sortKey=date&sortDirection=ascending"
+            )
+        ],
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/blocklist.json"),
         status=200,
-        match_querystring=True,
     )
     data = sonarr_mock_client.get_blocklist(
         page=1,
@@ -756,11 +760,11 @@ def test_get_parsed_title(sonarr_client: SonarrAPI):
 def test_get_parsed_path(sonarr_mock_client: SonarrAPI):
     responses.add(
         responses.GET,
-        "https://127.0.0.1:8989/api/v3/parse?path=/",
+        "https://127.0.0.1:8989/api/v3/parse",
+        match=[matchers.query_string_matcher("path=/")],
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/parse.json"),
         status=200,
-        match_querystring=True,
     )
     data = sonarr_mock_client.get_parsed_path("/")
     assert isinstance(data, dict)
@@ -778,7 +782,6 @@ def test_download_release(sonarr_mock_client: SonarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/release_download.json"),
         status=201,
-        match_querystring=True,
     )
     data = sonarr_mock_client.download_release(guid="1450590", indexer_id=2)
     assert isinstance(data, dict)
@@ -805,7 +808,6 @@ def test_push_release(sonarr_mock_client: SonarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/release_download.json"),
         status=201,
-        match_querystring=True,
     )
     data = sonarr_mock_client.push_release(
         title="test",
@@ -825,7 +827,6 @@ def test_upd_episode_file_quality(sonarr_mock_client: SonarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("sonarr/episodefile.json"),
         status=202,
-        match_querystring=True,
     )
     data = sonarr_mock_client.upd_episode_file_quality(
         1, load_fixture("sonarr/file_quality.json")
@@ -875,7 +876,6 @@ def test_del_blocklist(sonarr_mock_client: SonarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/delete.json"),
         status=200,
-        match_querystring=True,
     )
     data = sonarr_mock_client.del_blocklist(id_=1)
     assert isinstance(data, dict)
@@ -890,7 +890,6 @@ def test_del_blocklist_bulk(sonarr_mock_client: SonarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/delete.json"),
         status=200,
-        match_querystring=True,
     )
     data = sonarr_mock_client.del_blocklist_bulk(ids=[1, 2, 3])
     assert isinstance(data, dict)
@@ -905,7 +904,6 @@ def test_del_indexer(sonarr_mock_client: SonarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/delete.json"),
         status=200,
-        match_querystring=True,
     )
     data = sonarr_mock_client.del_indexer(id_=1)
     assert isinstance(data, dict)
@@ -926,11 +924,11 @@ def test_del_indexer(sonarr_mock_client: SonarrAPI):
 def test_del_queue(sonarr_mock_client: SonarrAPI):
     responses.add(
         responses.DELETE,
-        "https://127.0.0.1:8989/api/v3/queue/1?removeFromClient=True&blocklist=True",
+        "https://127.0.0.1:8989/api/v3/queue/1",
+        match=[matchers.query_string_matcher("removeFromClient=True&blocklist=True")],
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/delete.json"),
         status=200,
-        match_querystring=True,
     )
 
     data = sonarr_mock_client.del_queue(id_=1, remove_from_client=True, blocklist=True)
@@ -946,7 +944,6 @@ def test_del_episode_file(sonarr_mock_client: SonarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/delete.json"),
         status=200,
-        match_querystring=True,
     )
     data = sonarr_mock_client.del_episode_file(id_=1)
     assert isinstance(data, dict)
@@ -971,7 +968,6 @@ def test_del_language_profile(sonarr_mock_client: SonarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/delete.json"),
         status=200,
-        match_querystring=True,
     )
     data = sonarr_mock_client.del_language_profile(id_=1)
     assert isinstance(data, dict)

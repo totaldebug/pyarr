@@ -5,6 +5,7 @@ import random
 
 import pytest
 import responses
+from responses import matchers
 
 from pyarr.exceptions import (
     PyarrMissingArgument,
@@ -553,7 +554,6 @@ def test_get_indexer(radarr_mock_client: RadarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/indexer_all.json"),
         status=200,
-        match_querystring=True,
     )
     data = radarr_mock_client.get_indexer()
     assert isinstance(data, list)
@@ -564,7 +564,6 @@ def test_get_indexer(radarr_mock_client: RadarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/indexer.json"),
         status=200,
-        match_querystring=True,
     )
     data = radarr_mock_client.get_indexer(id_=1)
     assert isinstance(data, dict)
@@ -580,7 +579,6 @@ def test_upd_indexer(radarr_mock_client: RadarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/indexer.json"),
         status=200,
-        match_querystring=True,
     )
     data = radarr_mock_client.get_indexer(1)
 
@@ -590,7 +588,6 @@ def test_upd_indexer(radarr_mock_client: RadarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/indexer.json"),
         status=202,
-        match_querystring=True,
     )
     data = radarr_mock_client.upd_indexer(1, data)
     assert isinstance(data, dict)
@@ -634,11 +631,11 @@ def test_get_remote_path_mapping(radarr_client: RadarrAPI):
 def test_get_blocklist_by_movie_id(radarr_mock_client: RadarrAPI):
     responses.add(
         responses.GET,
-        "https://127.0.0.1:7878/api/v3/blocklist/movie?movieId=1",
+        "https://127.0.0.1:7878/api/v3/blocklist/movie",
+        match=[matchers.query_string_matcher("movieId=1")],
         headers={"Content-Type": "application/json"},
         body=load_fixture("radarr/movie_blocklist.json"),
         status=200,
-        match_querystring=True,
     )
     data = radarr_mock_client.get_blocklist_by_movie_id(id_=1)
     assert isinstance(data, list)
@@ -653,18 +650,21 @@ def test_get_blocklist(radarr_mock_client: RadarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/blocklist.json"),
         status=200,
-        match_querystring=True,
     )
     data = radarr_mock_client.get_blocklist()
     assert isinstance(data, dict)
 
     responses.add(
         responses.GET,
-        "https://127.0.0.1:7878/api/v3/blocklist?page=1&pageSize=10&sortKey=date&sortDirection=ascending",
+        "https://127.0.0.1:7878/api/v3/blocklist",
+        match=[
+            matchers.query_string_matcher(
+                "page=1&pageSize=10&sortKey=date&sortDirection=ascending"
+            )
+        ],
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/blocklist.json"),
         status=200,
-        match_querystring=True,
     )
     data = radarr_mock_client.get_blocklist(
         page=1,
@@ -690,18 +690,21 @@ def test_get_queue(radarr_mock_client: RadarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("radarr/queue.json"),
         status=200,
-        match_querystring=True,
     )
     data = radarr_mock_client.get_queue()
     assert isinstance(data, dict)
 
     responses.add(
         responses.GET,
-        "https://127.0.0.1:7878/api/v3/queue?page=1&pageSize=20&sortKey=timeleft&sortDirection=default&includeUnknownMovieItems=False",
+        "https://127.0.0.1:7878/api/v3/queue",
+        match=[
+            matchers.query_string_matcher(
+                "page=1&pageSize=20&sortKey=timeleft&sortDirection=default&includeUnknownMovieItems=False"
+            )
+        ],
         headers={"Content-Type": "application/json"},
         body=load_fixture("radarr/queue.json"),
         status=200,
-        match_querystring=True,
     )
     data = radarr_mock_client.get_queue(
         page=1,
@@ -729,18 +732,17 @@ def test_get_queue_details(radarr_mock_client: RadarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("radarr/queue_details.json"),
         status=200,
-        match_querystring=True,
     )
     data = radarr_mock_client.get_queue_details()
     assert isinstance(data, list)
 
     responses.add(
         responses.GET,
-        "https://127.0.0.1:7878/api/v3/queue/details?movieId=1&includeMovie=True",
+        "https://127.0.0.1:7878/api/v3/queue/details",
+        match=[matchers.query_string_matcher("movieId=1&includeMovie=True")],
         headers={"Content-Type": "application/json"},
         body=load_fixture("radarr/queue_details.json"),
         status=200,
-        match_querystring=True,
     )
     data = radarr_mock_client.get_queue_details(id_=1, include_movie=True)
     assert isinstance(data, list)
@@ -756,7 +758,6 @@ def test_import_movies(radarr_mock_client: RadarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("radarr/movie_import.json"),
         status=200,
-        match_querystring=True,
     )
     data = radarr_mock_client.import_movies(
         data=json.loads(load_fixture("radarr/movie_import.json"))
@@ -769,11 +770,11 @@ def test_import_movies(radarr_mock_client: RadarrAPI):
 def test_get_movie_files_by_movie_id(radarr_mock_client: RadarrAPI):
     responses.add(
         responses.GET,
-        "https://127.0.0.1:7878/api/v3/moviefile?movieId=1",
+        "https://127.0.0.1:7878/api/v3/moviefile",
+        match=[matchers.query_string_matcher("movieId=1")],
         headers={"Content-Type": "application/json"},
         body=load_fixture("radarr/moviefiles.json"),
         status=200,
-        match_querystring=True,
     )
     data = radarr_mock_client.get_movie_files_by_movie_id(id_=1)
     assert isinstance(data, list)
@@ -788,18 +789,21 @@ def test_get_movie_file(radarr_mock_client: RadarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("radarr/moviefile.json"),
         status=200,
-        match_querystring=True,
     )
     data = radarr_mock_client.get_movie_file(id_=1)
     assert isinstance(data, dict)
 
     responses.add(
         responses.GET,
-        "https://127.0.0.1:7878/api/v3/moviefile?movieFileIds=1&movieFileIds=2&movieFileIds=3&movieFileIds=4",
+        "https://127.0.0.1:7878/api/v3/moviefile",
+        match=[
+            matchers.query_string_matcher(
+                "movieFileIds=1&movieFileIds=2&movieFileIds=3&movieFileIds=4"
+            )
+        ],
         headers={"Content-Type": "application/json"},
         body=load_fixture("radarr/moviefiles.json"),
         status=200,
-        match_querystring=True,
     )
     data = radarr_mock_client.get_movie_file(id_=[1, 2, 3, 4])
     assert isinstance(data, list)
@@ -852,7 +856,6 @@ def test_del_movies(radarr_mock_client: RadarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/delete.json"),
         status=200,
-        match_querystring=True,
     )
     del_data = {"movieIds": [0], "deleteFIles": True, "addImportExclusion": True}
     data = radarr_mock_client.del_movies(data=del_data)
@@ -868,7 +871,6 @@ def test_del_blocklist(radarr_mock_client: RadarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/delete.json"),
         status=200,
-        match_querystring=True,
     )
     data = radarr_mock_client.del_blocklist(id_=1)
     assert isinstance(data, dict)
@@ -883,7 +885,6 @@ def test_del_blocklist_bulk(radarr_mock_client: RadarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/delete.json"),
         status=200,
-        match_querystring=True,
     )
     data = radarr_mock_client.del_blocklist_bulk(ids=[1, 2, 3])
     assert isinstance(data, dict)
@@ -898,7 +899,6 @@ def test_del_movie_file(radarr_mock_client: RadarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/delete.json"),
         status=200,
-        match_querystring=True,
     )
     data = radarr_mock_client.del_movie_file(id_=1)
     assert isinstance(data, dict)
@@ -929,11 +929,11 @@ def test_del_movie_file(radarr_mock_client: RadarrAPI):
 def test_del_queue_bulk(radarr_mock_client: RadarrAPI):
     responses.add(
         responses.DELETE,
-        "https://127.0.0.1:7878/api/v3/queue/bulk?removeFromClient=True&blocklist=True",
+        "https://127.0.0.1:7878/api/v3/queue/bulk",
+        match=[matchers.query_string_matcher("removeFromClient=True&blocklist=True")],
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/delete.json"),
         status=200,
-        match_querystring=True,
     )
 
     data = radarr_mock_client.del_queue_bulk(
@@ -947,11 +947,11 @@ def test_del_queue_bulk(radarr_mock_client: RadarrAPI):
 def test_del_queue(radarr_mock_client: RadarrAPI):
     responses.add(
         responses.DELETE,
-        "https://127.0.0.1:7878/api/v3/queue/1?removeFromClient=True&blocklist=True",
+        "https://127.0.0.1:7878/api/v3/queue/1",
+        match=[matchers.query_string_matcher("removeFromClient=True&blocklist=True")],
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/delete.json"),
         status=200,
-        match_querystring=True,
     )
 
     data = radarr_mock_client.del_queue(id_=1, remove_from_client=True, blocklist=True)
@@ -967,7 +967,6 @@ def test_del_indexer(radarr_mock_client: RadarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/delete.json"),
         status=200,
-        match_querystring=True,
     )
     data = radarr_mock_client.del_indexer(id_=1)
     assert isinstance(data, dict)
@@ -993,7 +992,6 @@ def test_force_grab_queue_item(radarr_mock_client: RadarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("common/blank_dict.json"),
         status=201,
-        match_querystring=True,
     )
     data = radarr_mock_client.force_grab_queue_item(id_=1)
     assert isinstance(data, dict)

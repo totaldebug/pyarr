@@ -2,6 +2,7 @@ import contextlib
 
 import pytest
 import responses
+from responses import matchers
 
 from pyarr.exceptions import PyarrMissingArgument, PyarrResourceNotFound
 from pyarr.readarr import ReadarrAPI
@@ -364,18 +365,21 @@ def test_get_queue(readarr_mock_client: ReadarrAPI):
         headers={"Content-Type": "application/json"},
         body=load_fixture("readarr/queue.json"),
         status=200,
-        match_querystring=True,
     )
     data = readarr_mock_client.get_queue()
     assert isinstance(data, dict)
 
     responses.add(
         responses.GET,
-        "https://127.0.0.1:8787/api/v1/queue?page=2&pageSize=20&sortKey=Books.Id&sortDirection=ascending&includeUnknownAuthorItems=True&includeAuthor=True&includeBook=True",
+        "https://127.0.0.1:8787/api/v1/queue",
+        match=[
+            matchers.query_string_matcher(
+                "page=2&pageSize=20&sortKey=Books.Id&sortDirection=ascending&includeUnknownAuthorItems=True&includeAuthor=True&includeBook=True"
+            )
+        ],
         headers={"Content-Type": "application/json"},
         body=load_fixture("readarr/queue.json"),
         status=200,
-        match_querystring=True,
     )
     data = readarr_mock_client.get_queue(
         page=2,
