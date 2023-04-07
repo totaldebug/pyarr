@@ -1008,6 +1008,18 @@ pytest = ">=4.6"
 testing = ["fields", "hunter", "process-tests", "pytest-xdist", "six", "virtualenv"]
 
 [[package]]
+name = "pytest-rerunfailures"
+version = "11.1.2"
+description = "pytest plugin to re-run tests to eliminate flaky failures"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+packaging = ">=17.1"
+pytest = ">=5.3"
+
+[[package]]
 name = "python-dateutil"
 version = "2.8.2"
 description = "Extensions to the standard Python datetime module"
@@ -1553,7 +1565,7 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "a390d2d08675236d40fb758a51095bedd436482499e904a6b2e5097bc257b104"
+content-hash = "80168e18889ee4f00510801b9d10b199e77a01546513cc40042557b39decf43f"
 
 [metadata.files]
 alabaster = [
@@ -2267,6 +2279,10 @@ pytest = [
 pytest-cov = [
     {file = "pytest-cov-3.0.0.tar.gz", hash = "sha256:e7f0f5b1617d2210a2cabc266dfe2f4c75a8d32fb89eafb7ad9d06f6d076d470"},
     {file = "pytest_cov-3.0.0-py3-none-any.whl", hash = "sha256:578d5d15ac4a25e5f961c938b85a05b09fdaae9deef3bb6de9a6e766622ca7a6"},
+]
+pytest-rerunfailures = [
+    {file = "pytest-rerunfailures-11.1.2.tar.gz", hash = "sha256:55611661e873f1cafa384c82f08d07883954f4b76435f4b8a5b470c1954573de"},
+    {file = "pytest_rerunfailures-11.1.2-py3-none-any.whl", hash = "sha256:d21fe2e46d9774f8ad95f1aa799544ae95cac3a223477af94aa985adfae92b7e"},
 ]
 python-dateutil = [
     {file = "python-dateutil-2.8.2.tar.gz", hash = "sha256:0123cacc1627ae19ddf3c27a5de5bd67ee4586fbdd6440d9748f8abb483d3e86"},
