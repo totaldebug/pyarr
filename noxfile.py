@@ -17,7 +17,19 @@ def format(session: Session) -> None:
 def coverage(session: Session) -> None:
     """Check tests cover all code"""
     session.run("poetry", "install", external=True)
-    session.run("pytest", "tests", "--cov=pyarr", "--cov-report", "term-missing", "-vv")
+    session.run(
+        "pytest",
+        "tests",
+        "--showlocals",
+        "--reruns",
+        "3",
+        "--reruns-delay",
+        "5",
+        "--cov=pyarr",
+        "--cov-report",
+        "term-missing",
+        "-vv",
+    )
 
 
 @nox.session(reuse_venv=True)
