@@ -55,7 +55,7 @@ A few guidelines for approval:
 Testing
 =======
 
-Tests can be run with the following command: ``nox -s docker_test``. This command will check
+Tests can be run with the following command: ``nox -s tests``. This command will check
 code style and typing compliance and will then execute all required``tests``
 
 If you are adding a new method to the library, a test must be added as well. This test should be

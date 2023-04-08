@@ -36,12 +36,14 @@ def coverage(session: Session) -> None:
 
 
 @nox.session(reuse_venv=True)
-def test(session: Session) -> None:
+def tests(session: Session) -> None:
     """Run the complete test suite"""
-    session.run("poetry", "install", external=True)
-    session.notify("test_types")
-    session.notify("test_style")
-    session.notify("test_suite")
+    if os.environ.get("GITHUB_ACTIONS") == "true":
+        session.notify("test_types")
+        session.notify("test_style")
+        session.notify("test_suite")
+    else:
+        session.notify("docker_test")
 
 
 @nox.session(reuse_venv=True)
@@ -56,16 +58,11 @@ def docker_test(session: Session) -> None:
 
 @nox.session(reuse_venv=True)
 def test_create_containers(session: Session) -> None:
-    compose_file = (
-        ".ci/docker-compose.yml"
-        if os.environ.get("GITHUB_ACTIONS") == "true"
-        else ".devcontainer/docker-compose.yml"
-    )
     session.run(
         "docker",
         "compose",
         "-f",
-        compose_file,
+        ".devcontainer/docker-compose.yml",
         "pull",
         external=True,
     )
@@ -85,7 +82,7 @@ def test_create_containers(session: Session) -> None:
         "--project-name",
         project_name,
         "-f",
-        compose_file,
+        ".devcontainer/docker-compose.yml",
         "up",
         "-d",
         external=True,
