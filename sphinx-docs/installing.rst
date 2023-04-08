@@ -4,21 +4,25 @@ Installation
 
 Install the package (or add it to your ``requirements.txt`` file):
 
-.. code:: console
+.. code:: shell
 
-    $ pip install pyarr
+    poetry add pyarr
+
+.. code:: shell
+
+    pip install pyarr
 
 from source:
 
-.. code:: python
+.. code:: shell
 
-    pip install -e https://github.com/marksie1988/pyarr.git#egg=pyarr
+    pip install -e https://github.com/totaldebug/pyarr.git#egg=pyarr
 
 add this to requirements.txt:
 
-.. code:: python
+.. code:: shell
 
-    -e git+https://github.com/marksie1988/pyarr.git#egg=pyarr
+    -e git+https://github.com/totaldebug/pyarr.git#egg=pyarr
 
 
 Via Git or Download
@@ -33,3 +37,4 @@ Via Git or Download
     from pyarr import SonarrAPI
     from pyarr import RadarrAPI
     from pyarr import ReadarrAPI
+    from pyarr import LidarrAPI

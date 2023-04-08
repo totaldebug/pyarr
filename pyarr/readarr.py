@@ -231,16 +231,7 @@ class ReadarrAPI(BaseArrAPI):
     # PROFILES
 
     # POST /qualityprofile
-    def add_quality_profile(
-        self,
-        name: str,
-        upgrades_allowed: bool,
-        cutoff: int,
-        items: list,
-        min_format_score: int = 0,
-        cutoff_format_score: int = 0,
-        format_items: list = [],
-    ) -> JsonObject:  # type: ignore[override]
+    def add_quality_profile(self, name: str, upgrades_allowed: bool, cutoff: int, items: list, min_format_score: int = 0, cutoff_format_score: int = 0, format_items: list = None) -> JsonObject:  # type: ignore[override]
         """Add new quality profile
 
         Args:
@@ -255,6 +246,8 @@ class ReadarrAPI(BaseArrAPI):
         Returns:
             JsonObject: An object containing the profile
         """
+        if format_items is None:
+            format_items = []
         data = {
             "name": name,
             "upgradeAllowed": upgrades_allowed,

@@ -1,4 +1,4 @@
-name: Test
+name: tests
 
 on:
   push:
@@ -40,5 +40,4 @@ jobs:
       - name: 🧪 Check tests are passing
         run: |
           pip install poetry nox
-          nox -s test
-
+          nox -s tests
