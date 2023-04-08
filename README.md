@@ -2,7 +2,7 @@
 
 [![Release][release-shield]][release-url]
 [![Stargazers][stars-shield]][stars-url]
-[![HACS][hacs-shield]][hacs-url]
+![codecov][codecov-shield]
 
 ![GitHub last release date][gh-last-release-date]
 ![GitHub last commit][gh-last-commit]
@@ -180,6 +180,7 @@ Below are a list of resources that I used to assist with this project.
 [license-url]: https://creativecommons.org/licenses/by-nc-sa/4.0/
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/marksie1988
+[codecov-url]: https://img.shields.io/codecov/c/github/totaldebug/pyarr?style=flat-square
 
 [gh-last-release-date]: https://img.shields.io/github/release-date/totaldebug/pyarr?style=flat-square&label=Last%20Release%20Date&logo=github&logoColor=white
 [gh-last-commit]: https://img.shields.io/github/last-commit/totaldebug/pyarr.svg?style=flat-square&logo=github&label=Last%20Commit&logoColor=white
