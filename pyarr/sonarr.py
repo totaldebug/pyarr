@@ -431,18 +431,24 @@ class SonarrAPI(BaseArrAPI):
 
     ## SERIES
     # GET /series and /series/{id}
-    def get_series(self, id_: Optional[int] = None) -> Union[JsonArray, JsonObject]:
+    def get_series(
+        self, id_: Optional[int] = None, tvdb: Optional[bool] = False
+    ) -> Union[JsonArray, JsonObject]:
         """Returns all series in your collection or the series with the matching
         series ID if one is found.
 
         Args:
             id_ (Optional[int], optional): Database id for series. Defaults to None.
+            tvdb (Optional[bool], optional): Set to true if ID is tvdb. Defaults to False
 
         Returns:
             Union[JsonArray, JsonObject]: List of dictionaries with items, or a
             dictionary with single item
         """
-        path = f"series{f'/{id_}' if id_ else ''}"
+        if id_ and tvdb:
+            path = f"series?tvdbId={id_}"
+        else:
+            path = f"series{f'/{id_}' if id_ else ''}"
         return self._get(path, self.ver_uri)
 
     # POST /series
