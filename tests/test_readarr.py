@@ -140,7 +140,7 @@ def test_get_tag(readarr_client: ReadarrAPI):
 
 def test_add_metadata_profile(readarr_client: ReadarrAPI):
     data = readarr_client.add_metadata_profile(
-        name="Standard",
+        name="TestProfile",
         min_popularity=0,
         skip_missing_date=False,
         skip_missing_isbn=False,
@@ -150,13 +150,13 @@ def test_add_metadata_profile(readarr_client: ReadarrAPI):
         min_pages=0,
     )
     assert isinstance(data, dict)
-    assert data["name"] == "Standard"
+    assert data["name"] == "TestProfile"
 
 
 def test_add_quality_profile(readarr_client: ReadarrAPI):
 
     data = readarr_client.add_quality_profile(
-        name="eBook",
+        name="TestProfile",
         upgrades_allowed=False,
         cutoff=4,
         items=[
@@ -182,7 +182,7 @@ def test_add_quality_profile(readarr_client: ReadarrAPI):
         cutoff_format_score=0,
     )
     assert isinstance(data, dict)
-    assert data["name"] == "eBook"
+    assert data["name"] == "TestProfile"
 
 
 def test_add_release_profile(readarr_client: ReadarrAPI):

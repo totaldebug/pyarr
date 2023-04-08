@@ -33,23 +33,6 @@ def test_get_root_folder(radarr_client: RadarrAPI):
     assert isinstance(data, dict)
 
 
-def test_get_command(radarr_client: RadarrAPI):
-    """Check get_command()"""
-
-    # No args
-    data = radarr_client.get_command()
-    assert isinstance(data, list)
-
-    # When an ID is supplied
-    data = radarr_client.get_command(data[0]["id"])
-    assert isinstance(data, dict)
-
-    # when an incorrect ID is supplied, not found response
-    with contextlib.suppress(PyarrResourceNotFound):
-        data = radarr_client.get_command(432111111)
-        assert False
-
-
 def test_post_command(radarr_client: RadarrAPI):
 
     data = radarr_client.post_command(name="RescanMovie", movieid=1)
@@ -68,6 +51,23 @@ def test_post_command(radarr_client: RadarrAPI):
     assert isinstance(data, dict)
     data = radarr_client.post_command(name="Backup")
     assert isinstance(data, dict)
+
+
+def test_get_command(radarr_client: RadarrAPI):
+    """Check get_command()"""
+
+    # No args
+    data = radarr_client.get_command()
+    assert isinstance(data, list)
+
+    # When an ID is supplied
+    data = radarr_client.get_command(data[0]["id"])
+    assert isinstance(data, dict)
+
+    # when an incorrect ID is supplied, not found response
+    with contextlib.suppress(PyarrResourceNotFound):
+        data = radarr_client.get_command(432111111)
+        assert False
 
 
 def test_add_quality_profile(radarr_client: RadarrAPI):
