@@ -120,7 +120,9 @@ def test_cleanup_containers(session: Session) -> None:
 def test_suite(session: Session) -> None:
     """Run the Python-based test suite"""
     session.run("poetry", "install", external=True)
-    session.run("pytest", "tests")
+    session.run(
+        "pytest", "--showlocals", "--reruns", "3", "--reruns-delay", "5", "tests"
+    )
 
 
 @nox.session(reuse_venv=True)

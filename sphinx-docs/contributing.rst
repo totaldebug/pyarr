@@ -5,8 +5,8 @@ Contributing
 It is recommended that contributions to this project are created within vscode,
 utilising the devcontainer functionality.
 
-This ensures that all developers are using the same environment and extentions.
-This reduces the risk of additional bugs / formatting issues within the project.
+This ensures that all developers are using the same environment and extentions,
+reducing the risk of additional bugs / formatting issues within the project.
 
 .. note::
     The setup of VSCode devcontainer is outside of the scope of this document
@@ -37,7 +37,7 @@ prior to the pull request being submitted.
 If you are not using devcontainer please register the pre-commit-config:
 
 .. code:: bash
-   
+
    poetry run pre-commit install
 
 A few guidelines for approval:
@@ -55,8 +55,11 @@ A few guidelines for approval:
 Testing
 =======
 
-Tests can be run with the following command: ``nox -s test``. This command will check
-code style and typing compliance and will then execute ``tests``
+Tests can be run with the following command: ``nox -s docker_test``. This command will check
+code style and typing compliance and will then execute all required``tests``
+
+If you are adding a new method to the library, a test must be added as well. This test should be
+against the live API, if a mock is required then reason for this should be added to the PR notes.
 
 **********************
 Updating Documentation
@@ -88,6 +91,7 @@ Pull Requests
 
 - Each feature / bugfix should have its own PR. This makes code review more efficient
    and allows for a clean changelog generation
+- All CI tests must be passing
 - If a Pull Request contains multiple changes, our core team may reject it
 - All information in the Pull Request template should be completed, when people look
    at what was done with this Pull Request it should be easy to tell from this template
