@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import subprocess
 
 import nox
@@ -55,11 +56,16 @@ def docker_test(session: Session) -> None:
 
 @nox.session(reuse_venv=True)
 def test_create_containers(session: Session) -> None:
+    compose_file = (
+        ".ci/docker-compose.yml"
+        if os.environ.get("GITHUB_ACTIONS") == "true"
+        else ".devcontainer/docker-compose.yml"
+    )
     session.run(
         "docker",
         "compose",
         "-f",
-        ".devcontainer/docker-compose.yml",
+        compose_file,
         "pull",
         external=True,
     )
@@ -79,7 +85,7 @@ def test_create_containers(session: Session) -> None:
         "--project-name",
         project_name,
         "-f",
-        ".devcontainer/docker-compose.yml",
+        compose_file,
         "up",
         "-d",
         external=True,
