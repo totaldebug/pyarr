@@ -174,6 +174,9 @@ def test_get_series(sonarr_client: SonarrAPI):
     data = sonarr_client.get_series(data[0]["id"])
     assert isinstance(data, dict)
 
+    data = sonarr_client.get_series(id_=data["tvdbId"], tvdb=True)
+    assert isinstance(data, list)
+
 
 def test_get_episode(sonarr_client: SonarrAPI):
     """Test getting episode"""
