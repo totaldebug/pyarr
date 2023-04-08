@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import subprocess
+
 import nox
 from nox.sessions import Session
 
@@ -44,15 +46,15 @@ def test(session: Session) -> None:
 @nox.session(reuse_venv=True)
 def docker_test(session: Session) -> None:
     """Run the complete test suite"""
-    session.notify("test_docker_up")
+    session.notify("test_create_containers")
     session.notify("test_types")
     session.notify("test_style")
     session.notify("test_suite")
-    session.notify("test_docker_down")
+    session.notify("test_cleanup_containers")
 
 
 @nox.session(reuse_venv=True)
-def test_docker_up(session: Session) -> None:
+def test_create_containers(session: Session) -> None:
     session.run(
         "docker",
         "compose",
@@ -61,11 +63,21 @@ def test_docker_up(session: Session) -> None:
         "pull",
         external=True,
     )
+    hostname = subprocess.check_output(["hostname"]).strip().decode("utf-8")
+    inspect_command = [
+        "docker",
+        "inspect",
+        "--format",
+        '{{ index .Config.Labels "com.docker.compose.project" }}',
+        hostname,
+    ]
+    project_name = subprocess.check_output(inspect_command).strip().decode("utf-8")
+
     session.run(
         "docker",
         "compose",
         "--project-name",
-        "pyarr_devcontainer",
+        project_name,
         "-f",
         ".devcontainer/docker-compose.yml",
         "up",
@@ -75,17 +87,33 @@ def test_docker_up(session: Session) -> None:
 
 
 @nox.session(reuse_venv=True)
-def test_docker_down(session: Session) -> None:
-    session.run(
+def test_cleanup_containers(session: Session) -> None:
+    # Get the container IDs using the filter
+    hostname = subprocess.check_output(["hostname"]).strip().decode("utf-8")
+    project_name_command = [
         "docker",
-        "compose",
-        "--project-name",
-        "pyarr_devcontainer",
-        "-f",
-        ".devcontainer/docker-compose.yml",
-        "down",
-        external=True,
-    )
+        "inspect",
+        "--format",
+        '{{ index .Config.Labels "com.docker.compose.project" }}',
+        hostname,
+    ]
+    project_name = subprocess.check_output(project_name_command).strip().decode("utf-8")
+    container_filter = f"label=com.docker.compose.project={project_name}"
+
+    # Execute the `docker ps` command and filter the output using grep
+    cmd1 = ["docker", "ps", "-a", "-q", "--filter", container_filter]
+    cmd2 = ["grep", "-v", hostname]
+    output1 = subprocess.run(cmd1, stdout=subprocess.PIPE)
+    output2 = subprocess.run(cmd2, input=output1.stdout, stdout=subprocess.PIPE)
+
+    # Get the container IDs from the output
+    container_ids = output2.stdout.decode("utf-8").strip().split()
+
+    # Kill and remove the containers, cant use docker compose down as that kills
+    # the workspace container for devcontainer. this works just as well.
+    for container_id in container_ids:
+        session.run("docker", "kill", container_id, silent=True, external=True)
+        session.run("docker", "rm", container_id, silent=True, external=True)
 
 
 @nox.session(reuse_venv=True)

@@ -25,20 +25,8 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Run containers
-        run: docker-compose -f .ci/docker-compose.yml up -d
-      - name: Add hosts
-        run: |
-          sudo echo "127.0.0.1 sonarr readarr radarr lidarr prowlarr deluge jackett" | sudo tee -a /etc/hosts
-      - name: Sleep for 1 min
-        run: sleep 60s
-        shell: bash
-      - name: check ports are mapped
-        run: docker ps
-      - name: check one of the containers is up
-        run: curl http://radarr:7878
       - name: 🧪 Check tests are passing
         run: |
           pip install poetry nox
-          nox -s test
+          nox -s docker_test
 
