@@ -3,7 +3,10 @@ name: Codecov
 on:
   pull_request:
     branches:
-      - main
+      - master
+  push:
+    branches:
+      - master
 
 jobs:
   code-coverage:
