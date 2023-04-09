@@ -814,6 +814,70 @@ def test_get_indexer(radarr_client: RadarrAPI):
     assert isinstance(data, list)
 
 
+# TODO: get correct fixture
+@pytest.mark.usefixtures
+@responses.activate
+def test_get_manual_import(radarr_mock_client: RadarrAPI):
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:7878/api/v3/manualimport",
+        match=[matchers.query_string_matcher("folder=/movies/")],
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/blank_list.json"),
+        status=200,
+    )
+    data = radarr_mock_client.get_manual_import(folder="/movies/")
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:7878/api/v3/manualimport",
+        match=[
+            matchers.query_string_matcher(
+                "folder=/movies/&downloadId=1&movieId=1&filterExistingFiles=True&replaceExistingFiles=True"
+            )
+        ],
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/blank_list.json"),
+        status=200,
+    )
+    data = radarr_mock_client.get_manual_import(
+        folder="/movies/",
+        download_id=1,
+        movie_id=1,
+        filter_existing_files=True,
+        replace_existing_files=True,
+    )
+    assert isinstance(data, list)
+
+
+# TODO: get correct fixture, confirm update returns dict
+@pytest.mark.usefixtures
+@responses.activate
+def test_upd_manual_import(radarr_mock_client: RadarrAPI):
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:7878/api/v3/manualimport",
+        match=[matchers.query_string_matcher("folder=/movies/")],
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/blank_list.json"),
+        status=200,
+    )
+    man_import = radarr_mock_client.get_manual_import(folder="/movies/")
+
+    responses.add(
+        responses.PUT,
+        "https://127.0.0.1:7878/api/v3/manualimport",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/blank_dict.json"),
+        status=200,
+    )
+    data = radarr_mock_client.upd_manual_import(data=man_import)
+    assert isinstance(data, dict)
+
+
 #### DELETES MUST BE LAST
 
 

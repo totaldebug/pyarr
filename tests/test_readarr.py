@@ -422,6 +422,70 @@ def test_upd_metadata_provider(readarr_client: ReadarrAPI):
     assert isinstance(data, dict)
 
 
+# TODO: get correct fixture
+@pytest.mark.usefixtures
+@responses.activate
+def test_get_manual_import(readarr_mock_client: ReadarrAPI):
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8787/api/v1/manualimport",
+        match=[matchers.query_string_matcher("folder=/books/")],
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/blank_list.json"),
+        status=200,
+    )
+    data = readarr_mock_client.get_manual_import(folder="/books/")
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8787/api/v1/manualimport",
+        match=[
+            matchers.query_string_matcher(
+                "folder=/books/&downloadId=1&authorId=1&filterExistingFiles=True&replaceExistingFiles=True"
+            )
+        ],
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/blank_list.json"),
+        status=200,
+    )
+    data = readarr_mock_client.get_manual_import(
+        folder="/books/",
+        download_id=1,
+        author_id=1,
+        filter_existing_files=True,
+        replace_existing_files=True,
+    )
+    assert isinstance(data, list)
+
+
+# TODO: get correct fixture, confirm update returns dict
+@pytest.mark.usefixtures
+@responses.activate
+def test_upd_manual_import(readarr_mock_client: ReadarrAPI):
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8787/api/v1/manualimport",
+        match=[matchers.query_string_matcher("folder=/books/")],
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/blank_list.json"),
+        status=200,
+    )
+    man_import = readarr_mock_client.get_manual_import(folder="/books/")
+
+    responses.add(
+        responses.PUT,
+        "https://127.0.0.1:8787/api/v1/manualimport",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/blank_dict.json"),
+        status=200,
+    )
+    data = readarr_mock_client.upd_manual_import(data=man_import)
+    assert isinstance(data, dict)
+
+
 # DELETE ACTIONS MUST BE LAST
 
 
