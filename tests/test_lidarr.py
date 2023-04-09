@@ -567,7 +567,7 @@ def test_upd_manual_import(lidarr_mock_client: LidarrAPI):
 # TODO: get correct fixture
 @pytest.mark.usefixtures
 @responses.activate
-def test_get_manual_import(lidarr_mock_client: LidarrAPI):
+def test_get_retag(lidarr_mock_client: LidarrAPI):
 
     responses.add(
         responses.GET,

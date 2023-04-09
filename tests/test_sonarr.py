@@ -31,23 +31,6 @@ def test_get_root_folder(sonarr_client: SonarrAPI):
     assert isinstance(data, dict)
 
 
-def test_get_command(sonarr_client: SonarrAPI):
-    """Check get_command()"""
-
-    # No args
-    data = sonarr_client.get_command()
-    assert isinstance(data, list)
-
-    # When an ID is supplied
-    data = sonarr_client.get_command(data[0]["id"])
-    assert isinstance(data, dict)
-
-    # when an incorrect ID is supplied, not found response
-    with contextlib.suppress(PyarrResourceNotFound):
-        data = sonarr_client.get_command(4321)
-        assert False
-
-
 def test_post_command(sonarr_client: SonarrAPI):
 
     data = sonarr_client.post_command(name="RefreshSeries")
@@ -76,6 +59,23 @@ def test_post_command(sonarr_client: SonarrAPI):
     assert isinstance(data, dict)
     data = sonarr_client.post_command("missingEpisodeSearch")
     assert isinstance(data, dict)
+
+
+def test_get_command(sonarr_client: SonarrAPI):
+    """Check get_command()"""
+
+    # No args
+    data = sonarr_client.get_command()
+    assert isinstance(data, list)
+
+    # When an ID is supplied
+    data = sonarr_client.get_command(data[0]["id"])
+    assert isinstance(data, dict)
+
+    # when an incorrect ID is supplied, not found response
+    with contextlib.suppress(PyarrResourceNotFound):
+        data = sonarr_client.get_command(4321)
+        assert False
 
 
 def test_get_quality_profile(sonarr_client: SonarrAPI):
@@ -834,6 +834,70 @@ def test_upd_episode_file_quality(sonarr_mock_client: SonarrAPI):
     data = sonarr_mock_client.upd_episode_file_quality(
         1, load_fixture("sonarr/file_quality.json")
     )
+    assert isinstance(data, dict)
+
+
+# TODO: get correct fixture
+@pytest.mark.usefixtures
+@responses.activate
+def test_get_manual_import(sonarr_mock_client: SonarrAPI):
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/manualimport",
+        match=[matchers.query_string_matcher("folder=/series/")],
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/blank_list.json"),
+        status=200,
+    )
+    data = sonarr_mock_client.get_manual_import(folder="/series/")
+    assert isinstance(data, list)
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/manualimport",
+        match=[
+            matchers.query_string_matcher(
+                "folder=/series/&downloadId=1&seriesId=1&filterExistingFiles=True&replaceExistingFiles=True"
+            )
+        ],
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/blank_list.json"),
+        status=200,
+    )
+    data = sonarr_mock_client.get_manual_import(
+        folder="/series/",
+        download_id=1,
+        series_id=1,
+        filter_existing_files=True,
+        replace_existing_files=True,
+    )
+    assert isinstance(data, list)
+
+
+# TODO: get correct fixture, confirm update returns dict
+@pytest.mark.usefixtures
+@responses.activate
+def test_upd_manual_import(sonarr_mock_client: SonarrAPI):
+
+    responses.add(
+        responses.GET,
+        "https://127.0.0.1:8989/api/v3/manualimport",
+        match=[matchers.query_string_matcher("folder=/series/")],
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/blank_list.json"),
+        status=200,
+    )
+    man_import = sonarr_mock_client.get_manual_import(folder="/series/")
+
+    responses.add(
+        responses.PUT,
+        "https://127.0.0.1:8989/api/v3/manualimport",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/blank_dict.json"),
+        status=200,
+    )
+    data = sonarr_mock_client.upd_manual_import(data=man_import)
     assert isinstance(data, dict)
 
 

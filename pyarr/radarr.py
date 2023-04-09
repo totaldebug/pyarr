@@ -561,3 +561,51 @@ class RadarrAPI(BaseArrAPI):
             "items": items,
         }
         return self._post("qualityprofile", self.ver_uri, data=data)
+
+    # GET /manualimport
+    def get_manual_import(
+        self,
+        folder: str,
+        download_id: Optional[str] = None,
+        movie_id: Optional[int] = None,
+        filter_existing_files: Optional[bool] = None,
+        replace_existing_files: Optional[bool] = None,
+    ) -> JsonArray:
+        """Gets a manual import list
+
+        Args:
+            downloadId (str): Download IDs
+            movieId (int, optional): Movie Database ID. Defaults to None.
+            folder (Optional[str], optional): folder name. Defaults to None.
+            filterExistingFiles (bool, optional): filter files. Defaults to True.
+            replaceExistingFiles (bool, optional): replace files. Defaults to True.
+
+        Returns:
+            JsonArray: List of dictionaries with items
+        """
+        params: dict[str, Union[str, int, bool]] = {"folder": folder}
+        if download_id:
+            params["downloadId"] = download_id
+        if movie_id:
+            params["movieId"] = movie_id
+        if filter_existing_files:
+            params["filterExistingFiles"] = filter_existing_files
+        if replace_existing_files:
+            params["replaceExistingFiles"] = replace_existing_files
+
+        return self._get("manualimport", self.ver_uri, params=params)
+
+    # PUT /manualimport
+    def upd_manual_import(self, data: JsonObject) -> JsonObject:
+        """Update a manual import
+
+        Note:
+            To be used in conjunction with get_manual_import()
+
+        Args:
+            data (JsonObject): Data containing changes
+
+        Returns:
+            JsonObject: Dictionary of updated record
+        """
+        return self._put("manualimport", self.ver_uri, data=data)
