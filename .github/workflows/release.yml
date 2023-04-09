@@ -22,7 +22,7 @@ jobs:
       - name: 🧪 Check tests are passing
         run: |
           pip install poetry nox
-          nox -s test
+          nox -s tests
 
   build-n-publish:
     name: Create release and publish 🐍 distribution 📦 to PyPI

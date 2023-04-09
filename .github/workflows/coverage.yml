@@ -1,0 +1,41 @@
+name: coverage
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  code-quality:
+    name: 📊 Check code coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+      - name: Run containers
+        run: docker-compose -f .ci/docker-compose.yml up -d
+      - name: Add hosts
+        run: |
+          sudo echo "127.0.0.1 sonarr readarr radarr lidarr prowlarr deluge jackett" | sudo tee -a /etc/hosts
+      - name: Sleep for 30s
+        run: sleep 30s
+        shell: bash
+      - name: check ports are mapped
+        run: docker ps
+      - name: check one of the containers is up
+        run: curl http://radarr:7878
+      - name: 🧪 Check tests are passing
+        run: |
+          pip install poetry nox
+          nox -s tests
+      - name: 📤 Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+         token: ${{ secrets.CODECOV_TOKEN }}

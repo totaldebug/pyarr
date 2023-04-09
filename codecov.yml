@@ -1,0 +1,17 @@
+---
+coverage:
+  precision: 2
+  status:
+    project:
+      default:
+        target: auto # auto compares coverage to the previous base commit
+        threshold: 2% # allows a 2% drop per pull request
+parsers:
+  gcov:
+    branch_detection:
+      conditional: yes
+      loop: yes
+      method: no
+      macro: no
+ignore:
+  - "tests"
