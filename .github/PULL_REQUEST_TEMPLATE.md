@@ -21,6 +21,7 @@ Please select the desired item checkbox and change it to "[x]", then delete opti
 - [ ] Bug fix (non-breaking change which fixes an issue)
 - [ ] New feature (non-breaking change which adds functionality)
 - [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- [ ] CI / Tests update
 - [ ] Documentation update
 
 ## How has this been tested
