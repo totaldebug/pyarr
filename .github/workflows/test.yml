@@ -41,3 +41,8 @@ jobs:
         run: |
           pip install poetry nox
           nox -s tests
+      - name: 📤 Upload coverage to Codecov
+        if: ${{ github.event_name != 'schedule' }}
+        uses: codecov/codecov-action@v3
+        with:
+         token: ${{ secrets.CODECOV_TOKEN }}

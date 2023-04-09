@@ -17,25 +17,6 @@ def format(session: Session) -> None:
 
 
 @nox.session(reuse_venv=True)
-def coverage(session: Session) -> None:
-    """Check tests cover all code"""
-    session.run("poetry", "install", external=True)
-    session.run(
-        "pytest",
-        "tests",
-        "--showlocals",
-        "--reruns",
-        "3",
-        "--reruns-delay",
-        "5",
-        "--cov=pyarr",
-        "--cov-report",
-        "term-missing",
-        "-vv",
-    )
-
-
-@nox.session(reuse_venv=True)
 def tests(session: Session) -> None:
     """Run the complete test suite"""
     if os.environ.get("GITHUB_ACTIONS") == "true":
@@ -124,7 +105,18 @@ def test_suite(session: Session) -> None:
     """Run the Python-based test suite"""
     session.run("poetry", "install", external=True)
     session.run(
-        "pytest", "--showlocals", "--reruns", "3", "--reruns-delay", "5", "tests"
+        "pytest",
+        "--showlocals",
+        "--reruns",
+        "3",
+        "--reruns-delay",
+        "5",
+        "--cov=pyarr",
+        "--cov-report",
+        "xml",
+        "--cov-report",
+        "term-missing",
+        "-vv",
     )
 
 
