@@ -6,6 +6,7 @@
 # cache
 __pycache__
 .idea
+.cache
 
 # python
 *.pyc
@@ -41,3 +42,4 @@ tests/docker_configs/lidarr/*
 tests/docker_configs/deluge/*
 tests/docker_configs/jackett/*
 !tests/docker_configs/jackett/config/jackett/Jackett/ServerConfig.json
+core.*
