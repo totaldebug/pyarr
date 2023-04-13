@@ -1,11 +1,14 @@
 {
-    "name": "PyArr",
-    "dockerComposeFile": [
-        "docker-compose.yml",
-        "docker-compose.workspace.yml"
-    ],
-    "service": "workspace",
-    "workspaceFolder": "/workspace",
+    "name": "pyarr",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": "..",
+        "args": {
+            // Options
+            //"POETRY_VERSION": "1.2.2",
+            //"NOX_VERSION": "2022.11.21"
+        }
+    },
     "forwardPorts": [
         "sonarr:8989",
         "radarr:7878",
@@ -14,31 +17,48 @@
         "jackett:9117",
         "deluge:8112"
     ],
-    "extensions": [
-        "github.vscode-pull-request-github",
-        "ms-python.python",
-        "ms-python.vscode-pylance",
-        "yzhang.markdown-all-in-one",
-        "tabnine.tabnine-vscode",
-        "rebornix.project-snippets",
-        "njpwerner.autodocstring",
-        "sourcery.sourcery"
-    ],
-    "settings": {
-        "files.eol": "\n",
-        "editor.tabSize": 4,
-        "terminal.integrated.profiles.linux": {
-            "zsh": {
-                "path": "/bin/zsh"
-            }
-        },
-        "terminal.integrated.defaultProfile.linux": "zsh",
-        "editor.formatOnPaste": false,
-        "editor.formatOnSave": true,
-        "editor.formatOnType": true,
-        "files.trimTrailingWhitespace": true,
-        "python.formatting.provider": "black",
-        "autoDocstring.docstringFormat": "google"
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "files.eol": "\n",
+                "editor.tabSize": 4,
+                "terminal.integrated.profiles.linux": {
+                    "zsh": {
+                        "path": "/bin/zsh"
+                    }
+                },
+                "terminal.integrated.defaultProfile.linux": "zsh",
+                "editor.formatOnPaste": false,
+                "editor.formatOnSave": true,
+                "editor.formatOnType": true,
+                "files.trimTrailingWhitespace": true,
+                "python.formatting.provider": "black",
+                "autoDocstring.docstringFormat": "google"
+            },
+            "extensions": [
+                "github.vscode-pull-request-github",
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "yzhang.markdown-all-in-one",
+                "tabnine.tabnine-vscode",
+                "rebornix.project-snippets",
+                "njpwerner.autodocstring",
+                "sourcery.sourcery"
+            ]
+        }
     },
-    "postCreateCommand": "poetry install && poetry run pre-commit install -t pre-commit -t commit-msg"
+    "features": {
+        "docker-in-docker": "latest",
+        "git": "latest"
+    },
+    "remoteUser": "vscode",
+    "postCreateCommand": "zsh ./.devcontainer/post-install.sh",
+    "mounts": [
+        // Re-use local SSH keys (useful if you use SSH keys for Git repo access or other SSH work)
+        "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached",
+        // Re-use local Git configuration
+        "source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig,type=bind,consistency=cached",
+        // map docker socket of host
+        "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+    ]
 }
