@@ -30,8 +30,8 @@ jobs:
       - name: Add hosts
         run: |
           sudo echo "127.0.0.1 sonarr readarr radarr lidarr prowlarr deluge jackett" | sudo tee -a /etc/hosts
-      - name: Sleep for 1 min
-        run: sleep 60s
+      - name: sleep 30s for containers to start-up
+        run: sleep 30s
         shell: bash
       - name: check ports are mapped
         run: docker ps
