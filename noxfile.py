@@ -147,6 +147,22 @@ def test_style(session: Session) -> None:
 
 
 @nox.session(reuse_venv=True)
+def release(session: Session) -> None:
+    """Release a new version of the package"""
+    session.run("poetry", "install", external=True)
+    session.run("poetry", "build", external=True)
+    session.run(
+        "poetry",
+        "publish",
+        "-u",
+        "__token__",
+        "-p",
+        session.env["PYPI_PASSWORD"],
+        external=True,
+    )
+
+
+@nox.session(reuse_venv=True)
 def docs(session: Session) -> None:
     """Create local copy of docs for testing"""
     session.run("poetry", "install", external=True)
