@@ -18,8 +18,10 @@ Setup your environment
 
 #. Fork the `repository <https://github.com/totaldebug/pyarr>`_
 #. Open the repository in VSCode
-#. Copy the ``.devcontainer/recommended-***`` files and remove the "recommended-" text
-#. Update the renamed ``recommended-***`` files to suite your environment
+#. Copy the ``.devcontainer/recommended-devcontainer.json`` files and rename the copy to ``devcontainer.json``.
+#. Modify the ``mounts`` section as required for your environment
+#. Copy the ``.devcontainer/recommended-docker-compose.yml`` files and rename the copy to ``docker.compose.yml``
+#. You may need to modify the ``volumes`` for your environment
 #. Press ``ctrl + shift + p`` and select ``Remote-Container: Reopen in Container``
 #. Once loaded you can begin modification of the module or Documentation
 

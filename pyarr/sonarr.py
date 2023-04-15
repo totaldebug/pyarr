@@ -149,6 +149,25 @@ class SonarrAPI(BaseArrAPI):
         """
         return self._put(f"episode/{id_}", self.ver_uri, data=data)
 
+    # PUT /episode/monitor
+    def upd_episode_monitor(
+        self, episode_ids: list[int], monitored: bool = True
+    ) -> JsonArray:
+        """Update episode monitored status
+
+        Args:
+            episode_ids (list[int]): All episode IDs to be updated
+            monitored (bool, optional): True or False. Defaults to True.
+
+        Returns:
+            JsonArray: list of dictionaries containing updated records
+        """
+        return self._put(
+            "episode/monitor",
+            self.ver_uri,
+            data={"episodeIds": episode_ids, "monitored": monitored},
+        )
+
     ## EPISODE FILE
 
     # GET /episodefile

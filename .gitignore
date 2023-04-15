@@ -30,6 +30,7 @@ _build
 !.devcontainer/Dockerfile
 !.devcontainer/recommended-docker-compose.yml
 !.devcontainer/docker-compose.workspace.yml
+!.devcontainer/post-install.sh
 
 tests/docker_configs/sonarr/*
 !tests/docker_configs/sonarr/config.xml

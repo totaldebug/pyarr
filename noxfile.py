@@ -40,6 +40,7 @@ def docker_test(session: Session) -> None:
 @nox.session(reuse_venv=True)
 def test_create_containers(session: Session) -> None:
     session.run(
+        "sudo",
         "docker",
         "compose",
         "-f",
@@ -49,6 +50,7 @@ def test_create_containers(session: Session) -> None:
     )
     hostname = subprocess.check_output(["hostname"]).strip().decode("utf-8")
     inspect_command = [
+        "sudo",
         "docker",
         "inspect",
         "--format",
@@ -58,6 +60,7 @@ def test_create_containers(session: Session) -> None:
     project_name = subprocess.check_output(inspect_command).strip().decode("utf-8")
 
     session.run(
+        "sudo",
         "docker",
         "compose",
         "--project-name",
@@ -75,6 +78,7 @@ def test_cleanup_containers(session: Session) -> None:
     # Get the container IDs using the filter
     hostname = subprocess.check_output(["hostname"]).strip().decode("utf-8")
     project_name_command = [
+        "sudo",
         "docker",
         "inspect",
         "--format",
@@ -85,7 +89,7 @@ def test_cleanup_containers(session: Session) -> None:
     container_filter = f"label=com.docker.compose.project={project_name}"
 
     # Execute the `docker ps` command and filter the output using grep
-    cmd1 = ["docker", "ps", "-a", "-q", "--filter", container_filter]
+    cmd1 = ["sudo", "docker", "ps", "-a", "-q", "--filter", container_filter]
     cmd2 = ["grep", "-v", hostname]
     output1 = subprocess.run(cmd1, stdout=subprocess.PIPE)
     output2 = subprocess.run(cmd2, input=output1.stdout, stdout=subprocess.PIPE)
@@ -96,8 +100,8 @@ def test_cleanup_containers(session: Session) -> None:
     # Kill and remove the containers, cant use docker compose down as that kills
     # the workspace container for devcontainer. this works just as well.
     for container_id in container_ids:
-        session.run("docker", "kill", container_id, silent=True, external=True)
-        session.run("docker", "rm", container_id, silent=True, external=True)
+        session.run("sudo", "docker", "kill", container_id, silent=True, external=True)
+        session.run("sudo", "docker", "rm", container_id, silent=True, external=True)
 
 
 @nox.session(reuse_venv=True)
@@ -134,11 +138,11 @@ def test_style(session: Session) -> None:
     session.run("flake8", "pyarr", "tests")
     session.run(
         "black",
-        ".",
+        "pyarr",
         "--check",
     )
-    session.run("isort", ".", "--check-only")
-    session.run("autoflake", ".")
+    session.run("isort", "pyarr", "--check-only")
+    session.run("autoflake", "-r", "pyarr")
     session.run("interrogate", "pyarr")
 
 

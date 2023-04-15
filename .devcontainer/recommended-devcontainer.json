@@ -1,14 +1,10 @@
 {
     "name": "pyarr",
-    "build": {
-        "dockerfile": "Dockerfile",
-        "context": "..",
-        "args": {
-            // Options
-            //"POETRY_VERSION": "1.2.2",
-            //"NOX_VERSION": "2022.11.21"
-        }
-    },
+    "dockerComposeFile": [
+        "docker-compose.workspace.yml"
+    ],
+    "service": "pyarr-workspace",
+    "workspaceFolder": "/workspace",
     "forwardPorts": [
         "sonarr:8989",
         "radarr:7878",
@@ -48,17 +44,18 @@
         }
     },
     "features": {
-        "docker-in-docker": "latest",
-        "git": "latest"
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+        "ghcr.io/devcontainers/features/git:1": {}
     },
     "remoteUser": "vscode",
     "postCreateCommand": "zsh ./.devcontainer/post-install.sh",
     "mounts": [
-        // Re-use local SSH keys (useful if you use SSH keys for Git repo access or other SSH work)
+        "source=${localEnv:HOME}/repos/pyarrfork,target=/workspace,type=bind,consistency=cached",
+        /* Re-use local SSH keys (useful if you use SSH keys for Git repo access or other SSH work)*/
         "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached",
-        // Re-use local Git configuration
+        /* Re-use local Git configuration*/
         "source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig,type=bind,consistency=cached",
-        // map docker socket of host
+        /* map docker socket of host*/
         "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
     ]
 }

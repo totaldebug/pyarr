@@ -16,7 +16,6 @@ from tests import (
 
 
 def test_add_root_folder(readarr_client: ReadarrAPI):
-
     qual_profile = readarr_client.get_quality_profile()
     meta_profile = readarr_client.get_metadata_profile()
 
@@ -30,7 +29,6 @@ def test_add_root_folder(readarr_client: ReadarrAPI):
 
 
 def test_get_root_folder(readarr_client: ReadarrAPI):
-
     data = readarr_client.get_root_folder()
     assert isinstance(data, list)
 
@@ -39,7 +37,6 @@ def test_get_root_folder(readarr_client: ReadarrAPI):
 
 
 def test_get_command(readarr_client: ReadarrAPI):
-
     # No args
     data = readarr_client.get_command()
     assert isinstance(data, list)
@@ -55,7 +52,6 @@ def test_get_command(readarr_client: ReadarrAPI):
 
 
 def test_post_command(readarr_client: ReadarrAPI):
-
     data = readarr_client.post_command(name="ApplicationUpdateCheck")
     assert isinstance(data, dict)
     data = readarr_client.post_command("AuthorSearch", authorId=1)
@@ -81,7 +77,6 @@ def test_post_command(readarr_client: ReadarrAPI):
 
 
 def test_get_quality_profile(readarr_client: ReadarrAPI):
-
     data = readarr_client.get_quality_profile()
     assert isinstance(data, list)
 
@@ -124,7 +119,6 @@ def test_add_book(readarr_client: ReadarrAPI):
 
 
 def test_create_tag(readarr_client: ReadarrAPI):
-
     data = readarr_client.create_tag(label="test")
     assert isinstance(data, dict)
     assert data["label"] == "test"
@@ -154,7 +148,6 @@ def test_add_metadata_profile(readarr_client: ReadarrAPI):
 
 
 def test_add_quality_profile(readarr_client: ReadarrAPI):
-
     data = readarr_client.add_quality_profile(
         name="TestProfile",
         upgrades_allowed=False,
@@ -264,7 +257,6 @@ def test_get_cutoff(readarr_client: ReadarrAPI):
 
 @pytest.mark.usefixtures
 def test_get_book(readarr_client: ReadarrAPI):
-
     data = readarr_client.get_book()
     assert isinstance(data, list)
 
@@ -274,11 +266,20 @@ def test_get_book(readarr_client: ReadarrAPI):
 
 @pytest.mark.usefixtures
 def test_upd_book(readarr_client: ReadarrAPI):
-
     book = readarr_client.get_book()
 
     data = readarr_client.upd_book(id_=book[0]["id"], data=book[0])
     assert isinstance(data, dict)
+
+
+def test_upd_book_monitor(readarr_client: ReadarrAPI):
+    books = readarr_client.get_book()
+    book_ids = [d.get("id") for d in books]
+
+    data = readarr_client.upd_book_monitor(book_ids=book_ids, monitored=False)
+
+    assert isinstance(data, list)
+    assert data[0]["monitored"] == False
 
 
 @pytest.mark.usefixtures
@@ -305,7 +306,6 @@ def test_add_author(readarr_client: ReadarrAPI):
 
 @pytest.mark.usefixtures
 def test_upd_author(readarr_client: ReadarrAPI):
-
     author = readarr_client.get_author()
     author[0]["monitored"] = True
 
@@ -316,7 +316,6 @@ def test_upd_author(readarr_client: ReadarrAPI):
 
 @pytest.mark.usefixtures
 def test_get_author(readarr_client: ReadarrAPI):
-
     data = readarr_client.get_author()
     assert isinstance(data, list)
 
@@ -326,7 +325,6 @@ def test_get_author(readarr_client: ReadarrAPI):
 
 @pytest.mark.usefixtures
 def test_get_metadata_profile(readarr_client: ReadarrAPI):
-
     data = readarr_client.get_metadata_profile()
     assert isinstance(data, list)
 
@@ -336,7 +334,6 @@ def test_get_metadata_profile(readarr_client: ReadarrAPI):
 
 @pytest.mark.usefixtures
 def test_get_delay_profile(readarr_client: ReadarrAPI):
-
     data = readarr_client.get_delay_profile()
     assert isinstance(data, list)
 
@@ -346,7 +343,6 @@ def test_get_delay_profile(readarr_client: ReadarrAPI):
 
 @pytest.mark.usefixtures
 def test_get_release_profile(readarr_client: ReadarrAPI):
-
     data = readarr_client.get_release_profile()
     assert isinstance(data, list)
 
@@ -402,21 +398,18 @@ def test_get_queue(readarr_mock_client: ReadarrAPI):
 
 @pytest.mark.usefixtures
 def test_get_log_file(readarr_client: ReadarrAPI):
-
     data = readarr_client.get_log_file()
     assert isinstance(data, list)
 
 
 @pytest.mark.usefixtures
 def test_get_metadata_provider(readarr_client: ReadarrAPI):
-
     data = readarr_client.get_metadata_provider()
     assert isinstance(data, dict)
 
 
 @pytest.mark.usefixtures
 def test_upd_metadata_provider(readarr_client: ReadarrAPI):
-
     provider = readarr_client.get_metadata_provider()
     data = readarr_client.upd_metadata_provider(data=provider)
     assert isinstance(data, dict)
@@ -426,7 +419,6 @@ def test_upd_metadata_provider(readarr_client: ReadarrAPI):
 @pytest.mark.usefixtures
 @responses.activate
 def test_get_manual_import(readarr_mock_client: ReadarrAPI):
-
     responses.add(
         responses.GET,
         "https://127.0.0.1:8787/api/v1/manualimport",
@@ -464,7 +456,6 @@ def test_get_manual_import(readarr_mock_client: ReadarrAPI):
 @pytest.mark.usefixtures
 @responses.activate
 def test_upd_manual_import(readarr_mock_client: ReadarrAPI):
-
     responses.add(
         responses.GET,
         "https://127.0.0.1:8787/api/v1/manualimport",
@@ -534,7 +525,6 @@ def test_del_tag(readarr_client: ReadarrAPI):
 
 
 def test_del_root_folder(readarr_client: ReadarrAPI):
-
     root_folders = readarr_client.get_root_folder()
 
     # Check folder can be deleted
@@ -548,12 +538,10 @@ def test_del_root_folder(readarr_client: ReadarrAPI):
 
 
 def test_del_quality_profile(readarr_client: ReadarrAPI):
-
     quality_profiles = readarr_client.get_quality_profile()
 
     for profile in quality_profiles:
         if profile["name"] == "eBook":
-
             # Check folder can be deleted
             data = readarr_client.del_quality_profile(profile["id"])
             assert data.status_code == 200
@@ -564,7 +552,6 @@ def test_del_quality_profile(readarr_client: ReadarrAPI):
 
 
 def test_del_release_profile(readarr_client: ReadarrAPI):
-
     profile = readarr_client.get_release_profile()
 
     # Check folder can be deleted
@@ -577,7 +564,6 @@ def test_del_release_profile(readarr_client: ReadarrAPI):
 
 
 def test_del_delay_profile(readarr_client: ReadarrAPI):
-
     profile = readarr_client.get_delay_profile()
 
     # Check folder can be deleted
@@ -590,7 +576,6 @@ def test_del_delay_profile(readarr_client: ReadarrAPI):
 
 
 def test_del_metadata_profile(readarr_client: ReadarrAPI):
-
     profiles = readarr_client.get_metadata_profile()
 
     for profile in profiles:
