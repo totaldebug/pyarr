@@ -447,6 +447,25 @@ class ReadarrAPI(BaseArrAPI):
         """
         return self._put(f"book/{id_}", self.ver_uri, data=data)
 
+    # PUT /book/monitor
+    def upd_book_monitor(
+        self, book_ids: list[int], monitored: bool = True
+    ) -> JsonArray:
+        """Update book monitored status
+
+        Args:
+            book_ids (list[int]): All book IDs to be updated
+            monitored (bool, optional): True or False. Defaults to True.
+
+        Returns:
+            JsonArray: list of dictionaries containing updated records
+        """
+        return self._put(
+            "book/monitor",
+            self.ver_uri,
+            data={"bookIds": book_ids, "monitored": monitored},
+        )
+
     # DELETE /book/{id}
     def del_book(
         self,

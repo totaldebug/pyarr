@@ -68,6 +68,7 @@ exclude = '''
     | \.tox
     | \.nox
     | \.venv
+    | \.cache
     | _build
     | buck-out
     | build
@@ -96,6 +97,7 @@ known_first_party = [
 forced_separate = [
     "tests",
 ]
+skip = [".cache", ".nox"]
 combine_as_imports = true
 
 [tool.autoflake]
@@ -116,7 +118,7 @@ ignore-nested-functions = false
 ignore-nested-classes = true
 ignore-setters = false
 fail-under = 100
-exclude = ["setup.py", "sphinx-docs", "build", ".devcontainer", ".nox"]
+exclude = ["setup.py", "sphinx-docs", "build", ".devcontainer", ".nox", ".cache"]
 ignore-regex = ["^get$", "^mock_.*", ".*BaseClass.*"]
 verbose = 0
 quiet = false

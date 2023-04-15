@@ -17,13 +17,11 @@ from tests import SONARR_TVDB, load_fixture
 
 
 def test_add_root_folder(sonarr_client: SonarrAPI):
-
     data = sonarr_client.add_root_folder(directory="/defaults")
     assert isinstance(data, dict)
 
 
 def test_get_root_folder(sonarr_client: SonarrAPI):
-
     data = sonarr_client.get_root_folder()
     assert isinstance(data, list)
 
@@ -32,7 +30,6 @@ def test_get_root_folder(sonarr_client: SonarrAPI):
 
 
 def test_post_command(sonarr_client: SonarrAPI):
-
     data = sonarr_client.post_command(name="RefreshSeries")
     assert isinstance(data, dict)
     data = sonarr_client.post_command("RefreshSeries", seriesId=1)
@@ -79,7 +76,6 @@ def test_get_command(sonarr_client: SonarrAPI):
 
 
 def test_get_quality_profile(sonarr_client: SonarrAPI):
-
     data = sonarr_client.get_quality_profile()
     assert isinstance(data, list)
 
@@ -88,7 +84,6 @@ def test_get_quality_profile(sonarr_client: SonarrAPI):
 
 
 def test_upd_quality_profile(sonarr_client: SonarrAPI):
-
     qual_profiles = sonarr_client.get_quality_profile()
 
     data = sonarr_client.upd_quality_profile(
@@ -98,13 +93,11 @@ def test_upd_quality_profile(sonarr_client: SonarrAPI):
 
 
 def test_get_language_profile_schema(sonarr_client: SonarrAPI):
-
     data = sonarr_client.get_language_profile_schema()
     assert isinstance(data, dict)
 
 
 def test_get_language_profile(sonarr_client: SonarrAPI):
-
     data = sonarr_client.get_language_profile()
     assert isinstance(data, list)
 
@@ -120,7 +113,6 @@ def test_upd_language_profile(sonarr_client: SonarrAPI):
 
 
 def test_lookup_series(sonarr_client: SonarrAPI):
-
     data = sonarr_client.lookup_series(id_=SONARR_TVDB)
     assert isinstance(data, list)
 
@@ -133,7 +125,6 @@ def test_lookup_series(sonarr_client: SonarrAPI):
 
 
 def test_lookup_series_by_tvdb_id(sonarr_client: SonarrAPI):
-
     data = sonarr_client.lookup_series_by_tvdb_id(SONARR_TVDB)
     assert isinstance(data, list)
 
@@ -142,7 +133,6 @@ def test_lookup_series_by_tvdb_id(sonarr_client: SonarrAPI):
 
 
 def test_add_series(sonarr_client: SonarrAPI):
-
     quality_profile = sonarr_client.get_quality_profile()
     language_profile = sonarr_client.get_language_profile()
     lookup_result = sonarr_client.lookup_series(id_=SONARR_TVDB)
@@ -167,7 +157,6 @@ def test_add_series(sonarr_client: SonarrAPI):
 
 
 def test_get_series(sonarr_client: SonarrAPI):
-
     data = sonarr_client.get_series()
     assert isinstance(data, list)
 
@@ -195,7 +184,6 @@ def test_get_episode(sonarr_client: SonarrAPI):
 
 
 def test_upd_series(sonarr_client: SonarrAPI):
-
     series = sonarr_client.get_series()
 
     data = sonarr_client.upd_series(data=series[0]["id"])
@@ -203,7 +191,6 @@ def test_upd_series(sonarr_client: SonarrAPI):
 
 
 def test_get_episodes_by_series_id(sonarr_client: SonarrAPI):
-
     series = sonarr_client.get_series()
     data = sonarr_client.get_episodes_by_series_id(series[0]["id"])
 
@@ -245,7 +232,6 @@ def test_get_episode_file(sonarr_client: SonarrAPI):
 
 
 def test_upd_episode(sonarr_client: SonarrAPI):
-
     series = sonarr_client.get_series()
     episodes = sonarr_client.get_episode(id_=series[0]["id"], series=True)
 
@@ -256,8 +242,18 @@ def test_upd_episode(sonarr_client: SonarrAPI):
     assert data["monitored"] == True
 
 
-def test_get_wanted(sonarr_client: SonarrAPI):
+def test_upd_episode_monitor(sonarr_client: SonarrAPI):
+    series = sonarr_client.get_series()
+    episodes = sonarr_client.get_episode(id_=series[0]["id"], series=True)
+    episode_ids = [d.get("id") for d in episodes]
 
+    data = sonarr_client.upd_episode_monitor(episode_ids=episode_ids, monitored=False)
+
+    assert isinstance(data, list)
+    assert data[0]["monitored"] == False
+
+
+def test_get_wanted(sonarr_client: SonarrAPI):
     data = sonarr_client.get_wanted()
     assert isinstance(data, dict)
 
@@ -282,7 +278,6 @@ def test_get_wanted(sonarr_client: SonarrAPI):
 
 
 def test_get_history(sonarr_client: SonarrAPI):
-
     data = sonarr_client.get_history()
     assert isinstance(data, dict)
 
@@ -310,7 +305,6 @@ def test_get_history(sonarr_client: SonarrAPI):
 
 
 def test_get_calendar(sonarr_client: SonarrAPI):
-
     start = datetime.strptime("Nov 30 2020  1:33PM", "%b %d %Y %I:%M%p")
     end = datetime.strptime("Dec 1 2020  1:33PM", "%b %d %Y %I:%M%p")
     data = sonarr_client.get_calendar(start_date=start, end_date=end)
@@ -337,7 +331,6 @@ def test_get_indexer_schema(sonarr_client: SonarrAPI):
 @pytest.mark.usefixtures
 @responses.activate
 def test_get_indexer(sonarr_mock_client: SonarrAPI):
-
     responses.add(
         responses.GET,
         "https://127.0.0.1:8989/api/v3/indexer",
@@ -362,7 +355,6 @@ def test_get_indexer(sonarr_mock_client: SonarrAPI):
 @pytest.mark.usefixtures
 @responses.activate
 def test_upd_indexer(sonarr_mock_client: SonarrAPI):
-
     responses.add(
         responses.GET,
         "https://127.0.0.1:8989/api/v3/indexer/1",
@@ -384,19 +376,16 @@ def test_upd_indexer(sonarr_mock_client: SonarrAPI):
 
 
 def test_get_system_status(sonarr_client: SonarrAPI):
-
     data = sonarr_client.get_system_status()
     assert isinstance(data, dict)
 
 
 def test_get_health(sonarr_client: SonarrAPI):
-
     data = sonarr_client.get_health()
     assert isinstance(data, list)
 
 
 def test_get_metadata(sonarr_client: SonarrAPI):
-
     data = sonarr_client.get_metadata()
     assert isinstance(data, list)
 
@@ -405,25 +394,21 @@ def test_get_metadata(sonarr_client: SonarrAPI):
 
 
 def test_get_update(sonarr_client: SonarrAPI):
-
     data = sonarr_client.get_update()
     assert isinstance(data, list)
 
 
 def test_get_disk_space(sonarr_client: SonarrAPI):
-
     data = sonarr_client.get_disk_space()
     assert isinstance(data, list)
 
 
 def test_get_backup(sonarr_client: SonarrAPI):
-
     data = sonarr_client.get_backup()
     assert isinstance(data, list)
 
 
 def test_get_log(sonarr_client: SonarrAPI):
-
     data = sonarr_client.get_log()
     assert isinstance(data, dict)
 
@@ -452,7 +437,6 @@ def test_get_log(sonarr_client: SonarrAPI):
 
 
 def test_get_task(sonarr_client: SonarrAPI):
-
     data = sonarr_client.get_task()
     assert isinstance(data, list)
 
@@ -461,13 +445,11 @@ def test_get_task(sonarr_client: SonarrAPI):
 
 
 def test_get_config_ui(sonarr_client: SonarrAPI):
-
     data = sonarr_client.get_config_ui()
     assert isinstance(data, dict)
 
 
 def test_upd_config_ui(sonarr_client: SonarrAPI):
-
     payload = sonarr_client.get_config_ui()
     payload["enableColorImpairedMode"] = True
     data = sonarr_client.upd_config_ui(payload)
@@ -476,13 +458,11 @@ def test_upd_config_ui(sonarr_client: SonarrAPI):
 
 
 def test_get_config_host(sonarr_client: SonarrAPI):
-
     data = sonarr_client.get_config_host()
     assert isinstance(data, dict)
 
 
 def test_upd_config_host(sonarr_client: SonarrAPI):
-
     payload = sonarr_client.get_config_host()
     payload["backupRetention"] = 29
     data = sonarr_client.upd_config_host(payload)
@@ -492,13 +472,11 @@ def test_upd_config_host(sonarr_client: SonarrAPI):
 
 
 def test_get_config_naming(sonarr_client: SonarrAPI):
-
     data = sonarr_client.get_config_naming()
     assert isinstance(data, dict)
 
 
 def test_upd_config_naming(sonarr_client: SonarrAPI):
-
     payload = sonarr_client.get_config_naming()
     payload["numberStyle"] = (
         "E{episode:00}S{season:00}"
@@ -515,13 +493,11 @@ def test_upd_config_naming(sonarr_client: SonarrAPI):
 
 
 def test_get_media_management(sonarr_client: SonarrAPI):
-
     data = sonarr_client.get_media_management()
     assert isinstance(data, dict)
 
 
 def test_upd_media_management(sonarr_client: SonarrAPI):
-
     payload = sonarr_client.get_media_management()
     payload["recycleBinCleanupDays"] = 6
     data = sonarr_client.upd_media_management(payload)
@@ -531,7 +507,6 @@ def test_upd_media_management(sonarr_client: SonarrAPI):
 
 
 def test_get_notification_schema(sonarr_client: SonarrAPI):
-
     data = sonarr_client.get_notification_schema()
     assert isinstance(data, list)
 
@@ -544,13 +519,11 @@ def test_get_notification_schema(sonarr_client: SonarrAPI):
 
 
 def test_create_tag(sonarr_client: SonarrAPI):
-
     data = sonarr_client.create_tag(label="string")
     assert isinstance(data, dict)
 
 
 def test_get_tag(sonarr_client: SonarrAPI):
-
     data = sonarr_client.get_tag()
     assert isinstance(data, list)
 
@@ -559,7 +532,6 @@ def test_get_tag(sonarr_client: SonarrAPI):
 
 
 def test_get_tag_detail(sonarr_client: SonarrAPI):
-
     data = sonarr_client.get_tag_detail()
     assert isinstance(data, list)
 
@@ -576,7 +548,6 @@ def test_upd_tag(sonarr_client: SonarrAPI):
 
 
 def test_get_download_client_schema(sonarr_client: SonarrAPI):
-
     data = sonarr_client.get_download_client_schema()
     assert isinstance(data, list)
 
@@ -589,7 +560,6 @@ def test_get_download_client_schema(sonarr_client: SonarrAPI):
 
 
 def test_get_import_list_schema(sonarr_client: SonarrAPI):
-
     data = sonarr_client.get_import_list_schema()
     assert isinstance(data, list)
 
@@ -602,7 +572,6 @@ def test_get_import_list_schema(sonarr_client: SonarrAPI):
 
 
 def test_get_releases(sonarr_client: SonarrAPI):
-
     data = sonarr_client.get_releases()
     assert isinstance(data, list)
 
@@ -610,7 +579,6 @@ def test_get_releases(sonarr_client: SonarrAPI):
 
 
 def test_get_quality_definition(sonarr_client: SonarrAPI):
-
     data = sonarr_client.get_quality_definition()
     assert isinstance(data, list)
 
@@ -753,7 +721,6 @@ def test_upd_config_download_client(sonarr_client: SonarrAPI):
 
 
 def test_get_parsed_title(sonarr_client: SonarrAPI):
-
     with pytest.deprecated_call():
         sonarr_client.get_parsed_title(title="test")
 
@@ -841,7 +808,6 @@ def test_upd_episode_file_quality(sonarr_mock_client: SonarrAPI):
 @pytest.mark.usefixtures
 @responses.activate
 def test_get_manual_import(sonarr_mock_client: SonarrAPI):
-
     responses.add(
         responses.GET,
         "https://127.0.0.1:8989/api/v3/manualimport",
@@ -879,7 +845,6 @@ def test_get_manual_import(sonarr_mock_client: SonarrAPI):
 @pytest.mark.usefixtures
 @responses.activate
 def test_upd_manual_import(sonarr_mock_client: SonarrAPI):
-
     responses.add(
         responses.GET,
         "https://127.0.0.1:8989/api/v3/manualimport",
@@ -913,7 +878,6 @@ def test_del_series(sonarr_client: SonarrAPI):
 
 
 def test_del_root_folder(sonarr_client: SonarrAPI):
-
     root_folders = sonarr_client.get_root_folder()
 
     # Check folder can be deleted
@@ -926,7 +890,6 @@ def test_del_root_folder(sonarr_client: SonarrAPI):
 
 
 def test_del_tag(sonarr_client: SonarrAPI):
-
     tags = sonarr_client.get_tag()
 
     data = sonarr_client.del_tag(tags[0]["id"])
