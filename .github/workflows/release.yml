@@ -59,7 +59,12 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: 3.11
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install poetry nox
       - name: Publish distribution 📦 to PyPI
         run: |
-          pip install poetry nox
-          nox -s release
+          nox -rs release -- "$PYPI_PASSWORD"
+        env:
+          PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
