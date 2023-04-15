@@ -4,6 +4,8 @@ from os.path import abspath, dirname, join
 import re
 import sys
 
+import toml
+
 path = dirname(dirname(abspath(__file__)))
 sys.path.append(path)
 sys.path.append(join(path, "pyarr"))
@@ -13,8 +15,15 @@ slug = re.sub(r"\W+", "-", project.lower())
 copyright = "2021, Steven Marks, TotalDebug"
 author = "Steven Marks, TotalDebug"
 
+
 # The short X.Y version
-version = "2.0"
+def get_version():
+    with open("../pyproject.toml") as f:
+        config = toml.load(f)
+    return config["tool"]["poetry"]["version"]
+
+
+version = get_version()
 # The full version, including alpha/beta/rc tags
 release = ""
 
