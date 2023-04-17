@@ -121,6 +121,28 @@ def test_add_album(lidarr_client: LidarrAPI):
             assert False
 
     assert isinstance(data, dict)
+    assert data["title"] == "Wicked Words & Epic Tales: A Narrative Landscape"
+
+    items = lidarr_client.lookup(LIDARR_ALBUM_TERM)
+
+    for item in items:
+        if "album" in item:
+            album = item["album"]
+            data = lidarr_client.add_album(
+                album=album,
+                root_dir="/defaults/",
+                quality_profile_id=qual_profile[0]["id"],
+                metadata_profile_id=meta_profile[0]["id"],
+                monitored=False,
+                artist_monitor="latest",
+                artist_search_for_missing_albums=False,
+            )
+            break
+        if item == items[-1]:
+            assert False
+
+    assert isinstance(data, dict)
+    assert data["title"] == "DAWN"
 
 
 def test_upd_album(lidarr_client: LidarrAPI):

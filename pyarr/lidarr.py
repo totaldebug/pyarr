@@ -235,8 +235,10 @@ class LidarrAPI(BaseArrAPI):
         quality_profile_id: Optional[int] = None,
         metadata_profile_id: Optional[int] = None,
         monitored: bool = True,
+        artist_monitored: bool = True,
         artist_monitor: LidarrArtistMonitor = "all",
         artist_search_for_missing_albums: bool = False,
+        search_for_new_album: bool = False,
     ) -> JsonObject:
         """Adds an album to Lidarr
 
@@ -246,8 +248,10 @@ class LidarrAPI(BaseArrAPI):
             quality_profile_id (Optional[int], optional): Quality profile ID. Defaults to None.
             metadata_profile_id (Optional[int], optional): Metadata profile ID. Defaults to None.
             monitored (bool, optional): Should the album be monitored. Defaults to True.
+            artist_monitored (bool, optional): Should the album be monitored. Defaults to True.
             artist_monitor (LidarrArtistMonitor, optional): What level to monitor the artist. Defaults to "all".
             artist_search_for_missing_albums (bool, optional): Search for any missing albums by this artist. Defaults to False.
+            search_for_new_album (bool, optional): Search for new albums by this artist. Defaults to False.
 
         Returns:
             JsonObject: Dictionary with added record
@@ -267,15 +271,18 @@ class LidarrAPI(BaseArrAPI):
                     "There is no Metadata Profile setup"
                 ) from exception
 
-        album["id"] = 0
         album["artist"]["metadataProfileId"] = metadata_profile_id
         album["artist"]["qualityProfileId"] = quality_profile_id
         album["artist"]["rootFolderPath"] = root_dir
+        album["artist"]["monitored"] = artist_monitored
         album["artist"]["addOptions"] = {
             "monitor": artist_monitor,
             "searchForMissingAlbums": artist_search_for_missing_albums,
         }
         album["monitored"] = monitored
+        album["addOptions"] = {
+            "searchForNewAlbum": search_for_new_album,
+        }
         return self._post("album", self.ver_uri, data=album)
 
     def upd_album(self, data: JsonObject) -> JsonObject:
