@@ -963,3 +963,24 @@ class BaseArrAPI(RequestHandler):
         """
         path = f"command{f'/{id_}' if id_ else ''}"
         return self._get(path, self.ver_uri)
+
+    # GET /language/{id}
+    # TODO: update notes and tests for Sonarr once resolved
+    def get_language(
+        self, id_: Optional[int] = None
+    ) -> Union[JsonArray, dict[Any, Any]]:
+        """Gets all language profiles or specific one with id
+
+        Note:
+            This method is not working in Sonarr, use get_language_profile()
+            I have raised this with the Sonarr team.
+
+        Args:
+            id_ (Optional[int], optional): Language profile id from database. Defaults to None.
+
+        Returns:
+            Union[JsonArray, dict[Any, Any]]: List of dictionaries with items
+        """
+
+        path = f"language{f'/{id_}' if id_ else ''}"
+        return self._get(path, self.ver_uri)

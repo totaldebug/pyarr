@@ -104,12 +104,16 @@ def test_get_language_profile(sonarr_client: SonarrAPI):
     data = sonarr_client.get_language_profile(data[0]["id"])
     assert isinstance(data, dict)
 
+    with pytest.deprecated_call():
+        sonarr_client.get_language_profile()
 
-def test_upd_language_profile(sonarr_client: SonarrAPI):
-    profile = sonarr_client.get_language_profile()
-    profile[0]["upgradeAllowed"] = False
-    data = sonarr_client.upd_language_profile(id_=profile[0]["id"], data=profile[0])
-    assert isinstance(data, dict)
+
+# def test_get_language(sonarr_client: SonarrAPI):
+#    data = sonarr_client.get_language()
+#    assert isinstance(data, list)
+#
+#    data = sonarr_client.get_language(data[0]["id"])
+#    assert isinstance(data, dict)
 
 
 def test_lookup_series(sonarr_client: SonarrAPI):
@@ -986,28 +990,4 @@ def test_del_episode_file(sonarr_mock_client: SonarrAPI):
     )
     with contextlib.suppress(PyarrResourceNotFound):
         data = sonarr_mock_client.del_episode_file(id_=999)
-        assert False
-
-
-@pytest.mark.usefixtures
-@responses.activate
-def test_del_language_profile(sonarr_mock_client: SonarrAPI):
-    responses.add(
-        responses.DELETE,
-        "https://127.0.0.1:8989/api/v3/languageprofile/1",
-        headers={"Content-Type": "application/json"},
-        body=load_fixture("common/delete.json"),
-        status=200,
-    )
-    data = sonarr_mock_client.del_language_profile(id_=1)
-    assert isinstance(data, dict)
-
-    responses.add(
-        responses.DELETE,
-        "https://127.0.0.1:8989/api/v3/languageprofile/999",
-        headers={"Content-Type": "application/json"},
-        status=404,
-    )
-    with contextlib.suppress(PyarrResourceNotFound):
-        data = sonarr_mock_client.del_language_profile(id_=999)
         assert False

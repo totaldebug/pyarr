@@ -645,43 +645,21 @@ class SonarrAPI(BaseArrAPI):
         Args:
             id_ (Optional[int], optional): Language profile id from database. Defaults to None.
 
+        Note:
+            This method is deprecated and will be removed in a
+            future release. Please use get_language()
+
         Returns:
             Union[JsonArray, dict[Any, Any]]: List of dictionaries with items
         """
+        warn(
+            "This method is deprecated and will be removed in a future release. Please use get_language()",
+            DeprecationWarning,
+            stacklevel=2,
+        )
 
         path = f"languageprofile{f'/{id_}' if id_ else ''}"
         return self._get(path, self.ver_uri)
-
-    # PUT /languageprofile/{id}
-    def upd_language_profile(self, id_: int, data: JsonObject) -> JsonObject:
-        """Update the language profile data
-
-        Note:
-            To be used in conjunction with get_language_profile()
-
-        Args:
-            id_ (int): Profile ID to Update
-            data (JsonObject): All parameters to update
-
-        Returns:
-            JsonObject: Dictionary of updated record
-        """
-
-        return self._put(f"languageprofile/{id_}", self.ver_uri, data=data)
-
-    # DELETE /languageprofile
-    def del_language_profile(
-        self, id_: int
-    ) -> Union[Response, JsonObject, dict[Any, Any]]:
-        """Removes a specific language profile from the blocklist
-
-        Args:
-            id_ (int): Profile ID from database
-
-        Returns:
-            Response: HTTP Response
-        """
-        return self._delete(f"languageprofile/{id_}", self.ver_uri)
 
     # GET /languageprofile/schema/{id}
     def get_language_profile_schema(
