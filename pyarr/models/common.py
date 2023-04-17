@@ -23,8 +23,21 @@ Note:
     within Arr api docs.
 """
 
-PyarrHistorySortKey = Literal["id", "date", "eventType"]
+PyarrHistorySortKey = Literal[
+    "id",
+    "date",
+    "eventType",
+    "series.title",
+    "episode.title",
+    "movieFile.relativePath",
+    "sourceTitle",
+    "status",
+]
 """History sort keys
+
+series.title (Sonarr)
+episode.title (Sonarr)
+status (Lidarr only)
 
 Note:
     There may be more, but these are not well documented

@@ -290,14 +290,15 @@ def test_get_history(sonarr_client: SonarrAPI):
     data = sonarr_client.get_history()
     assert isinstance(data, dict)
 
-    data = sonarr_client.get_history(
-        page=1,
-        page_size=10,
-        sort_key="date",
-        sort_dir="default",
-        id_=episodes[0]["id"],
-    )
-    assert isinstance(data, dict)
+    for key in ["id", "date", "eventType", "series.title", "episode.title"]:
+        data = sonarr_client.get_history(
+            page=1,
+            page_size=10,
+            sort_key=key,
+            sort_dir="default",
+            id_=episodes[0]["id"],
+        )
+        assert isinstance(data, dict)
 
     with contextlib.suppress(PyarrMissingArgument):
         data = sonarr_client.get_history(sort_key="time")

@@ -50,3 +50,6 @@ LidarrImportListSchema = Literal[
     "SpotifyPlaylist",
     "SpotifySavedAlbums",
 ]
+
+#: Lidarr History Sort Keys
+LidarrHistorySortKey = Literal["sourceTitle", "status"]

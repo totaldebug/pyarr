@@ -17,7 +17,6 @@ from pyarr.models.common import (
     PyarrSortDirection,
 )
 from pyarr.models.lidarr import LidarrImportListSchema
-from pyarr.models.sonarr import SonarrHistorySortKey
 from pyarr.types import JsonArray, JsonObject
 
 from .request_handler import RequestHandler
@@ -219,7 +218,7 @@ class BaseArrAPI(RequestHandler):
         self,
         page: Optional[int] = None,
         page_size: Optional[int] = None,
-        sort_key: Optional[Union[PyarrHistorySortKey, SonarrHistorySortKey]] = None,
+        sort_key: Optional[PyarrHistorySortKey] = None,
         sort_dir: Optional[PyarrSortDirection] = None,
     ) -> JsonObject:
         """Gets history (grabs/failures/completed)
@@ -235,7 +234,11 @@ class BaseArrAPI(RequestHandler):
         """
         params: dict[
             str,
-            Union[int, PyarrHistorySortKey, SonarrHistorySortKey, PyarrSortDirection],
+            Union[
+                int,
+                PyarrHistorySortKey,
+                PyarrSortDirection,
+            ],
         ] = {}
 
         if page:

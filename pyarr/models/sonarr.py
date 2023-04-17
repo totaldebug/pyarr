@@ -99,14 +99,3 @@ SonarrSortKey = Literal[
     "status",
     "timeleft",
 ]
-
-
-SonarrHistorySortKey = Literal[
-    "id", "date", "eventType", "series.title", "episode.title"
-]
-"""Sonarr History sort keys
-
-Note:
-    There may be more, but these are not well documented
-    within Arr api docs.
-"""

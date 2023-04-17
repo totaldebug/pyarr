@@ -781,13 +781,14 @@ def test_get_history(lidarr_client: LidarrAPI):
     data = lidarr_client.get_history()
     assert isinstance(data, dict)
 
-    data = lidarr_client.get_history(
-        page=1,
-        page_size=10,
-        sort_key="date",
-        sort_dir="default",
-    )
-    assert isinstance(data, dict)
+    for key in ["id", "date", "eventType", "status"]:
+        data = lidarr_client.get_history(
+            page=1,
+            page_size=10,
+            sort_key=key,
+            sort_dir="default",
+        )
+        assert isinstance(data, dict)
 
     with contextlib.suppress(PyarrMissingArgument):
         data = lidarr_client.get_history(sort_key="date")

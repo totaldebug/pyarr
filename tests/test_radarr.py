@@ -196,16 +196,17 @@ def test_get_history(radarr_client: RadarrAPI):
     data = radarr_client.get_history()
     assert isinstance(data, dict)
 
-    data = radarr_client.get_history(
-        page=1,
-        page_size=10,
-        sort_key="time",
-        sort_dir="default",
-    )
-    assert isinstance(data, dict)
+    for key in ["id", "date", "eventType"]:
+        data = radarr_client.get_history(
+            page=1,
+            page_size=10,
+            sort_key=key,
+            sort_dir="default",
+        )
+        assert isinstance(data, dict)
 
     with contextlib.suppress(PyarrMissingArgument):
-        data = radarr_client.get_history(sort_key="time")
+        data = radarr_client.get_history(sort_key="date")
         assert False
 
     with contextlib.suppress(PyarrMissingArgument):

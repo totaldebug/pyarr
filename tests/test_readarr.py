@@ -363,6 +363,28 @@ def test_get_quality_profile_schema(readarr_client: ReadarrAPI):
     assert isinstance(data, dict)
 
 
+def test_get_history(readarr_client: ReadarrAPI):
+    data = readarr_client.get_history()
+    assert isinstance(data, dict)
+
+    for key in ["id", "date", "eventType"]:
+        data = readarr_client.get_history(
+            page=1,
+            page_size=10,
+            sort_key=key,
+            sort_dir="default",
+        )
+        assert isinstance(data, dict)
+
+    with contextlib.suppress(PyarrMissingArgument):
+        data = readarr_client.get_history(sort_key="date")
+        assert False
+
+    with contextlib.suppress(PyarrMissingArgument):
+        data = readarr_client.get_history(sort_dir="descending")
+        assert False
+
+
 @pytest.mark.usefixtures
 @responses.activate
 def test_get_queue(readarr_mock_client: ReadarrAPI):
