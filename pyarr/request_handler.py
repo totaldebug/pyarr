@@ -11,6 +11,7 @@ from .exceptions import (
     PyarrConnectionError,
     PyarrMethodNotAllowed,
     PyarrResourceNotFound,
+    PyarrServerError,
     PyarrUnauthorizedError,
 )
 from .types import _ReturnType
@@ -241,11 +242,17 @@ def _process_response(
         )
     if res.status_code == 404:
         raise PyarrResourceNotFound("Resource not found")
-    if res.status_code == 502:
-        raise PyarrBadGateway("Bad Gateway. Check your server is accessible")
     if res.status_code == 405:
         raise PyarrMethodNotAllowed(f"The endpoint {res.url} is not allowed")
+    if res.status_code == 500:
+        raise PyarrServerError(
+            f"Internal Server Error: {res.json()['message']}",
+            res.json(),
+        )
+    if res.status_code == 502:
+        raise PyarrBadGateway("Bad Gateway. Check your server is accessible.")
 
+    print(res.status_code)
     content_type = res.headers.get("Content-Type", "")
     if "application/json" in content_type:
         return res.json()
