@@ -799,45 +799,16 @@ def test_get_history(lidarr_client: LidarrAPI):
 
 
 def test_add_quality_profile(lidarr_client: LidarrAPI):
+    language = lidarr_client.get_language()[0]
+    schema = lidarr_client.get_quality_profile_schema()
+    schema["items"][1]["allowed"] = True
+
     data = lidarr_client.add_quality_profile(
         name="music",
-        upgrades_allowed=True,
-        cutoff=1005,
-        items=[
-            {"quality": {"id": 0, "name": "Unknown"}, "items": [], "allowed": True},
-            {
-                "name": "Lossless",
-                "items": [
-                    {
-                        "quality": {"id": 7, "name": "ALAC"},
-                        "items": [],
-                        "allowed": True,
-                    },
-                    {
-                        "quality": {"id": 6, "name": "FLAC"},
-                        "items": [],
-                        "allowed": True,
-                    },
-                    {
-                        "quality": {"id": 35, "name": "APE"},
-                        "items": [],
-                        "allowed": True,
-                    },
-                    {
-                        "quality": {"id": 36, "name": "WavPack"},
-                        "items": [],
-                        "allowed": True,
-                    },
-                    {
-                        "quality": {"id": 21, "name": "FLAC 24bit"},
-                        "items": [],
-                        "allowed": True,
-                    },
-                ],
-                "allowed": True,
-                "id": 1005,
-            },
-        ],
+        upgrade_allowed=True,
+        cutoff=schema["items"][1]["id"],
+        schema=schema,
+        language=language,
     )
     assert isinstance(data, dict)
 
@@ -872,6 +843,11 @@ def test_upd_quality_definition(lidarr_client: LidarrAPI):
     )
     assert isinstance(data, dict)
     assert data["maxSize"] == rand_float
+
+
+def test_get_quality_profile_schema(lidarr_client: LidarrAPI):
+    data = lidarr_client.get_quality_profile_schema()
+    assert isinstance(data, dict)
 
 
 def test_get_indexer_schema(lidarr_client: LidarrAPI):

@@ -392,6 +392,14 @@ class BaseArrAPI(RequestHandler):
         """
         return self._put(f"qualitydefinition/{id_}", self.ver_uri, data=data)
 
+    def get_quality_profile_schema(self) -> JsonArray:
+        """Get the schemas for quality profiles
+
+        Returns:
+            JsonArray: List of dictionaries with items
+        """
+        return self._get("qualityprofile/schema", self.ver_uri)
+
     # INDEXER
 
     # GET /indexer/schema

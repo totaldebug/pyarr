@@ -605,6 +605,11 @@ def test_upd_quality_definition(sonarr_client: SonarrAPI):
     assert data["maxSize"] == rand_float
 
 
+def test_get_quality_profile_schema(sonarr_client: SonarrAPI):
+    data = sonarr_client.get_quality_profile_schema()
+    assert isinstance(data, dict)
+
+
 @pytest.mark.usefixtures
 @responses.activate
 def test_get_queue(sonarr_mock_client: SonarrAPI):

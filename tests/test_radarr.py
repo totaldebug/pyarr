@@ -595,6 +595,11 @@ def test_get_language(radarr_client: RadarrAPI):
     assert isinstance(data, dict)
 
 
+def test_get_quality_profile_schema(radarr_client: RadarrAPI):
+    data = radarr_client.get_quality_profile_schema()
+    assert isinstance(data, dict)
+
+
 @pytest.mark.usefixtures
 @responses.activate
 def test_get_blocklist_by_movie_id(radarr_mock_client: RadarrAPI):
