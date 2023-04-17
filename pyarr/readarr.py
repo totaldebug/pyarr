@@ -841,3 +841,16 @@ class ReadarrAPI(BaseArrAPI):
             JsonObject: Dictionary of updated record
         """
         return self._put("manualimport", self.ver_uri, data=data)
+
+    # GET /edition
+    def get_edition(self, id_: int) -> JsonObject:
+        """Get edition's for specific book
+
+        Args:
+            id_ (int): Database ID of book
+
+        Returns:
+            JsonObject: Dictionary of editions
+        """
+
+        return self._get("edition", self.ver_uri, params={"bookId": id_})

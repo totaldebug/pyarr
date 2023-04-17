@@ -268,6 +268,14 @@ def test_get_book(readarr_client: ReadarrAPI):
 def test_upd_book(readarr_client: ReadarrAPI):
     book = readarr_client.get_book()
 
+    data = readarr_client.get_edition(id_=book[0]["id"])
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+def test_upd_book(readarr_client: ReadarrAPI):
+    book = readarr_client.get_book()
+
     data = readarr_client.upd_book(id_=book[0]["id"], data=book[0])
     assert isinstance(data, dict)
 
