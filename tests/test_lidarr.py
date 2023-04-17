@@ -353,6 +353,14 @@ def test_upd_metadata_provider(lidarr_client: LidarrAPI):
     assert isinstance(data, dict)
 
 
+def test_get_language(lidarr_client: LidarrAPI):
+    data = lidarr_client.get_language()
+    assert isinstance(data, list)
+
+    data = lidarr_client.get_language(data[0]["id"])
+    assert isinstance(data, dict)
+
+
 @pytest.mark.usefixtures
 @responses.activate
 def test_get_queue(lidarr_mock_client: LidarrAPI):

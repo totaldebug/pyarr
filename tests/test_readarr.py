@@ -350,6 +350,14 @@ def test_get_release_profile(readarr_client: ReadarrAPI):
     assert isinstance(data, dict)
 
 
+def test_get_language(readarr_client: ReadarrAPI):
+    data = readarr_client.get_language()
+    assert isinstance(data, list)
+
+    data = readarr_client.get_language(data[0]["id"])
+    assert isinstance(data, dict)
+
+
 @pytest.mark.usefixtures
 @responses.activate
 def test_get_queue(readarr_mock_client: ReadarrAPI):

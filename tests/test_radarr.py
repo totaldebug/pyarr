@@ -19,13 +19,11 @@ from tests.conftest import radarr_client, radarr_mock_client
 
 
 def test_add_root_folder(radarr_client: RadarrAPI):
-
     data = radarr_client.add_root_folder(directory="/defaults")
     assert isinstance(data, dict)
 
 
 def test_get_root_folder(radarr_client: RadarrAPI):
-
     data = radarr_client.get_root_folder()
     assert isinstance(data, list)
 
@@ -34,7 +32,6 @@ def test_get_root_folder(radarr_client: RadarrAPI):
 
 
 def test_post_command(radarr_client: RadarrAPI):
-
     data = radarr_client.post_command(name="RescanMovie", movieid=1)
     assert isinstance(data, dict)
     data = radarr_client.post_command(name="RefreshMovie", seriesId=1)
@@ -71,7 +68,6 @@ def test_get_command(radarr_client: RadarrAPI):
 
 
 def test_add_quality_profile(radarr_client: RadarrAPI):
-
     data = radarr_client.get_quality_definition()
     assert isinstance(data, list)
 
@@ -84,7 +80,6 @@ def test_add_quality_profile(radarr_client: RadarrAPI):
 
 
 def test_get_quality_profile(radarr_client: RadarrAPI):
-
     data = radarr_client.get_quality_profile()
     assert isinstance(data, list)
 
@@ -93,7 +88,6 @@ def test_get_quality_profile(radarr_client: RadarrAPI):
 
 
 def test_upd_quality_profile(radarr_client: RadarrAPI):
-
     quality_profiles = radarr_client.get_quality_profile()
 
     for profile in quality_profiles:
@@ -114,13 +108,11 @@ def test_lookup_movie(radarr_client: RadarrAPI):
 
 
 def test_lookup_movie_by_tmdb_id(radarr_client: RadarrAPI):
-
     data = radarr_client.lookup_movie_by_tmdb_id(id_=RADARR_TMDB)
     assert isinstance(data, list)
 
 
 def test_lookup_movie_by_imdb_id(radarr_client: RadarrAPI):
-
     data = radarr_client.lookup_movie_by_imdb_id(id_=RADARR_IMDB)
     assert isinstance(data, list)
 
@@ -153,7 +145,6 @@ def test_get_movie(radarr_client: RadarrAPI):
 
 
 def test_get_movie_by_movie_id(radarr_client: RadarrAPI):
-
     movie = radarr_client.get_movie()
     data = radarr_client.get_movie_by_movie_id(movie[0]["id"])
     assert isinstance(data, dict)
@@ -167,7 +158,6 @@ def test_get_movie_by_movie_id(radarr_client: RadarrAPI):
 
 
 def test_upd_movie(radarr_client: RadarrAPI):
-
     movie = radarr_client.get_movie()
 
     data = radarr_client.upd_movie(data=movie[0])
@@ -200,7 +190,6 @@ def test_upd_movies(radarr_client: RadarrAPI):
 
 
 def test_get_history(radarr_client: RadarrAPI):
-
     data = radarr_client.get_history()
     assert isinstance(data, dict)
 
@@ -222,7 +211,6 @@ def test_get_history(radarr_client: RadarrAPI):
 
 
 def test_get_calendar(radarr_client: RadarrAPI):
-
     start = datetime.strptime("Nov 30 2020  1:33PM", "%b %d %Y %I:%M%p")
     end = datetime.strptime("Dec 1 2020  1:33PM", "%b %d %Y %I:%M%p")
     data = radarr_client.get_calendar(start_date=start, end_date=end)
@@ -235,19 +223,16 @@ def test_get_calendar(radarr_client: RadarrAPI):
 
 
 def test_get_system_status(radarr_client: RadarrAPI):
-
     data = radarr_client.get_system_status()
     assert isinstance(data, dict)
 
 
 def test_get_health(radarr_client: RadarrAPI):
-
     data = radarr_client.get_health()
     assert isinstance(data, list)
 
 
 def test_get_metadata(radarr_client: RadarrAPI):
-
     data = radarr_client.get_metadata()
     assert isinstance(data, list)
 
@@ -256,25 +241,21 @@ def test_get_metadata(radarr_client: RadarrAPI):
 
 
 def test_get_update(radarr_client: RadarrAPI):
-
     data = radarr_client.get_update()
     assert isinstance(data, list)
 
 
 def test_get_disk_space(radarr_client: RadarrAPI):
-
     data = radarr_client.get_disk_space()
     assert isinstance(data, list)
 
 
 def test_get_backup(radarr_client: RadarrAPI):
-
     data = radarr_client.get_backup()
     assert isinstance(data, list)
 
 
 def test_get_log(radarr_client: RadarrAPI):
-
     data = radarr_client.get_log()
     assert isinstance(data, dict)
 
@@ -303,7 +284,6 @@ def test_get_log(radarr_client: RadarrAPI):
 
 
 def test_get_task(radarr_client: RadarrAPI):
-
     data = radarr_client.get_task()
     assert isinstance(data, list)
 
@@ -312,13 +292,11 @@ def test_get_task(radarr_client: RadarrAPI):
 
 
 def test_get_config_ui(radarr_client: RadarrAPI):
-
     data = radarr_client.get_config_ui()
     assert isinstance(data, dict)
 
 
 def test_upd_config_ui(radarr_client: RadarrAPI):
-
     payload = radarr_client.get_config_ui()
     payload["enableColorImpairedMode"] = True
     data = radarr_client.upd_config_ui(payload)
@@ -327,13 +305,11 @@ def test_upd_config_ui(radarr_client: RadarrAPI):
 
 
 def test_get_config_host(radarr_client: RadarrAPI):
-
     data = radarr_client.get_config_host()
     assert isinstance(data, dict)
 
 
 def test_upd_config_host(radarr_client: RadarrAPI):
-
     payload = radarr_client.get_config_host()
     payload["backupRetention"] = 29
     data = radarr_client.upd_config_host(payload)
@@ -343,13 +319,11 @@ def test_upd_config_host(radarr_client: RadarrAPI):
 
 
 def test_get_config_naming(radarr_client: RadarrAPI):
-
     data = radarr_client.get_config_naming()
     assert isinstance(data, dict)
 
 
 def test_upd_config_naming(radarr_client: RadarrAPI):
-
     payload = radarr_client.get_config_naming()
     if (
         payload["standardMovieFormat"]
@@ -378,13 +352,11 @@ def test_upd_config_naming(radarr_client: RadarrAPI):
 
 
 def test_get_media_management(radarr_client: RadarrAPI):
-
     data = radarr_client.get_media_management()
     assert isinstance(data, dict)
 
 
 def test_upd_media_management(radarr_client: RadarrAPI):
-
     payload = radarr_client.get_media_management()
     payload["recycleBinCleanupDays"] = 6
     data = radarr_client.upd_media_management(payload)
@@ -394,7 +366,6 @@ def test_upd_media_management(radarr_client: RadarrAPI):
 
 
 def test_get_notification_schema(radarr_client: RadarrAPI):
-
     data = radarr_client.get_notification_schema()
     assert isinstance(data, list)
 
@@ -407,13 +378,11 @@ def test_get_notification_schema(radarr_client: RadarrAPI):
 
 
 def test_create_tag(radarr_client: RadarrAPI):
-
     data = radarr_client.create_tag(label="string")
     assert isinstance(data, dict)
 
 
 def test_get_tag(radarr_client: RadarrAPI):
-
     data = radarr_client.get_tag()
     assert isinstance(data, list)
 
@@ -422,7 +391,6 @@ def test_get_tag(radarr_client: RadarrAPI):
 
 
 def test_get_tag_detail(radarr_client: RadarrAPI):
-
     data = radarr_client.get_tag_detail()
     assert isinstance(data, list)
 
@@ -439,7 +407,6 @@ def test_upd_tag(radarr_client: RadarrAPI):
 
 
 def test_get_download_client_schema(radarr_client: RadarrAPI):
-
     data = radarr_client.get_download_client_schema()
     assert isinstance(data, list)
 
@@ -452,7 +419,6 @@ def test_get_download_client_schema(radarr_client: RadarrAPI):
 
 
 def test_get_import_list_schema(radarr_client: RadarrAPI):
-
     data = radarr_client.get_import_list_schema()
     assert isinstance(data, list)
 
@@ -497,7 +463,6 @@ def test_get_download_client(radarr_client: RadarrAPI):
 
 
 def test_get_quality_definition(radarr_client: RadarrAPI):
-
     data = radarr_client.get_quality_definition()
     assert isinstance(data, list)
 
@@ -521,13 +486,11 @@ def test_upd_quality_definition(radarr_client: RadarrAPI):
 
 
 def test_get_queue_status(radarr_client: RadarrAPI):
-
     data = radarr_client.get_queue_status()
     assert isinstance(data, dict)
 
 
 def test_get_custom_filter(radarr_client: RadarrAPI):
-
     data = radarr_client.get_custom_filter()
     assert isinstance(data, list)
 
@@ -547,7 +510,6 @@ def test_get_indexer_schema(radarr_client: RadarrAPI):
 @pytest.mark.usefixtures
 @responses.activate
 def test_get_indexer(radarr_mock_client: RadarrAPI):
-
     responses.add(
         responses.GET,
         "https://127.0.0.1:7878/api/v3/indexer",
@@ -572,7 +534,6 @@ def test_get_indexer(radarr_mock_client: RadarrAPI):
 @pytest.mark.usefixtures
 @responses.activate
 def test_upd_indexer(radarr_mock_client: RadarrAPI):
-
     responses.add(
         responses.GET,
         "https://127.0.0.1:7878/api/v3/indexer/1",
@@ -624,6 +585,14 @@ def test_get_movie_history(radarr_client: RadarrAPI):
 def test_get_remote_path_mapping(radarr_client: RadarrAPI):
     data = radarr_client.get_remote_path_mapping()
     assert isinstance(data, list)
+
+
+def test_get_language(radarr_client: RadarrAPI):
+    data = radarr_client.get_language()
+    assert isinstance(data, list)
+
+    data = radarr_client.get_language(data[0]["id"])
+    assert isinstance(data, dict)
 
 
 @pytest.mark.usefixtures
@@ -751,7 +720,6 @@ def test_get_queue_details(radarr_mock_client: RadarrAPI):
 @pytest.mark.usefixtures
 @responses.activate
 def test_import_movies(radarr_mock_client: RadarrAPI):
-
     responses.add(
         responses.POST,
         "https://127.0.0.1:7878/api/v3/movie/import",
@@ -818,7 +786,6 @@ def test_get_indexer(radarr_client: RadarrAPI):
 @pytest.mark.usefixtures
 @responses.activate
 def test_get_manual_import(radarr_mock_client: RadarrAPI):
-
     responses.add(
         responses.GET,
         "https://127.0.0.1:7878/api/v3/manualimport",
@@ -856,7 +823,6 @@ def test_get_manual_import(radarr_mock_client: RadarrAPI):
 @pytest.mark.usefixtures
 @responses.activate
 def test_upd_manual_import(radarr_mock_client: RadarrAPI):
-
     responses.add(
         responses.GET,
         "https://127.0.0.1:7878/api/v3/manualimport",
@@ -892,7 +858,6 @@ def test_del_tag(radarr_client: RadarrAPI):
 
 
 def test_del_movie(radarr_client: RadarrAPI):
-
     movie = radarr_client.get_movie()
 
     data = radarr_client.del_movie(
@@ -1062,7 +1027,6 @@ def test_force_grab_queue_item(radarr_mock_client: RadarrAPI):
 
 
 def test_del_root_folder(radarr_client: RadarrAPI):
-
     root_folders = radarr_client.get_root_folder()
 
     # Check folder can be deleted
@@ -1075,12 +1039,10 @@ def test_del_root_folder(radarr_client: RadarrAPI):
 
 
 def test_del_quality_profile(radarr_client: RadarrAPI):
-
     quality_profiles = radarr_client.get_quality_profile()
 
     for profile in quality_profiles:
         if profile["name"] == "Testing":
-
             # Check folder can be deleted
             data = radarr_client.del_quality_profile(profile["id"])
             assert data.status_code == 200
