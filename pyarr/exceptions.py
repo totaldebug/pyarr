@@ -40,3 +40,11 @@ class PyarrMissingArgument(PyarrError):
 
 class PyarrBadRequest(PyarrError):
     """Bad Request, possible bug."""
+
+
+class PyarrServerError(PyarrError):
+    """Server Error, missing or incorrect options."""
+
+    def __init__(self, message, response):
+        super().__init__(message)
+        self.response = response
