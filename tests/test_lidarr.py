@@ -36,7 +36,6 @@ def test_add_root_folder(lidarr_client: LidarrAPI):
 
 
 def test_get_root_folder(lidarr_client: LidarrAPI):
-
     data = lidarr_client.get_root_folder()
     assert isinstance(data, list)
 
@@ -45,19 +44,16 @@ def test_get_root_folder(lidarr_client: LidarrAPI):
 
 
 def test_lookup(lidarr_client: LidarrAPI):
-
     data = lidarr_client.lookup(term=LIDARR_TERM)
     assert isinstance(data, list)
 
 
 def test_lookup_artist(lidarr_client: LidarrAPI):
-
     data = lidarr_client.lookup_artist(term=LIDARR_ARTIST_TERM)
     assert isinstance(data, list)
 
 
 def test_lookup_album(lidarr_client: LidarrAPI):
-
     data = lidarr_client.lookup_album(term=LIDARR_ALBUM_TERM)
     assert isinstance(data, list)
 
@@ -86,7 +82,6 @@ def test_add_artist(lidarr_client: LidarrAPI):
 
 
 def test_get_artist(lidarr_client: LidarrAPI):
-
     data = lidarr_client.get_artist()
     assert isinstance(data, list)
 
@@ -98,7 +93,6 @@ def test_get_artist(lidarr_client: LidarrAPI):
 
 
 def test_upd_artist(lidarr_client: LidarrAPI):
-
     artist = lidarr_client.get_artist()
 
     data = lidarr_client.upd_artist(data=artist[0])
@@ -106,7 +100,6 @@ def test_upd_artist(lidarr_client: LidarrAPI):
 
 
 def test_add_album(lidarr_client: LidarrAPI):
-
     qual_profile = lidarr_client.get_quality_profile()
     meta_profile = lidarr_client.get_metadata_profile()
     items = lidarr_client.lookup(f"lidarr:{LIDARR_MUSICBRAINZ_ALBUM_ID}")
@@ -128,10 +121,31 @@ def test_add_album(lidarr_client: LidarrAPI):
             assert False
 
     assert isinstance(data, dict)
+    assert data["title"] == "Wicked Words & Epic Tales: A Narrative Landscape"
+
+    items = lidarr_client.lookup(LIDARR_ALBUM_TERM)
+
+    for item in items:
+        if "album" in item:
+            album = item["album"]
+            data = lidarr_client.add_album(
+                album=album,
+                root_dir="/defaults/",
+                quality_profile_id=qual_profile[0]["id"],
+                metadata_profile_id=meta_profile[0]["id"],
+                monitored=False,
+                artist_monitor="latest",
+                artist_search_for_missing_albums=False,
+            )
+            break
+        if item == items[-1]:
+            assert False
+
+    assert isinstance(data, dict)
+    assert data["title"] == "DAWN"
 
 
 def test_upd_album(lidarr_client: LidarrAPI):
-
     album = lidarr_client.get_album()
 
     data = lidarr_client.upd_album(data=album[0])
@@ -139,7 +153,6 @@ def test_upd_album(lidarr_client: LidarrAPI):
 
 
 def test_get_album(lidarr_client: LidarrAPI):
-
     data = lidarr_client.get_album()
     assert isinstance(data, list)
 
@@ -151,7 +164,6 @@ def test_get_album(lidarr_client: LidarrAPI):
 
 
 def test_post_command(lidarr_client: LidarrAPI):
-
     data = lidarr_client.post_command(name="DownloadedAlbumsScan")
     assert isinstance(data, dict)
     data = lidarr_client.post_command(name="ArtistSearch")
@@ -169,7 +181,6 @@ def test_post_command(lidarr_client: LidarrAPI):
 
 
 def test_get_wanted(lidarr_client: LidarrAPI):
-
     data = lidarr_client.get_wanted()
     assert isinstance(data, dict)
 
@@ -196,7 +207,6 @@ def test_get_wanted(lidarr_client: LidarrAPI):
 @pytest.mark.usefixtures
 @responses.activate
 def test_get_parse(lidarr_mock_client):
-
     responses.add(
         responses.GET,
         "https://127.0.0.1:8686/api/v1/parse",
@@ -230,7 +240,6 @@ def test_get_tracks(lidarr_client: LidarrAPI):
 @pytest.mark.usefixtures
 @responses.activate
 def test_get_track_file(lidarr_mock_client: LidarrAPI):
-
     responses.add(
         responses.GET,
         "https://127.0.0.1:8686/api/v1/trackfile",
@@ -297,7 +306,6 @@ def test_get_track_file(lidarr_mock_client: LidarrAPI):
 @pytest.mark.usefixtures
 @responses.activate
 def test_upd_track_file(lidarr_mock_client: LidarrAPI):
-
     responses.add(
         responses.GET,
         "https://127.0.0.1:8686/api/v1/trackfile/1",
@@ -319,7 +327,6 @@ def test_upd_track_file(lidarr_mock_client: LidarrAPI):
 
 
 def test_get_metadata_profile(lidarr_client: LidarrAPI):
-
     data = lidarr_client.get_metadata_profile()
     assert isinstance(data, list)
 
@@ -328,7 +335,6 @@ def test_get_metadata_profile(lidarr_client: LidarrAPI):
 
 
 def test_upd_metadata_profile(lidarr_client: LidarrAPI):
-
     profile = lidarr_client.get_metadata_profile()
 
     data = lidarr_client.upd_metadata_profile(data=profile[0])
@@ -336,13 +342,11 @@ def test_upd_metadata_profile(lidarr_client: LidarrAPI):
 
 
 def test_get_metadata_provider(lidarr_client: LidarrAPI):
-
     data = lidarr_client.get_metadata_provider()
     assert isinstance(data, dict)
 
 
 def test_upd_metadata_provider(lidarr_client: LidarrAPI):
-
     provider = lidarr_client.get_metadata_provider()
 
     data = lidarr_client.upd_metadata_provider(data=provider)
@@ -352,7 +356,6 @@ def test_upd_metadata_provider(lidarr_client: LidarrAPI):
 @pytest.mark.usefixtures
 @responses.activate
 def test_get_queue(lidarr_mock_client: LidarrAPI):
-
     responses.add(
         responses.GET,
         "https://127.0.0.1:8686/api/v1/queue",
@@ -413,7 +416,6 @@ def test_get_queue(lidarr_mock_client: LidarrAPI):
 @pytest.mark.usefixtures
 @responses.activate
 def test_get_queue_details(lidarr_mock_client: LidarrAPI):
-
     responses.add(
         responses.GET,
         "https://127.0.0.1:8686/api/v1/queue/details",
@@ -446,7 +448,6 @@ def test_get_queue_details(lidarr_mock_client: LidarrAPI):
 @pytest.mark.usefixtures
 @responses.activate
 def test_get_release(lidarr_mock_client: LidarrAPI):
-
     responses.add(
         responses.GET,
         "https://127.0.0.1:8686/api/v1/release",
@@ -473,7 +474,6 @@ def test_get_release(lidarr_mock_client: LidarrAPI):
 @pytest.mark.usefixtures
 @responses.activate
 def test_get_rename(lidarr_mock_client: LidarrAPI):
-
     responses.add(
         responses.GET,
         "https://127.0.0.1:8686/api/v1/rename",
@@ -504,7 +504,6 @@ def test_get_rename(lidarr_mock_client: LidarrAPI):
 @pytest.mark.usefixtures
 @responses.activate
 def test_get_manual_import(lidarr_mock_client: LidarrAPI):
-
     responses.add(
         responses.GET,
         "https://127.0.0.1:8686/api/v1/manualimport",
@@ -542,7 +541,6 @@ def test_get_manual_import(lidarr_mock_client: LidarrAPI):
 @pytest.mark.usefixtures
 @responses.activate
 def test_upd_manual_import(lidarr_mock_client: LidarrAPI):
-
     responses.add(
         responses.GET,
         "https://127.0.0.1:8686/api/v1/manualimport",
@@ -568,7 +566,6 @@ def test_upd_manual_import(lidarr_mock_client: LidarrAPI):
 @pytest.mark.usefixtures
 @responses.activate
 def test_get_retag(lidarr_mock_client: LidarrAPI):
-
     responses.add(
         responses.GET,
         "https://127.0.0.1:8686/api/v1/retag",
@@ -592,7 +589,6 @@ def test_get_retag(lidarr_mock_client: LidarrAPI):
 
 
 def test_get_calendar(lidarr_client: LidarrAPI):
-
     start = datetime.strptime("Nov 30 2020  1:33PM", "%b %d %Y %I:%M%p")
     end = datetime.strptime("Dec 1 2020  1:33PM", "%b %d %Y %I:%M%p")
     data = lidarr_client.get_calendar(start_date=start, end_date=end)
@@ -605,19 +601,16 @@ def test_get_calendar(lidarr_client: LidarrAPI):
 
 
 def test_get_system_status(lidarr_client: LidarrAPI):
-
     data = lidarr_client.get_system_status()
     assert isinstance(data, dict)
 
 
 def test_get_health(lidarr_client: LidarrAPI):
-
     data = lidarr_client.get_health()
     assert isinstance(data, list)
 
 
 def test_get_metadata(lidarr_client: LidarrAPI):
-
     data = lidarr_client.get_metadata()
     assert isinstance(data, list)
 
@@ -626,25 +619,21 @@ def test_get_metadata(lidarr_client: LidarrAPI):
 
 
 def test_get_update(lidarr_client: LidarrAPI):
-
     data = lidarr_client.get_update()
     assert isinstance(data, list)
 
 
 def test_get_disk_space(lidarr_client: LidarrAPI):
-
     data = lidarr_client.get_disk_space()
     assert isinstance(data, list)
 
 
 def test_get_backup(lidarr_client: LidarrAPI):
-
     data = lidarr_client.get_backup()
     assert isinstance(data, list)
 
 
 def test_get_log(lidarr_client: LidarrAPI):
-
     data = lidarr_client.get_log()
     assert isinstance(data, dict)
 
@@ -673,7 +662,6 @@ def test_get_log(lidarr_client: LidarrAPI):
 
 
 def test_get_task(lidarr_client: LidarrAPI):
-
     data = lidarr_client.get_task()
     assert isinstance(data, list)
 
@@ -682,13 +670,11 @@ def test_get_task(lidarr_client: LidarrAPI):
 
 
 def test_get_config_ui(lidarr_client: LidarrAPI):
-
     data = lidarr_client.get_config_ui()
     assert isinstance(data, dict)
 
 
 def test_upd_config_ui(lidarr_client: LidarrAPI):
-
     payload = lidarr_client.get_config_ui()
     payload["enableColorImpairedMode"] = True
     data = lidarr_client.upd_config_ui(payload)
@@ -697,13 +683,11 @@ def test_upd_config_ui(lidarr_client: LidarrAPI):
 
 
 def test_get_config_host(lidarr_client: LidarrAPI):
-
     data = lidarr_client.get_config_host()
     assert isinstance(data, dict)
 
 
 def test_upd_config_host(lidarr_client: LidarrAPI):
-
     payload = lidarr_client.get_config_host()
     payload["backupRetention"] = 29
     data = lidarr_client.upd_config_host(payload)
@@ -713,13 +697,11 @@ def test_upd_config_host(lidarr_client: LidarrAPI):
 
 
 def test_get_config_naming(lidarr_client: LidarrAPI):
-
     data = lidarr_client.get_config_naming()
     assert isinstance(data, dict)
 
 
 def test_upd_config_naming(lidarr_client: LidarrAPI):
-
     payload = lidarr_client.get_config_naming()
     payload["standardTrackFormat"] = (
         "{Album Title} - {track:00} - {Track Title} - {Album Title} ({Release Year})/{Artist Name}"
@@ -733,13 +715,11 @@ def test_upd_config_naming(lidarr_client: LidarrAPI):
 
 
 def test_get_media_management(lidarr_client: LidarrAPI):
-
     data = lidarr_client.get_media_management()
     assert isinstance(data, dict)
 
 
 def test_upd_media_management(lidarr_client: LidarrAPI):
-
     payload = lidarr_client.get_media_management()
     payload["recycleBinCleanupDays"] = 6
     data = lidarr_client.upd_media_management(payload)
@@ -749,7 +729,6 @@ def test_upd_media_management(lidarr_client: LidarrAPI):
 
 
 def test_get_notification_schema(lidarr_client: LidarrAPI):
-
     data = lidarr_client.get_notification_schema()
     assert isinstance(data, list)
 
@@ -762,13 +741,11 @@ def test_get_notification_schema(lidarr_client: LidarrAPI):
 
 
 def test_create_tag(lidarr_client: LidarrAPI):
-
     data = lidarr_client.create_tag(label="string")
     assert isinstance(data, dict)
 
 
 def test_get_tag(lidarr_client: LidarrAPI):
-
     data = lidarr_client.get_tag()
     assert isinstance(data, list)
 
@@ -777,7 +754,6 @@ def test_get_tag(lidarr_client: LidarrAPI):
 
 
 def test_get_tag_detail(lidarr_client: LidarrAPI):
-
     data = lidarr_client.get_tag_detail()
     assert isinstance(data, list)
 
@@ -794,7 +770,6 @@ def test_upd_tag(lidarr_client: LidarrAPI):
 
 
 def test_get_history(lidarr_client: LidarrAPI):
-
     data = lidarr_client.get_history()
     assert isinstance(data, dict)
 
@@ -816,7 +791,6 @@ def test_get_history(lidarr_client: LidarrAPI):
 
 
 def test_add_quality_profile(lidarr_client: LidarrAPI):
-
     data = lidarr_client.add_quality_profile(
         name="music",
         upgrades_allowed=True,
@@ -861,7 +835,6 @@ def test_add_quality_profile(lidarr_client: LidarrAPI):
 
 
 def test_upd_quality_profile(lidarr_client: LidarrAPI):
-
     quality_profiles = lidarr_client.get_quality_profile()
 
     data = lidarr_client.upd_quality_profile(
@@ -871,7 +844,6 @@ def test_upd_quality_profile(lidarr_client: LidarrAPI):
 
 
 def test_get_quality_definition(lidarr_client: LidarrAPI):
-
     data = lidarr_client.get_quality_definition()
     assert isinstance(data, list)
 
@@ -942,7 +914,6 @@ def test_upd_config_download_client(lidarr_client: LidarrAPI):
 
 
 def test_get_download_client_schema(lidarr_client: LidarrAPI):
-
     data = lidarr_client.get_download_client_schema()
     assert isinstance(data, list)
 
@@ -955,7 +926,6 @@ def test_get_download_client_schema(lidarr_client: LidarrAPI):
 
 
 def test_get_import_list_schema(lidarr_client: LidarrAPI):
-
     data = lidarr_client.get_import_list_schema()
     assert isinstance(data, list)
 
@@ -987,7 +957,6 @@ def test_get_command(lidarr_client: LidarrAPI):
 @pytest.mark.usefixtures
 @responses.activate
 def test_get_indexer(lidarr_mock_client: LidarrAPI):
-
     responses.add(
         responses.GET,
         "https://127.0.0.1:8686/api/v1/indexer",
@@ -1012,7 +981,6 @@ def test_get_indexer(lidarr_mock_client: LidarrAPI):
 @pytest.mark.usefixtures
 @responses.activate
 def test_upd_indexer(lidarr_mock_client: LidarrAPI):
-
     responses.add(
         responses.GET,
         "https://127.0.0.1:8686/api/v1/indexer/1",
@@ -1089,7 +1057,6 @@ def test_delete_artist(lidarr_client: LidarrAPI):
 
 
 def test_del_root_folder(lidarr_client: LidarrAPI):
-
     root_folders = lidarr_client.get_root_folder()
 
     # Check folder can be deleted
@@ -1103,12 +1070,10 @@ def test_del_root_folder(lidarr_client: LidarrAPI):
 
 
 def test_del_quality_profile(lidarr_client: LidarrAPI):
-
     quality_profiles = lidarr_client.get_quality_profile()
 
     for profile in quality_profiles:
         if profile["name"] == "music":
-
             # Check folder can be deleted
             data = lidarr_client.del_quality_profile(profile["id"])
             assert data.status_code == 200
@@ -1119,7 +1084,6 @@ def test_del_quality_profile(lidarr_client: LidarrAPI):
 
 
 def test_del_tag(lidarr_client: LidarrAPI):
-
     tags = lidarr_client.get_tag()
 
     data = lidarr_client.del_tag(tags[0]["id"])
