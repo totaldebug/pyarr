@@ -68,13 +68,16 @@ def test_get_command(radarr_client: RadarrAPI):
 
 
 def test_add_quality_profile(radarr_client: RadarrAPI):
-    data = radarr_client.get_quality_definition()
-    assert isinstance(data, list)
-
-    test_items = [data[0], data[3], data[5]]
+    language = radarr_client.get_language()[0]
+    schema = radarr_client.get_quality_profile_schema()
+    schema["items"][1]["allowed"] = True
 
     data = radarr_client.add_quality_profile(
-        name="Testing", upgrades_allowed=True, cutoff=3, items=test_items
+        name="Testing",
+        upgrade_allowed=True,
+        cutoff=schema["items"][1]["quality"]["id"],
+        schema=schema,
+        language=language,
     )
     assert isinstance(data, dict)
 

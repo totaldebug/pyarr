@@ -293,7 +293,7 @@ def test_get_history(sonarr_client: SonarrAPI):
     data = sonarr_client.get_history(
         page=1,
         page_size=10,
-        sort_key="time",
+        sort_key="date",
         sort_dir="default",
         id_=episodes[0]["id"],
     )

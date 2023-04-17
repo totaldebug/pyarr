@@ -9,7 +9,7 @@ from pyarr.types import JsonArray, JsonObject
 
 from .base import BaseArrAPI
 from .models.common import PyarrHistorySortKey, PyarrSortDirection
-from .models.sonarr import SonarrCommands, SonarrSortKey
+from .models.sonarr import SonarrCommands, SonarrHistorySortKey, SonarrSortKey
 
 
 class SonarrAPI(BaseArrAPI):
@@ -601,7 +601,7 @@ class SonarrAPI(BaseArrAPI):
         self,
         page: Optional[int] = None,
         page_size: Optional[int] = None,
-        sort_key: Optional[PyarrHistorySortKey] = None,
+        sort_key: Optional[Union[PyarrHistorySortKey, SonarrHistorySortKey]] = None,
         sort_dir: Optional[PyarrSortDirection] = None,
         id_: Optional[int] = None,
     ) -> JsonObject:
@@ -610,14 +610,17 @@ class SonarrAPI(BaseArrAPI):
         Args:
             page (Optional[int], optional): Page number to return. Defaults to None.
             page_size (Optional[int], optional): Number of items per page. Defaults to None.
-            sort_key (Optional[PyarrHistorySortKey], optional): Field to sort by. Defaults to None.
+            sort_key (Optional[Union[PyarrHistorySortKey, SonarrHistorySortKey]], optional): Field to sort by. Defaults to None.
             sort_dir (Optional[PyarrSortDirection], optional): Direction to sort the items. Defaults to None.
             id_ (Optional[int], optional): Filter to a specific episode ID. Defaults to None.
 
         Returns:
            JsonObject: Dictionary with items
         """
-        params: dict[str, Union[int, PyarrHistorySortKey, PyarrSortDirection]] = {}
+        params: dict[
+            str,
+            Union[int, PyarrHistorySortKey, SonarrHistorySortKey, PyarrSortDirection],
+        ] = {}
 
         if page:
             params["page"] = page

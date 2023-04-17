@@ -784,13 +784,13 @@ def test_get_history(lidarr_client: LidarrAPI):
     data = lidarr_client.get_history(
         page=1,
         page_size=10,
-        sort_key="time",
+        sort_key="date",
         sort_dir="default",
     )
     assert isinstance(data, dict)
 
     with contextlib.suppress(PyarrMissingArgument):
-        data = lidarr_client.get_history(sort_key="time")
+        data = lidarr_client.get_history(sort_key="date")
         assert False
 
     with contextlib.suppress(PyarrMissingArgument):

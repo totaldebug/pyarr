@@ -23,7 +23,7 @@ Note:
     within Arr api docs.
 """
 
-PyarrHistorySortKey = Literal["time"]
+PyarrHistorySortKey = Literal["id", "date", "eventType"]
 """History sort keys
 
 Note:
