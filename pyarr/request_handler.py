@@ -252,7 +252,6 @@ def _process_response(
     if res.status_code == 502:
         raise PyarrBadGateway("Bad Gateway. Check your server is accessible.")
 
-    print(res.status_code)
     content_type = res.headers.get("Content-Type", "")
     if "application/json" in content_type:
         return res.json()

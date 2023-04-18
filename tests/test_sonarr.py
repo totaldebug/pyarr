@@ -189,9 +189,11 @@ def test_get_episode(sonarr_client: SonarrAPI):
 
 def test_upd_series(sonarr_client: SonarrAPI):
     series = sonarr_client.get_series()
+    series[0]["monitored"] = False
 
-    data = sonarr_client.upd_series(data=series[0]["id"])
+    data = sonarr_client.upd_series(data=series[0])
     assert isinstance(data, dict)
+    assert data["monitored"] is False
 
 
 def test_get_episodes_by_series_id(sonarr_client: SonarrAPI):
@@ -290,14 +292,15 @@ def test_get_history(sonarr_client: SonarrAPI):
     data = sonarr_client.get_history()
     assert isinstance(data, dict)
 
-    data = sonarr_client.get_history(
-        page=1,
-        page_size=10,
-        sort_key="time",
-        sort_dir="default",
-        id_=episodes[0]["id"],
-    )
-    assert isinstance(data, dict)
+    for key in ["id", "date", "eventType", "series.title", "episode.title"]:
+        data = sonarr_client.get_history(
+            page=1,
+            page_size=10,
+            sort_key=key,
+            sort_dir="default",
+            id_=episodes[0]["id"],
+        )
+        assert isinstance(data, dict)
 
     with contextlib.suppress(PyarrMissingArgument):
         data = sonarr_client.get_history(sort_key="time")
@@ -603,6 +606,11 @@ def test_upd_quality_definition(sonarr_client: SonarrAPI):
     )
     assert isinstance(data, dict)
     assert data["maxSize"] == rand_float
+
+
+def test_get_quality_profile_schema(sonarr_client: SonarrAPI):
+    data = sonarr_client.get_quality_profile_schema()
+    assert isinstance(data, dict)
 
 
 @pytest.mark.usefixtures

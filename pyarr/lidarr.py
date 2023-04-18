@@ -744,23 +744,43 @@ class LidarrAPI(BaseArrAPI):
 
     # POST /qualityprofile
     def add_quality_profile(
-        self, name: str, upgrades_allowed: bool, cutoff: int, items: list
+        self,
+        name: str,
+        upgrade_allowed: bool,
+        cutoff: int,
+        schema: dict[str, Any],
+        language: dict,
+        min_format_score: int = 0,
+        cutoff_format_score: int = 0,
+        format_items: list = None,
     ) -> JsonObject:
-        """Add new quality profile
+        """Add new quality profile.
 
         Args:
             name (str): Name of the profile
-            upgrades_allowed (bool): Are upgrades in quality allowed?
+            upgrade_allowed (bool): Are upgrades in quality allowed?
             cutoff (int): ID of quality definition to cutoff at. Must be an allowed definition ID.
-            items (list): Add a list of items (from `get_quality_definition()`)
+            schema (dict[str, Any]): Add the profile schema (from `get_quality_profile_schema()`)
+            language (dict): Language profile (from `get_language()`)
+            min_format_score (int, optional): Minimum format score. Defaults to 0.
+            cutoff_format_score (int, optional): Cutoff format score. Defaults to 0.
+            format_items (list, optional): Format items. Defaults to [].
+
+        Note:
+            Update the result from `get_quality_profile_schema()` set the items you need
+            from `"allowed": false` to `"allowed": true`. See tests for more details.
 
         Returns:
             JsonObject: An object containing the profile
         """
-        data = {
-            "name": name,
-            "upgradeAllowed": upgrades_allowed,
-            "cutoff": cutoff,
-            "items": items,
-        }
-        return self._post("qualityprofile", self.ver_uri, data=data)
+        if format_items is None:
+            format_items = []
+        schema["name"] = name
+        schema["upgradeAllowed"] = upgrade_allowed
+        schema["cutoff"] = cutoff
+        schema["formatItems"] = format_items
+        schema["language"] = language
+        schema["minFormatScore"] = min_format_score
+        schema["cutoffFormatScore"] = cutoff_format_score
+
+        return self._post("qualityprofile", self.ver_uri, data=schema)

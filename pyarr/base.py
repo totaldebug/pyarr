@@ -232,7 +232,14 @@ class BaseArrAPI(RequestHandler):
         Returns:
            JsonObject: Dictionary with items
         """
-        params: dict[str, Union[int, PyarrHistorySortKey, PyarrSortDirection]] = {}
+        params: dict[
+            str,
+            Union[
+                int,
+                PyarrHistorySortKey,
+                PyarrSortDirection,
+            ],
+        ] = {}
 
         if page:
             params["page"] = page
@@ -391,6 +398,14 @@ class BaseArrAPI(RequestHandler):
             JsonObject: Dictionary of updated record
         """
         return self._put(f"qualitydefinition/{id_}", self.ver_uri, data=data)
+
+    def get_quality_profile_schema(self) -> JsonArray:
+        """Get the schemas for quality profiles
+
+        Returns:
+            JsonArray: List of dictionaries with items
+        """
+        return self._get("qualityprofile/schema", self.ver_uri)
 
     # INDEXER
 

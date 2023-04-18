@@ -541,26 +541,50 @@ class RadarrAPI(BaseArrAPI):
 
     # POST /qualityprofile
     def add_quality_profile(
-        self, name: str, upgrades_allowed: bool, cutoff: int, items: list
+        self,
+        name: str,
+        schema: dict[str, Any],
+        cutoff: int,
+        upgrade_allowed: Optional[bool] = None,
+        language: Optional[dict[str, Any]] = None,
+        min_format_score: Optional[int] = None,
+        cutoff_format_score: Optional[int] = None,
+        format_items: Optional[list] = None,
     ) -> JsonObject:
         """Add new quality profile
 
         Args:
             name (str): Name of the profile
-            upgrades_allowed (bool): Are upgrades in quality allowed?
+            schema (dict[str, Any]): Add the profile schema (from `get_quality_profile_schema()`)
             cutoff (int): ID of quality definition to cutoff at. Must be an allowed definition ID.
-            items (list): Add a list of items (from `get_quality_definition()`)
+            upgrade_allowed (bool, optional): Are upgrades in quality allowed?. Default provided by schema.
+            language (dict, optional): Language profile (from `get_language()`). Default provided by schema.
+            min_format_score (int, optional): Minimum format score. Default provided by schema.
+            cutoff_format_score (int, optional): Cutoff format score. Default provided by schema.
+            format_items (list, optional): Format items. Default provided by schema.
+
+        Note:
+            Update the result from `get_quality_profile_schema()` set the items you need
+            from `"allowed": false` to `"allowed": true`. See tests for more details.
 
         Returns:
             JsonObject: An object containing the profile
         """
-        data = {
-            "name": name,
-            "upgradeAllowed": upgrades_allowed,
-            "cutoff": cutoff,
-            "items": items,
-        }
-        return self._post("qualityprofile", self.ver_uri, data=data)
+        schema["name"] = name
+        schema["cutoff"] = cutoff
+
+        if format_items is not None:
+            schema["formatItems"] = format_items
+        if language is not None:
+            schema["language"] = language
+        if upgrade_allowed is not None:
+            schema["upgradeAllowed"] = upgrade_allowed
+        if min_format_score is not None:
+            schema["minFormatScore"] = min_format_score
+        if cutoff_format_score is not None:
+            schema["cutoffFormatScore"] = cutoff_format_score
+
+        return self._post("qualityprofile", self.ver_uri, data=schema)
 
     # GET /manualimport
     def get_manual_import(

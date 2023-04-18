@@ -212,7 +212,6 @@ def test_add_delay_profile(readarr_client: ReadarrAPI):
     assert data["minimumCustomFormatScore"] == 10
 
 
-@pytest.mark.usefixtures
 def test_get_missing(readarr_client: ReadarrAPI):
     data = readarr_client.get_missing()
     assert isinstance(data, dict)
@@ -233,7 +232,6 @@ def test_get_missing(readarr_client: ReadarrAPI):
         assert False
 
 
-@pytest.mark.usefixtures
 def test_get_cutoff(readarr_client: ReadarrAPI):
     data = readarr_client.get_cutoff()
     assert isinstance(data, dict)
@@ -255,7 +253,6 @@ def test_get_cutoff(readarr_client: ReadarrAPI):
         assert False
 
 
-@pytest.mark.usefixtures
 def test_get_book(readarr_client: ReadarrAPI):
     data = readarr_client.get_book()
     assert isinstance(data, list)
@@ -264,12 +261,19 @@ def test_get_book(readarr_client: ReadarrAPI):
     assert isinstance(data, dict)
 
 
-@pytest.mark.usefixtures
 def test_upd_book(readarr_client: ReadarrAPI):
     book = readarr_client.get_book()
+    editions = readarr_client.get_edition(book[0]["id"])
 
-    data = readarr_client.upd_book(id_=book[0]["id"], data=book[0])
+    data = readarr_client.upd_book(book=book[0], editions=editions)
     assert isinstance(data, dict)
+
+
+def test_get_edition(readarr_client: ReadarrAPI):
+    book = readarr_client.get_book()
+
+    data = readarr_client.get_edition(id_=book[0]["id"])
+    assert isinstance(data, list)
 
 
 def test_upd_book_monitor(readarr_client: ReadarrAPI):
@@ -282,7 +286,6 @@ def test_upd_book_monitor(readarr_client: ReadarrAPI):
     assert data[0]["monitored"] == False
 
 
-@pytest.mark.usefixtures
 def test_add_author(readarr_client: ReadarrAPI):
     qual_profile = readarr_client.get_quality_profile()
     meta_profile = readarr_client.get_metadata_profile()
@@ -304,7 +307,6 @@ def test_add_author(readarr_client: ReadarrAPI):
     assert isinstance(data, dict)
 
 
-@pytest.mark.usefixtures
 def test_upd_author(readarr_client: ReadarrAPI):
     author = readarr_client.get_author()
     author[0]["monitored"] = True
@@ -314,7 +316,6 @@ def test_upd_author(readarr_client: ReadarrAPI):
     assert data["monitored"] == True
 
 
-@pytest.mark.usefixtures
 def test_get_author(readarr_client: ReadarrAPI):
     data = readarr_client.get_author()
     assert isinstance(data, list)
@@ -323,7 +324,6 @@ def test_get_author(readarr_client: ReadarrAPI):
     assert isinstance(data, dict)
 
 
-@pytest.mark.usefixtures
 def test_get_metadata_profile(readarr_client: ReadarrAPI):
     data = readarr_client.get_metadata_profile()
     assert isinstance(data, list)
@@ -332,7 +332,6 @@ def test_get_metadata_profile(readarr_client: ReadarrAPI):
     assert isinstance(data, dict)
 
 
-@pytest.mark.usefixtures
 def test_get_delay_profile(readarr_client: ReadarrAPI):
     data = readarr_client.get_delay_profile()
     assert isinstance(data, list)
@@ -341,7 +340,6 @@ def test_get_delay_profile(readarr_client: ReadarrAPI):
     assert isinstance(data, dict)
 
 
-@pytest.mark.usefixtures
 def test_get_release_profile(readarr_client: ReadarrAPI):
     data = readarr_client.get_release_profile()
     assert isinstance(data, list)
@@ -356,6 +354,33 @@ def test_get_language(readarr_client: ReadarrAPI):
 
     data = readarr_client.get_language(data[0]["id"])
     assert isinstance(data, dict)
+
+
+def test_get_quality_profile_schema(readarr_client: ReadarrAPI):
+    data = readarr_client.get_quality_profile_schema()
+    assert isinstance(data, dict)
+
+
+def test_get_history(readarr_client: ReadarrAPI):
+    data = readarr_client.get_history()
+    assert isinstance(data, dict)
+
+    for key in ["id", "date", "eventType"]:
+        data = readarr_client.get_history(
+            page=1,
+            page_size=10,
+            sort_key=key,
+            sort_dir="default",
+        )
+        assert isinstance(data, dict)
+
+    with contextlib.suppress(PyarrMissingArgument):
+        data = readarr_client.get_history(sort_key="date")
+        assert False
+
+    with contextlib.suppress(PyarrMissingArgument):
+        data = readarr_client.get_history(sort_dir="descending")
+        assert False
 
 
 @pytest.mark.usefixtures

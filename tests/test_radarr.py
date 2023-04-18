@@ -68,13 +68,16 @@ def test_get_command(radarr_client: RadarrAPI):
 
 
 def test_add_quality_profile(radarr_client: RadarrAPI):
-    data = radarr_client.get_quality_definition()
-    assert isinstance(data, list)
-
-    test_items = [data[0], data[3], data[5]]
+    language = radarr_client.get_language()[0]
+    schema = radarr_client.get_quality_profile_schema()
+    schema["items"][1]["allowed"] = True
 
     data = radarr_client.add_quality_profile(
-        name="Testing", upgrades_allowed=True, cutoff=3, items=test_items
+        name="Testing",
+        upgrade_allowed=True,
+        cutoff=schema["items"][1]["quality"]["id"],
+        schema=schema,
+        language=language,
     )
     assert isinstance(data, dict)
 
@@ -193,16 +196,17 @@ def test_get_history(radarr_client: RadarrAPI):
     data = radarr_client.get_history()
     assert isinstance(data, dict)
 
-    data = radarr_client.get_history(
-        page=1,
-        page_size=10,
-        sort_key="time",
-        sort_dir="default",
-    )
-    assert isinstance(data, dict)
+    for key in ["id", "date", "eventType"]:
+        data = radarr_client.get_history(
+            page=1,
+            page_size=10,
+            sort_key=key,
+            sort_dir="default",
+        )
+        assert isinstance(data, dict)
 
     with contextlib.suppress(PyarrMissingArgument):
-        data = radarr_client.get_history(sort_key="time")
+        data = radarr_client.get_history(sort_key="date")
         assert False
 
     with contextlib.suppress(PyarrMissingArgument):
@@ -592,6 +596,11 @@ def test_get_language(radarr_client: RadarrAPI):
     assert isinstance(data, list)
 
     data = radarr_client.get_language(data[0]["id"])
+    assert isinstance(data, dict)
+
+
+def test_get_quality_profile_schema(radarr_client: RadarrAPI):
+    data = radarr_client.get_quality_profile_schema()
     assert isinstance(data, dict)
 
 
