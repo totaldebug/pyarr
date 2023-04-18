@@ -518,14 +518,7 @@ class SonarrAPI(BaseArrAPI):
             "searchForMissingEpisodes": search_for_missing_episodes,
         }
 
-        response: dict[str, Any] = self._post("series", self.ver_uri, data=series)
-        for item in response:
-            if "errorMessage" in item:
-                raise Exception(item)
-            else:
-                continue
-
-        return response
+        return self._post("series", self.ver_uri, data=series)
 
     # PUT /series
     def upd_series(self, data: JsonObject) -> JsonObject:
