@@ -432,20 +432,25 @@ class ReadarrAPI(BaseArrAPI):
         return self._post("book", self.ver_uri, data=book)
 
     # PUT /book/{id}
-    def upd_book(self, id_: int, data: JsonObject) -> JsonObject:
-        """Update the given book, currently only monitored is changed, all other modifications are ignored.
+    def upd_book(self, book: JsonObject, editions: JsonArray) -> JsonObject:
+        """Update the given book.
 
         Note:
-            To be used in conjunction with get_book()
+            To be used in conjunction with get_book() and get_edition()
+
+            Currently only monitored states are updated (for the book and edition).
 
         Args:
             id_ (int): Book database ID to update
-            data (JsonObject): All parameters to update book
+            book (JsonObject): All parameters to update book
+            editions (JsonArray): List of editions to update book from `get_edition()`
 
         Returns:
             JsonObject: Dictionary with updated record
         """
-        return self._put(f"book/{id_}", self.ver_uri, data=data)
+        book["editions"] = editions
+
+        return self._put("book", self.ver_uri, data=book)
 
     # PUT /book/monitor
     def upd_book_monitor(
@@ -843,7 +848,7 @@ class ReadarrAPI(BaseArrAPI):
         return self._put("manualimport", self.ver_uri, data=data)
 
     # GET /edition
-    def get_edition(self, id_: int) -> JsonObject:
+    def get_edition(self, id_: int) -> JsonArray:
         """Get edition's for specific book
 
         Args:

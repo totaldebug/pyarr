@@ -189,7 +189,7 @@ def test_get_episode(sonarr_client: SonarrAPI):
 
 def test_upd_series(sonarr_client: SonarrAPI):
     series = sonarr_client.get_series()
-    series["monitored"] = False
+    series[0]["monitored"] = False
 
     data = sonarr_client.upd_series(data=series[0])
     assert isinstance(data, dict)
