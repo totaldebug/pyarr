@@ -31,6 +31,7 @@ modified for each one by changing the `sonarr` referances to the required `arr` 
 
 .. code-block:: python
    :linenos:
+
     # Import SonarrAPI Class
     from pyarr import SonarrAPI
 

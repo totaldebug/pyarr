@@ -37,8 +37,6 @@
 
 </div>
 
-
-
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
@@ -61,8 +59,6 @@
   </ol>
 </details>
 
-
-
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
@@ -77,7 +73,6 @@ The library returns results in JSON format for ease of use, this also reduces th
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
 ### Built With
 
 [![python][python]][python-url]
@@ -87,7 +82,7 @@ The library returns results in JSON format for ease of use, this also reduces th
 <!-- GETTING STARTED -->
 ## Getting Started
 
-* [QuickStart Guide](https://docs.totaldebug.uk/pyarr/overview/quickstart.html)
+* [QuickStart Guide](https://docs.totaldebug.uk/pyarr/quickstart.html)
 * [Full Documentation](https://docs.totaldebug.uk/pyarr)
 * [Release Notes](https://github.com/totaldebug/pyarr/releases)
 
@@ -96,10 +91,10 @@ The library returns results in JSON format for ease of use, this also reduces th
 ## Features
 
 * Support for multiple Arr APIs
- * Sonarr
- * Radarr
- * Readarr
- * Lidarr
+* Sonarr
+* Radarr
+* Readarr
+* Lidarr
 * Type checking
 
 ## Compatibility
@@ -109,8 +104,6 @@ The below versions are based on our last tests, This will be updated as tests fa
 | Version | Sonarr | Radarr | Readarr | Lidarr |
 | ------- | ------ | ------ | ------- | ------ |
 | v5.0.0 | from: v3.0.10.1567 | from: v4.3.2.6857 | from: v0.1.4.1596 | from: v1.0.2.2592 |
-
-
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -134,7 +127,6 @@ Got something you would like to add? check out the contributing guide in the [do
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
 <!-- LICENSE -->
 ## License
 
@@ -143,7 +135,6 @@ Got something you would like to add? check out the contributing guide in the [do
 * Copyright © [Total Debug](https://totaldebug.uk).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 <!-- CONTACT -->
 ## Contact
@@ -162,7 +153,6 @@ Below are a list of resources that I used to assist with this project.
 * None at this time
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
@@ -188,7 +178,6 @@ Below are a list of resources that I used to assist with this project.
 [lines]: https://img.shields.io/tokei/lines/github/totaldebug/pyarr?style=flat-square
 [lines-url]: https://github.com/totaldebug/pyarr
 [code-size]: https://img.shields.io/github/languages/code-size/totaldebug/pyarr?style=flat-square
-
 
 [Sponsor]: https://img.shields.io/badge/sponsor-000?style=flat-square&logo=githubsponsors&logoColor=red
 [Sponsor-url]: https://github.com/sponsors/marksie1988
