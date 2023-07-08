@@ -3,6 +3,7 @@ from typing import Literal
 RadarrCommands = Literal[
     "DownloadedMoviesScan",
     "MissingMoviesSearch",
+    "MoviesSearch",
     "RefreshMovie",
     "RenameMovie",
     "RenameFiles",
@@ -22,6 +23,12 @@ DownloadedMoviesScan:
 
 MissingMoviesSearch:
     Searches for any missing movies
+
+MoviesSearch:
+    Searches for the specified movie or movies
+
+    Args:
+        movieIds (list[int]): ID of Movie or movies
 
 RefreshMovies:
     Refreshes all of the movies, or specific by ID
