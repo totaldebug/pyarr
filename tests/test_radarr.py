@@ -38,6 +38,8 @@ def test_post_command(radarr_client: RadarrAPI):
     assert isinstance(data, dict)
     data = radarr_client.post_command(name="MissingMoviesSearch")
     assert isinstance(data, dict)
+    data = radarr_client.post_command(name="MoviesSearch")
+    assert isinstance(data, dict)
     data = radarr_client.post_command(name="DownloadedMoviesScan")
     assert isinstance(data, dict)
     data = radarr_client.post_command(name="RenameFiles", files=[1, 2, 3])
