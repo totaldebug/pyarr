@@ -24,6 +24,9 @@ Backup:
 DownloadedEpisodesScan:
     Scans downloaded episodes for state
 
+    Args:
+        path (str)
+
 EpisodeSearch:
     Searches for all episondes, or specific ones in supplied list
 
@@ -49,6 +52,7 @@ RenameFiles:
     Renames files to the expected naming format.
 
     Args:
+        seriesId (int, optional): ID of series files relate to
         files (list[int]): List of File IDs to rename.
 
 RescanSeries:

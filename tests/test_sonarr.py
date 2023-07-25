@@ -1,6 +1,7 @@
 import contextlib
 from datetime import datetime
 import random
+import time
 
 import pytest
 import responses
@@ -27,52 +28,6 @@ def test_get_root_folder(sonarr_client: SonarrAPI):
 
     data = sonarr_client.get_root_folder(data[0]["id"])
     assert isinstance(data, dict)
-
-
-def test_post_command(sonarr_client: SonarrAPI):
-    data = sonarr_client.post_command(name="RefreshSeries")
-    assert isinstance(data, dict)
-    data = sonarr_client.post_command("RefreshSeries", seriesId=1)
-    assert isinstance(data, dict)
-    data = sonarr_client.post_command("RescanSeries")
-    assert isinstance(data, dict)
-    data = sonarr_client.post_command("RescanSeries", seriesId=1)
-    assert isinstance(data, dict)
-    data = sonarr_client.post_command("EpisodeSearch", episodeIds=[1, 2, 3])
-    assert isinstance(data, dict)
-    data = sonarr_client.post_command("SeasonSearch", seriesId=1, seasonNumber=1)
-    assert isinstance(data, dict)
-    data = sonarr_client.post_command("SeriesSearch", seriesId=1)
-    assert isinstance(data, dict)
-    data = sonarr_client.post_command("DownloadedEpisodesScan")
-    assert isinstance(data, dict)
-    data = sonarr_client.post_command("RssSync")
-    assert isinstance(data, dict)
-    data = sonarr_client.post_command("RenameFiles", files=[1, 2, 3])
-    assert isinstance(data, dict)
-    data = sonarr_client.post_command("RenameSeries", seriesIds=[1, 2, 3])
-    assert isinstance(data, dict)
-    data = sonarr_client.post_command("Backup")
-    assert isinstance(data, dict)
-    data = sonarr_client.post_command("missingEpisodeSearch")
-    assert isinstance(data, dict)
-
-
-def test_get_command(sonarr_client: SonarrAPI):
-    """Check get_command()"""
-
-    # No args
-    data = sonarr_client.get_command()
-    assert isinstance(data, list)
-
-    # When an ID is supplied
-    data = sonarr_client.get_command(data[0]["id"])
-    assert isinstance(data, dict)
-
-    # when an incorrect ID is supplied, not found response
-    with contextlib.suppress(PyarrResourceNotFound):
-        data = sonarr_client.get_command(4321)
-        assert False
 
 
 def test_get_quality_profile(sonarr_client: SonarrAPI):
@@ -735,6 +690,124 @@ def test_upd_config_download_client(sonarr_client: SonarrAPI):
 def test_get_parsed_title(sonarr_client: SonarrAPI):
     with pytest.deprecated_call():
         sonarr_client.get_parsed_title(title="test")
+
+
+def test_post_command(sonarr_client: SonarrAPI):
+    # RefreshSeries
+    data = sonarr_client.post_command(name="RefreshSeries")
+    time.sleep(5)
+    result = sonarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
+
+    data = sonarr_client.post_command(
+        "RefreshSeries", seriesId=sonarr_client.get_series()[0]["id"]
+    )
+    time.sleep(5)
+    result = sonarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
+
+    # RescanSeries
+    data = sonarr_client.post_command("RescanSeries")
+    time.sleep(5)
+    result = sonarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
+
+    data = sonarr_client.post_command(
+        "RescanSeries", seriesId=sonarr_client.get_series()[0]["id"]
+    )
+    time.sleep(5)
+    result = sonarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
+
+    # EpisodeSearch
+    data = sonarr_client.post_command("EpisodeSearch", episodeIds=[1, 2, 3])
+    time.sleep(5)
+    result = sonarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
+
+    # SeasonSearch
+    data = sonarr_client.post_command(
+        "SeasonSearch", seriesId=sonarr_client.get_series()[0]["id"], seasonNumber=1
+    )
+    time.sleep(5)
+    result = sonarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
+
+    # SeriesSearch
+    data = sonarr_client.post_command(
+        "SeriesSearch", seriesId=sonarr_client.get_series()[0]["id"]
+    )
+    time.sleep(5)
+    result = sonarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
+
+    # DownloadedEpisodesScan
+    data = sonarr_client.post_command(
+        "DownloadedEpisodesScan", path=sonarr_client.get_root_folder()[0]["path"]
+    )
+    time.sleep(5)
+    result = sonarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
+
+    # RSS Sync
+    data = sonarr_client.post_command("RssSync")
+    result = sonarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
+
+    # RenameFiles, NOTE: this test will always return a failed message on get_command
+    # this would only work if we actually download files which we can't do on test.
+    data = sonarr_client.post_command(
+        "RenameFiles", seriesId=sonarr_client.get_series()[0]["id"], files=[1, 2, 3]
+    )
+    assert isinstance(data, dict)
+
+    # RenameSeries
+    data = sonarr_client.post_command(
+        "RenameSeries", seriesIds=[sonarr_client.get_series()[0]["id"]]
+    )
+    time.sleep(5)
+    result = sonarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
+
+    # Test backups
+    data = sonarr_client.post_command("Backup")
+    time.sleep(5)
+    result = sonarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
+
+    data = sonarr_client.post_command("missingEpisodeSearch")
+    time.sleep(5)
+    result = sonarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
+
+
+def test_get_command(sonarr_client: SonarrAPI):
+    """Check get_command()"""
+
+    # No args
+    data = sonarr_client.get_command()
+    assert isinstance(data, list)
+
+    # When an ID is supplied
+    data = sonarr_client.get_command(data[0]["id"])
+    assert isinstance(data, dict)
+
+    # when an incorrect ID is supplied, not found response
+    with contextlib.suppress(PyarrResourceNotFound):
+        data = sonarr_client.get_command(4321)
+        assert False
 
 
 @pytest.mark.usefixtures
