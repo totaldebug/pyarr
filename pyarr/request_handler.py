@@ -216,7 +216,7 @@ class RequestHandler:
         return value
 
 
-class AsyncRequestHandler(RequestHandler):
+class AsyncRequestHandler:
     """Base class for API Wrappers"""
 
     def __init__(
@@ -230,11 +230,26 @@ class AsyncRequestHandler(RequestHandler):
             host_url (str): Host URL to Arr api
             api_key (str): API Key for Arr api
         """
-        super().__init__(host_url, api_key)
+        self.host_url = host_url.rstrip("/")
+        self.api_key = api_key
         self.session = AIOHTTP_SESSION
         self.auth: Union[aiohttp.BasicAuth, None] = None
 
-    def basic_auth(self, username: str, password: str) -> Union[HTTPBasicAuth, None]:
+    def _request_url(self, path: str, ver_uri: str) -> str:
+        """Builds the URL for the request to use.
+
+        Args:
+            path (str): Destination for specific call
+            ver_uri (str): API Version number
+
+        Returns:
+            str: string URL for API endpoint
+        """
+        return f"{self.host_url}/api{ver_uri}/{path}"
+
+    def basic_auth(
+        self, username: str, password: str
+    ) -> Union[aiohttp.BasicAuth, None]:
         """If you have basic authentication setup you will need to pass your
         username and passwords to the HTTPBASICAUTH() method.
 
@@ -338,7 +353,7 @@ class AsyncRequestHandler(RequestHandler):
         ver_uri: str = "",
         params: Union[dict, None] = None,
         data: Union[dict, None] = None,
-    ) -> Union[Response, dict[str, Any], dict[Any, Any]]:
+    ) -> Union[aiohttp.ClientResponse, dict[str, Any], dict[Any, Any]]:
         """Wrapper on any delete requests
 
         Args:
@@ -359,11 +374,20 @@ class AsyncRequestHandler(RequestHandler):
                 auth=self.auth,
             )
         )
-        if isinstance(response, dict):
-            assert isinstance(response, dict)
-        else:
-            assert isinstance(response, aiohttp.ClientResponse)
-        return response
+        return self._check_type(response, dict, aiohttp.ClientResponse)
+
+    def _check_type(self, value: Any, *types: Type) -> Any:
+        """Takes the response and asserts its type
+
+        Args:
+            value (Any): Response from request
+            types (Type): The types that should be checked for
+
+        Returns:
+            Any: Many possible return types
+        """
+        assert isinstance(value, types)
+        return value
 
 
 def _process_response(
@@ -452,9 +476,10 @@ async def _aprocess_response(request: _RequestContextManager):
             if res.status == 405:
                 raise PyarrMethodNotAllowed(f"The endpoint {res.url} is not allowed")
             if res.status == 500:
+                res_json = await res.json()
                 raise PyarrServerError(
-                    f"Internal Server Error: {res.json()['message']}",
-                    await res.json(),
+                    f"Internal Server Error: {res_json['message']}",
+                    res_json,
                 )
             if res.status == 502:
                 raise PyarrBadGateway("Bad Gateway. Check your server is accessible.")
