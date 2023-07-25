@@ -1,4 +1,4 @@
-from typing import Any, Optional, Union
+from typing import Any, Optional, Type, Union
 
 import aiohttp
 import requests
@@ -94,7 +94,7 @@ class RequestHandler:
                 "Timeout occurred while connecting to API."
             ) from exception
         response = _process_response(res)
-        return self._return(res, dict if isinstance(response, dict) else list)
+        return self._check_type(res, dict if isinstance(response, dict) else list)
 
     def _post(
         self,
@@ -128,7 +128,7 @@ class RequestHandler:
                 "Timeout occurred while connecting to API."
             ) from exception
         response = _process_response(res)
-        return self._return(res, dict if isinstance(response, dict) else list)
+        return self._check_type(res, dict if isinstance(response, dict) else list)
 
     def _put(
         self,
@@ -163,7 +163,7 @@ class RequestHandler:
             ) from exception
 
         response = _process_response(res)
-        return self._return(res, dict if isinstance(response, dict) else list)
+        return self._check_type(res, dict if isinstance(response, dict) else list)
 
     def _delete(
         self,
@@ -202,19 +202,18 @@ class RequestHandler:
             assert isinstance(response, Response)
         return response
 
-    def _return(self, res: Response, arg1: type) -> Any:
+    def _check_type(self, value: Any, *types: Type) -> Any:
         """Takes the response and asserts its type
 
         Args:
-            res (Response): Response from request
-            arg1 (type): The type that should be asserted
+            value (Any): Response from request
+            types (Type): The types that should be checked for
 
         Returns:
             Any: Many possible return types
         """
-        response = _process_response(res)
-        assert isinstance(response, arg1)
-        return response
+        assert isinstance(value, types)
+        return value
 
 
 class AsyncRequestHandler(RequestHandler):
@@ -272,7 +271,7 @@ class AsyncRequestHandler(RequestHandler):
                 auth=self.auth,
             )
         )
-        return self._return(response, dict if isinstance(response, dict) else list)
+        return self._check_type(response, dict, list)
 
     async def _post(
         self,
@@ -301,7 +300,7 @@ class AsyncRequestHandler(RequestHandler):
                 auth=self.auth,
             )
         )
-        return self._return(response, dict if isinstance(response, dict) else list)
+        return self._check_type(response, dict, list)
 
     async def _put(
         self,
@@ -331,7 +330,7 @@ class AsyncRequestHandler(RequestHandler):
                 auth=self.auth,
             )
         )
-        return self._return(response, dict if isinstance(response, dict) else list)
+        return self._check_type(response, dict, list)
 
     async def _delete(
         self,
@@ -364,19 +363,6 @@ class AsyncRequestHandler(RequestHandler):
             assert isinstance(response, dict)
         else:
             assert isinstance(response, aiohttp.ClientResponse)
-        return response
-
-    def _return(self, response: aiohttp.ClientResponse, arg1: type) -> Any:
-        """Takes the response and asserts its type
-
-        Args:
-            res (Response): Response from request
-            arg1 (type): The type that should be asserted
-
-        Returns:
-            Any: Many possible return types
-        """
-        assert isinstance(response, arg1)
         return response
 
 
@@ -468,16 +454,16 @@ async def _aprocess_response(request: _RequestContextManager):
             if res.status == 500:
                 raise PyarrServerError(
                     f"Internal Server Error: {res.json()['message']}",
-                    res.json(),
+                    await res.json(),
                 )
             if res.status == 502:
                 raise PyarrBadGateway("Bad Gateway. Check your server is accessible.")
 
             content_type = res.headers.get("Content-Type", "")
             if "application/json" in content_type:
-                return res.json()
-            else:
-                assert isinstance(res, aiohttp.ClientResponse)
+                return await res.json()
+
+            assert isinstance(res, aiohttp.ClientResponse)
             return res
 
     except HTTPRequestTimeout as exception:
