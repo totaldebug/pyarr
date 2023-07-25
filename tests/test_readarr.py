@@ -1,4 +1,5 @@
 import contextlib
+import time
 
 import pytest
 import responses
@@ -33,46 +34,6 @@ def test_get_root_folder(readarr_client: ReadarrAPI):
     assert isinstance(data, list)
 
     data = readarr_client.get_root_folder(data[0]["id"])
-    assert isinstance(data, dict)
-
-
-def test_get_command(readarr_client: ReadarrAPI):
-    # No args
-    data = readarr_client.get_command()
-    assert isinstance(data, list)
-
-    # When an ID is supplied
-    data = readarr_client.get_command(data[0]["id"])
-    assert isinstance(data, dict)
-
-    # when an incorrect ID is supplied, not found response
-    with contextlib.suppress(PyarrResourceNotFound):
-        data = readarr_client.get_command(4321)
-        assert False
-
-
-def test_post_command(readarr_client: ReadarrAPI):
-    data = readarr_client.post_command(name="ApplicationUpdateCheck")
-    assert isinstance(data, dict)
-    data = readarr_client.post_command("AuthorSearch", authorId=1)
-    assert isinstance(data, dict)
-    data = readarr_client.post_command("BookSearch", bookId=1)
-    assert isinstance(data, dict)
-    data = readarr_client.post_command("RefreshAuthor", authorId=1)
-    assert isinstance(data, dict)
-    data = readarr_client.post_command("RefreshBook", bookId=1)
-    assert isinstance(data, dict)
-    data = readarr_client.post_command("RenameAuthor", authorIds=[1, 2, 3])
-    assert isinstance(data, dict)
-    data = readarr_client.post_command("RescanFolders")
-    assert isinstance(data, dict)
-    data = readarr_client.post_command("RssSync")
-    assert isinstance(data, dict)
-    data = readarr_client.post_command("Backup")
-    assert isinstance(data, dict)
-    data = readarr_client.post_command("MissingBookSearch")
-    assert isinstance(data, dict)
-    data = readarr_client.post_command("RenameFiles", authorId=1)
     assert isinstance(data, dict)
 
 
@@ -383,6 +344,122 @@ def test_get_history(readarr_client: ReadarrAPI):
         assert False
 
 
+def test_get_log_file(readarr_client: ReadarrAPI):
+    data = readarr_client.get_log_file()
+    assert isinstance(data, list)
+
+
+def test_get_metadata_provider(readarr_client: ReadarrAPI):
+    data = readarr_client.get_metadata_provider()
+    assert isinstance(data, dict)
+
+
+def test_upd_metadata_provider(readarr_client: ReadarrAPI):
+    provider = readarr_client.get_metadata_provider()
+    data = readarr_client.upd_metadata_provider(data=provider)
+    assert isinstance(data, dict)
+
+
+def test_get_command(readarr_client: ReadarrAPI):
+    # No args
+    data = readarr_client.get_command()
+    assert isinstance(data, list)
+
+    # When an ID is supplied
+    data = readarr_client.get_command(data[0]["id"])
+    assert isinstance(data, dict)
+
+    # when an incorrect ID is supplied, not found response
+    with contextlib.suppress(PyarrResourceNotFound):
+        data = readarr_client.get_command(4321)
+        assert False
+
+
+def test_post_command(readarr_client: ReadarrAPI):
+    # ApplicationUpdateCheck
+    data = readarr_client.post_command(name="ApplicationUpdateCheck")
+    time.sleep(5)
+    result = readarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["status"] == "completed"
+
+    # AuthorSearch
+    data = readarr_client.post_command(
+        "AuthorSearch", authorId=readarr_client.get_author()[0]["id"]
+    )
+    time.sleep(5)
+    result = readarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
+
+    # BookSearch
+    data = readarr_client.post_command(
+        "BookSearch", bookId=readarr_client.get_book()[0]["id"]
+    )
+    assert isinstance(data, dict)
+
+    # RefreshAuthor
+    data = readarr_client.post_command(
+        "RefreshAuthor", authorId=readarr_client.get_author()[0]["id"]
+    )
+    time.sleep(5)
+    result = readarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
+
+    # RefreshBook
+    data = readarr_client.post_command(
+        "RefreshBook", bookId=readarr_client.get_book()[0]["id"]
+    )
+    time.sleep(5)
+    result = readarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
+
+    # RenameAuthor
+    data = readarr_client.post_command(
+        "RenameAuthor", authorIds=[readarr_client.get_author()[0]["id"]]
+    )
+    time.sleep(5)
+    result = readarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
+
+    # RescanFolders
+    data = readarr_client.post_command("RescanFolders")
+    time.sleep(5)
+    result = readarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
+
+    # RssSync
+    data = readarr_client.post_command("RssSync")
+    time.sleep(5)
+    result = readarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
+
+    # Backup
+    data = readarr_client.post_command("Backup")
+    time.sleep(5)
+    result = readarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
+
+    # MissingBookSearch
+    data = readarr_client.post_command("MissingBookSearch")
+    time.sleep(5)
+    result = readarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
+
+    # RenameFiles
+    data = readarr_client.post_command(
+        "RenameFiles", authorId=readarr_client.get_author()[0]["id"], files=[1, 2, 3]
+    )
+    assert isinstance(data, dict)
+
+
 @pytest.mark.usefixtures
 @responses.activate
 def test_get_queue(readarr_mock_client: ReadarrAPI):
@@ -427,25 +504,6 @@ def test_get_queue(readarr_mock_client: ReadarrAPI):
     with contextlib.suppress(PyarrMissingArgument):
         data = readarr_mock_client.get_queue(sort_dir="default")
         assert False
-
-
-@pytest.mark.usefixtures
-def test_get_log_file(readarr_client: ReadarrAPI):
-    data = readarr_client.get_log_file()
-    assert isinstance(data, list)
-
-
-@pytest.mark.usefixtures
-def test_get_metadata_provider(readarr_client: ReadarrAPI):
-    data = readarr_client.get_metadata_provider()
-    assert isinstance(data, dict)
-
-
-@pytest.mark.usefixtures
-def test_upd_metadata_provider(readarr_client: ReadarrAPI):
-    provider = readarr_client.get_metadata_provider()
-    data = readarr_client.upd_metadata_provider(data=provider)
-    assert isinstance(data, dict)
 
 
 # TODO: get correct fixture

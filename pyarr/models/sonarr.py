@@ -25,7 +25,7 @@ DownloadedEpisodesScan:
     Scans downloaded episodes for state
 
     Args:
-        path (str)
+        path (str): path to files
 
 EpisodeSearch:
     Searches for all episondes, or specific ones in supplied list

@@ -2,6 +2,7 @@ import contextlib
 from datetime import datetime
 import json
 import random
+import time
 
 import pytest
 import responses
@@ -29,44 +30,6 @@ def test_get_root_folder(radarr_client: RadarrAPI):
 
     data = radarr_client.get_root_folder(data[0]["id"])
     assert isinstance(data, dict)
-
-
-def test_post_command(radarr_client: RadarrAPI):
-    data = radarr_client.post_command(name="RescanMovie", movieid=1)
-    assert isinstance(data, dict)
-    data = radarr_client.post_command(name="RefreshMovie", seriesId=1)
-    assert isinstance(data, dict)
-    data = radarr_client.post_command(name="MissingMoviesSearch")
-    assert isinstance(data, dict)
-    data = radarr_client.post_command(name="MoviesSearch")
-    assert isinstance(data, dict)
-    data = radarr_client.post_command(name="DownloadedMoviesScan")
-    assert isinstance(data, dict)
-    data = radarr_client.post_command(name="RenameFiles", files=[1, 2, 3])
-    assert isinstance(data, dict)
-    data = radarr_client.post_command(name="RenameFiles")
-    assert isinstance(data, dict)
-    data = radarr_client.post_command(name="RenameMovie", seriesIds=[1, 2, 3])
-    assert isinstance(data, dict)
-    data = radarr_client.post_command(name="Backup")
-    assert isinstance(data, dict)
-
-
-def test_get_command(radarr_client: RadarrAPI):
-    """Check get_command()"""
-
-    # No args
-    data = radarr_client.get_command()
-    assert isinstance(data, list)
-
-    # When an ID is supplied
-    data = radarr_client.get_command(data[0]["id"])
-    assert isinstance(data, dict)
-
-    # when an incorrect ID is supplied, not found response
-    with contextlib.suppress(PyarrResourceNotFound):
-        data = radarr_client.get_command(432111111)
-        assert False
 
 
 def test_add_quality_profile(radarr_client: RadarrAPI):
@@ -604,6 +567,90 @@ def test_get_language(radarr_client: RadarrAPI):
 def test_get_quality_profile_schema(radarr_client: RadarrAPI):
     data = radarr_client.get_quality_profile_schema()
     assert isinstance(data, dict)
+
+
+def test_post_command(radarr_client: RadarrAPI):
+    # RescanMovie
+    data = radarr_client.post_command(
+        name="RescanMovie", movieId=radarr_client.get_movie()[0]["id"]
+    )
+    time.sleep(5)
+    result = radarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
+
+    # RefreshMovie
+    data = radarr_client.post_command(
+        name="RefreshMovie", movieId=radarr_client.get_movie()[0]["id"]
+    )
+    time.sleep(5)
+    result = radarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
+
+    # MissingMoviesSearch
+    data = radarr_client.post_command(name="MissingMoviesSearch")
+    time.sleep(5)
+    result = radarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
+
+    # MoviesSearch
+    data = radarr_client.post_command(name="MoviesSearch")
+    assert isinstance(data, dict)
+
+    # DownloadedMoviesScan
+    data = radarr_client.post_command(
+        name="DownloadedMoviesScan", path=radarr_client.get_root_folder()[0]["path"]
+    )
+    time.sleep(5)
+    result = radarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
+
+    # RenameFiles, NOTE: this test will always return a failed message on get_command
+    # this would only work if we actually download files which we can't do on test.
+    data = radarr_client.post_command(name="RenameFiles", files=[1, 2, 3])
+    assert isinstance(data, dict)
+
+    # RenameMovie
+    data = radarr_client.post_command(
+        name="RenameMovie", movieIds=[radarr_client.get_movie()[0]["id"]]
+    )
+    time.sleep(5)
+    result = radarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
+
+    # RSS Sync
+    data = radarr_client.post_command("RssSync")
+    time.sleep(5)
+    result = radarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
+
+    data = radarr_client.post_command(name="Backup")
+    time.sleep(5)
+    result = radarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
+
+
+def test_get_command(radarr_client: RadarrAPI):
+    """Check get_command()"""
+
+    # No args
+    data = radarr_client.get_command()
+    assert isinstance(data, list)
+
+    # When an ID is supplied
+    data = radarr_client.get_command(data[0]["id"])
+    assert isinstance(data, dict)
+
+    # when an incorrect ID is supplied, not found response
+    with contextlib.suppress(PyarrResourceNotFound):
+        data = radarr_client.get_command(432111111)
+        assert False
 
 
 @pytest.mark.usefixtures

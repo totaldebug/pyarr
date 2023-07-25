@@ -56,12 +56,14 @@ RenameFiles:
 
     Args:
         authorId (int, optional): ID for Author
+        files (str): ID of files
 
 RescanFolders:
     Rescans folders
 
 RssSync:
     Synchronise RSS Feeds
+
 Backup:
     Backup of the Database
 
