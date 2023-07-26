@@ -1,6 +1,7 @@
 import contextlib
 from datetime import datetime
 import random
+import time
 
 import pytest
 import responses
@@ -161,23 +162,6 @@ def test_get_album(lidarr_client: LidarrAPI):
 
     data = lidarr_client.get_album(foreignAlbumId=LIDARR_MUSICBRAINZ_ARTIST_ID)
     assert isinstance(data, list)
-
-
-def test_post_command(lidarr_client: LidarrAPI):
-    data = lidarr_client.post_command(name="DownloadedAlbumsScan")
-    assert isinstance(data, dict)
-    data = lidarr_client.post_command(name="ArtistSearch")
-    assert isinstance(data, dict)
-    data = lidarr_client.post_command(name="RefreshArtist")
-    assert isinstance(data, dict)
-    data = lidarr_client.post_command(name="RefreshAlbum")
-    assert isinstance(data, dict)
-    data = lidarr_client.post_command(name="ApplicationUpdateCheck")
-    assert isinstance(data, dict)
-    data = lidarr_client.post_command(name="MissingAlbumSearch")
-    assert isinstance(data, dict)
-    data = lidarr_client.post_command(name="AlbumSearch")
-    assert isinstance(data, dict)
 
 
 def test_get_wanted(lidarr_client: LidarrAPI):
@@ -359,6 +343,63 @@ def test_get_language(lidarr_client: LidarrAPI):
 
     data = lidarr_client.get_language(data[0]["id"])
     assert isinstance(data, dict)
+
+
+def test_post_command(lidarr_client: LidarrAPI):
+    data = lidarr_client.post_command(
+        name="DownloadedAlbumsScan", path=lidarr_client.get_root_folder()[0]["path"]
+    )
+    time.sleep(5)
+    result = lidarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
+
+    data = lidarr_client.post_command(
+        name="ArtistSearch", artistId=lidarr_client.get_artist()[0]["id"]
+    )
+    time.sleep(5)
+    result = lidarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
+
+    data = lidarr_client.post_command(name="RefreshArtist")
+    time.sleep(5)
+    result = lidarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
+
+    data = lidarr_client.post_command(name="RefreshAlbum")
+    time.sleep(5)
+    result = lidarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
+
+    data = lidarr_client.post_command(name="ApplicationUpdateCheck")
+    time.sleep(5)
+    result = lidarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "No update available"
+
+    data = lidarr_client.post_command(name="MissingAlbumSearch")
+    time.sleep(5)
+    result = lidarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
+
+    data = lidarr_client.post_command(name="AlbumSearch")
+    assert isinstance(data, dict)
+
+    data = lidarr_client.post_command(name="RssSync")
+    time.sleep(5)
+    result = lidarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
+
+    data = lidarr_client.post_command(name="Backup")
+    time.sleep(5)
+    result = lidarr_client.get_command(id_=data["id"])
+    assert isinstance(data, dict)
+    assert result["message"] == "Completed"
 
 
 @pytest.mark.usefixtures

@@ -311,16 +311,27 @@ class LidarrAPI(BaseArrAPI):
         return self._delete(f"album/{id_}", self.ver_uri)
 
     # POST /command
-    def post_command(self, name: LidarrCommand) -> JsonObject:
+    def post_command(
+        self, name: LidarrCommand, **kwargs: Optional[dict[str, Union[int, list[int]]]]
+    ) -> JsonObject:
         """Send a command to Lidarr
 
         Args:
             name (LidarrCommand): Command to be run against Lidarr
+            **kwargs: Additional parameters for specific commands.
+
+        Note:
+            For available commands and required `**kwargs` see the `LidarrCommands` model
 
         Returns:
             JsonObject: dictionary of executed command information
         """
-        return self._post("command", self.ver_uri, data={"name": name})
+        data: dict[str, Any] = {
+            "name": name,
+        }
+        if kwargs:
+            data |= kwargs
+        return self._post("command", self.ver_uri, data=data)
 
     # GET /wanted
     def get_wanted(

@@ -16,10 +16,10 @@ Radarr commands.
         The parameters are supplied as `**kwargs` within the `post_command` method.
 
 DownloadedMoviesScan:
-    Scans for all clients for downloaded movies, or a single client by ID
+    Scans downloaded episodes for state
 
     Args:
-        clientid (int, optional): Download client ID
+        path (str): path to files
 
 MissingMoviesSearch:
     Searches for any missing movies
@@ -30,29 +30,34 @@ MoviesSearch:
     Args:
         movieIds (list[int]): ID of Movie or movies
 
-RefreshMovies:
+RefreshMovie:
     Refreshes all of the movies, or specific by ID
 
     Args:
-        movieid (int, Optional): ID of Movie
+        movieId (int, Optional): ID of Movie
 
 RenameMovie:
     Rename specific movie to correct format.
 
     Args:
-        movieid (list[int]): ID of Movie or movies
+        movieId (int): ID of Movie or movies
+        movieIds (list[int]): ID of Movie or movies
 
 RescanMovie:
     Rescans specific movie
 
     Args:
-        movieid (int): ID of Movie
+        movieId (int): ID of Movie
 
 RenameFiles:
     Rename files to correct format
 
     Args:
-        movieid (int): ID of Movie
+        movieId (int): ID of Movie
+        files (int): ID of files
+
+RssSync:
+    Synchronise RSS Feeds
 
 Backup:
     Backup the server data

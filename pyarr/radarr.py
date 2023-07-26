@@ -3,6 +3,7 @@ from warnings import warn
 
 from requests import Response
 
+from pyarr.const import DEPRECATION_WARNING
 from pyarr.types import JsonArray, JsonObject
 
 from .base import BaseArrAPI
@@ -159,7 +160,7 @@ class RadarrAPI(BaseArrAPI):
             JsonArray: List of dictionaries with items
         """
         warn(
-            "This method is deprecated and will be removed in a future release. Please use get_movie()",
+            f"{DEPRECATION_WARNING} Please use get_movie()",
             DeprecationWarning,
             stacklevel=2,
         )
@@ -226,7 +227,7 @@ class RadarrAPI(BaseArrAPI):
             JsonArray: List of dictionaries with items
         """
         warn(
-            "This method is deprecated and will be removed in a future release. use lookup_movie(term='tmdb:123456')",
+            f"{DEPRECATION_WARNING} use lookup_movie(term='tmdb:123456')",
             DeprecationWarning,
             stacklevel=2,
         )
@@ -244,7 +245,7 @@ class RadarrAPI(BaseArrAPI):
             JsonArray: List of dictionaries with items
         """
         warn(
-            "This method is deprecated and will be removed in a future release. use lookup_movie(term='imdb:123456')",
+            f"{DEPRECATION_WARNING} use lookup_movie(term='imdb:123456')",
             DeprecationWarning,
             stacklevel=2,
         )
@@ -291,7 +292,7 @@ class RadarrAPI(BaseArrAPI):
             Response: HTTP Response
         """
         warn(
-            "This method is deprecated and will be removed in a future release. Please use del_movie().",
+            f"{DEPRECATION_WARNING} Please use del_movie().",
             DeprecationWarning,
             stacklevel=2,
         )

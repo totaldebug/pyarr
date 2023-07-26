@@ -4,6 +4,7 @@ from warnings import warn
 
 from requests import Response
 
+from pyarr.const import DEPRECATION_WARNING
 from pyarr.exceptions import PyarrMissingArgument
 from pyarr.types import JsonArray, JsonObject
 
@@ -102,7 +103,7 @@ class SonarrAPI(BaseArrAPI):
             JsonArray: List of dictionaries with items
         """
         warn(
-            "This method is deprecated and will be removed in a future release. Please use get_episode()",
+            f"{DEPRECATION_WARNING} Please use get_episode()",
             DeprecationWarning,
             stacklevel=2,
         )
@@ -124,7 +125,7 @@ class SonarrAPI(BaseArrAPI):
             JsonArray: List of dictionaries with items
         """
         warn(
-            "This method is deprecated and will be removed in a future release. Please use get_episode()",
+            f"{DEPRECATION_WARNING} Please use get_episode()",
             DeprecationWarning,
             stacklevel=2,
         )
@@ -181,7 +182,7 @@ class SonarrAPI(BaseArrAPI):
             JsonArray: List of dictionaries with items
         """
         warn(
-            "This method is deprecated and will be removed in a future release. Please use get_episode_file()",
+            f"{DEPRECATION_WARNING} Please use get_episode_file()",
             DeprecationWarning,
             stacklevel=2,
         )
@@ -368,7 +369,7 @@ class SonarrAPI(BaseArrAPI):
             JsonObject: List of dictionaries with items
         """
         warn(
-            "This method is deprecated and will be removed in a future release. Please use get_parse_title_path()",
+            f"{DEPRECATION_WARNING} Please use get_parse_title_path()",
             DeprecationWarning,
             stacklevel=2,
         )
@@ -388,7 +389,7 @@ class SonarrAPI(BaseArrAPI):
             JsonObject: List of dictionaries with items
         """
         warn(
-            "This method is deprecated and will be removed in a future release. Please use get_parse_title_path()",
+            f"{DEPRECATION_WARNING} Please use get_parse_title_path()",
             DeprecationWarning,
             stacklevel=2,
         )
@@ -581,7 +582,7 @@ class SonarrAPI(BaseArrAPI):
             JsonArray: List of dictionaries with items
         """
         warn(
-            "This method is deprecated and will be removed in a future release. Please use lookup_series()",
+            f"{DEPRECATION_WARNING} Please use lookup_series()",
             DeprecationWarning,
             stacklevel=2,
         )
@@ -649,7 +650,7 @@ class SonarrAPI(BaseArrAPI):
             Union[JsonArray, dict[Any, Any]]: List of dictionaries with items
         """
         warn(
-            "This method is deprecated and will be removed in a future release. Please use get_language()",
+            f"{DEPRECATION_WARNING} Please use get_language()",
             DeprecationWarning,
             stacklevel=2,
         )
