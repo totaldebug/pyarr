@@ -840,6 +840,11 @@ def test_get_indexer(radarr_client: RadarrAPI):
     assert isinstance(data, list)
 
 
+def test_get_release(radarr_client: RadarrAPI):
+    data = radarr_client.get_release()
+    assert isinstance(data, list)
+
+
 # TODO: get correct fixture
 @pytest.mark.usefixtures
 @responses.activate
@@ -899,6 +904,39 @@ def test_upd_manual_import(radarr_mock_client: RadarrAPI):
         status=200,
     )
     data = radarr_mock_client.upd_manual_import(data=man_import)
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+@responses.activate
+def test_post_release(radarr_mock_client: RadarrAPI):
+    responses.add(
+        responses.POST,
+        "https://127.0.0.1:7878/api/v3/release",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/blank_dict.json"),
+        status=201,
+    )
+    data = radarr_mock_client.post_release(guid="1450590", indexer_id=2)
+    assert isinstance(data, dict)
+
+
+@pytest.mark.usefixtures
+@responses.activate
+def test_post_release_push(radarr_mock_client: RadarrAPI):
+    responses.add(
+        responses.POST,
+        "https://127.0.0.1:7878/api/v3/release/push",
+        headers={"Content-Type": "application/json"},
+        body=load_fixture("common/blank_dict.json"),
+        status=201,
+    )
+    data = radarr_mock_client.post_release_push(
+        title="test",
+        download_url="https://ipt.beelyrics.net/t/1450590",
+        protocol="Torrent",
+        publish_date=datetime(2020, 5, 17),
+    )
     assert isinstance(data, dict)
 
 
