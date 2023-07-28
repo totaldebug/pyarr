@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any, Optional, Union
 from warnings import warn
 
@@ -634,3 +635,56 @@ class RadarrAPI(BaseArrAPI):
             JsonObject: Dictionary of updated record
         """
         return self._put("manualimport", self.ver_uri, data=data)
+
+    ## RELEASE
+
+    # GET /release
+    def get_release(self, id_: Optional[int] = None) -> JsonArray:
+        """Query indexers for latest releases.
+
+        Args:
+            id_ (int): Database id for movie to check
+
+        Returns:
+            JsonArray: List of dictionaries with items
+        """
+        return self._get("release", self.ver_uri, {"movieId": id_} if id_ else None)
+
+    # POST /release
+    def post_release(self, guid: str, indexer_id: int) -> JsonObject:
+        """Adds a previously searched release to the download client, if the release is
+         still in Radarr's search cache (30 minute cache). If the release is not found
+         in the cache Radarr will return a 404.
+
+        Args:
+            guid (str): Recently searched result guid
+            indexer_id (int): Database id of indexer to use
+
+        Returns:
+            JsonObject: Dictionary with download release details
+        """
+        data = {"guid": guid, "indexerId": indexer_id}
+        return self._post("release", self.ver_uri, data=data)
+
+    # POST /release/push
+    def post_release_push(
+        self, title: str, download_url: str, protocol: str, publish_date: datetime
+    ) -> Any:
+        """If the title is wanted, Radarr will grab it.
+
+        Args:
+            title (str): Release name
+            download_url (str): .torrent file URL
+            protocol (str): "Usenet" or "Torrent
+            publish_date (datetime): ISO8601 date
+
+        Returns:
+            JSON: Array
+        """
+        data = {
+            "title": title,
+            "downloadUrl": download_url,
+            "protocol": protocol,
+            "publishDate": publish_date.isoformat(),
+        }
+        return self._post("release/push", self.ver_uri, data=data)

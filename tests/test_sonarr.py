@@ -830,7 +830,7 @@ def test_get_parsed_path(sonarr_mock_client: SonarrAPI):
 
 @pytest.mark.usefixtures
 @responses.activate
-def test_download_release(sonarr_mock_client: SonarrAPI):
+def test_post_release(sonarr_mock_client: SonarrAPI):
     responses.add(
         responses.POST,
         "https://127.0.0.1:8989/api/v3/release",

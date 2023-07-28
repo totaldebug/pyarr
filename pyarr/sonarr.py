@@ -9,10 +9,12 @@ from pyarr.exceptions import PyarrMissingArgument
 from pyarr.types import JsonArray, JsonObject
 
 from .base import BaseArrAPI
+from .lib.alias_decorator import alias, aliased
 from .models.common import PyarrHistorySortKey, PyarrSortDirection
 from .models.sonarr import SonarrCommands, SonarrSortKey
 
 
+@aliased
 class SonarrAPI(BaseArrAPI):
     """API wrapper for Sonarr endpoints."""
 
@@ -398,7 +400,8 @@ class SonarrAPI(BaseArrAPI):
     ## RELEASE
 
     # GET /release
-    def get_releases(self, id_: Optional[int] = None) -> JsonArray:
+    @alias("get_releases", deprecated_version="6.0.0")
+    def get_release(self, id_: Optional[int] = None) -> JsonArray:
         """Query indexers for latest releases.
 
         Args:
@@ -410,7 +413,8 @@ class SonarrAPI(BaseArrAPI):
         return self._get("release", self.ver_uri, {"episodeId": id_} if id_ else None)
 
     # POST /release
-    def download_release(self, guid: str, indexer_id: int) -> JsonObject:
+    @alias("download_release", "6.0.0")
+    def post_release(self, guid: str, indexer_id: int) -> JsonObject:
         """Adds a previously searched release to the download client, if the release is
          still in Sonarr's search cache (30 minute cache). If the release is not found
          in the cache Sonarr will return a 404.
@@ -427,7 +431,8 @@ class SonarrAPI(BaseArrAPI):
 
     # POST /release/push
     # TODO: find response
-    def push_release(
+    @alias("push_release", "6.0.0")
+    def post_release_push(
         self, title: str, download_url: str, protocol: str, publish_date: datetime
     ) -> Any:
         """If the title is wanted, Sonarr will grab it.
