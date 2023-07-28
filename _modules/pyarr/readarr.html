@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyarr.readarr &mdash; pyarr  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+          </a>
+              <div class="version">
+                5.2.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Overview</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">🚀 Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installing.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/sonarr.html">SonarrAPI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/radarr.html">RadarrAPI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/readarr.html">ReadarrAPI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/lidarr.html">LidarrAPI</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Models</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../models/common.html">Common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../models/sonarr.html">Sonarr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../models/radarr.html">Radarr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../models/readarr.html">Readarr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../models/lidarr.html">Lidarr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pyarr</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pyarr.readarr</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyarr.readarr</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span> <span class="nn">requests</span> <span class="kn">import</span> <span class="n">Response</span>
+
+<span class="kn">from</span> <span class="nn">pyarr.types</span> <span class="kn">import</span> <span class="n">JsonArray</span><span class="p">,</span> <span class="n">JsonObject</span>
+
+<span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">BaseArrAPI</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">PyarrMissingArgument</span><span class="p">,</span> <span class="n">PyarrMissingProfile</span>
+<span class="kn">from</span> <span class="nn">.models.common</span> <span class="kn">import</span> <span class="n">PyarrSortDirection</span>
+<span class="kn">from</span> <span class="nn">.models.readarr</span> <span class="kn">import</span> <span class="n">ReadarrAuthorMonitor</span><span class="p">,</span> <span class="n">ReadarrCommands</span><span class="p">,</span> <span class="n">ReadarrSortKeys</span>
+
+
+<div class="viewcode-block" id="ReadarrAPI"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI">[docs]</a><span class="k">class</span> <span class="nc">ReadarrAPI</span><span class="p">(</span><span class="n">BaseArrAPI</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;API wrapper for Readarr endpoints.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">api_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise Readarr API</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            host_url (str): URL for Readarr</span>
+<span class="sd">            api_key (str): API key for Readarr</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">ver_uri</span> <span class="o">=</span> <span class="s2">&quot;/v1&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">host_url</span><span class="p">,</span> <span class="n">api_key</span><span class="p">,</span> <span class="n">ver_uri</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ReadarrAPI.lookup"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.lookup">[docs]</a>    <span class="k">def</span> <span class="nf">lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">term</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonArray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Search for an author / book by name or Goodreads ID / ISBN / ASIN</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            You can also search using the Goodreads ID, work, or author, the ISBN or ASIN::</span>
+
+<span class="sd">                readarr.lookup(term=&quot;edition:656&quot;)</span>
+<span class="sd">                readarr.lookup(term=&quot;work:4912789&quot;)</span>
+<span class="sd">                readarr.lookup(term=&quot;author:128382&quot;)</span>
+<span class="sd">                readarr.lookup(term=&quot;isbn:067003469X&quot;)</span>
+<span class="sd">                readarr.lookup(term=&quot;asin:B00JCDK5ME&quot;)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            term (str): Search term</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonArray: List of dictionaries with items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s2">&quot;search&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;term&quot;</span><span class="p">:</span> <span class="n">term</span><span class="p">})</span></div>
+
+    <span class="c1"># GET /book/lookup</span>
+<div class="viewcode-block" id="ReadarrAPI.lookup_book"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.lookup_book">[docs]</a>    <span class="k">def</span> <span class="nf">lookup_book</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">term</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonArray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Searches for new books using a term, goodreads ID, isbn or asin.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            term (str): Search term::</span>
+
+<span class="sd">                goodreads:656</span>
+<span class="sd">                isbn:067003469X</span>
+<span class="sd">                asin:B00JCDK5ME</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonArray: List of dictionaries with items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s2">&quot;book/lookup&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;term&quot;</span><span class="p">:</span> <span class="n">term</span><span class="p">})</span></div>
+
+    <span class="c1"># GET /author/lookup/</span>
+<div class="viewcode-block" id="ReadarrAPI.lookup_author"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.lookup_author">[docs]</a>    <span class="k">def</span> <span class="nf">lookup_author</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">term</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonArray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Searches for new authors using a term</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            term (str): Author name or book</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonArray: List of dictionaries with items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;term&quot;</span><span class="p">:</span> <span class="n">term</span><span class="p">}</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s2">&quot;author/lookup&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span></div>
+
+    <span class="c1"># COMMAND</span>
+
+    <span class="c1"># GET /command/:id</span>
+<div class="viewcode-block" id="ReadarrAPI.get_command"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.get_command">[docs]</a>    <span class="k">def</span> <span class="nf">get_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">JsonArray</span><span class="p">,</span> <span class="n">JsonObject</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Queries the status of a previously started command, or all currently started commands.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id_ (Optional[int], optional): Database ID of the command. Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Union[JsonArray, JsonObject]: List of dictionaries with items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;command/</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">id_</span> <span class="k">else</span> <span class="s2">&quot;command&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">)</span></div>
+
+    <span class="c1"># POST /command</span>
+<div class="viewcode-block" id="ReadarrAPI.post_command"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.post_command">[docs]</a>    <span class="k">def</span> <span class="nf">post_command</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">ReadarrCommands</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]]],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonObject</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Performs any of the predetermined Readarr command routines</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (ReadarrCommands): Command name that should be executed</span>
+<span class="sd">            **kwargs: Additional parameters for specific commands</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            For available commands and required `**kwargs` see the `ReadarrCommands` model</span>
+
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonObject: Dictionary of command run</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">|=</span> <span class="n">kwargs</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="s2">&quot;command&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
+
+    <span class="c1">## WANTED (MISSING)</span>
+
+    <span class="c1"># GET /wanted/missing</span>
+<div class="viewcode-block" id="ReadarrAPI.get_missing"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.get_missing">[docs]</a>    <span class="k">def</span> <span class="nf">get_missing</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">page</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">page_size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">sort_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ReadarrSortKeys</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">sort_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PyarrSortDirection</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonObject</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets missing episode (episodes without files)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            page (int, optional): Page number to return. Defaults to None.</span>
+<span class="sd">            page_size (int, optional): Number of items per page. Defaults to None.</span>
+<span class="sd">            sort_key (ReadarrSortKeys, optional): id, title, ratings, bookid, or quality. (Others do not apply). Defaults to None.</span>
+<span class="sd">            sort_dir (PyarrSortDirection, optional): Direction to sort the items. Defaults to None,</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonObject: List of dictionaries with items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">ReadarrSortKeys</span><span class="p">,</span> <span class="n">PyarrSortDirection</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">page</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;page&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">page</span>
+        <span class="k">if</span> <span class="n">page_size</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;pageSize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">page_size</span>
+        <span class="k">if</span> <span class="n">sort_key</span> <span class="ow">and</span> <span class="n">sort_dir</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;sortKey&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sort_key</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;sortDirection&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sort_dir</span>
+        <span class="k">elif</span> <span class="n">sort_key</span> <span class="ow">or</span> <span class="n">sort_dir</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">PyarrMissingArgument</span><span class="p">(</span><span class="s2">&quot;sort_key and sort_dir  must be used together&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s2">&quot;wanted/missing&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span></div>
+
+    <span class="c1"># GET /wanted/cutoff</span>
+<div class="viewcode-block" id="ReadarrAPI.get_cutoff"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.get_cutoff">[docs]</a>    <span class="k">def</span> <span class="nf">get_cutoff</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">page</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">page_size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">sort_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ReadarrSortKeys</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">sort_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PyarrSortDirection</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">monitored</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonObject</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get wanted items where the cutoff is unmet</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            page (int, optional): Page number to return. Defaults to None.</span>
+<span class="sd">            page_size (int, optional):  Number of items per page. Defaults to None.</span>
+<span class="sd">            sort_key (ReadarrSortKeys, optional): id, title, ratings, bookid, or quality&quot;. (others do not apply). Defaults to None.</span>
+<span class="sd">            sort_dir (PyarrSortDirection, optional): Direction to sort. Defaults to None.</span>
+<span class="sd">            monitored (bool, optional): Search for monitored only. Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonObject: List of dictionaries with items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">ReadarrSortKeys</span><span class="p">,</span> <span class="n">PyarrSortDirection</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">page</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;page&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">page</span>
+        <span class="k">if</span> <span class="n">page_size</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;pageSize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">page_size</span>
+        <span class="k">if</span> <span class="n">sort_key</span> <span class="ow">and</span> <span class="n">sort_dir</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;sortKey&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sort_key</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;sortDirection&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sort_dir</span>
+        <span class="k">elif</span> <span class="n">sort_key</span> <span class="ow">or</span> <span class="n">sort_dir</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">PyarrMissingArgument</span><span class="p">(</span><span class="s2">&quot;sort_key and sort_dir  must be used together&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">monitored</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;monitored&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">monitored</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s2">&quot;wanted/cutoff&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span></div>
+
+    <span class="c1">## QUEUE</span>
+
+    <span class="c1"># GET /queue</span>
+<div class="viewcode-block" id="ReadarrAPI.get_queue"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.get_queue">[docs]</a>    <span class="k">def</span> <span class="nf">get_queue</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">page</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">page_size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">sort_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ReadarrSortKeys</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">sort_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PyarrSortDirection</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">unknown_authors</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">include_author</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">include_book</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonObject</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current download information</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            page (int, optional): Page number. Defaults to None.</span>
+<span class="sd">            page_size (int, optional): Number of items per page. Defaults to None.</span>
+<span class="sd">            sort_key (ReadarrSortKeys, optional): Field to sort by. Defaults to None.</span>
+<span class="sd">            sort_dir (PyarrSortDirection, optional): Direction to sort. Defaults to None.</span>
+<span class="sd">            unknown_authors (bool, optional): Include items with an unknown author. Defaults to None.</span>
+<span class="sd">            include_author (bool, optional): Include the author. Defaults to None.</span>
+<span class="sd">            include_book (bool, optional): Include the book. Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonObject: List of dictionaries with items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">ReadarrSortKeys</span><span class="p">,</span> <span class="n">PyarrSortDirection</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">page</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;page&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">page</span>
+        <span class="k">if</span> <span class="n">page_size</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;pageSize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">page_size</span>
+        <span class="k">if</span> <span class="n">sort_key</span> <span class="ow">and</span> <span class="n">sort_dir</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;sortKey&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sort_key</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;sortDirection&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sort_dir</span>
+        <span class="k">elif</span> <span class="n">sort_key</span> <span class="ow">or</span> <span class="n">sort_dir</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">PyarrMissingArgument</span><span class="p">(</span><span class="s2">&quot;sort_key and sort_dir  must be used together&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">unknown_authors</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;includeUnknownAuthorItems&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">unknown_authors</span>
+        <span class="k">if</span> <span class="n">include_author</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;includeAuthor&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">include_author</span>
+        <span class="k">if</span> <span class="n">include_book</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;includeBook&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">include_book</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s2">&quot;queue&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span></div>
+
+    <span class="c1"># PROFILES</span>
+
+    <span class="c1"># POST /qualityprofile</span>
+<div class="viewcode-block" id="ReadarrAPI.add_quality_profile"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.add_quality_profile">[docs]</a>    <span class="k">def</span> <span class="nf">add_quality_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">upgrades_allowed</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">cutoff</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">items</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">min_format_score</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">cutoff_format_score</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">format_items</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonObject</span><span class="p">:</span>  <span class="c1"># type: ignore[override]</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add new quality profile</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): Name of the profile</span>
+<span class="sd">            upgrades_allowed (bool): Are upgrades in quality allowed?</span>
+<span class="sd">            cutoff (int): ID of quality definition to cutoff at. Must be an allowed definition ID.</span>
+<span class="sd">            items (list): Add a list of items (from `get_quality_definition()`)</span>
+<span class="sd">            min_format_score (int): minimum score for format. Defaults to 0</span>
+<span class="sd">            cutoff_format_score (int): cutoff format score. Defaults to 0</span>
+<span class="sd">            format_items (list): custom format items. Defaults to []</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonObject: An object containing the profile</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">format_items</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">format_items</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;upgradeAllowed&quot;</span><span class="p">:</span> <span class="n">upgrades_allowed</span><span class="p">,</span>
+            <span class="s2">&quot;cutoff&quot;</span><span class="p">:</span> <span class="n">cutoff</span><span class="p">,</span>
+            <span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="n">items</span><span class="p">,</span>
+            <span class="s2">&quot;minFormatScore&quot;</span><span class="p">:</span> <span class="n">min_format_score</span><span class="p">,</span>
+            <span class="s2">&quot;cutoffFormatScore&quot;</span><span class="p">:</span> <span class="n">cutoff_format_score</span><span class="p">,</span>
+            <span class="s2">&quot;formatItems&quot;</span><span class="p">:</span> <span class="n">format_items</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="s2">&quot;qualityprofile&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
+
+    <span class="c1"># GET /metadataprofile/{id}</span>
+<div class="viewcode-block" id="ReadarrAPI.get_metadata_profile"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.get_metadata_profile">[docs]</a>    <span class="k">def</span> <span class="nf">get_metadata_profile</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">id_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">JsonArray</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets all metadata profiles or specific one with ID</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id_ (Optional[int], optional): Metadata profile id from database. Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Union[JsonArray, JsonObject]: List of dictionaries with items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;metadataprofile/</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">id_</span> <span class="k">else</span> <span class="s2">&quot;metadataprofile&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">)</span></div>
+
+    <span class="c1"># POST /metadataprofile</span>
+<div class="viewcode-block" id="ReadarrAPI.add_metadata_profile"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.add_metadata_profile">[docs]</a>    <span class="k">def</span> <span class="nf">add_metadata_profile</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">min_popularity</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">skip_missing_date</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">skip_missing_isbn</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">skip_parts_and_sets</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">skip_series_secondary</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">allowed_languages</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">min_pages</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">JsonArray</span><span class="p">,</span> <span class="n">JsonObject</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a metadata profile</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): Name of the profile</span>
+<span class="sd">            min_popularity (int): Minimum popularity</span>
+<span class="sd">            skip_missing_date (bool): Skip missing dates</span>
+<span class="sd">            skip_missing_isbn (bool): Skip missing isbn</span>
+<span class="sd">            skip_parts_and_sets (bool): Skip parts and sets</span>
+<span class="sd">            skip_series_secondary (bool): Skip series secondary</span>
+<span class="sd">            allowed_languages (str): List of allowed languages</span>
+<span class="sd">            min_pages (int): minimum pages</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Union[JsonArray, JsonObject]: object of added record</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;minPopularity&quot;</span><span class="p">:</span> <span class="n">min_popularity</span><span class="p">,</span>
+            <span class="s2">&quot;skipMissingDate&quot;</span><span class="p">:</span> <span class="n">skip_missing_date</span><span class="p">,</span>
+            <span class="s2">&quot;skipMissingIsbn&quot;</span><span class="p">:</span> <span class="n">skip_missing_isbn</span><span class="p">,</span>
+            <span class="s2">&quot;skipPartsAndSets&quot;</span><span class="p">:</span> <span class="n">skip_parts_and_sets</span><span class="p">,</span>
+            <span class="s2">&quot;skipSeriesSecondary&quot;</span><span class="p">:</span> <span class="n">skip_series_secondary</span><span class="p">,</span>
+            <span class="s2">&quot;allowedLanguages&quot;</span><span class="p">:</span> <span class="n">allowed_languages</span><span class="p">,</span>
+            <span class="s2">&quot;minPages&quot;</span><span class="p">:</span> <span class="n">min_pages</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="s2">&quot;metadataprofile&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
+
+    <span class="c1"># DELETE /metadataprofile/{id}</span>
+<div class="viewcode-block" id="ReadarrAPI.del_metadata_profile"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.del_metadata_profile">[docs]</a>    <span class="k">def</span> <span class="nf">del_metadata_profile</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">id_</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="n">JsonObject</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Delete the metadata profile with the given ID</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id_ (int): Database ID for metadata profile</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Response: HTTP Response</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delete</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;metadataprofile/</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">)</span></div>
+
+    <span class="c1"># GET /delayprofile/{id}</span>
+<div class="viewcode-block" id="ReadarrAPI.get_delay_profile"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.get_delay_profile">[docs]</a>    <span class="k">def</span> <span class="nf">get_delay_profile</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">id_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">JsonArray</span><span class="p">,</span> <span class="n">JsonObject</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets all delay profiles or specific one with ID</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id_ (Optional[int], optional): Metadata profile ID from database. Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Union[JsonArray, JsonObject]: List of dictionaries with items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;delayprofile/</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">id_</span> <span class="k">else</span> <span class="s2">&quot;delayprofile&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">)</span></div>
+
+    <span class="c1"># GET /releaseprofile/{id}</span>
+<div class="viewcode-block" id="ReadarrAPI.get_release_profile"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.get_release_profile">[docs]</a>    <span class="k">def</span> <span class="nf">get_release_profile</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">id_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">JsonArray</span><span class="p">,</span> <span class="n">JsonObject</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets all release profiles or specific one with ID</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id_ (Optional[int], optional): Release profile ID from database. Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Union[JsonArray, JsonObject]: List of dictionaries with items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;releaseprofile/</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">id_</span> <span class="k">else</span> <span class="s2">&quot;releaseprofile&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">)</span></div>
+
+    <span class="c1">## BOOKS</span>
+
+    <span class="c1"># GET /book and /book/{id}</span>
+<div class="viewcode-block" id="ReadarrAPI.get_book"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.get_book">[docs]</a>    <span class="k">def</span> <span class="nf">get_book</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">JsonArray</span><span class="p">,</span> <span class="n">JsonObject</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns all books in your collection or the book with the matching</span>
+<span class="sd">        book ID if one is found.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id_ (Optional[int], optional): Database id for book. Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Union[JsonArray, JsonObject]: List of dictionaries with items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;book/</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">id_</span> <span class="k">else</span> <span class="s2">&quot;book&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">)</span></div>
+
+    <span class="c1"># POST /book</span>
+<div class="viewcode-block" id="ReadarrAPI.add_book"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.add_book">[docs]</a>    <span class="k">def</span> <span class="nf">add_book</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">book</span><span class="p">:</span> <span class="n">JsonObject</span><span class="p">,</span>
+        <span class="n">root_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">quality_profile_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">metadata_profile_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">monitored</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">search_for_new_book</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">author_monitor</span><span class="p">:</span> <span class="n">ReadarrAuthorMonitor</span> <span class="o">=</span> <span class="s2">&quot;all&quot;</span><span class="p">,</span>
+        <span class="n">author_search_for_missing_books</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonObject</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a new book and its associated author (if not already added).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            book (JsonObject): A book object from `lookup()`</span>
+<span class="sd">            root_dir (str): The root directory for the books to be saved.</span>
+<span class="sd">            quality_profile_id (Optional[int], optional): Quality Profile. Defaults to first found profile.</span>
+<span class="sd">            metadata_profile_id (Optional[int], optional): Metadata Profile. Defaults to first found profile.</span>
+<span class="sd">            monitored (bool, optional): Monitor the book. Defaults to True.</span>
+<span class="sd">            search_for_new_book (bool, optional): Look for new books. Defaults to False.</span>
+<span class="sd">            author_monitor (ReadarrAuthorMonitor, optional): Monitor the author for books. Defaults to &quot;all&quot;.</span>
+<span class="sd">            author_search_for_missing_books (bool, optional): Search missing books by the author. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonObject: A copy of the added books</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">quality_profile_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">quality_profile_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_quality_profile</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">IndexError</span> <span class="k">as</span> <span class="n">exception</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">PyarrMissingProfile</span><span class="p">(</span>
+                    <span class="s2">&quot;There is no Quality Profile setup&quot;</span>
+                <span class="p">)</span> <span class="kn">from</span> <span class="nn">exception</span>
+        <span class="k">if</span> <span class="n">metadata_profile_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">metadata_profile_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_metadata_profile</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">IndexError</span> <span class="k">as</span> <span class="n">exception</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">PyarrMissingProfile</span><span class="p">(</span>
+                    <span class="s2">&quot;There is no Metadata Profile setup&quot;</span>
+                <span class="p">)</span> <span class="kn">from</span> <span class="nn">exception</span>
+
+        <span class="n">book</span><span class="p">[</span><span class="s2">&quot;author&quot;</span><span class="p">][</span><span class="s2">&quot;rootFolderPath&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">root_dir</span>
+        <span class="n">book</span><span class="p">[</span><span class="s2">&quot;author&quot;</span><span class="p">][</span><span class="s2">&quot;metadataProfileId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metadata_profile_id</span>
+        <span class="n">book</span><span class="p">[</span><span class="s2">&quot;author&quot;</span><span class="p">][</span><span class="s2">&quot;qualityProfileId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">quality_profile_id</span>
+        <span class="n">book</span><span class="p">[</span><span class="s2">&quot;author&quot;</span><span class="p">][</span><span class="s2">&quot;rootFolderPath&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">root_dir</span>
+        <span class="n">book</span><span class="p">[</span><span class="s2">&quot;author&quot;</span><span class="p">][</span><span class="s2">&quot;addOptions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;monitor&quot;</span><span class="p">:</span> <span class="n">author_monitor</span><span class="p">,</span>
+            <span class="s2">&quot;searchForMissingBooks&quot;</span><span class="p">:</span> <span class="n">author_search_for_missing_books</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">book</span><span class="p">[</span><span class="s2">&quot;monitored&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">monitored</span>
+        <span class="n">book</span><span class="p">[</span><span class="s2">&quot;author&quot;</span><span class="p">][</span><span class="s2">&quot;manualAdd&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">book</span><span class="p">[</span><span class="s2">&quot;addOptions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;searchForNewBook&quot;</span><span class="p">:</span> <span class="n">search_for_new_book</span><span class="p">}</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="s2">&quot;book&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">book</span><span class="p">)</span></div>
+
+    <span class="c1"># PUT /book/{id}</span>
+<div class="viewcode-block" id="ReadarrAPI.upd_book"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.upd_book">[docs]</a>    <span class="k">def</span> <span class="nf">upd_book</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">book</span><span class="p">:</span> <span class="n">JsonObject</span><span class="p">,</span> <span class="n">editions</span><span class="p">:</span> <span class="n">JsonArray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonObject</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the given book.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            To be used in conjunction with get_book() and get_edition()</span>
+
+<span class="sd">            Currently only monitored states are updated (for the book and edition).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id_ (int): Book database ID to update</span>
+<span class="sd">            book (JsonObject): All parameters to update book</span>
+<span class="sd">            editions (JsonArray): List of editions to update book from `get_edition()`</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonObject: Dictionary with updated record</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">book</span><span class="p">[</span><span class="s2">&quot;editions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">editions</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_put</span><span class="p">(</span><span class="s2">&quot;book&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">book</span><span class="p">)</span></div>
+
+    <span class="c1"># PUT /book/monitor</span>
+<div class="viewcode-block" id="ReadarrAPI.upd_book_monitor"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.upd_book_monitor">[docs]</a>    <span class="k">def</span> <span class="nf">upd_book_monitor</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">book_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">monitored</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonArray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update book monitored status</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            book_ids (list[int]): All book IDs to be updated</span>
+<span class="sd">            monitored (bool, optional): True or False. Defaults to True.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonArray: list of dictionaries containing updated records</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_put</span><span class="p">(</span>
+            <span class="s2">&quot;book/monitor&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;bookIds&quot;</span><span class="p">:</span> <span class="n">book_ids</span><span class="p">,</span> <span class="s2">&quot;monitored&quot;</span><span class="p">:</span> <span class="n">monitored</span><span class="p">},</span>
+        <span class="p">)</span></div>
+
+    <span class="c1"># DELETE /book/{id}</span>
+<div class="viewcode-block" id="ReadarrAPI.del_book"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.del_book">[docs]</a>    <span class="k">def</span> <span class="nf">del_book</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">id_</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">delete_files</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">import_list_exclusion</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="n">JsonObject</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Delete the book with the given ID</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id_ (int): Database ID for book</span>
+<span class="sd">            delete_files (bool, optional): If true book folder and files will be deleted. Defaults to None.</span>
+<span class="sd">            import_list_exclusion (bool, optional): Add an exclusion so book doesn&#39;t get re-added. Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Response: HTTP Response</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">delete_files</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;deleteFiles&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">delete_files</span>
+        <span class="k">if</span> <span class="n">import_list_exclusion</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;addImportListExclusion&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">import_list_exclusion</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delete</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;book/</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span></div>
+
+    <span class="c1"># AUTHORadd_author</span>
+
+    <span class="c1"># GET /author and /author/{id}</span>
+<div class="viewcode-block" id="ReadarrAPI.get_author"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.get_author">[docs]</a>    <span class="k">def</span> <span class="nf">get_author</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">JsonArray</span><span class="p">,</span> <span class="n">JsonObject</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns all authors in your collection or the author with the matching ID if one is found.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id_ (Optional[int], optional): Database ID for author. Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Union[JsonArray, JsonObject]: List of dictionaries with items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;author/</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">id_</span> <span class="k">else</span> <span class="s2">&quot;author&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">)</span></div>
+
+    <span class="c1"># POST /author/</span>
+<div class="viewcode-block" id="ReadarrAPI.add_author"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.add_author">[docs]</a>    <span class="k">def</span> <span class="nf">add_author</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">author</span><span class="p">:</span> <span class="n">JsonObject</span><span class="p">,</span>
+        <span class="n">root_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">quality_profile_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">metadata_profile_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">monitored</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">author_monitor</span><span class="p">:</span> <span class="n">ReadarrAuthorMonitor</span> <span class="o">=</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span>
+        <span class="n">author_search_for_missing_books</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonObject</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds an author based on data from lookup, must be an author record</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            author (JsonObject): A author object from `lookup()`</span>
+<span class="sd">            root_dir (str): Directory for book to be stored</span>
+<span class="sd">            quality_profile_id (int, optional): Quality profile id. Defaults to 1.</span>
+<span class="sd">            metadata_profile_id (int, optional): Metadata profile id. Defaults to 0.</span>
+<span class="sd">            monitored (bool, optional): Should the author be monitored. Defaults to True.</span>
+<span class="sd">            author_monitor (ReadarrAuthorMonitor, optional): What level  should the author be monitored. Defaults to &quot;none&quot;.</span>
+<span class="sd">            author_search_for_missing_books (bool, optional): Search for any missing books by the author. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonObject: Dictonary of added record</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">quality_profile_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">quality_profile_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_quality_profile</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">IndexError</span> <span class="k">as</span> <span class="n">exception</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">PyarrMissingProfile</span><span class="p">(</span>
+                    <span class="s2">&quot;There is no Quality Profile setup&quot;</span>
+                <span class="p">)</span> <span class="kn">from</span> <span class="nn">exception</span>
+        <span class="k">if</span> <span class="n">metadata_profile_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">metadata_profile_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_metadata_profile</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">IndexError</span> <span class="k">as</span> <span class="n">exception</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">PyarrMissingProfile</span><span class="p">(</span>
+                    <span class="s2">&quot;There is no Metadata Profile setup&quot;</span>
+                <span class="p">)</span> <span class="kn">from</span> <span class="nn">exception</span>
+        <span class="n">author</span><span class="p">[</span><span class="s2">&quot;metadataProfileId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metadata_profile_id</span>
+        <span class="n">author</span><span class="p">[</span><span class="s2">&quot;qualityProfileId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">quality_profile_id</span>
+        <span class="n">author</span><span class="p">[</span><span class="s2">&quot;rootFolderPath&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">root_dir</span>
+        <span class="n">author</span><span class="p">[</span><span class="s2">&quot;addOptions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;monitor&quot;</span><span class="p">:</span> <span class="n">author_monitor</span><span class="p">,</span>
+            <span class="s2">&quot;searchForMissingBooks&quot;</span><span class="p">:</span> <span class="n">author_search_for_missing_books</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">author</span><span class="p">[</span><span class="s2">&quot;monitored&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">monitored</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="s2">&quot;author&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">author</span><span class="p">)</span></div>
+
+    <span class="c1"># PUT /author/{id}</span>
+<div class="viewcode-block" id="ReadarrAPI.upd_author"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.upd_author">[docs]</a>    <span class="k">def</span> <span class="nf">upd_author</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">JsonObject</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonObject</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the given author, currently only monitored is changed, all other modifications are ignored.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            To be used in conjunction with get_author()</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id_ (int): Author database ID to update</span>
+<span class="sd">            data (JsonObject): All parameters to update author</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonObject: Dictionary with updated record</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_put</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;author/</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
+
+    <span class="c1"># DELETE /author/{id}</span>
+<div class="viewcode-block" id="ReadarrAPI.del_author"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.del_author">[docs]</a>    <span class="k">def</span> <span class="nf">del_author</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">id_</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">delete_files</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">import_list_exclusion</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="n">JsonObject</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Delete the author with the given ID</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id_ (int): Database ID for author</span>
+<span class="sd">            delete_files (bool, optional): If true author folder and files will be deleted. Defaults to None.</span>
+<span class="sd">            import_list_exclusion (bool, optional): Add an exclusion so author doesn&#39;t get re-added. Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Response: HTTP Response</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">delete_files</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;deleteFiles&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">delete_files</span>
+        <span class="k">if</span> <span class="n">import_list_exclusion</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;addImportListExclusion&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">import_list_exclusion</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delete</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;author/</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span></div>
+
+    <span class="c1">## LOG</span>
+
+    <span class="c1"># GET /log/file</span>
+<div class="viewcode-block" id="ReadarrAPI.get_log_file"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.get_log_file">[docs]</a>    <span class="k">def</span> <span class="nf">get_log_file</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonArray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get log file</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonArray: List of dictionaries with items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s2">&quot;log/file&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">)</span></div>
+
+    <span class="c1"># CONFIG</span>
+
+    <span class="c1"># POST /rootFolder/</span>
+<div class="viewcode-block" id="ReadarrAPI.add_root_folder"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.add_root_folder">[docs]</a>    <span class="k">def</span> <span class="nf">add_root_folder</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">default_quality_profile_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">default_metadata_profile_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">default_tags</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">is_calibre_lib</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">calibre_host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;localhost&quot;</span><span class="p">,</span>
+        <span class="n">calibre_port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8080</span><span class="p">,</span>
+        <span class="n">use_ssl</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">output_profile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonObject</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a new location to store files</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): Friendly Name for folder</span>
+<span class="sd">            path (str): Location the files should be stored</span>
+<span class="sd">            default_quality_profile_id (int): Quality Profile.</span>
+<span class="sd">            default_metadata_profile_id (int): Metadata Profile.</span>
+<span class="sd">            default_tags (Optional[list], optional): List of tags to apply. Defaults to None.</span>
+<span class="sd">            is_calibre_lib (bool, optional): Use Calibre Content Server. Defaults to False.</span>
+<span class="sd">            calibre_host (str, optional): Calibre Content Server address. Defaults to &quot;localhost&quot;.</span>
+<span class="sd">            calibre_port (int, optional): Calibre Content Server port. Defaults to 8080.</span>
+<span class="sd">            use_ssl (bool, optional): Calibre Content Server SSL. Defaults to False.</span>
+<span class="sd">            output_profile (str, optional): Books to monitor. Defaults to &quot;default&quot;.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonObject: Dictionary of added record</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">folder_json</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;isCalibreLibrary&quot;</span><span class="p">:</span> <span class="n">is_calibre_lib</span><span class="p">,</span>
+            <span class="s2">&quot;host&quot;</span><span class="p">:</span> <span class="n">calibre_host</span><span class="p">,</span>
+            <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="n">calibre_port</span><span class="p">,</span>
+            <span class="s2">&quot;useSsl&quot;</span><span class="p">:</span> <span class="n">use_ssl</span><span class="p">,</span>
+            <span class="s2">&quot;outputProfile&quot;</span><span class="p">:</span> <span class="n">output_profile</span><span class="p">,</span>
+            <span class="s2">&quot;defaultTags&quot;</span><span class="p">:</span> <span class="n">default_tags</span> <span class="ow">or</span> <span class="p">[],</span>
+            <span class="s2">&quot;defaultQualityProfileId&quot;</span><span class="p">:</span> <span class="n">default_quality_profile_id</span><span class="p">,</span>
+            <span class="s2">&quot;defaultMetadataProfileId&quot;</span><span class="p">:</span> <span class="n">default_metadata_profile_id</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">path</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="s2">&quot;rootFolder&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">folder_json</span><span class="p">)</span></div>
+
+    <span class="c1"># GET /config/metadataProvider</span>
+<div class="viewcode-block" id="ReadarrAPI.get_metadata_provider"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.get_metadata_provider">[docs]</a>    <span class="k">def</span> <span class="nf">get_metadata_provider</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonObject</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get metadata provider from settings/metadata</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonObject: Dictionary of record</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s2">&quot;config/metadataProvider&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">)</span></div>
+
+    <span class="c1"># PUT /config/metadataProvider</span>
+<div class="viewcode-block" id="ReadarrAPI.upd_metadata_provider"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.upd_metadata_provider">[docs]</a>    <span class="k">def</span> <span class="nf">upd_metadata_provider</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">JsonObject</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonObject</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the metadata provider data.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            To be used in conjunction with get_metadata_provider()</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (JsonObject): All parameters to update</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict[str, Any]: Dictionary of updated record</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_put</span><span class="p">(</span><span class="s2">&quot;config/metadataProvider&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ReadarrAPI.add_release_profile"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.add_release_profile">[docs]</a>    <span class="k">def</span> <span class="nf">add_release_profile</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">ignored</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+        <span class="n">required</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+        <span class="n">indexerId</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">tags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">includePreferredWhenRenaming</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonObject</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a Release Profile</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            ignored (list): List of terms in the release to ignore</span>
+<span class="sd">            indexerId (int): ID for preferred indexer. Defaults to 0 (any).</span>
+<span class="sd">            required (list): List of terms the release must include.</span>
+<span class="sd">            tags (list[int]): List of tag id&#39;s. Defaults to empty list</span>
+<span class="sd">            enabled (bool, optional): Enable release profile. Defaults to True.</span>
+<span class="sd">            includePreferredWhenRenaming (bool, optional): Include preferred when renaming. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonObject: Dictionary containing details of new profile</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">tags</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">tags</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;enabled&quot;</span><span class="p">:</span> <span class="n">enabled</span><span class="p">,</span>
+            <span class="s2">&quot;ignored&quot;</span><span class="p">:</span> <span class="n">ignored</span><span class="p">,</span>
+            <span class="s2">&quot;includePreferredWhenRenaming&quot;</span><span class="p">:</span> <span class="n">includePreferredWhenRenaming</span><span class="p">,</span>
+            <span class="s2">&quot;indexerId&quot;</span><span class="p">:</span> <span class="n">indexerId</span><span class="p">,</span>
+            <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="n">required</span><span class="p">,</span>
+            <span class="s2">&quot;tags&quot;</span><span class="p">:</span> <span class="n">tags</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span>
+            <span class="s2">&quot;releaseprofile&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+    <span class="c1"># DELETE /releaseprofile/{id}</span>
+<div class="viewcode-block" id="ReadarrAPI.del_release_profile"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.del_release_profile">[docs]</a>    <span class="k">def</span> <span class="nf">del_release_profile</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">id_</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="n">JsonObject</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Delete the release profile with the given ID</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id_ (int): Database ID for release profile</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Response: HTTP Response</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delete</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;releaseprofile/</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ReadarrAPI.add_delay_profile"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.add_delay_profile">[docs]</a>    <span class="k">def</span> <span class="nf">add_delay_profile</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+        <span class="n">preferredProtocol</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;usenet&quot;</span><span class="p">,</span>
+        <span class="n">usenetDelay</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">torrentDelay</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">bypassIfHighestQuality</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">bypassIfAboveCustomFormatScore</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">minimumCustomFormatScore</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonObject</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add delay profile</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            tags (list[int]): List of tag IDs. Use: `get_tag`.</span>
+<span class="sd">            preferredProtocol (str, optional): usenet, torrent, onlyusenet, onlytorrent  . Defaults to &quot;usenet&quot;.</span>
+<span class="sd">            usenetDelay (int, optional): Delay before grabbing a release. Defaults to 0.</span>
+<span class="sd">            torrentDelay (int, optional): Delay before grabbing a release. Defaults to 0.</span>
+<span class="sd">            bypassIfHighestQuality (bool, optional): Bypass delay when release has the highest enabled quality in the quality profile. Defaults to False.</span>
+<span class="sd">            bypassIfAboveCustomFormatScore (bool, optional): Enable bypass when release has a score higher than the configured minimum custom format score. Defaults to False.</span>
+<span class="sd">            minimumCustomFormatScore (int, optional): set when using `bypassIfAboveCustomFormatScore`. Defaults to 0.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonObject: Dictonary with added item</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;enableUsenet&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;enableTorrent&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;preferredProtocol&quot;</span><span class="p">:</span> <span class="n">preferredProtocol</span><span class="p">,</span>
+            <span class="s2">&quot;usenetDelay&quot;</span><span class="p">:</span> <span class="n">usenetDelay</span><span class="p">,</span>
+            <span class="s2">&quot;torrentDelay&quot;</span><span class="p">:</span> <span class="n">torrentDelay</span><span class="p">,</span>
+            <span class="s2">&quot;bypassIfHighestQuality&quot;</span><span class="p">:</span> <span class="n">bypassIfHighestQuality</span><span class="p">,</span>
+            <span class="s2">&quot;bypassIfAboveCustomFormatScore&quot;</span><span class="p">:</span> <span class="n">bypassIfAboveCustomFormatScore</span><span class="p">,</span>
+            <span class="s2">&quot;minimumCustomFormatScore&quot;</span><span class="p">:</span> <span class="n">minimumCustomFormatScore</span><span class="p">,</span>
+            <span class="s2">&quot;tags&quot;</span><span class="p">:</span> <span class="n">tags</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">preferredProtocol</span> <span class="o">==</span> <span class="s2">&quot;onlytorrent&quot;</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;preferredProtocol&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;torrent&quot;</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;enableUsenet&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="n">preferredProtocol</span> <span class="o">==</span> <span class="s2">&quot;onlyusenet&quot;</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;preferredProtocol&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;usenet&quot;</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;enableTorrent&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="s2">&quot;delayprofile&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
+
+    <span class="c1"># DELETE /delayprofile/{id}</span>
+<div class="viewcode-block" id="ReadarrAPI.del_delay_profile"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.del_delay_profile">[docs]</a>    <span class="k">def</span> <span class="nf">del_delay_profile</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">id_</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="n">JsonObject</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Delete the delay profile with the given ID</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id_ (int): Database ID for delay profile</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Response: HTTP Response</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delete</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;delayprofile/</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">)</span></div>
+
+    <span class="c1"># GET /manualimport</span>
+<div class="viewcode-block" id="ReadarrAPI.get_manual_import"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.get_manual_import">[docs]</a>    <span class="k">def</span> <span class="nf">get_manual_import</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">folder</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">download_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">author_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">filter_existing_files</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">replace_existing_files</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonArray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets a manual import list</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            downloadId (str): Download IDs</span>
+<span class="sd">            author_id (int, optional): Author Database ID. Defaults to None.</span>
+<span class="sd">            folder (Optional[str], optional): folder name. Defaults to None.</span>
+<span class="sd">            filterExistingFiles (bool, optional): filter files. Defaults to True.</span>
+<span class="sd">            replaceExistingFiles (bool, optional): replace files. Defaults to True.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonArray: List of dictionaries with items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;folder&quot;</span><span class="p">:</span> <span class="n">folder</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">download_id</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;downloadId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">download_id</span>
+        <span class="k">if</span> <span class="n">author_id</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;authorId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">author_id</span>
+        <span class="k">if</span> <span class="n">filter_existing_files</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;filterExistingFiles&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">filter_existing_files</span>
+        <span class="k">if</span> <span class="n">replace_existing_files</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;replaceExistingFiles&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">replace_existing_files</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s2">&quot;manualimport&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span></div>
+
+    <span class="c1"># PUT /manualimport</span>
+<div class="viewcode-block" id="ReadarrAPI.upd_manual_import"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.upd_manual_import">[docs]</a>    <span class="k">def</span> <span class="nf">upd_manual_import</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">JsonObject</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonObject</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update a manual import</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            To be used in conjunction with get_manual_import()</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (JsonObject): Data containing changes</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonObject: Dictionary of updated record</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_put</span><span class="p">(</span><span class="s2">&quot;manualimport&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
+
+    <span class="c1"># GET /edition</span>
+<div class="viewcode-block" id="ReadarrAPI.get_edition"><a class="viewcode-back" href="../../modules/readarr.html#pyarr.readarr.ReadarrAPI.get_edition">[docs]</a>    <span class="k">def</span> <span class="nf">get_edition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonArray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get edition&#39;s for specific book</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id_ (int): Database ID of book</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonObject: Dictionary of editions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s2">&quot;edition&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;bookId&quot;</span><span class="p">:</span> <span class="n">id_</span><span class="p">})</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Steven Marks, TotalDebug.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

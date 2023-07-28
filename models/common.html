@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Common &mdash; pyarr  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Sonarr" href="sonarr.html" />
+    <link rel="prev" title="LidarrAPI" href="../modules/lidarr.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+          </a>
+              <div class="version">
+                5.2.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Overview</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">🚀 Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installing.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules/sonarr.html">SonarrAPI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/radarr.html">RadarrAPI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/readarr.html">ReadarrAPI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/lidarr.html">LidarrAPI</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Models</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Common</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#pyarr.models.common.PyarrSortDirection"><code class="docutils literal notranslate"><span class="pre">PyarrSortDirection</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pyarr.models.common.PyarrLogSortKey"><code class="docutils literal notranslate"><span class="pre">PyarrLogSortKey</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pyarr.models.common.PyarrBlocklistSortKey"><code class="docutils literal notranslate"><span class="pre">PyarrBlocklistSortKey</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pyarr.models.common.PyarrHistorySortKey"><code class="docutils literal notranslate"><span class="pre">PyarrHistorySortKey</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pyarr.models.common.PyarrTaskSortKey"><code class="docutils literal notranslate"><span class="pre">PyarrTaskSortKey</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pyarr.models.common.PyarrLogFilterKey"><code class="docutils literal notranslate"><span class="pre">PyarrLogFilterKey</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pyarr.models.common.PyarrLogFilterValue"><code class="docutils literal notranslate"><span class="pre">PyarrLogFilterValue</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pyarr.models.common.PyarrNotificationSchema"><code class="docutils literal notranslate"><span class="pre">PyarrNotificationSchema</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pyarr.models.common.PyarrDownloadClientSchema"><code class="docutils literal notranslate"><span class="pre">PyarrDownloadClientSchema</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pyarr.models.common.PyarrImportListSchema"><code class="docutils literal notranslate"><span class="pre">PyarrImportListSchema</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pyarr.models.common.PyarrIndexerSchema"><code class="docutils literal notranslate"><span class="pre">PyarrIndexerSchema</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sonarr.html">Sonarr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="radarr.html">Radarr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="readarr.html">Readarr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lidarr.html">Lidarr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pyarr</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Common</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/models/common.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-pyarr.models.common">
+<span id="common"></span><h1>Common<a class="headerlink" href="#module-pyarr.models.common" title="Permalink to this heading"></a></h1>
+<dl class="py data">
+<dt class="sig sig-object py" id="pyarr.models.common.PyarrSortDirection">
+<span class="sig-prename descclassname"><span class="pre">pyarr.models.common.</span></span><span class="sig-name descname"><span class="pre">PyarrSortDirection</span></span><a class="headerlink" href="#pyarr.models.common.PyarrSortDirection" title="Permalink to this definition"></a></dt>
+<dd><p>Pyarr sort direction</p>
+<p>alias of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Literal</span></code>[‘ascending’, ‘default’, ‘descending’]</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pyarr.models.common.PyarrLogSortKey">
+<span class="sig-prename descclassname"><span class="pre">pyarr.models.common.</span></span><span class="sig-name descname"><span class="pre">PyarrLogSortKey</span></span><a class="headerlink" href="#pyarr.models.common.PyarrLogSortKey" title="Permalink to this definition"></a></dt>
+<dd><p>Log Sort Keys</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>There may be more, but these are not well documented
+within Arr api docs.</p>
+</div>
+<p>alias of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Literal</span></code>[‘Id’, ‘level’, ‘time’, ‘logger’, ‘message’, ‘exception’, ‘exceptionType’]</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pyarr.models.common.PyarrBlocklistSortKey">
+<span class="sig-prename descclassname"><span class="pre">pyarr.models.common.</span></span><span class="sig-name descname"><span class="pre">PyarrBlocklistSortKey</span></span><a class="headerlink" href="#pyarr.models.common.PyarrBlocklistSortKey" title="Permalink to this definition"></a></dt>
+<dd><p>Block list sort keys</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>There may be more, but these are not well documented
+within Arr api docs.</p>
+</div>
+<p>alias of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Literal</span></code>[‘date’]</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pyarr.models.common.PyarrHistorySortKey">
+<span class="sig-prename descclassname"><span class="pre">pyarr.models.common.</span></span><span class="sig-name descname"><span class="pre">PyarrHistorySortKey</span></span><a class="headerlink" href="#pyarr.models.common.PyarrHistorySortKey" title="Permalink to this definition"></a></dt>
+<dd><p>History sort keys</p>
+<p>series.title (Sonarr)
+episode.title (Sonarr)
+status (Lidarr only)</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>There may be more, but these are not well documented
+within Arr api docs.</p>
+</div>
+<p>alias of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Literal</span></code>[‘id’, ‘date’, ‘eventType’, ‘series.title’, ‘episode.title’, ‘movieFile.relativePath’, ‘sourceTitle’, ‘status’]</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pyarr.models.common.PyarrTaskSortKey">
+<span class="sig-prename descclassname"><span class="pre">pyarr.models.common.</span></span><span class="sig-name descname"><span class="pre">PyarrTaskSortKey</span></span><a class="headerlink" href="#pyarr.models.common.PyarrTaskSortKey" title="Permalink to this definition"></a></dt>
+<dd><p>Task sort keys</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>There may be more, but these are not well documented
+within Arr api docs.</p>
+</div>
+<p>alias of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Literal</span></code>[‘timeleft’]</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pyarr.models.common.PyarrLogFilterKey">
+<span class="sig-prename descclassname"><span class="pre">pyarr.models.common.</span></span><span class="sig-name descname"><span class="pre">PyarrLogFilterKey</span></span><a class="headerlink" href="#pyarr.models.common.PyarrLogFilterKey" title="Permalink to this definition"></a></dt>
+<dd><p>Log filter keys</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>There may be more, but these are not well documented
+within Arr api docs.</p>
+</div>
+<p>alias of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Literal</span></code>[‘level’]</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pyarr.models.common.PyarrLogFilterValue">
+<span class="sig-prename descclassname"><span class="pre">pyarr.models.common.</span></span><span class="sig-name descname"><span class="pre">PyarrLogFilterValue</span></span><a class="headerlink" href="#pyarr.models.common.PyarrLogFilterValue" title="Permalink to this definition"></a></dt>
+<dd><p>Log filter values</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>There may be more, but these are not well documented
+within Arr api docs.</p>
+</div>
+<p>alias of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Literal</span></code>[‘all’, ‘info’, ‘warn’, ‘error’]</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pyarr.models.common.PyarrNotificationSchema">
+<span class="sig-prename descclassname"><span class="pre">pyarr.models.common.</span></span><span class="sig-name descname"><span class="pre">PyarrNotificationSchema</span></span><a class="headerlink" href="#pyarr.models.common.PyarrNotificationSchema" title="Permalink to this definition"></a></dt>
+<dd><p>Notification schema implementations</p>
+<p>alias of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Literal</span></code>[‘Boxcar’, ‘CustomScript’, ‘Discord’, ‘Email’, ‘MediaBrowser’, ‘Gotify’, ‘Join’, ‘Xbmc’, ‘MailGun’, ‘PlexHomeTheater’, ‘PlexClient’, ‘PlexServer’, ‘Prowl’, ‘PushBullet’, ‘Pushover’, ‘SendGrid’, ‘Slack’, ‘SynologyIndexer’, ‘Telegram’, ‘Trakt’, ‘Twitter’, ‘Webhook’]</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pyarr.models.common.PyarrDownloadClientSchema">
+<span class="sig-prename descclassname"><span class="pre">pyarr.models.common.</span></span><span class="sig-name descname"><span class="pre">PyarrDownloadClientSchema</span></span><a class="headerlink" href="#pyarr.models.common.PyarrDownloadClientSchema" title="Permalink to this definition"></a></dt>
+<dd><p>Download client schema implementations</p>
+<p>alias of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Literal</span></code>[‘Aria2’, ‘Deluge’, ‘TorrentDownloadStation’, ‘UsenetDownloadStation’, ‘Flood’, ‘Hadouken’, ‘Nzbget’, ‘NzbVortex’, ‘Pneumatic’, ‘QBittorrent’, ‘RTorrent’, ‘Sabnzbd’, ‘TorrentBlackhole’, ‘Transmission’, ‘UsenetBlackhole’, ‘UTorrent’, ‘Vuze’]</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pyarr.models.common.PyarrImportListSchema">
+<span class="sig-prename descclassname"><span class="pre">pyarr.models.common.</span></span><span class="sig-name descname"><span class="pre">PyarrImportListSchema</span></span><a class="headerlink" href="#pyarr.models.common.PyarrImportListSchema" title="Permalink to this definition"></a></dt>
+<dd><p>Import List schema implementations</p>
+<p>alias of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Literal</span></code>[‘PlexImport’, ‘SonarrImport’, ‘TraktListImport’, ‘TraktPopularImport’, ‘TraktUserImport’]</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pyarr.models.common.PyarrIndexerSchema">
+<span class="sig-prename descclassname"><span class="pre">pyarr.models.common.</span></span><span class="sig-name descname"><span class="pre">PyarrIndexerSchema</span></span><a class="headerlink" href="#pyarr.models.common.PyarrIndexerSchema" title="Permalink to this definition"></a></dt>
+<dd><p>Indexer schema implementations</p>
+<p>alias of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Literal</span></code>[‘FileList’, ‘HDBits’, ‘IPTorrents’, ‘Newznab’, ‘Nyaa’, ‘Omgwtfnzbs’, ‘PassThePopcorn’, ‘Rarbg’, ‘TorrentRssIndexer’, ‘TorrentPotato’, ‘Torznab’]</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../modules/lidarr.html" class="btn btn-neutral float-left" title="LidarrAPI" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="sonarr.html" class="btn btn-neutral float-right" title="Sonarr" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Steven Marks, TotalDebug.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Readarr &mdash; pyarr  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Lidarr" href="lidarr.html" />
+    <link rel="prev" title="Radarr" href="radarr.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+          </a>
+              <div class="version">
+                5.2.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Overview</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">🚀 Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installing.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules/sonarr.html">SonarrAPI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/radarr.html">RadarrAPI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/readarr.html">ReadarrAPI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/lidarr.html">LidarrAPI</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Models</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="common.html">Common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sonarr.html">Sonarr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="radarr.html">Radarr</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Readarr</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#pyarr.models.readarr.ReadarrCommands"><code class="docutils literal notranslate"><span class="pre">ReadarrCommands</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pyarr.models.readarr.ReadarrSortKeys"><code class="docutils literal notranslate"><span class="pre">ReadarrSortKeys</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pyarr.models.readarr.ReadarrSearchType"><code class="docutils literal notranslate"><span class="pre">ReadarrSearchType</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pyarr.models.readarr.ReadarrAuthorMonitor"><code class="docutils literal notranslate"><span class="pre">ReadarrAuthorMonitor</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lidarr.html">Lidarr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pyarr</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Readarr</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/models/readarr.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-pyarr.models.readarr">
+<span id="readarr"></span><h1>Readarr<a class="headerlink" href="#module-pyarr.models.readarr" title="Permalink to this heading"></a></h1>
+<dl class="py data">
+<dt class="sig sig-object py" id="pyarr.models.readarr.ReadarrCommands">
+<span class="sig-prename descclassname"><span class="pre">pyarr.models.readarr.</span></span><span class="sig-name descname"><span class="pre">ReadarrCommands</span></span><a class="headerlink" href="#pyarr.models.readarr.ReadarrCommands" title="Permalink to this definition"></a></dt>
+<dd><p>Readarr commands.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The parameters are supplied as <cite>**kwargs</cite> within the <cite>post_command</cite> method.</p>
+</div>
+<dl>
+<dt>ApplicationUpdateCheck:</dt><dd><p>Checks for Application updates</p>
+</dd>
+<dt>AuthorSearch:</dt><dd><p>Search for specific author by ID</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>authorId (int): ID for Author</p>
+</dd>
+</dl>
+</dd>
+<dt>BookSearch:</dt><dd><p>Search for specific Book by ID</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>bookId (int): ID for Book</p>
+</dd>
+</dl>
+</dd>
+<dt>RefreshAuthor:</dt><dd><p>Refresh all Authors, or by specific ID</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>authorId (int, optional): ID for Author</p>
+</dd>
+</dl>
+</dd>
+<dt>RefreshBook:</dt><dd><p>Refresh all Books, or by specific ID</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>bookId (int, optional): ID for Book</p>
+</dd>
+</dl>
+</dd>
+<dt>RenameAuthor:</dt><dd><p>Rename all Authors, or by list of Ids</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>authorIds (list[int], optional): IDs for Authors</p>
+</dd>
+</dl>
+</dd>
+<dt>RenameFiles:</dt><dd><p>Rename all files, or by specific ID</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>authorId (int, optional): ID for Author
+files (str): ID of files</p>
+</dd>
+</dl>
+</dd>
+<dt>RescanFolders:</dt><dd><p>Rescans folders</p>
+</dd>
+<dt>RssSync:</dt><dd><p>Synchronise RSS Feeds</p>
+</dd>
+<dt>Backup:</dt><dd><p>Backup of the Database</p>
+</dd>
+<dt>MissingBookSearch:</dt><dd><p>Searches for any missing books</p>
+</dd>
+</dl>
+<p>alias of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Literal</span></code>[‘ApplicationUpdateCheck’, ‘AuthorSearch’, ‘BookSearch’, ‘RefreshAuthor’, ‘RefreshBook’, ‘RenameAuthor’, ‘RenameFiles’, ‘RescanFolders’, ‘RssSync’, ‘Backup’, ‘MissingBookSearch’]</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pyarr.models.readarr.ReadarrSortKeys">
+<span class="sig-prename descclassname"><span class="pre">pyarr.models.readarr.</span></span><span class="sig-name descname"><span class="pre">ReadarrSortKeys</span></span><a class="headerlink" href="#pyarr.models.readarr.ReadarrSortKeys" title="Permalink to this definition"></a></dt>
+<dd><p>Readarr sort keys.</p>
+<p>alias of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Literal</span></code>[‘authorId’, ‘Books.Id’, ‘books.releaseDate’, ‘downloadClient’, ‘id’, ‘indexer’, ‘message’, ‘path’, ‘progress’, ‘protocol’, ‘quality’, ‘ratings’, ‘size’, ‘sourcetitle’, ‘status’, ‘timeleft’, ‘title’]</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pyarr.models.readarr.ReadarrSearchType">
+<span class="sig-prename descclassname"><span class="pre">pyarr.models.readarr.</span></span><span class="sig-name descname"><span class="pre">ReadarrSearchType</span></span><a class="headerlink" href="#pyarr.models.readarr.ReadarrSearchType" title="Permalink to this definition"></a></dt>
+<dd><p>Readarr search types.</p>
+<p>alias of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Literal</span></code>[‘asin’, ‘edition’, ‘isbn’, ‘author’, ‘work’]</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pyarr.models.readarr.ReadarrAuthorMonitor">
+<span class="sig-prename descclassname"><span class="pre">pyarr.models.readarr.</span></span><span class="sig-name descname"><span class="pre">ReadarrAuthorMonitor</span></span><a class="headerlink" href="#pyarr.models.readarr.ReadarrAuthorMonitor" title="Permalink to this definition"></a></dt>
+<dd><p>Readarr author monitor options.</p>
+<p>alias of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Literal</span></code>[‘all’, ‘future’, ‘missing’, ‘existing’, ‘first’, ‘latest’, ‘none’]</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="radarr.html" class="btn btn-neutral float-left" title="Radarr" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lidarr.html" class="btn btn-neutral float-right" title="Lidarr" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Steven Marks, TotalDebug.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

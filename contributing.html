@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contributing &mdash; pyarr  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="SonarrAPI" href="modules/sonarr.html" />
+    <link rel="prev" title="Installation" href="installing.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+          </a>
+              <div class="version">
+                5.2.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Overview</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">🚀 Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installing.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Contributing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules/sonarr.html">SonarrAPI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/radarr.html">RadarrAPI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/readarr.html">ReadarrAPI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/lidarr.html">LidarrAPI</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Models</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="models/common.html">Common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models/sonarr.html">Sonarr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models/radarr.html">Radarr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models/readarr.html">Readarr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models/lidarr.html">Lidarr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pyarr</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Contributing</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/contributing.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="contributing">
+<h1>Contributing<a class="headerlink" href="#contributing" title="Permalink to this heading"></a></h1>
+<p>It is recommended that contributions to this project are created within vscode,
+utilising the devcontainer functionality.</p>
+<p>This ensures that all developers are using the same environment and extentions,
+reducing the risk of additional bugs / formatting issues within the project.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The setup of VSCode devcontainer is outside of the scope of this document
+additional information can be found within the VSCode documentation.</p>
+</div>
+<section id="setup-your-environment">
+<h2>Setup your environment<a class="headerlink" href="#setup-your-environment" title="Permalink to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Fork the <a class="reference external" href="https://github.com/totaldebug/pyarr">repository</a></p></li>
+<li><p>Open the repository in VSCode</p></li>
+<li><p>Copy the <code class="docutils literal notranslate"><span class="pre">.devcontainer/recommended-devcontainer.json</span></code> files and rename the copy to <code class="docutils literal notranslate"><span class="pre">devcontainer.json</span></code>.</p></li>
+<li><p>Modify the <code class="docutils literal notranslate"><span class="pre">mounts</span></code> section as required for your environment</p></li>
+<li><p>Copy the <code class="docutils literal notranslate"><span class="pre">.devcontainer/recommended-docker-compose.yml</span></code> files and rename the copy to <code class="docutils literal notranslate"><span class="pre">docker.compose.yml</span></code></p></li>
+<li><p>You may need to modify the <code class="docutils literal notranslate"><span class="pre">volumes</span></code> for your environment</p></li>
+<li><p>Press <code class="docutils literal notranslate"><span class="pre">ctrl</span> <span class="pre">+</span> <span class="pre">shift</span> <span class="pre">+</span> <span class="pre">p</span></code> and select <code class="docutils literal notranslate"><span class="pre">Remote-Container:</span> <span class="pre">Reopen</span> <span class="pre">in</span> <span class="pre">Container</span></code></p></li>
+<li><p>Once loaded you can begin modification of the module or Documentation</p></li>
+</ol>
+</section>
+<section id="updating-pyarr-module">
+<h2>Updating PyArr module<a class="headerlink" href="#updating-pyarr-module" title="Permalink to this heading"></a></h2>
+<section id="style-formatting">
+<h3>Style &amp; formatting<a class="headerlink" href="#style-formatting" title="Permalink to this heading"></a></h3>
+<p>It is highly recommended to use vsCode devcontainer as this automatically adds the
+required formatting checks on pre-commit, this will allow for resolution of issues
+prior to the pull request being submitted.</p>
+<p>If you are not using devcontainer please register the pre-commit-config:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>poetry<span class="w"> </span>run<span class="w"> </span>pre-commit<span class="w"> </span>install
+</pre></div>
+</div>
+<p>A few guidelines for approval:</p>
+<ul class="simple">
+<li><p>Must follow PEP8 / Black formatting. (devcontainer is setup to reformat on save)</p></li>
+<li><p>We recommend using <a class="reference external" href="https://sourcery.ai/">sourcery</a> to ensure code is most
+efficient, this will be checked when the pull request is opened.</p></li>
+<li><dl class="simple">
+<dt>All functions must use google docstring format, the devcontainer has an</dt><dd><p><a class="reference external" href="https://marketplace.visualstudio.com/items?itemName=njpwerner.autodocstring">autodocstring</a>
+plugin which will auto fill.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> must be updated with a new version, the new versions should</dt><dd><p>follow <a class="reference external" href="http://semver.org/">semver</a>.</p>
+</dd>
+</dl>
+</li>
+<li><p>Each feature / bugfix etc. should have its own pull request.</p></li>
+</ul>
+</section>
+<section id="testing">
+<h3>Testing<a class="headerlink" href="#testing" title="Permalink to this heading"></a></h3>
+<p>Tests can be run with the following command: <code class="docutils literal notranslate"><span class="pre">nox</span> <span class="pre">-s</span> <span class="pre">tests</span></code>. This command will check
+code style and typing compliance and will then execute all required``tests``</p>
+<p>If you are adding a new method to the library, a test must be added as well. This test should be
+against the live API, if a mock is required then reason for this should be added to the PR notes.</p>
+</section>
+</section>
+<section id="updating-documentation">
+<h2>Updating Documentation<a class="headerlink" href="#updating-documentation" title="Permalink to this heading"></a></h2>
+<p>The documentation for this project utilises <a class="reference external" href="https://www.sphinx-doc.org/">sphinx</a>.
+Sphinx allows for automatic documenting of all classes / functions via DocString.</p>
+<p>To Update static pages, you can amend the <code class="docutils literal notranslate"><span class="pre">.rst</span></code> files in the <code class="docutils literal notranslate"><span class="pre">sphinx-docs</span></code> folder.</p>
+<p>To test the documentation locally use command <code class="docutils literal notranslate"><span class="pre">nox</span> <span class="pre">-s</span> <span class="pre">docs</span></code> this will create all HTML files
+in the <code class="docutils literal notranslate"><span class="pre">build</span></code> directory.</p>
+<p>All Python Class / Function documentation is updated automatically by Github Actions and
+does not require any manual changes to be made.</p>
+<p>Sphinx documentation uses <a class="reference external" href="https://docutils.sourceforge.io/rst.html">reStructuredText</a> to format each of the pages.</p>
+</section>
+<section id="pull-requests-release">
+<h2>Pull Requests &amp; Release<a class="headerlink" href="#pull-requests-release" title="Permalink to this heading"></a></h2>
+<p>Now that you have made the changes required for your enhancement, a pull request
+is required for the core team to review the changes, request amendments or approve
+the work that you have completed.</p>
+<section id="pull-requests">
+<h3>Pull Requests<a class="headerlink" href="#pull-requests" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Each feature / bugfix should have its own PR. This makes code review more efficient</dt><dd><p>and allows for a clean changelog generation</p>
+</dd>
+</dl>
+</li>
+<li><p>All CI tests must be passing</p></li>
+<li><p>If a Pull Request contains multiple changes, our core team may reject it</p></li>
+<li><dl class="simple">
+<dt>All information in the Pull Request template should be completed, when people look</dt><dd><p>at what was done with this Pull Request it should be easy to tell from this template</p>
+</dd>
+</dl>
+</li>
+<li><p>It must state if the change is a Breaking Change, and what would break by implementing</p></li>
+</ul>
+</section>
+<section id="release-changes">
+<h3>Release Changes<a class="headerlink" href="#release-changes" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>To release a new version of the module or documentation updates, the core team</dt><dd><p>will take the following steps:</p>
+</dd>
+</dl>
+<ol class="arabic simple">
+<li><p>Reviewing and testing the PR that has been submitted to ensure all
+requirements have been met.</p></li>
+<li><p>Tag the release in git: <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">tag</span> <span class="pre">$NEW_VERSION</span></code>.</p></li>
+<li><p>Push the tag to GitHub: <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">push</span> <span class="pre">--tags</span> <span class="pre">origin</span></code>.</p></li>
+<li><p>If all tests complete the package will be automatically released to PyPI</p></li>
+<li><p>Github Action will re-create the documentation with Sphinx</p></li>
+</ol>
+<p>If the only change is to documentation, the workflow <code class="docutils literal notranslate"><span class="pre">Sphinx</span> <span class="pre">Documentation</span> <span class="pre">Update</span></code>
+will be run to update the documentation.</p>
+<p>Documentation updates don’t require the version to be updated in <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>
+and also don’t require tagging.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="installing.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="modules/sonarr.html" class="btn btn-neutral float-right" title="SonarrAPI" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Steven Marks, TotalDebug.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

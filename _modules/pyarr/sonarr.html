@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyarr.sonarr &mdash; pyarr  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+          </a>
+              <div class="version">
+                5.2.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Overview</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">🚀 Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installing.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/sonarr.html">SonarrAPI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/radarr.html">RadarrAPI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/readarr.html">ReadarrAPI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/lidarr.html">LidarrAPI</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Models</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../models/common.html">Common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../models/sonarr.html">Sonarr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../models/radarr.html">Radarr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../models/readarr.html">Readarr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../models/lidarr.html">Lidarr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pyarr</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pyarr.sonarr</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyarr.sonarr</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
+
+<span class="kn">from</span> <span class="nn">requests</span> <span class="kn">import</span> <span class="n">Response</span>
+
+<span class="kn">from</span> <span class="nn">pyarr.const</span> <span class="kn">import</span> <span class="n">DEPRECATION_WARNING</span>
+<span class="kn">from</span> <span class="nn">pyarr.exceptions</span> <span class="kn">import</span> <span class="n">PyarrMissingArgument</span>
+<span class="kn">from</span> <span class="nn">pyarr.types</span> <span class="kn">import</span> <span class="n">JsonArray</span><span class="p">,</span> <span class="n">JsonObject</span>
+
+<span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">BaseArrAPI</span>
+<span class="kn">from</span> <span class="nn">.lib.alias_decorator</span> <span class="kn">import</span> <span class="n">alias</span><span class="p">,</span> <span class="n">aliased</span>
+<span class="kn">from</span> <span class="nn">.models.common</span> <span class="kn">import</span> <span class="n">PyarrHistorySortKey</span><span class="p">,</span> <span class="n">PyarrSortDirection</span>
+<span class="kn">from</span> <span class="nn">.models.sonarr</span> <span class="kn">import</span> <span class="n">SonarrCommands</span><span class="p">,</span> <span class="n">SonarrSortKey</span>
+
+
+<div class="viewcode-block" id="SonarrAPI"><a class="viewcode-back" href="../../modules/sonarr.html#pyarr.sonarr.SonarrAPI">[docs]</a><span class="nd">@aliased</span>
+<span class="k">class</span> <span class="nc">SonarrAPI</span><span class="p">(</span><span class="n">BaseArrAPI</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;API wrapper for Sonarr endpoints.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">api_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ver_uri</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;/v3&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the Sonarr API.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            host_url (str): URL for Sonarr</span>
+<span class="sd">            api_key (str): API key for Sonarr</span>
+<span class="sd">            ver_uri (str): Version URI for Radarr. Defaults to None (empty string).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">host_url</span><span class="p">,</span> <span class="n">api_key</span><span class="p">,</span> <span class="n">ver_uri</span><span class="p">)</span>
+
+    <span class="c1"># POST /rootfolder</span>
+<div class="viewcode-block" id="SonarrAPI.add_root_folder"><a class="viewcode-back" href="../../modules/sonarr.html#pyarr.sonarr.SonarrAPI.add_root_folder">[docs]</a>    <span class="k">def</span> <span class="nf">add_root_folder</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">directory</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonObject</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds a new root folder</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            directory (str): The directory path</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonObject: Dictionary containing path details</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="s2">&quot;rootfolder&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">directory</span><span class="p">})</span></div>
+
+    <span class="c1">## COMMAND</span>
+
+    <span class="c1"># POST /command</span>
+    <span class="c1"># TODO: Add more logic to ensure correct kwargs for a command</span>
+<div class="viewcode-block" id="SonarrAPI.post_command"><a class="viewcode-back" href="../../modules/sonarr.html#pyarr.sonarr.SonarrAPI.post_command">[docs]</a>    <span class="k">def</span> <span class="nf">post_command</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">SonarrCommands</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]]]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonObject</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Performs any of the predetermined Sonarr command routines</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (SonarrCommands): Command that should be executed</span>
+<span class="sd">            **kwargs: Additional parameters for specific commands.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            For available commands and required `**kwargs` see the `SonarrCommands` model</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonObject: Dictionary containing job</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">|=</span> <span class="n">kwargs</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="s2">&quot;command&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
+
+    <span class="c1">## EPISODE</span>
+
+    <span class="c1"># GET /episode</span>
+<div class="viewcode-block" id="SonarrAPI.get_episode"><a class="viewcode-back" href="../../modules/sonarr.html#pyarr.sonarr.SonarrAPI.get_episode">[docs]</a>    <span class="k">def</span> <span class="nf">get_episode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">series</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonObject</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get episodes by ID or series</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id_ (int): ID for Episode or Series.</span>
+<span class="sd">            series (bool, optional): Set to true if the ID is for a Series. Defaults to false.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonArray: List of dictionaries with items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;episode</span><span class="si">{</span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">series</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="sa">f</span><span class="s1">&#39;/</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s1">&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;seriesId&quot;</span><span class="p">:</span> <span class="n">id_</span><span class="p">}</span> <span class="k">if</span> <span class="n">series</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+    <span class="c1"># GET /episode</span>
+<div class="viewcode-block" id="SonarrAPI.get_episodes_by_series_id"><a class="viewcode-back" href="../../modules/sonarr.html#pyarr.sonarr.SonarrAPI.get_episodes_by_series_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_episodes_by_series_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonArray</span><span class="p">:</span>
+        <span class="c1"># sourcery skip: class-extract-method</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets all episodes from a given series ID</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id_ (int): Database id for series</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            This method is deprecated and will be removed in a</span>
+<span class="sd">            future release. Please use get_episode()</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonArray: List of dictionaries with items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">warn</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">DEPRECATION_WARNING</span><span class="si">}</span><span class="s2"> Please use get_episode()&quot;</span><span class="p">,</span>
+            <span class="ne">DeprecationWarning</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;seriesId&quot;</span><span class="p">:</span> <span class="n">id_</span><span class="p">}</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s2">&quot;episode&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span></div>
+
+    <span class="c1"># GET /episode/{id}</span>
+<div class="viewcode-block" id="SonarrAPI.get_episode_by_episode_id"><a class="viewcode-back" href="../../modules/sonarr.html#pyarr.sonarr.SonarrAPI.get_episode_by_episode_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_episode_by_episode_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonObject</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets a specific episode by database id</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id_ (int): Database id for episode</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            This method is deprecated and will be removed in a</span>
+<span class="sd">            future release. Please use get_episode()</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonArray: List of dictionaries with items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">warn</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">DEPRECATION_WARNING</span><span class="si">}</span><span class="s2"> Please use get_episode()&quot;</span><span class="p">,</span>
+            <span class="ne">DeprecationWarning</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;episode/</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">)</span></div>
+
+    <span class="c1"># PUT /episode</span>
+<div class="viewcode-block" id="SonarrAPI.upd_episode"><a class="viewcode-back" href="../../modules/sonarr.html#pyarr.sonarr.SonarrAPI.upd_episode">[docs]</a>    <span class="k">def</span> <span class="nf">upd_episode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">JsonObject</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonObject</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the given episodes, currently only monitored is supported</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id_ (int): ID of the Episode to be updated</span>
+<span class="sd">            data (dict[str, Any]): Parameters to update the episode</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            ::</span>
+
+<span class="sd">                payload = {&quot;monitored&quot;: True}</span>
+<span class="sd">                sonarr.upd_episode(1, payload)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonObject: Dictionary with updated record</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_put</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;episode/</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
+
+    <span class="c1"># PUT /episode/monitor</span>
+<div class="viewcode-block" id="SonarrAPI.upd_episode_monitor"><a class="viewcode-back" href="../../modules/sonarr.html#pyarr.sonarr.SonarrAPI.upd_episode_monitor">[docs]</a>    <span class="k">def</span> <span class="nf">upd_episode_monitor</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">episode_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">monitored</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonArray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update episode monitored status</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            episode_ids (list[int]): All episode IDs to be updated</span>
+<span class="sd">            monitored (bool, optional): True or False. Defaults to True.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonArray: list of dictionaries containing updated records</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_put</span><span class="p">(</span>
+            <span class="s2">&quot;episode/monitor&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;episodeIds&quot;</span><span class="p">:</span> <span class="n">episode_ids</span><span class="p">,</span> <span class="s2">&quot;monitored&quot;</span><span class="p">:</span> <span class="n">monitored</span><span class="p">},</span>
+        <span class="p">)</span></div>
+
+    <span class="c1">## EPISODE FILE</span>
+
+    <span class="c1"># GET /episodefile</span>
+<div class="viewcode-block" id="SonarrAPI.get_episode_files_by_series_id"><a class="viewcode-back" href="../../modules/sonarr.html#pyarr.sonarr.SonarrAPI.get_episode_files_by_series_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_episode_files_by_series_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonArray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns all episode file information for series id specified</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id_ (int): Database id of series</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonArray: List of dictionaries with items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">warn</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">DEPRECATION_WARNING</span><span class="si">}</span><span class="s2"> Please use get_episode_file()&quot;</span><span class="p">,</span>
+            <span class="ne">DeprecationWarning</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;seriesId&quot;</span><span class="p">:</span> <span class="n">id_</span><span class="p">}</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s2">&quot;episodefile&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span></div>
+
+    <span class="c1"># GET /episodefile/{id}</span>
+<div class="viewcode-block" id="SonarrAPI.get_episode_file"><a class="viewcode-back" href="../../modules/sonarr.html#pyarr.sonarr.SonarrAPI.get_episode_file">[docs]</a>    <span class="k">def</span> <span class="nf">get_episode_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">series</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonObject</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns episode file information for specified id</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id_ (int): Database id of episode file</span>
+<span class="sd">            series (bool, optional): Set to true if the ID is for a Series. Defaults to false.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonObject: Dictionary with data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;episodefile</span><span class="si">{</span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">series</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="sa">f</span><span class="s1">&#39;/</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s1">&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;seriesId&quot;</span><span class="p">:</span> <span class="n">id_</span><span class="p">}</span> <span class="k">if</span> <span class="n">series</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+    <span class="c1"># DELETE /episodefile/{id}</span>
+<div class="viewcode-block" id="SonarrAPI.del_episode_file"><a class="viewcode-back" href="../../modules/sonarr.html#pyarr.sonarr.SonarrAPI.del_episode_file">[docs]</a>    <span class="k">def</span> <span class="nf">del_episode_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="n">JsonObject</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Deletes the episode file with corresponding id</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id_ (int): Database id for episode file</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Response: HTTP Response</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delete</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;episodefile/</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">)</span></div>
+
+    <span class="c1"># PUT /episodefile/{id}</span>
+<div class="viewcode-block" id="SonarrAPI.upd_episode_file_quality"><a class="viewcode-back" href="../../modules/sonarr.html#pyarr.sonarr.SonarrAPI.upd_episode_file_quality">[docs]</a>    <span class="k">def</span> <span class="nf">upd_episode_file_quality</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">JsonObject</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonObject</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the quality of the episode file and returns the episode file</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id_ (int): Database id for episode file</span>
+<span class="sd">            data (JsonObject): data with quality::</span>
+
+<span class="sd">                {</span>
+<span class="sd">                    &quot;quality&quot;: {</span>
+<span class="sd">                        &quot;quality&quot;: {</span>
+<span class="sd">                        &quot;id&quot;: 8</span>
+<span class="sd">                        },</span>
+<span class="sd">                        &quot;revision&quot;: {</span>
+<span class="sd">                        &quot;version&quot;: 1,</span>
+<span class="sd">                        &quot;real&quot;: 0</span>
+<span class="sd">                        }</span>
+<span class="sd">                    },</span>
+<span class="sd">                }</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonObject: Dictionary with updated record</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_put</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;episodefile/</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
+
+    <span class="c1"># GET /wanted/missing</span>
+<div class="viewcode-block" id="SonarrAPI.get_wanted"><a class="viewcode-back" href="../../modules/sonarr.html#pyarr.sonarr.SonarrAPI.get_wanted">[docs]</a>    <span class="k">def</span> <span class="nf">get_wanted</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">page</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">page_size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">sort_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SonarrSortKey</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">sort_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PyarrSortDirection</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">include_series</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonObject</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets missing episode (episodes without files)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            page (Optional[int], optional): Page number to return. Defaults to None.</span>
+<span class="sd">            page_size (Optional[int], optional): Number of items per page. Defaults to None.</span>
+<span class="sd">            sort_key (Optional[SonarrSortKey], optional): series.title or airDateUtc. Defaults to None.</span>
+<span class="sd">            sort_dir (Optional[PyarrSortDirection], optional): Direction to sort the items. Defaults to None.</span>
+<span class="sd">            include_series (Optional[bool], optional): Include the whole series. Defaults to None</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonObject: Dictionary with items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">SonarrSortKey</span><span class="p">,</span> <span class="n">PyarrSortDirection</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">page</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;page&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">page</span>
+        <span class="k">if</span> <span class="n">page_size</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;pageSize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">page_size</span>
+        <span class="k">if</span> <span class="n">sort_key</span> <span class="ow">and</span> <span class="n">sort_dir</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;sortKey&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sort_key</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;sortDirection&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sort_dir</span>
+        <span class="k">elif</span> <span class="n">sort_key</span> <span class="ow">or</span> <span class="n">sort_dir</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">PyarrMissingArgument</span><span class="p">(</span><span class="s2">&quot;sort_key and sort_dir  must be used together&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">include_series</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;includeSeries&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">include_series</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s2">&quot;wanted/missing&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span></div>
+
+    <span class="c1">## QUEUE</span>
+
+    <span class="c1"># GET /queue</span>
+<div class="viewcode-block" id="SonarrAPI.get_queue"><a class="viewcode-back" href="../../modules/sonarr.html#pyarr.sonarr.SonarrAPI.get_queue">[docs]</a>    <span class="k">def</span> <span class="nf">get_queue</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">page</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">page_size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">sort_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SonarrSortKey</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">sort_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PyarrSortDirection</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">include_unknown_series_items</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">include_series</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">include_episode</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonObject</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets currently downloading info</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            page (Optional[int], optional): Page number to return. Defaults to None.</span>
+<span class="sd">            page_size (Optional[int], optional): Number of items per page. Defaults to None.</span>
+<span class="sd">            sort_key (Optional[SonarrSortKey], optional): Field to sort by. Defaults to None.</span>
+<span class="sd">            sort_dir (Optional[PyarrSortDirection], optional): Direction to sort the items. Defaults to None.</span>
+<span class="sd">            include_unknown_series_items (Optional[bool], optional): Include unknown series items. Defaults to None.</span>
+<span class="sd">            include_series (Optional[bool], optional): Include series. Defaults to None.</span>
+<span class="sd">            include_episode (Optional[bool], optional): Include episodes. Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonObject: Dictionary with queue items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">SonarrSortKey</span><span class="p">,</span> <span class="n">PyarrSortDirection</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="n">page</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;page&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">page</span>
+        <span class="k">if</span> <span class="n">page_size</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;pageSize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">page_size</span>
+        <span class="k">if</span> <span class="n">sort_key</span> <span class="ow">and</span> <span class="n">sort_dir</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;sortKey&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sort_key</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;sortDirection&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sort_dir</span>
+        <span class="k">elif</span> <span class="n">sort_key</span> <span class="ow">or</span> <span class="n">sort_dir</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">PyarrMissingArgument</span><span class="p">(</span><span class="s2">&quot;sort_key and sort_dir  must be used together&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">include_unknown_series_items</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;includeUnknownSeriesItems&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">include_unknown_series_items</span>
+        <span class="k">if</span> <span class="n">include_series</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;includeSeries&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">include_series</span>
+        <span class="k">if</span> <span class="n">include_episode</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;includeEpisode&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">include_episode</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s2">&quot;queue&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span></div>
+
+    <span class="c1">## PARSE</span>
+
+<div class="viewcode-block" id="SonarrAPI.get_parse_title_path"><a class="viewcode-back" href="../../modules/sonarr.html#pyarr.sonarr.SonarrAPI.get_parse_title_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_parse_title_path</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonObject</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the result of parsing a title or path. series and episodes will be</span>
+<span class="sd">        returned only if the parsing matches to a specific series and one or more</span>
+<span class="sd">        episodes. series and episodes will be formatted the same as Series and Episode</span>
+<span class="sd">        responses.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            title (Optional[str], optional): Title of series or episode. Defaults to None.</span>
+<span class="sd">            path (Optional[str], optional): file path of series or episode. Defaults to None.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            PyarrMissingArgument: If no argument is passed, error</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonObject: Dictionary with items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">PyarrMissingArgument</span><span class="p">(</span><span class="s2">&quot;A title or path must be specified&quot;</span><span class="p">)</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">title</span>
+        <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s2">&quot;parse&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span></div>
+
+    <span class="c1"># GET /parse</span>
+<div class="viewcode-block" id="SonarrAPI.get_parsed_title"><a class="viewcode-back" href="../../modules/sonarr.html#pyarr.sonarr.SonarrAPI.get_parsed_title">[docs]</a>    <span class="k">def</span> <span class="nf">get_parsed_title</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonObject</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the result of parsing a title. series and episodes will be</span>
+<span class="sd">        returned only if the parsing matches to a specific series and one or more</span>
+<span class="sd">        episodes. series and episodes will be formatted the same as Series and Episode</span>
+<span class="sd">        responses.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            title (str): Title of series / episode</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonObject: List of dictionaries with items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">warn</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">DEPRECATION_WARNING</span><span class="si">}</span><span class="s2"> Please use get_parse_title_path()&quot;</span><span class="p">,</span>
+            <span class="ne">DeprecationWarning</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s2">&quot;parse&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">title</span><span class="p">})</span></div>
+
+    <span class="c1"># GET /parse</span>
+<div class="viewcode-block" id="SonarrAPI.get_parsed_path"><a class="viewcode-back" href="../../modules/sonarr.html#pyarr.sonarr.SonarrAPI.get_parsed_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_parsed_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonObject</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the result of parsing a file path. series and episodes will be</span>
+<span class="sd">        returned only if the parsing matches to a specific series and one or more</span>
+<span class="sd">        episodes. series and episodes will be formatted the same as Series and Episode</span>
+<span class="sd">        responses.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            file_path (str): file path of series / episode</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonObject: List of dictionaries with items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">warn</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">DEPRECATION_WARNING</span><span class="si">}</span><span class="s2"> Please use get_parse_title_path()&quot;</span><span class="p">,</span>
+            <span class="ne">DeprecationWarning</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s2">&quot;parse&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">file_path</span><span class="p">})</span></div>
+
+    <span class="c1">## RELEASE</span>
+
+    <span class="c1"># GET /release</span>
+<div class="viewcode-block" id="SonarrAPI.get_release"><a class="viewcode-back" href="../../modules/sonarr.html#pyarr.sonarr.SonarrAPI.get_release">[docs]</a>    <span class="nd">@alias</span><span class="p">(</span><span class="s2">&quot;get_releases&quot;</span><span class="p">,</span> <span class="n">deprecated_version</span><span class="o">=</span><span class="s2">&quot;6.0.0&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">get_release</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonArray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Query indexers for latest releases.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id_ (int): Database id for episode to check</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonArray: List of dictionaries with items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s2">&quot;release&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;episodeId&quot;</span><span class="p">:</span> <span class="n">id_</span><span class="p">}</span> <span class="k">if</span> <span class="n">id_</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span></div>
+
+    <span class="c1"># POST /release</span>
+<div class="viewcode-block" id="SonarrAPI.post_release"><a class="viewcode-back" href="../../modules/sonarr.html#pyarr.sonarr.SonarrAPI.post_release">[docs]</a>    <span class="nd">@alias</span><span class="p">(</span><span class="s2">&quot;download_release&quot;</span><span class="p">,</span> <span class="s2">&quot;6.0.0&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">post_release</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">guid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">indexer_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonObject</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds a previously searched release to the download client, if the release is</span>
+<span class="sd">         still in Sonarr&#39;s search cache (30 minute cache). If the release is not found</span>
+<span class="sd">         in the cache Sonarr will return a 404.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            guid (str): Recently searched result guid</span>
+<span class="sd">            indexer_id (int): Database id of indexer to use</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonObject: Dictionary with download release details</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;guid&quot;</span><span class="p">:</span> <span class="n">guid</span><span class="p">,</span> <span class="s2">&quot;indexerId&quot;</span><span class="p">:</span> <span class="n">indexer_id</span><span class="p">}</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="s2">&quot;release&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
+
+    <span class="c1"># POST /release/push</span>
+    <span class="c1"># TODO: find response</span>
+<div class="viewcode-block" id="SonarrAPI.post_release_push"><a class="viewcode-back" href="../../modules/sonarr.html#pyarr.sonarr.SonarrAPI.post_release_push">[docs]</a>    <span class="nd">@alias</span><span class="p">(</span><span class="s2">&quot;push_release&quot;</span><span class="p">,</span> <span class="s2">&quot;6.0.0&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">post_release_push</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">download_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">protocol</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">publish_date</span><span class="p">:</span> <span class="n">datetime</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;If the title is wanted, Sonarr will grab it.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            title (str): Release name</span>
+<span class="sd">            download_url (str): .torrent file URL</span>
+<span class="sd">            protocol (str): &quot;Usenet&quot; or &quot;Torrent</span>
+<span class="sd">            publish_date (datetime): ISO8601 date</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JSON: Array</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">title</span><span class="p">,</span>
+            <span class="s2">&quot;downloadUrl&quot;</span><span class="p">:</span> <span class="n">download_url</span><span class="p">,</span>
+            <span class="s2">&quot;protocol&quot;</span><span class="p">:</span> <span class="n">protocol</span><span class="p">,</span>
+            <span class="s2">&quot;publishDate&quot;</span><span class="p">:</span> <span class="n">publish_date</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="s2">&quot;release/push&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
+
+    <span class="c1">## SERIES</span>
+    <span class="c1"># GET /series and /series/{id}</span>
+<div class="viewcode-block" id="SonarrAPI.get_series"><a class="viewcode-back" href="../../modules/sonarr.html#pyarr.sonarr.SonarrAPI.get_series">[docs]</a>    <span class="k">def</span> <span class="nf">get_series</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">id_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">tvdb</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">JsonArray</span><span class="p">,</span> <span class="n">JsonObject</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns all series in your collection or the series with the matching</span>
+<span class="sd">        series ID if one is found.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id_ (Optional[int], optional): Database id for series. Defaults to None.</span>
+<span class="sd">            tvdb (Optional[bool], optional): Set to true if ID is tvdb. Defaults to False</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Union[JsonArray, JsonObject]: List of dictionaries with items, or a</span>
+<span class="sd">            dictionary with single item</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">id_</span> <span class="ow">and</span> <span class="n">tvdb</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;series?tvdbId=</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;series</span><span class="si">{</span><span class="sa">f</span><span class="s1">&#39;/</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s1">&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">id_</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">)</span></div>
+
+    <span class="c1"># POST /series</span>
+<div class="viewcode-block" id="SonarrAPI.add_series"><a class="viewcode-back" href="../../modules/sonarr.html#pyarr.sonarr.SonarrAPI.add_series">[docs]</a>    <span class="k">def</span> <span class="nf">add_series</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">series</span><span class="p">:</span> <span class="n">JsonObject</span><span class="p">,</span>
+        <span class="n">quality_profile_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">language_profile_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">root_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">season_folder</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">monitored</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">ignore_episodes_with_files</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">ignore_episodes_without_files</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">search_for_missing_episodes</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonObject</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds a new series to your collection</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            if you do not add the required params, then the series wont function. some of these without the others can</span>
+<span class="sd">            indeed make a &quot;series&quot;. But it wont function properly in nzbdrone.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            series (JsonObject): A series object from `lookup()`</span>
+<span class="sd">            quality_profile_id (int): Database id for quality profile</span>
+<span class="sd">            language_profile_id (int): Database id for language profile</span>
+<span class="sd">            root_dir (str): Root folder location, full path will be created from this</span>
+<span class="sd">            season_folder (bool, optional): Create a folder for each season. Defaults to True.</span>
+<span class="sd">            monitored (bool, optional): Monitor this series. Defaults to True.</span>
+<span class="sd">            ignore_episodes_with_files (bool, optional): Ignore any episodes with existing files. Defaults to False.</span>
+<span class="sd">            ignore_episodes_without_files (bool, optional): Ignore any episodes without existing files. Defaults to False.</span>
+<span class="sd">            search_for_missing_episodes (bool, optional): Search for missing episodes to download. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonObject: Dictionary of added record</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">monitored</span> <span class="ow">and</span> <span class="n">series</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;seasons&quot;</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">series</span><span class="p">[</span><span class="s2">&quot;seasons&quot;</span><span class="p">]:</span>
+                <span class="n">season</span><span class="p">[</span><span class="s2">&quot;monitored&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="n">series</span><span class="p">[</span><span class="s2">&quot;rootFolderPath&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">root_dir</span>
+        <span class="n">series</span><span class="p">[</span><span class="s2">&quot;qualityProfileId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">quality_profile_id</span>
+        <span class="n">series</span><span class="p">[</span><span class="s2">&quot;languageProfileId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">language_profile_id</span>
+        <span class="n">series</span><span class="p">[</span><span class="s2">&quot;seasonFolder&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">season_folder</span>
+        <span class="n">series</span><span class="p">[</span><span class="s2">&quot;monitored&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">monitored</span>
+        <span class="n">series</span><span class="p">[</span><span class="s2">&quot;addOptions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;ignoreEpisodesWithFiles&quot;</span><span class="p">:</span> <span class="n">ignore_episodes_with_files</span><span class="p">,</span>
+            <span class="s2">&quot;ignoreEpisodesWithoutFiles&quot;</span><span class="p">:</span> <span class="n">ignore_episodes_without_files</span><span class="p">,</span>
+            <span class="s2">&quot;searchForMissingEpisodes&quot;</span><span class="p">:</span> <span class="n">search_for_missing_episodes</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="s2">&quot;series&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">series</span><span class="p">)</span></div>
+
+    <span class="c1"># PUT /series</span>
+<div class="viewcode-block" id="SonarrAPI.upd_series"><a class="viewcode-back" href="../../modules/sonarr.html#pyarr.sonarr.SonarrAPI.upd_series">[docs]</a>    <span class="k">def</span> <span class="nf">upd_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">JsonObject</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonObject</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update an existing series</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (JsonObject): contains data obtained by get_series()</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonObject: Dictionary or updated record</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_put</span><span class="p">(</span><span class="s2">&quot;series&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
+
+    <span class="c1"># DELETE /series/{id}</span>
+<div class="viewcode-block" id="SonarrAPI.del_series"><a class="viewcode-back" href="../../modules/sonarr.html#pyarr.sonarr.SonarrAPI.del_series">[docs]</a>    <span class="k">def</span> <span class="nf">del_series</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">id_</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">delete_files</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="n">JsonObject</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Delete the series with the given ID</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id_ (int): Database ID for series</span>
+<span class="sd">            delete_files (bool, optional): If true series folder and files will be deleted. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: Blank dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># File deletion does not work</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;deleteFiles&quot;</span><span class="p">:</span> <span class="n">delete_files</span><span class="p">}</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delete</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;series/</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span></div>
+
+    <span class="c1"># GET /series/lookup</span>
+<div class="viewcode-block" id="SonarrAPI.lookup_series"><a class="viewcode-back" href="../../modules/sonarr.html#pyarr.sonarr.SonarrAPI.lookup_series">[docs]</a>    <span class="k">def</span> <span class="nf">lookup_series</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">term</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">id_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonArray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Searches for new shows on TheTVDB.com utilizing sonarr.tv&#39;s caching and augmentation proxy.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            term (Optional[str], optional): Series&#39; Name</span>
+<span class="sd">            id_ (Optional[int], optional): TVDB ID for series</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonArray: List of dictionaries with items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">term</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">id_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">PyarrMissingArgument</span><span class="p">(</span><span class="s2">&quot;A term or TVDB id must be included&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s2">&quot;series/lookup&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;term&quot;</span><span class="p">:</span> <span class="n">term</span> <span class="ow">or</span> <span class="sa">f</span><span class="s2">&quot;tvdb:</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">})</span></div>
+
+    <span class="c1"># GET /series/lookup</span>
+<div class="viewcode-block" id="SonarrAPI.lookup_series_by_tvdb_id"><a class="viewcode-back" href="../../modules/sonarr.html#pyarr.sonarr.SonarrAPI.lookup_series_by_tvdb_id">[docs]</a>    <span class="k">def</span> <span class="nf">lookup_series_by_tvdb_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonArray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Searches for new shows on TheTVDB.com utilizing sonarr.tv&#39;s caching and augmentation proxy.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            This method is deprecated and will be removed in a future release. Please use lookup_series()</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id_ (int): TVDB ID</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonArray: List of dictionaries with items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">warn</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">DEPRECATION_WARNING</span><span class="si">}</span><span class="s2"> Please use lookup_series()&quot;</span><span class="p">,</span>
+            <span class="ne">DeprecationWarning</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;term&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;tvdb:</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s2">&quot;series/lookup&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span></div>
+
+    <span class="c1"># GET /history</span>
+    <span class="c1"># Overrides base get history for ID</span>
+<div class="viewcode-block" id="SonarrAPI.get_history"><a class="viewcode-back" href="../../modules/sonarr.html#pyarr.sonarr.SonarrAPI.get_history">[docs]</a>    <span class="k">def</span> <span class="nf">get_history</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">page</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">page_size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">sort_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PyarrHistorySortKey</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">sort_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PyarrSortDirection</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">id_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonObject</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets history (grabs/failures/completed)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            page (Optional[int], optional): Page number to return. Defaults to None.</span>
+<span class="sd">            page_size (Optional[int], optional): Number of items per page. Defaults to None.</span>
+<span class="sd">            sort_key (Optional[PyarrHistorySortKey], optional): Field to sort by. Defaults to None.</span>
+<span class="sd">            sort_dir (Optional[PyarrSortDirection], optional): Direction to sort the items. Defaults to None.</span>
+<span class="sd">            id_ (Optional[int], optional): Filter to a specific episode ID. Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">           JsonObject: Dictionary with items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span>
+            <span class="nb">str</span><span class="p">,</span>
+            <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">PyarrHistorySortKey</span><span class="p">,</span> <span class="n">PyarrSortDirection</span><span class="p">],</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="n">page</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;page&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">page</span>
+
+        <span class="k">if</span> <span class="n">page_size</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;pageSize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">page_size</span>
+
+        <span class="k">if</span> <span class="n">sort_key</span> <span class="ow">and</span> <span class="n">sort_dir</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;sortKey&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sort_key</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;sortDirection&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sort_dir</span>
+        <span class="k">elif</span> <span class="n">sort_key</span> <span class="ow">or</span> <span class="n">sort_dir</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">PyarrMissingArgument</span><span class="p">(</span><span class="s2">&quot;sort_key and sort_dir  must be used together&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">id_</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;episodeId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">id_</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s2">&quot;history&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span></div>
+
+    <span class="c1"># GET /languageprofile/{id}</span>
+<div class="viewcode-block" id="SonarrAPI.get_language_profile"><a class="viewcode-back" href="../../modules/sonarr.html#pyarr.sonarr.SonarrAPI.get_language_profile">[docs]</a>    <span class="k">def</span> <span class="nf">get_language_profile</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">id_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">JsonArray</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets all language profiles or specific one with id</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id_ (Optional[int], optional): Language profile id from database. Defaults to None.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            This method is deprecated and will be removed in a</span>
+<span class="sd">            future release. Please use get_language()</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Union[JsonArray, dict[Any, Any]]: List of dictionaries with items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">warn</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">DEPRECATION_WARNING</span><span class="si">}</span><span class="s2"> Please use get_language()&quot;</span><span class="p">,</span>
+            <span class="ne">DeprecationWarning</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;languageprofile</span><span class="si">{</span><span class="sa">f</span><span class="s1">&#39;/</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s1">&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">id_</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">)</span></div>
+
+    <span class="c1"># GET /languageprofile/schema/{id}</span>
+<div class="viewcode-block" id="SonarrAPI.get_language_profile_schema"><a class="viewcode-back" href="../../modules/sonarr.html#pyarr.sonarr.SonarrAPI.get_language_profile_schema">[docs]</a>    <span class="k">def</span> <span class="nf">get_language_profile_schema</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">id_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">JsonArray</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets all language profile schemas or specific one with id</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id_ (Optional[int], optional): Language profile schema id from database. Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Union[JsonArray, dict[Any, Any]]: List of dictionaries with items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;languageprofile/schema</span><span class="si">{</span><span class="sa">f</span><span class="s1">&#39;/</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s1">&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">id_</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">)</span></div>
+
+    <span class="c1"># POST /qualityprofile</span>
+<div class="viewcode-block" id="SonarrAPI.add_quality_profile"><a class="viewcode-back" href="../../modules/sonarr.html#pyarr.sonarr.SonarrAPI.add_quality_profile">[docs]</a>    <span class="k">def</span> <span class="nf">add_quality_profile</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">upgrades_allowed</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">cutoff</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">items</span><span class="p">:</span> <span class="nb">list</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonObject</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add new quality profile</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): Name of the profile</span>
+<span class="sd">            upgrades_allowed (bool): Are upgrades in quality allowed?</span>
+<span class="sd">            cutoff (int): ID of quality definition to cutoff at. Must be an allowed definition ID.</span>
+<span class="sd">            items (list): Add a list of items (from `get_quality_definition()`)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonObject: An object containing the profile</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;upgradeAllowed&quot;</span><span class="p">:</span> <span class="n">upgrades_allowed</span><span class="p">,</span>
+            <span class="s2">&quot;cutoff&quot;</span><span class="p">:</span> <span class="n">cutoff</span><span class="p">,</span>
+            <span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="n">items</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="s2">&quot;qualityprofile&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
+
+    <span class="c1"># GET /manualimport</span>
+<div class="viewcode-block" id="SonarrAPI.get_manual_import"><a class="viewcode-back" href="../../modules/sonarr.html#pyarr.sonarr.SonarrAPI.get_manual_import">[docs]</a>    <span class="k">def</span> <span class="nf">get_manual_import</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">folder</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">download_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">series_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">filter_existing_files</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">replace_existing_files</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonArray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets a manual import list</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            downloadId (str): Download IDs</span>
+<span class="sd">            series_id (int, optional): Series Database ID. Defaults to None.</span>
+<span class="sd">            folder (Optional[str], optional): folder name. Defaults to None.</span>
+<span class="sd">            filterExistingFiles (bool, optional): filter files. Defaults to True.</span>
+<span class="sd">            replaceExistingFiles (bool, optional): replace files. Defaults to True.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonArray: List of dictionaries with items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;folder&quot;</span><span class="p">:</span> <span class="n">folder</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">download_id</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;downloadId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">download_id</span>
+        <span class="k">if</span> <span class="n">series_id</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;seriesId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">series_id</span>
+        <span class="k">if</span> <span class="n">filter_existing_files</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;filterExistingFiles&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">filter_existing_files</span>
+        <span class="k">if</span> <span class="n">replace_existing_files</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;replaceExistingFiles&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">replace_existing_files</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s2">&quot;manualimport&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span></div>
+
+    <span class="c1"># PUT /manualimport</span>
+<div class="viewcode-block" id="SonarrAPI.upd_manual_import"><a class="viewcode-back" href="../../modules/sonarr.html#pyarr.sonarr.SonarrAPI.upd_manual_import">[docs]</a>    <span class="k">def</span> <span class="nf">upd_manual_import</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">JsonObject</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonObject</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update a manual import</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            To be used in conjunction with get_manual_import()</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (JsonObject): Data containing changes</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            JsonObject: Dictionary of updated record</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_put</span><span class="p">(</span><span class="s2">&quot;manualimport&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ver_uri</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Steven Marks, TotalDebug.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
