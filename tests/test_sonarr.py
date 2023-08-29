@@ -146,7 +146,7 @@ def test_upd_series(sonarr_client: SonarrAPI):
     series = sonarr_client.get_series()
     series[0]["monitored"] = False
 
-    data = sonarr_client.upd_series(data=series[0])
+    data = sonarr_client.upd_series(data=series[0], move_files=True)
     assert isinstance(data, dict)
     assert data["monitored"] is False
 

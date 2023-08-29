@@ -527,16 +527,24 @@ class SonarrAPI(BaseArrAPI):
         return self._post("series", self.ver_uri, data=series)
 
     # PUT /series
-    def upd_series(self, data: JsonObject) -> JsonObject:
+    def upd_series(
+            self, 
+            data: JsonObject, 
+            move_files: Optional[bool] = None,
+    ) -> JsonObject:
         """Update an existing series
 
         Args:
             data (JsonObject): contains data obtained by get_series()
+            move_files (Optional[bool], optional): Have sonarr move files when updating. Defaults to None.
 
         Returns:
             JsonObject: Dictionary or updated record
         """
-        return self._put("series", self.ver_uri, data=data)
+        params = {}
+        if move_files is not None:
+            params["moveFiles"] = move_files
+        return self._put("series", self.ver_uri, data=data, params=params)
 
     # DELETE /series/{id}
     def del_series(
