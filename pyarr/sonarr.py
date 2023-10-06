@@ -735,17 +735,17 @@ class SonarrAPI(BaseArrAPI):
 
         return self._get("manualimport", self.ver_uri, params=params)
 
-    # PUT /manualimport
-    def upd_manual_import(self, data: JsonObject) -> JsonObject:
-        """Update a manual import
+    # POST /manualimport
+    def add_manual_import(self, data: JsonArray) -> JsonArray:
+        """Add a manual import
 
         Note:
             To be used in conjunction with get_manual_import()
 
         Args:
-            data (JsonObject): Data containing changes
+            data (JsonArray): Data for the import
 
         Returns:
-            JsonObject: Dictionary of updated record
+            JsonArray: Array of dicts of the new imports
         """
-        return self._put("manualimport", self.ver_uri, data=data)
+        return self._post("manualimport", self.ver_uri, data=data)
