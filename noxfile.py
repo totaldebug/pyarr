@@ -147,16 +147,33 @@ def test_style(session: Session) -> None:
 
 
 @nox.session(reuse_venv=True)
+def serve_docs(session: Session) -> None:
+    """Create local copy of docs for testing"""
+    session.run("poetry", "install", external=True)
+    session.run("sphinx-autobuild", "docs", "build")
+
+
+@nox.session(reuse_venv=True)
+def build_docs(session: Session) -> None:
+    """Create local copy of docs for testing"""
+    session.run("poetry", "install", external=True)
+    session.run("sphinx-build", "-b", "html", "docs", "build")
+
+@nox.session(reuse_venv=True)
+def install_release(session: Session) -> None:
+    session.run("npm", "install", "@semantic-release/changelog")
+    session.run("npm", "install", "@semantic-release/exec")
+    session.run("npm", "install", "@semantic-release/git")
+    session.run("npm", "install", "@semantic-release/github")
+    session.run("npm", "install", "conventional-changelog-conventionalcommits@7.0.2")
+    session.run("npm", "install", "semantic-release-pypi")
+
+@nox.session(reuse_venv=True)
 def release(session: Session) -> None:
     """Release a new version of the package"""
     pypi_password = session.posargs[0]
     session.run("poetry", "install", external=True)
+    session.notify("install_release")
+    session.run("npx", "semantic-release", "--debug")
     session.run("poetry", "build", external=True)
-    session.run("poetry", "publish", "-u", "__token__", "-p", pypi_password)
-
-
-@nox.session(reuse_venv=True)
-def docs(session: Session) -> None:
-    """Create local copy of docs for testing"""
-    session.run("poetry", "install", external=True)
-    session.run("sphinx-build", "sphinx-docs", "build")
+    session.run("poetry", "publish", "-u", "__token__", "-p", pypi_password, external=True)

@@ -1,11 +1,9 @@
----
-name: Semantic Release
+name: release
 
 on:
   push:
-    branches:
-      - main
-      - beta
+    tags:
+      - 'v*'
   workflow_dispatch:
 
 jobs:
@@ -38,46 +36,35 @@ jobs:
         run: |
           pip install poetry nox
           nox -s tests
-  release:
+
+  build-n-publish:
     name: Create release and publish 🐍 distribution 📦 to PyPI
+    if: startsWith(github.ref, 'refs/tags/')
     needs: [code-quality]
     runs-on: ubuntu-latest
-    concurrency: release
-    permissions:
-      id-token: write
-      contents: write
-
     steps:
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
+      - name: Getting your configuration from GitHub
+        uses: actions/checkout@v2
+      - name: 🛎️ Create release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          generate_release_notes: true
+          prerelease: ${{ contains(needs.tag_version.outputs.tag, '-rc') || contains(needs.tag_version.outputs.tag, '-b') || contains(needs.tag_version.outputs.tag, '-a') }}
+      - name: 🏷️ Update latest tag
+        uses: EndBug/latest-tag@latest
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20
-
-    - uses: actions/setup-python@v5
-      with:
-        python-version: '3.12'
-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        python -m pip install poetry nox
-        npm install @semantic-release/changelog
-        npm install @semantic-release/exec
-        npm install @semantic-release/git
-        npm install @semantic-release/github
-        npm install conventional-changelog-conventionalcommits@7.0.2
-        npm install semantic-release-pypi
-
-    - name: Run Release
-      run: |
-        nox -rs release -- "$PYPI_PASSWORD"
-      env:
-        PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: 🏷️ Update latest tag
-      uses: EndBug/latest-tag@latest
+      # PyPi release steps
+      - name: Set up Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.11
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install poetry nox
+      - name: Publish distribution 📦 to PyPI
+        run: |
+          nox -rs release -- "$PYPI_PASSWORD"
+        env:
+          PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}

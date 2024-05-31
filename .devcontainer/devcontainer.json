@@ -1,0 +1,69 @@
+{
+	"name": "PyArr",
+	"dockerComposeFile": [
+		"docker-compose.workspace.yml"
+	],
+	"service": "pyarr-workspace",
+	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+	"forwardPorts": [
+		"sonarr:8989",
+		"radarr:7878",
+		"readarr:8787",
+		"lidarr:8686"
+	],
+	"initializeCommand": "echo 'Hello World!'",
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"[python]": {
+					"diffEditor.ignoreTrimWhitespace": false,
+					"editor.formatOnType": true,
+					"editor.wordBasedSuggestions": "off",
+					"editor.defaultFormatter": "ms-python.black-formatter",
+					"autoDocstring.docstringFormat": "google",
+					"editor.tabSize": 4
+				},
+				"[yaml]": {
+					"editor.insertSpaces": true,
+					"editor.tabSize": 2,
+					"editor.autoIndent": "advanced",
+					"diffEditor.ignoreTrimWhitespace": false
+				},
+				"files.eol": "\n",
+				"terminal.integrated.profiles.linux": {
+					"zsh": {
+						"path": "/bin/zsh"
+					}
+				},
+				"terminal.integrated.defaultProfile.linux": "zsh",
+				"editor.formatOnPaste": false,
+				"editor.formatOnSave": true,
+				"editor.formatOnType": true,
+				"files.trimTrailingWhitespace": true
+			},
+			"extensions": [
+				"sourcery.sourcery",
+				"njpwerner.autodocstring",
+				"ms-python.flake8",
+				"dbaeumer.vscode-eslint",
+				"ms-python.isort",
+				"ms-python.python",
+				"ms-python.vscode-pylance",
+				"ms-python.black-formatter",
+				"GitHub.vscode-github-actions",
+				"yzhang.markdown-all-in-one"
+			],
+			"runArgs": [
+				"--network=pyarr-dev"
+			]
+		}
+	},
+	"remoteUser": "vscode",
+	"postCreateCommand": "zsh ./.devcontainer/post-install.sh",
+	"mounts": [
+		/* Re-use local SSH keys (useful if you use SSH keys for Git repo access or other SSH work)*/
+		"source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached",
+		/* Re-use local Git configuration*/
+		"source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig,type=bind,consistency=cached",
+	]
+}

@@ -1,0 +1,38 @@
+name: Sphinx Documentation Build and Publish
+
+on:
+  push:
+    branches:
+      - main  # Adjust branch name as needed
+    paths:
+      - "docs/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12  # Adjust Python version as needed
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install poetry nox
+          pip install -r docs/requirements.txt
+
+      - name: Build documentation
+        run: |
+          nox -s build_docs
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/

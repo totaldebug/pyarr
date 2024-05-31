@@ -25,13 +25,6 @@ coverage.xml
 _build
 .nox
 
-.devcontainer/*
-!.devcontainer/recommended-devcontainer.json
-!.devcontainer/Dockerfile
-!.devcontainer/recommended-docker-compose.yml
-!.devcontainer/docker-compose.workspace.yml
-!.devcontainer/post-install.sh
-
 tests/docker_configs/sonarr/*
 !tests/docker_configs/sonarr/config.xml
 tests/docker_configs/radarr/*

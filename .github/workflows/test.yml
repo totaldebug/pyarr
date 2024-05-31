@@ -3,10 +3,11 @@ name: tests
 on:
   push:
     branches:
-      - master
+      - beta
   pull_request:
     branches:
-      - master
+      - main
+      - beta
   schedule:
     - cron: "0 0 * * *"
   workflow_dispatch:
