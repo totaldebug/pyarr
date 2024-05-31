@@ -472,7 +472,7 @@ def test_get_notification_schema(sonarr_client: SonarrAPI):
     data = sonarr_client.get_notification_schema()
     assert isinstance(data, list)
 
-    data = sonarr_client.get_notification_schema(implementation="Boxcar")
+    data = sonarr_client.get_notification_schema(implementation="Apprise")
     assert isinstance(data, list)
 
     with contextlib.suppress(PyarrRecordNotFound):

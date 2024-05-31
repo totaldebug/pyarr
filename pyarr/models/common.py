@@ -71,7 +71,7 @@ Note:
 
 #: Notification schema implementations
 PyarrNotificationSchema = Literal[
-    "Boxcar",
+    "Apprise",
     "CustomScript",
     "Discord",
     "Email",
@@ -80,13 +80,16 @@ PyarrNotificationSchema = Literal[
     "Join",
     "Xbmc",
     "MailGun",
-    "PlexHomeTheater",
-    "PlexClient",
+    "Notifiarr",
+    "Ntfy",
     "PlexServer",
     "Prowl",
     "PushBullet",
+    "Pushcut",
     "Pushover",
     "SendGrid",
+    "Signal",
+    "Simplepush",
     "Slack",
     "SynologyIndexer",
     "Telegram",
@@ -102,6 +105,7 @@ PyarrDownloadClientSchema = Literal[
     "TorrentDownloadStation",
     "UsenetDownloadStation",
     "Flood",
+    "TorrentFreeboxDownload",
     "Hadouken",
     "Nzbget",
     "NzbVortex",
@@ -118,7 +122,13 @@ PyarrDownloadClientSchema = Literal[
 
 #: Import List schema implementations
 PyarrImportListSchema = Literal[
+    "AniListImport",
+    "CustomImport",
+    "ImdbListImport",
+    "MyAnimeListImport",
     "PlexImport",
+    "PlexRssImport",
+    "SimklUserImport",
     "SonarrImport",
     "TraktListImport",
     "TraktPopularImport",

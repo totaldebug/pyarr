@@ -338,7 +338,7 @@ def test_get_notification_schema(radarr_client: RadarrAPI):
     data = radarr_client.get_notification_schema()
     assert isinstance(data, list)
 
-    data = radarr_client.get_notification_schema(implementation="Boxcar")
+    data = radarr_client.get_notification_schema(implementation="Apprise")
     assert isinstance(data, list)
 
     with contextlib.suppress(PyarrRecordNotFound):
