@@ -12,6 +12,6 @@ RUN su vscode -c "umask 0002 && sudo pip3 install nox-poetry nox"
 
 RUN wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O - | zsh || true
 
-RUN poetry congfig virtualenvs.in-project true
+RUN poetry config virtualenvs.in-project true
 
 CMD ["zsh"]
