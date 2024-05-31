@@ -138,7 +138,6 @@ class RadarrAPI(BaseArrAPI):
         params = {}
         if move_files is not None:
             params["moveFiles"] = move_files
-        print(type(data))
         return self._put(
             "movie",
             self.ver_uri,
