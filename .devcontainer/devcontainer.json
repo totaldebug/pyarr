@@ -4,7 +4,7 @@
 		"docker-compose.workspace.yml"
 	],
 	"service": "pyarr-workspace",
-	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+	"workspaceFolder": "/workspaces",
 	"forwardPorts": [
 		"sonarr:8989",
 		"radarr:7878",
