@@ -64,6 +64,6 @@
 		/* Re-use local SSH keys (useful if you use SSH keys for Git repo access or other SSH work)*/
 		"source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached",
 		/* Re-use local Git configuration*/
-		"source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig,type=bind,consistency=cached",
+		"source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig,type=bind,consistency=cached"
 	]
 }
