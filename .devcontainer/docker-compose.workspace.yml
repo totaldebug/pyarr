@@ -8,8 +8,5 @@ services:
       dockerfile: Dockerfile
     container_name: pyarr-workspace
     volumes:
-      - type: bind
-        source: /var/run/docker.sock
-        target: /var/run/docker.sock
       - ..:/workspaces:cached
     command: sleep infinity

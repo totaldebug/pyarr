@@ -54,10 +54,17 @@
 				"yzhang.markdown-all-in-one"
 			],
 			"runArgs": [
+				"--privileged",
 				"--network=pyarr-dev"
 			]
 		}
 	},
 	"remoteUser": "vscode",
-	"postCreateCommand": "zsh ./.devcontainer/post-install.sh"
+	"postCreateCommand": "zsh ./.devcontainer/post-install.sh",
+	"features": {
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {
+			"version": "latest",
+			"moby": true
+		}
+	}
 }
