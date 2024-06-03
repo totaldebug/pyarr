@@ -62,7 +62,7 @@
 	"remoteUser": "vscode",
 	"postCreateCommand": "zsh ./.devcontainer/post-install.sh",
 	"features": {
-		"ghcr.io/devcontainers/features/docker-in-docker:2": {
+		"ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
 			"version": "latest",
 			"moby": true
 		}
