@@ -6,10 +6,10 @@
 	"service": "pyarr-workspace",
 	"workspaceFolder": "/workspaces",
 	"forwardPorts": [
-		"sonarr:8989",
-		"radarr:7878",
-		"readarr:8787",
-		"lidarr:8686"
+		8989,
+		7878,
+		8787,
+		8686
 	],
 	"initializeCommand": "echo 'Hello World!'",
 	"customizations": {
@@ -50,6 +50,7 @@
 				"ms-python.python",
 				"ms-python.vscode-pylance",
 				"ms-python.black-formatter",
+				"ms-toolsai.jupyter",
 				"GitHub.vscode-github-actions",
 				"yzhang.markdown-all-in-one"
 			],
@@ -62,7 +63,7 @@
 	"remoteUser": "vscode",
 	"postCreateCommand": "zsh ./.devcontainer/post-install.sh",
 	"features": {
-		"ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {
 			"version": "latest",
 			"moby": true
 		}

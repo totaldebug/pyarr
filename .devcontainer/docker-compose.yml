@@ -1,6 +1,5 @@
 ---
 
-version: '3'
 services:
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
@@ -50,27 +49,3 @@ services:
     ports:
       - 8686:8686
     restart: unless-stopped
-  #deluge:
-  #  image: lscr.io/linuxserver/deluge:latest
-  #  container_name: deluge
-  #  environment:
-  #    - PUID=1000
-  #    - PGID=1000
-  #    - TZ=Europe/London
-  #  volumes:
-  #    - ../tests/docker_configs/deluge/config:/config
-  #  ports:
-  #    - 8112:8112
-  #  restart: unless-stopped
-  #jackett:
-  #  image: lscr.io/linuxserver/jackett:latest
-  #  container_name: jackett
-  #  environment:
-  #    - PUID=1000
-  #    - PGID=1000
-  #    - TZ=Europe/London
-  #  volumes:
-  #    - ../tests/docker_configs/jackett/config:/config
-  #  ports:
-  #    - 9117:9117
-  #  restart: unless-stopped
