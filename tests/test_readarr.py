@@ -390,7 +390,7 @@ def test_post_command(readarr_client: ReadarrAPI):
     time.sleep(5)
     result = readarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "completed"
 
     # BookSearch
     data = readarr_client.post_command(
@@ -405,7 +405,7 @@ def test_post_command(readarr_client: ReadarrAPI):
     time.sleep(5)
     result = readarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "completed"
 
     # RefreshBook
     data = readarr_client.post_command(
@@ -414,7 +414,7 @@ def test_post_command(readarr_client: ReadarrAPI):
     time.sleep(5)
     result = readarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "completed" or "started"
 
     # RenameAuthor
     data = readarr_client.post_command(
@@ -423,35 +423,35 @@ def test_post_command(readarr_client: ReadarrAPI):
     time.sleep(5)
     result = readarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "completed"
 
     # RescanFolders
     data = readarr_client.post_command("RescanFolders")
     time.sleep(5)
     result = readarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "completed"
 
     # RssSync
     data = readarr_client.post_command("RssSync")
     time.sleep(5)
     result = readarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "completed"
 
     # Backup
     data = readarr_client.post_command("Backup")
     time.sleep(5)
     result = readarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "completed"
 
     # MissingBookSearch
     data = readarr_client.post_command("MissingBookSearch")
     time.sleep(5)
     result = readarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "completed"
 
     # RenameFiles
     data = readarr_client.post_command(

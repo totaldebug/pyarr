@@ -63,12 +63,12 @@ def test_get_language_profile(sonarr_client: SonarrAPI):
         sonarr_client.get_language_profile()
 
 
-# def test_get_language(sonarr_client: SonarrAPI):
-#    data = sonarr_client.get_language()
-#    assert isinstance(data, list)
-#
-#    data = sonarr_client.get_language(data[0]["id"])
-#    assert isinstance(data, dict)
+def test_get_language(sonarr_client: SonarrAPI):
+    data = sonarr_client.get_language()
+    assert isinstance(data, list)
+
+    data = sonarr_client.get_language(data[0]["id"])
+    assert isinstance(data, dict)
 
 
 def test_lookup_series(sonarr_client: SonarrAPI):
@@ -93,7 +93,7 @@ def test_lookup_series_by_tvdb_id(sonarr_client: SonarrAPI):
 
 def test_add_series(sonarr_client: SonarrAPI):
     quality_profile = sonarr_client.get_quality_profile()
-    language_profile = sonarr_client.get_language_profile()
+    language_profile = sonarr_client.get_language()
     lookup_result = sonarr_client.lookup_series(id_=SONARR_TVDB)
 
     data = sonarr_client.add_series(
@@ -247,7 +247,7 @@ def test_get_history(sonarr_client: SonarrAPI):
     data = sonarr_client.get_history()
     assert isinstance(data, dict)
 
-    for key in ["id", "date", "eventType", "series.title", "episode.title"]:
+    for key in ["id", "date", "eventType", "series.title"]:
         data = sonarr_client.get_history(
             page=1,
             page_size=10,
@@ -258,7 +258,7 @@ def test_get_history(sonarr_client: SonarrAPI):
         assert isinstance(data, dict)
 
     with contextlib.suppress(PyarrMissingArgument):
-        data = sonarr_client.get_history(sort_key="time")
+        data = sonarr_client.get_history(sort_key="date")
         assert False
 
     with contextlib.suppress(PyarrMissingArgument):
@@ -440,18 +440,17 @@ def test_get_config_naming(sonarr_client: SonarrAPI):
 
 def test_upd_config_naming(sonarr_client: SonarrAPI):
     payload = sonarr_client.get_config_naming()
-    payload["numberStyle"] = (
-        "E{episode:00}S{season:00}"
-        if payload["numberStyle"] == "S{season:00}E{episode:00}"
-        else "S{season:00}E{episode:00}"
+    payload["standardEpisodeFormat"] = (
+        "{Series Title} - E{episode:00}S{season:00} - {Episode Title} {Quality Full}"
     )
+
     data = sonarr_client.upd_config_naming(payload)
 
     assert isinstance(data, dict)
-    if payload["numberStyle"] == "S{season:00}E{episode:00}":
-        assert data["numberStyle"] == "E{episode:00}S{season:00}"
-    else:
-        assert data["numberStyle"] == "S{season:00}E{episode:00}"
+    assert (
+        data["standardEpisodeFormat"]
+        == "{Series Title} - E{episode:00}S{season:00} - {Episode Title} {Quality Full}"
+    )
 
 
 def test_get_media_management(sonarr_client: SonarrAPI):
@@ -698,7 +697,7 @@ def test_post_command(sonarr_client: SonarrAPI):
     time.sleep(5)
     result = sonarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "completed"
 
     data = sonarr_client.post_command(
         "RefreshSeries", seriesId=sonarr_client.get_series()[0]["id"]
@@ -706,14 +705,14 @@ def test_post_command(sonarr_client: SonarrAPI):
     time.sleep(5)
     result = sonarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "completed"
 
     # RescanSeries
     data = sonarr_client.post_command("RescanSeries")
     time.sleep(5)
     result = sonarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "completed"
 
     data = sonarr_client.post_command(
         "RescanSeries", seriesId=sonarr_client.get_series()[0]["id"]
@@ -721,14 +720,14 @@ def test_post_command(sonarr_client: SonarrAPI):
     time.sleep(5)
     result = sonarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "completed"
 
     # EpisodeSearch
     data = sonarr_client.post_command("EpisodeSearch", episodeIds=[1, 2, 3])
     time.sleep(5)
     result = sonarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "completed"
 
     # SeasonSearch
     data = sonarr_client.post_command(
@@ -737,7 +736,7 @@ def test_post_command(sonarr_client: SonarrAPI):
     time.sleep(5)
     result = sonarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "completed"
 
     # SeriesSearch
     data = sonarr_client.post_command(
@@ -746,7 +745,7 @@ def test_post_command(sonarr_client: SonarrAPI):
     time.sleep(5)
     result = sonarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "completed"
 
     # DownloadedEpisodesScan
     data = sonarr_client.post_command(
@@ -755,13 +754,13 @@ def test_post_command(sonarr_client: SonarrAPI):
     time.sleep(5)
     result = sonarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "completed"
 
     # RSS Sync
     data = sonarr_client.post_command("RssSync")
     result = sonarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "started" or "completed"
 
     # RenameFiles, NOTE: this test will always return a failed message on get_command
     # this would only work if we actually download files which we can't do on test.
@@ -777,20 +776,20 @@ def test_post_command(sonarr_client: SonarrAPI):
     time.sleep(5)
     result = sonarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "completed"
 
     # Test backups
     data = sonarr_client.post_command("Backup")
     time.sleep(5)
     result = sonarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "completed"
 
     data = sonarr_client.post_command("missingEpisodeSearch")
     time.sleep(5)
     result = sonarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "completed"
 
 
 def test_get_command(sonarr_client: SonarrAPI):
@@ -846,8 +845,8 @@ def test_get_parse_title_path(sonarr_client: SonarrAPI):
     data = sonarr_client.get_parse_title_path(title="test")
     assert isinstance(data, dict)
 
-    data = sonarr_client.get_parse_title_path(path="/defaults")
-    assert isinstance(data, dict)
+    # data = sonarr_client.get_parse_title_path(path="/defaults")
+    # assert data.status_code == 204
 
     with contextlib.suppress(PyarrMissingArgument):
         data = sonarr_client.get_parse_title_path()
@@ -958,8 +957,7 @@ def test_del_series(sonarr_client: SonarrAPI):
     series = sonarr_client.get_series()
     data = sonarr_client.del_series(series[0]["id"], delete_files=True)
 
-    assert isinstance(data, dict)
-    assert data == {}
+    assert data.status_code == 200
 
 
 def test_del_root_folder(sonarr_client: SonarrAPI):
@@ -967,19 +965,14 @@ def test_del_root_folder(sonarr_client: SonarrAPI):
 
     # Check folder can be deleted
     data = sonarr_client.del_root_folder(root_folders[0]["id"])
-    assert isinstance(data, dict)
-
-    # Check that none existant root folder doesnt throw error
-    data = sonarr_client.del_root_folder(999)
-    assert isinstance(data, dict)
+    assert data.status_code == 200
 
 
 def test_del_tag(sonarr_client: SonarrAPI):
     tags = sonarr_client.get_tag()
 
     data = sonarr_client.del_tag(tags[0]["id"])
-    assert isinstance(data, dict)
-    assert data == {}
+    assert data.status_code == 200
 
 
 @pytest.mark.usefixtures

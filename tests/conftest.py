@@ -17,7 +17,7 @@ from tests import (
 
 @pytest.fixture()
 def sonarr_client():
-    yield SonarrAPI("http://sonarr:8989", SONARR_API_KEY)
+    yield SonarrAPI("http://localhost:8989", SONARR_API_KEY)
 
 
 @pytest.fixture()
@@ -27,7 +27,7 @@ def sonarr_mock_client():
 
 @pytest.fixture()
 def radarr_client():
-    yield RadarrAPI("http://radarr:7878", RADARR_API_KEY)
+    yield RadarrAPI("http://localhost:7878", RADARR_API_KEY)
 
 
 @pytest.fixture()
@@ -37,7 +37,7 @@ def radarr_mock_client():
 
 @pytest.fixture()
 def lidarr_client():
-    yield LidarrAPI("http://lidarr:8686", LIDARR_API_KEY)
+    yield LidarrAPI("http://localhost:8686", LIDARR_API_KEY)
 
 
 @pytest.fixture()
@@ -47,7 +47,7 @@ def lidarr_mock_client():
 
 @pytest.fixture()
 def readarr_client():
-    yield ReadarrAPI("http://readarr:8787", READARR_API_KEY)
+    yield ReadarrAPI("http://localhost:8787", READARR_API_KEY)
 
 
 @pytest.fixture()

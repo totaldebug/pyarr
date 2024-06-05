@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import os
-import subprocess
 
 import nox
 from nox.sessions import Session
@@ -48,23 +47,10 @@ def test_create_containers(session: Session) -> None:
         "pull",
         external=True,
     )
-    hostname = subprocess.check_output(["hostname"]).strip().decode("utf-8")
-    inspect_command = [
-        "sudo",
-        "docker",
-        "inspect",
-        "--format",
-        '{{ index .Config.Labels "com.docker.compose.project" }}',
-        hostname,
-    ]
-    project_name = subprocess.check_output(inspect_command).strip().decode("utf-8")
-
     session.run(
         "sudo",
         "docker",
         "compose",
-        "--project-name",
-        project_name,
         "-f",
         ".devcontainer/docker-compose.yml",
         "up",
@@ -75,33 +61,16 @@ def test_create_containers(session: Session) -> None:
 
 @nox.session(reuse_venv=True)
 def test_cleanup_containers(session: Session) -> None:
-    # Get the container IDs using the filter
-    hostname = subprocess.check_output(["hostname"]).strip().decode("utf-8")
-    project_name_command = [
+    session.run(
         "sudo",
         "docker",
-        "inspect",
-        "--format",
-        '{{ index .Config.Labels "com.docker.compose.project" }}',
-        hostname,
-    ]
-    project_name = subprocess.check_output(project_name_command).strip().decode("utf-8")
-    container_filter = f"label=com.docker.compose.project={project_name}"
-
-    # Execute the `docker ps` command and filter the output using grep
-    cmd1 = ["sudo", "docker", "ps", "-a", "-q", "--filter", container_filter]
-    cmd2 = ["grep", "-v", hostname]
-    output1 = subprocess.run(cmd1, stdout=subprocess.PIPE)
-    output2 = subprocess.run(cmd2, input=output1.stdout, stdout=subprocess.PIPE)
-
-    # Get the container IDs from the output
-    container_ids = output2.stdout.decode("utf-8").strip().split()
-
-    # Kill and remove the containers, cant use docker compose down as that kills
-    # the workspace container for devcontainer. this works just as well.
-    for container_id in container_ids:
-        session.run("sudo", "docker", "kill", container_id, silent=True, external=True)
-        session.run("sudo", "docker", "rm", container_id, silent=True, external=True)
+        "compose",
+        "-f",
+        ".devcontainer/docker-compose.yml",
+        "down",
+        external=True,
+    )
+    session.run("git", "checkout", "--", "tests/docker_configs/", external=True)
 
 
 @nox.session(reuse_venv=True)
@@ -159,6 +128,7 @@ def build_docs(session: Session) -> None:
     session.run("poetry", "install", external=True)
     session.run("sphinx-build", "-b", "html", "docs", "build")
 
+
 @nox.session(reuse_venv=True)
 def install_release(session: Session) -> None:
     session.run("npm", "install", "@semantic-release/changelog")
@@ -168,6 +138,7 @@ def install_release(session: Session) -> None:
     session.run("npm", "install", "conventional-changelog-conventionalcommits@7.0.2")
     session.run("npm", "install", "semantic-release-pypi")
 
+
 @nox.session(reuse_venv=True)
 def release(session: Session) -> None:
     """Release a new version of the package"""
@@ -176,4 +147,6 @@ def release(session: Session) -> None:
     session.notify("install_release")
     session.run("npx", "semantic-release", "--debug")
     session.run("poetry", "build", external=True)
-    session.run("poetry", "publish", "-u", "__token__", "-p", pypi_password, external=True)
+    session.run(
+        "poetry", "publish", "-u", "__token__", "-p", pypi_password, external=True
+    )

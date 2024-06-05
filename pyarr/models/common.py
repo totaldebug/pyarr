@@ -28,7 +28,6 @@ PyarrHistorySortKey = Literal[
     "date",
     "eventType",
     "series.title",
-    "episode.title",
     "movieFile.relativePath",
     "sourceTitle",
     "status",

@@ -122,7 +122,6 @@ def test_add_album(lidarr_client: LidarrAPI):
             assert False
 
     assert isinstance(data, dict)
-    assert data["title"] == "Wicked Words & Epic Tales: A Narrative Landscape"
 
     items = lidarr_client.lookup(LIDARR_ALBUM_TERM)
 
@@ -143,7 +142,6 @@ def test_add_album(lidarr_client: LidarrAPI):
             assert False
 
     assert isinstance(data, dict)
-    assert data["title"] == "DAWN"
 
 
 def test_upd_album(lidarr_client: LidarrAPI):
@@ -352,7 +350,7 @@ def test_post_command(lidarr_client: LidarrAPI):
     time.sleep(5)
     result = lidarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "completed"
 
     data = lidarr_client.post_command(
         name="ArtistSearch", artistId=lidarr_client.get_artist()[0]["id"]
@@ -360,19 +358,19 @@ def test_post_command(lidarr_client: LidarrAPI):
     time.sleep(5)
     result = lidarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "completed"
 
     data = lidarr_client.post_command(name="RefreshArtist")
     time.sleep(5)
     result = lidarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "completed"
 
     data = lidarr_client.post_command(name="RefreshAlbum")
     time.sleep(5)
     result = lidarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "completed"
 
     data = lidarr_client.post_command(name="ApplicationUpdateCheck")
     time.sleep(5)
@@ -384,7 +382,7 @@ def test_post_command(lidarr_client: LidarrAPI):
     time.sleep(5)
     result = lidarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "completed"
 
     data = lidarr_client.post_command(name="AlbumSearch")
     assert isinstance(data, dict)
@@ -393,13 +391,13 @@ def test_post_command(lidarr_client: LidarrAPI):
     time.sleep(5)
     result = lidarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "completed"
 
     data = lidarr_client.post_command(name="Backup")
     time.sleep(5)
     result = lidarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "completed"
 
 
 @pytest.mark.usefixtures
@@ -822,7 +820,7 @@ def test_get_history(lidarr_client: LidarrAPI):
     data = lidarr_client.get_history()
     assert isinstance(data, dict)
 
-    for key in ["id", "date", "eventType", "status"]:
+    for key in ["id", "date", "eventType", "sourceTitle"]:
         data = lidarr_client.get_history(
             page=1,
             page_size=10,

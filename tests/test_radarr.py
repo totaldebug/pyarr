@@ -577,7 +577,7 @@ def test_post_command(radarr_client: RadarrAPI):
     time.sleep(5)
     result = radarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "completed"
 
     # RefreshMovie
     data = radarr_client.post_command(
@@ -586,14 +586,14 @@ def test_post_command(radarr_client: RadarrAPI):
     time.sleep(5)
     result = radarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "completed"
 
     # MissingMoviesSearch
     data = radarr_client.post_command(name="MissingMoviesSearch")
     time.sleep(5)
     result = radarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "completed"
 
     # MoviesSearch
     data = radarr_client.post_command(name="MoviesSearch")
@@ -606,7 +606,7 @@ def test_post_command(radarr_client: RadarrAPI):
     time.sleep(5)
     result = radarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "completed"
 
     # RenameFiles, NOTE: this test will always return a failed message on get_command
     # this would only work if we actually download files which we can't do on test.
@@ -620,20 +620,20 @@ def test_post_command(radarr_client: RadarrAPI):
     time.sleep(5)
     result = radarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "completed"
 
     # RSS Sync
     data = radarr_client.post_command("RssSync")
     time.sleep(5)
     result = radarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "completed"
 
     data = radarr_client.post_command(name="Backup")
     time.sleep(5)
     result = radarr_client.get_command(id_=data["id"])
     assert isinstance(data, dict)
-    assert result["message"] == "Completed"
+    assert result["status"] == "completed"
 
 
 def test_get_command(radarr_client: RadarrAPI):

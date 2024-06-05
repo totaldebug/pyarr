@@ -1,47 +1,35 @@
+fail_fast: true
 repos:
   - repo: local
     hooks:
-      - id: isort
-        name: isort
-        stages: [commit]
-        language: system
-        entry: poetry run isort pyarr
-        types: [python]
-
-      - id: black
-        name: black
-        stages: [commit]
-        language: system
-        entry: poetry run black pyarr --check
-        types: [python]
-
-      - id: flake8
-        name: flake8
-        stages: [commit]
-        language: system
-        entry: poetry run flake8 pyarr
-        types: [python]
-        exclude: setup.py
-
-      - id: mypy
-        name: mypy
-        stages: [commit]
-        language: system
-        entry: poetry run mypy pyarr
-        types: [python]
-        pass_filenames: false
-
       - id: interrogate
         name: interrogate
-        stages: [commit]
         language: system
-        entry: poetry run interrogate pyarr
+        entry: interrogate
         types: [python]
-        pass_filenames: false
-
-  - repo: https://github.com/compilerla/conventional-pre-commit
-    rev: v1.2.0
+        exclude: ^(docs/conf.py|setup.py|tests|noxfile.py)
+        args: [--config=pyproject.toml]
+  - repo: https://github.com/psf/black
+    rev: 24.3.0
     hooks:
-      - id: conventional-pre-commit
-        stages: [commit-msg]
-        args: []
+      - id: black
+  - repo: https://github.com/pycqa/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
+        additional_dependencies: [toml]
+
+  - repo: https://github.com/pycqa/flake8
+    rev: 6.1.0
+    hooks:
+      - id: flake8
+        exclude: ^(tests)
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: debug-statements
+      - id: check-toml
+      - id: check-yaml
