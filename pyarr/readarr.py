@@ -154,7 +154,7 @@ class ReadarrAPI(BaseArrAPI):
         page_size: Optional[int] = None,
         sort_key: Optional[ReadarrSortKeys] = None,
         sort_dir: Optional[PyarrSortDirection] = None,
-        monitored: bool = None,
+        monitored: bool | None = None,
     ) -> JsonObject:
         """Get wanted items where the cutoff is unmet
 
@@ -231,7 +231,7 @@ class ReadarrAPI(BaseArrAPI):
     # PROFILES
 
     # POST /qualityprofile
-    def add_quality_profile(self, name: str, upgrades_allowed: bool, cutoff: int, items: list, min_format_score: int = 0, cutoff_format_score: int = 0, format_items: list = None) -> JsonObject:  # type: ignore[override]
+    def add_quality_profile(self, name: str, upgrades_allowed: bool, cutoff: int, items: list, min_format_score: int = 0, cutoff_format_score: int = 0, format_items: list | None = None) -> JsonObject:  # type: ignore[override]
         """Add new quality profile
 
         Args:
@@ -688,7 +688,7 @@ class ReadarrAPI(BaseArrAPI):
         ignored: list,
         required: list,
         indexerId: int = 0,
-        tags: list[int] = None,
+        tags: list[int] | None = None,
         enabled: bool = True,
         includePreferredWhenRenaming: bool = False,
     ) -> JsonObject:

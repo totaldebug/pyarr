@@ -14,7 +14,7 @@ class FunctionWrapper:
 class alias(object):
     """Add an alias to a function"""
 
-    def __init__(self, *aliases: str, deprecated_version: str = None) -> None:
+    def __init__(self, *aliases: str, deprecated_version: str | None = None) -> None:
         """Constructor
 
         Args:

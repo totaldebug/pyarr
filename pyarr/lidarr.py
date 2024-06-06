@@ -35,7 +35,7 @@ class LidarrAPI(BaseArrAPI):
         path: str,
         default_quality_profile_id: int,
         default_metadata_profile_id: int,
-        default_tags: list[int] = None,
+        default_tags: list[int] | None = None,
     ) -> JsonObject:
         """Add a new location to store files
 
@@ -763,7 +763,7 @@ class LidarrAPI(BaseArrAPI):
         language: dict,
         min_format_score: int = 0,
         cutoff_format_score: int = 0,
-        format_items: list = None,
+        format_items: list | None = None,
     ) -> JsonObject:
         """Add new quality profile.
 
