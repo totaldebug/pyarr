@@ -1,15 +1,14 @@
-[tool.poetry]
+[project]
 name = "pyarr"
 version = "5.2.0"
 description = "Synchronous Sonarr, Radarr, Lidarr and Readarr API's for Python"
-authors = ["Steven Marks <marksie1988@users.noreply.github.com>"]
-license = "MIT"
+authors = [
+    { name = "Steven Marks", email = "marksie1988@users.noreply.github.com" }
+]
+license = { text = "MIT" }
 readme = "README.md"
 keywords = ["sonarr", "radarr", "readarr", "lidarr", "api", "wrapper", "plex"]
-homepage = "https://github.com/totaldebug/pyarr"
-repository = "https://github.com/totaldebug/pyarr"
-documentation = "https://docs.totaldebug.uk/pyarr"
-
+requires-python = ">=3.10"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
@@ -21,92 +20,67 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Topic :: Software Development :: Libraries :: Python Modules"
 ]
-packages = [
-    {include = "pyarr"},
-    {include = "pyarr/py.typed"}
+dependencies = [
+    "requests>=2.28.2",
+    "types-requests>=2.28.11.17",
+    "overrides>=7.3.1",
+    "yarl>=1.9.4",
+    "backoff>=2.2.1",
 ]
 
-[tool.poetry.dependencies]
-python = "^3.10"
-requests = "^2.28.2"
-types-requests = "^2.28.11.17"
-overrides = "^7.3.1"
+[project.urls]
+homepage = "https://github.com/totaldebug/pyarr"
+repository = "https://github.com/totaldebug/pyarr"
+documentation = "https://docs.totaldebug.uk/pyarr"
 
-[tool.poetry.group.dev.dependencies]
-black = {version = "^22.12.0", allow-prereleases = true}
-flake8 = "^3.9.2"
-isort = "^5.12.0"
-mypy = "^0.910"
-pre-commit = "^2.21.0"
-interrogate = "^1.5.0"
-Sphinx = "^4.5.0"
-sphinx-argparse = "^0.3.2"
-sphinx-autobuild = "^2021.3.14"
-sphinx-rtd-theme = "^1.2.0"
-pytest = "^7.2.2"
-pytest-cov = "^3.0.0"
-pylint = "^2.17.1"
-responses = "^0.21.0"
-autoflake = "^1.7.8"
-ipykernel = "^6.22.0"
-sphinx-toolbox = "^3.4.0"
-enum-tools = "^0.9.0.post1"
-pytest-rerunfailures = "^11.1.2"
-nox = "^2022.11.21"
-toml = "^0.10.2"
+[dependency-groups]
+dev = [
+    "ruff>=0.9.0",
+    "mypy>=1.10.0",
+    "pre-commit>=3.7.1",
+    "interrogate>=1.5.0",
+    "Sphinx>=7.3.7",
+    "sphinx-argparse>=0.4.0",
+    "sphinx-autobuild>=2024.4.16",
+    "sphinx-rtd-theme>=2.0.0",
+    "pytest>=8.2.2",
+    "pytest-cov>=5.0.0",
+    "responses>=0.25.0",
+    "ipykernel>=6.22.0",
+    "sphinx-toolbox>=3.4.0",
+    "enum-tools>=0.12.0",
+    "pytest-rerunfailures>=14.0",
+    "nox>=2024.4.15",
+    "toml>=0.10.2",
+    "types-toml>=0.10.8.20240310",
+    "commitizen>=3.27.0",
+]
 
-[tool.black]
-line-length = 88
-target_version = ['py310']
-include = '\.pyi?$'
-exclude = '''
+[build-system]
+requires = ["uv_build>=0.10.0,<0.11.0"]
+build-backend = "uv_build"
 
-(
-  /(
-      \.eggs         # exclude a few common directories in the
-    | \.git          # root of the project
-    | \.hg
-    | \.mypy_cache
-    | \.tox
-    | \.nox
-    | \.venv
-    | \.cache
-    | _build
-    | buck-out
-    | build
-    | dist
-  )/
-)
-'''
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = []
+
+[tool.ruff.lint.isort]
+known-first-party = ["pyarr"]
+section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
 
 [tool.mypy]
 python_version = "3.10"
 warn_return_any = true
 warn_unused_configs = true
+mypy_path = "src"
 
 [[tool.mypy.overrides]]
-module = "pyarr"
+module = "pyarr.*"
 disallow_untyped_defs = true
-
-[tool.isort]
-profile = "black"
-# will group `import x` and `from x import` of the same module.
-force_sort_within_sections = true
-known_first_party = [
-    "pyarr",
-    "tests",
-]
-forced_separate = [
-    "tests",
-]
-skip = [".cache", ".nox"]
-combine_as_imports = true
-
-[tool.autoflake]
-check = true
-remove-unused-variables = true
-remove-all-unused-imports = true
-remove-duplicate-keys = true
 
 [tool.interrogate]
 ignore-init-method = true
@@ -125,7 +99,3 @@ ignore-regex = ["^get$", "^mock_.*", ".*BaseClass.*"]
 verbose = 0
 quiet = false
 color = true
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"

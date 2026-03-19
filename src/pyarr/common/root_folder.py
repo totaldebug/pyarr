@@ -1,0 +1,60 @@
+from pyarr.common.base import CommonActions
+from pyarr.types import JsonArray, JsonObject
+
+
+class RootFolder(CommonActions):
+    """Root folder actions for Arr clients."""
+
+    def get(self, item_id: int | None = None) -> JsonArray | JsonObject:
+        """Returns the list of root folders or a specific root folder by ID.
+
+        Args:
+            item_id (int | None, optional): ID of the root folder to return. Defaults to None.
+
+        Returns:
+            JsonArray | JsonObject: List of dictionaries with items or a single dictionary.
+        """
+        return self._get("rootfolder", item_id=item_id)
+
+    def add(
+        self,
+        path: str,
+        name: str | None = None,
+        default_quality_profile_id: int | None = None,
+        default_metadata_profile_id: int | None = None,
+        default_tags: list[int] | None = None,
+    ) -> JsonObject:
+        """Adds a new root folder.
+
+        Args:
+            path (str): The directory path.
+            name (str | None, optional): Name for this root folder (Lidarr). Defaults to None.
+            default_quality_profile_id (int | None, optional): Default quality profile ID (Lidarr). Defaults to None.
+            default_metadata_profile_id (int | None, optional): Default metadata profile ID (Lidarr). Defaults to None.
+            default_tags (list[int] | None, optional): List of default tag IDs (Lidarr). Defaults to None.
+
+        Returns:
+            JsonObject: Dictionary containing path details.
+        """
+        json_data: dict[str, str | int | list[int]] = {"path": path}
+        if name:
+            json_data["name"] = name
+        if default_quality_profile_id:
+            json_data["defaultQualityProfileId"] = default_quality_profile_id
+        if default_metadata_profile_id:
+            json_data["defaultMetadataProfileId"] = default_metadata_profile_id
+        if default_tags:
+            json_data["defaultTags"] = default_tags
+
+        response = self.handler.request("rootfolder", method="POST", json_data=json_data)
+        if isinstance(response, dict):
+            return response
+        raise ValueError("Expected a dictionary response from the 'rootfolder' endpoint")
+
+    def delete(self, item_id: int) -> None:
+        """Delete a root folder by ID.
+
+        Args:
+            item_id (int): The ID of the root folder to delete.
+        """
+        self._delete("rootfolder", item_id=item_id)

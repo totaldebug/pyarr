@@ -1,47 +1,24 @@
 repos:
-  - repo: local
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    # Ruff version.
+    rev: v0.9.0
     hooks:
-      - id: isort
-        name: isort
-        stages: [commit]
-        language: system
-        entry: poetry run isort pyarr
-        types: [python]
-
-      - id: black
-        name: black
-        stages: [commit]
-        language: system
-        entry: poetry run black pyarr --check
-        types: [python]
-
-      - id: flake8
-        name: flake8
-        stages: [commit]
-        language: system
-        entry: poetry run flake8 pyarr
-        types: [python]
-        exclude: setup.py
-
+      # Run the linter.
+      - id: ruff
+        args: [--fix]
+      # Run the formatter.
+      - id: ruff-format
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.10.0
+    hooks:
       - id: mypy
-        name: mypy
-        stages: [commit]
-        language: system
-        entry: poetry run mypy pyarr
-        types: [python]
-        pass_filenames: false
-
-      - id: interrogate
-        name: interrogate
-        stages: [commit]
-        language: system
-        entry: poetry run interrogate pyarr
-        types: [python]
-        pass_filenames: false
-
-  - repo: https://github.com/compilerla/conventional-pre-commit
-    rev: v1.2.0
-    hooks:
-      - id: conventional-pre-commit
-        stages: [commit-msg]
-        args: []
+        additional_dependencies: [types-requests, yarl, backoff, overrides, types-toml]
+        args: [--show-error-codes, --ignore-missing-imports]

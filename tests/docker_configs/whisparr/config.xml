@@ -1,0 +1,20 @@
+<Config>
+  <LogLevel>info</LogLevel>
+  <EnableSsl>False</EnableSsl>
+  <Port>6969</Port>
+  <UrlBase></UrlBase>
+  <BindAddress>*</BindAddress>
+  <ApiKey>da96fdd18ce147b79b54c2fdadb7e19a</ApiKey>
+  <AuthenticationMethod>None</AuthenticationMethod>
+  <UpdateMechanism>Docker</UpdateMechanism>
+  <LaunchBrowser>True</LaunchBrowser>
+  <Branch>v2</Branch>
+  <InstanceName>Whisparr</InstanceName>
+  <WhisparrMetadata>https://api.whisparr.com/v3/{route}</WhisparrMetadata>
+  <GithubOwnerRepo>whisparr/whisparr</GithubOwnerRepo>
+  <SslPort>8008</SslPort>
+  <AuthenticationRequired>Enabled</AuthenticationRequired>
+  <LogSizeLimit>1</LogSizeLimit>
+  <SslCertPath></SslCertPath>
+  <SslCertPassword></SslCertPassword>
+</Config>

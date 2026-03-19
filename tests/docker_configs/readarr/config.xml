@@ -13,4 +13,5 @@
   <SslCertPath></SslCertPath>
   <SslCertPassword></SslCertPassword>
   <InstanceName>Readarr</InstanceName>
+  <AuthenticationRequired>Enabled</AuthenticationRequired>
 </Config>

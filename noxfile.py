@@ -10,10 +10,9 @@ from nox.sessions import Session
 @nox.session(reuse_venv=True)
 def format(session: Session) -> None:
     """Run automatic code formatters"""
-    session.run("poetry", "install", external=True)
-    session.run("black", ".")
-    session.run("isort", ".")
-    session.run("autoflake", "--in-place", ".")
+    session.run("uv", "sync", external=True)
+    session.run("uv", "run", "ruff", "format", ".", external=True)
+    session.run("uv", "run", "ruff", "check", "--fix", ".", external=True)
 
 
 @nox.session(reuse_venv=True)
@@ -40,7 +39,8 @@ def docker_test(session: Session) -> None:
 @nox.session(reuse_venv=True)
 def test_create_containers(session: Session) -> None:
     session.run(
-        "sudo",
+        "uv",
+        "run",
         "docker",
         "compose",
         "-f",
@@ -60,7 +60,8 @@ def test_create_containers(session: Session) -> None:
     project_name = subprocess.check_output(inspect_command).strip().decode("utf-8")
 
     session.run(
-        "sudo",
+        "uv",
+        "run",
         "docker",
         "compose",
         "--project-name",
@@ -75,9 +76,8 @@ def test_create_containers(session: Session) -> None:
 
 @nox.session(reuse_venv=True)
 def test_cleanup_containers(session: Session) -> None:
-    # Get the container IDs using the filter
     hostname = subprocess.check_output(["hostname"]).strip().decode("utf-8")
-    project_name_command = [
+    inspect_command = [
         "sudo",
         "docker",
         "inspect",
@@ -85,7 +85,7 @@ def test_cleanup_containers(session: Session) -> None:
         '{{ index .Config.Labels "com.docker.compose.project" }}',
         hostname,
     ]
-    project_name = subprocess.check_output(project_name_command).strip().decode("utf-8")
+    project_name = subprocess.check_output(inspect_command).strip().decode("utf-8")
     container_filter = f"label=com.docker.compose.project={project_name}"
 
     # Execute the `docker ps` command and filter the output using grep
@@ -107,9 +107,12 @@ def test_cleanup_containers(session: Session) -> None:
 @nox.session(reuse_venv=True)
 def test_suite(session: Session) -> None:
     """Run the Python-based test suite"""
-    session.run("poetry", "install", external=True)
+    session.run("uv", "sync", external=True)
     session.run(
+        "uv",
+        "run",
         "pytest",
+        "tests",
         "--showlocals",
         "--reruns",
         "3",
@@ -121,43 +124,39 @@ def test_suite(session: Session) -> None:
         "--cov-report",
         "term-missing",
         "-vv",
+        external=True,
     )
 
 
 @nox.session(reuse_venv=True)
 def test_types(session: Session) -> None:
     """Check that typing is working as expected"""
-    session.run("poetry", "install", external=True)
-    session.run("mypy", "--show-error-codes", "pyarr")
+    session.run("uv", "sync", external=True)
+    session.run("uv", "run", "mypy", "--show-error-codes", "src/pyarr", external=True)
 
 
 @nox.session(reuse_venv=True)
 def test_style(session: Session) -> None:
     """Check that style guidelines are being followed"""
-    session.run("poetry", "install", external=True)
-    session.run("flake8", "pyarr", "tests")
-    session.run(
-        "black",
-        "pyarr",
-        "--check",
-    )
-    session.run("isort", "pyarr", "--check-only")
-    session.run("autoflake", "-r", "pyarr")
-    session.run("interrogate", "pyarr")
+    session.run("uv", "sync", external=True)
+    session.run("uv", "run", "ruff", "check", "src/pyarr", "tests", external=True)
+    session.run("uv", "run", "ruff", "format", "--check", "src/pyarr", "tests", external=True)
+    session.run("uv", "run", "interrogate", "src/pyarr", external=True)
 
 
 @nox.session(reuse_venv=True)
 def serve_docs(session: Session) -> None:
     """Create local copy of docs for testing"""
-    session.run("poetry", "install", external=True)
-    session.run("sphinx-autobuild", "docs", "build")
+    session.run("uv", "sync", external=True)
+    session.run("uv", "run", "sphinx-autobuild", "docs", "build", external=True)
 
 
 @nox.session(reuse_venv=True)
 def build_docs(session: Session) -> None:
     """Create local copy of docs for testing"""
-    session.run("poetry", "install", external=True)
-    session.run("sphinx-build", "-b", "html", "docs", "build")
+    session.run("uv", "sync", external=True)
+    session.run("uv", "run", "sphinx-build", "-b", "html", "docs", "build", external=True)
+
 
 @nox.session(reuse_venv=True)
 def install_release(session: Session) -> None:
@@ -168,12 +167,13 @@ def install_release(session: Session) -> None:
     session.run("npm", "install", "conventional-changelog-conventionalcommits@7.0.2")
     session.run("npm", "install", "semantic-release-pypi")
 
+
 @nox.session(reuse_venv=True)
 def release(session: Session) -> None:
     """Release a new version of the package"""
     pypi_password = session.posargs[0]
-    session.run("poetry", "install", external=True)
+    session.run("uv", "sync", external=True)
     session.notify("install_release")
     session.run("npx", "semantic-release", "--debug")
-    session.run("poetry", "build", external=True)
-    session.run("poetry", "publish", "-u", "__token__", "-p", pypi_password, external=True)
+    session.run("uv", "build", external=True)
+    session.run("uv", "publish", "-u", "__token__", "-p", pypi_password, external=True)

@@ -1,83 +1,77 @@
----
-name: Semantic Release
+name: Release Please
 
 on:
   push:
     branches:
       - main
-      - beta
-  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
-  code-quality:
-    name: 📊 Check code quality
+  release-please:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.10", "3.11", "3.12"]
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+      pr: ${{ steps.release.outputs.pr }}
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+      - uses: google-github-actions/release-please-action@v4
+        id: release
         with:
-          python-version: ${{ matrix.python-version }}
-      - name: Run containers
-        run: docker-compose -f .ci/docker-compose.yml up -d
-      - name: Add hosts
-        run: |
-          sudo echo "127.0.0.1 sonarr readarr radarr lidarr prowlarr deluge jackett" | sudo tee -a /etc/hosts
-      - name: sleep 30s for containers to start-up
-        run: sleep 30s
-        shell: bash
-      - name: check ports are mapped
-        run: docker ps
-      - name: check one of the containers is up
-        run: curl http://radarr:7878
-      - name: 🧪 Check tests are passing
-        run: |
-          pip install poetry nox
-          nox -s tests
-  release:
-    name: Create release and publish 🐍 distribution 📦 to PyPI
-    needs: [code-quality]
+          token: ${{ secrets.GITHUB_TOKEN }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+  # Full Release to PyPI when release-please PR is merged
+  publish-release:
     runs-on: ubuntu-latest
-    concurrency: release
-    permissions:
-      id-token: write
-      contents: write
-
+    needs: release-please
+    if: ${{ needs.release-please.outputs.release_created }}
     steps:
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: "pyproject.toml"
+      - name: Build and Publish to PyPI
+        run: |
+          uv build
+          uv publish
+        env:
+          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_PASSWORD }}
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20
+  # Release Candidate to PyPI when release-please PR is updated (User PR merged to main)
+  publish-rc:
+    runs-on: ubuntu-latest
+    needs: release-please
+    if: ${{ !needs.release-please.outputs.release_created && needs.release-please.outputs.pr }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: "pyproject.toml"
 
-    - uses: actions/setup-python@v5
-      with:
-        python-version: '3.12'
+      - name: Extract version and publish RC
+        run: |
+          # Get the version from the release-please PR
+          VERSION=$(echo '${{ needs.release-please.outputs.pr }}' | jq -r '.version')
+          if [ -z "$VERSION" ]; then
+            echo "Could not extract version from PR"
+            exit 1
+          fi
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        python -m pip install poetry nox
-        npm install @semantic-release/changelog
-        npm install @semantic-release/exec
-        npm install @semantic-release/git
-        npm install @semantic-release/github
-        npm install conventional-changelog-conventionalcommits@7.0.2
-        npm install semantic-release-pypi
+          # Update version in pyproject.toml to include RC suffix if not already there
+          # release-please should already have the rc version if configured
+          echo "Publishing version: $VERSION"
 
-    - name: Run Release
-      run: |
-        nox -rs release -- "$PYPI_PASSWORD"
-      env:
-        PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: 🏷️ Update latest tag
-      uses: EndBug/latest-tag@latest
+          uv build
+          uv publish
+        env:
+          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_PASSWORD }}

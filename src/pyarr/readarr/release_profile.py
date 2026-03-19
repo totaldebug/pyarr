@@ -1,0 +1,60 @@
+from pyarr.common.base import CommonActions
+from pyarr.types import JsonArray, JsonObject
+
+
+class ReleaseProfile(CommonActions):
+    """Release profile actions for Readarr."""
+
+    def get(self, item_id: int | None = None) -> JsonArray | JsonObject:
+        """Returns release profiles by ID or all profiles.
+
+        Args:
+            item_id (int | None, optional): Database ID for profile. Defaults to None.
+
+        Returns:
+            JsonArray | JsonObject: List of dictionaries with items or a single dictionary.
+        """
+        return self._get("releaseprofile", item_id=item_id)
+
+    def add(
+        self,
+        ignored: list,
+        required: list,
+        indexer_id: int = 0,
+        tags: list[int] | None = None,
+        enabled: bool = True,
+        include_preferred_when_renaming: bool = False,
+    ) -> JsonObject:
+        """Add a release profile.
+
+        Args:
+            ignored (list): List of terms to ignore.
+            required (list): List of terms required.
+            indexer_id (int, optional): ID for preferred indexer. Defaults to 0.
+            tags (list[int] | None, optional): List of tag IDs. Defaults to None.
+            enabled (bool, optional): Enable profile. Defaults to True.
+            include_preferred_when_renaming (bool, optional): Include preferred when renaming. Defaults to False.
+
+        Returns:
+            JsonObject: Dictionary of added record.
+        """
+        json_data = {
+            "enabled": enabled,
+            "ignored": ignored,
+            "includePreferredWhenRenaming": include_preferred_when_renaming,
+            "indexerId": indexer_id,
+            "required": required,
+            "tags": tags or [],
+        }
+        response = self.handler.request("releaseprofile", method="POST", json_data=json_data)
+        if isinstance(response, dict):
+            return response
+        raise ValueError("Expected a dictionary response from the 'releaseprofile' endpoint")
+
+    def delete(self, item_id: int) -> None:
+        """Delete a release profile by ID.
+
+        Args:
+            item_id (int): Database ID for profile.
+        """
+        self._delete("releaseprofile", item_id=item_id)

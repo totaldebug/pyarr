@@ -1,14 +1,12 @@
-# -*- coding: utf-8 -*-
-
-from os.path import abspath, dirname, join
 import re
 import sys
+from os.path import abspath, dirname, join
 
 import toml
 
 path = dirname(dirname(abspath(__file__)))
-sys.path.append(path)
-sys.path.append(join(path, "pyarr"))
+sys.path.append(join(path, "src"))
+sys.path.append(join(path, "src", "pyarr"))
 
 project = "pyarr"
 slug = re.sub(r"\W+", "-", project.lower())
@@ -76,7 +74,7 @@ htmlhelp_basename = slug
 # -- Options for LaTeX output ------------------------------------------------
 
 latex_documents = [
-    ("index", "{0}.tex".format(slug), project, author, "manual"),
+    ("index", f"{slug}.tex", project, author, "manual"),
 ]
 
 

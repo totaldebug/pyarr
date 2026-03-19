@@ -1,20 +1,21 @@
 import pathlib
 import xml.etree.ElementTree as ET
 
-MOCK_URL = "https://127.0.0.1"
+
+def _get_api_key(path: str) -> str:
+    root = ET.parse(path).getroot()
+    api_key_element = root.find("ApiKey")
+    if api_key_element is not None and api_key_element.text is not None:
+        return api_key_element.text
+    return ""
+
+
+MOCK_HOST = "127.0.0.1"
 MOCK_API_KEY = "123456789abcdefg123456789"
-SONARR_API_KEY = (
-    ET.parse("tests/docker_configs/sonarr/config.xml").getroot().find("ApiKey").text
-)
-RADARR_API_KEY = (
-    ET.parse("tests/docker_configs/radarr/config.xml").getroot().find("ApiKey").text
-)
-READARR_API_KEY = (
-    ET.parse("tests/docker_configs/readarr/config.xml").getroot().find("ApiKey").text
-)
-LIDARR_API_KEY = (
-    ET.parse("tests/docker_configs/lidarr/config.xml").getroot().find("ApiKey").text
-)
+SONARR_API_KEY = _get_api_key("tests/docker_configs/sonarr/config.xml")
+RADARR_API_KEY = _get_api_key("tests/docker_configs/radarr/config.xml")
+READARR_API_KEY = _get_api_key("tests/docker_configs/readarr/config.xml")
+LIDARR_API_KEY = _get_api_key("tests/docker_configs/lidarr/config.xml")
 
 RADARR_IMDB = "tt1213644"
 RADARR_IMDB_LIST = ["tt0060666", "tt1316037"]
@@ -38,8 +39,4 @@ READARR_AUTHOR_TERM = "Maurice Maeterlinck"
 
 def load_fixture(filename) -> str:
     """Load a fixture."""
-    return (
-        pathlib.Path(__file__)
-        .parent.joinpath("fixtures", filename)
-        .read_text(encoding="utf8")
-    )
+    return pathlib.Path(__file__).parent.joinpath("fixtures", filename).read_text(encoding="utf8")
