@@ -18,7 +18,7 @@ author = "Steven Marks, TotalDebug"
 def get_version():
     with open("../pyproject.toml") as f:
         config = toml.load(f)
-    return config["tool"]["poetry"]["version"]
+    return config["project"]["version"]
 
 
 version = get_version()
