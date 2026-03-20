@@ -54,6 +54,7 @@ dev = [
     "toml>=0.10.2",
     "types-toml>=0.10.8.20240310",
     "commitizen>=3.27.0",
+    "myst-parser>=1.0.0",
 ]
 
 [build-system]

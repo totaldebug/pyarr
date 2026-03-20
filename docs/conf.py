@@ -49,6 +49,9 @@ napoleon_use_param = True
 napoleon_use_rtype = True
 napoleon_use_keyword = True
 autodoc_member_order = "bysource"
+autosectionlabel_prefix_document = True
+
+myst_suppress_warnings = ["myst.header"]
 
 templates_path = ["_templates"]
 source_suffix = ".rst"

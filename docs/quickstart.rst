@@ -13,6 +13,7 @@ This package is distributed on PyPI and can be installed with `pip`:
 
 .. code-block:: shell
    :linenos:
+
     pip install pyarr
 
 
