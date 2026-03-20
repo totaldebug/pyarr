@@ -24,6 +24,7 @@ build
 coverage.xml
 _build
 .nox
+.ruff_cache
 
 tests/docker_configs/sonarr/*
 !tests/docker_configs/sonarr/config.xml
