@@ -1,14 +1,14 @@
 [project]
 name = "pyarr"
 version = "6.0.0"
-description = "Synchronous Sonarr, Radarr, Lidarr and Readarr API's for Python"
+description = "Synchronous Sonarr, Radarr, Lidarr, Prowlarr, Bazarr, Dispatcharr and Readarr API's for Python"
 authors = [
     { name = "Steven Marks", email = "marksie1988@users.noreply.github.com" }
 ]
 license = { text = "MIT" }
 readme = "README.md"
-keywords = ["sonarr", "radarr", "readarr", "lidarr", "api", "wrapper", "plex"]
-requires-python = ">=3.10"
+keywords = ["sonarr", "radarr", "readarr", "lidarr", "prowlarr", "dispatcharr", "bazarr", "api", "wrapper", "plex"]
+requires-python = ">=3.12"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",

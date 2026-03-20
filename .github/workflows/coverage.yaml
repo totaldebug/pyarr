@@ -1,4 +1,4 @@
-name: tests
+name: coverage
 
 on:
   push:
@@ -13,18 +13,12 @@ on:
       - "docs/**"
       - "README.md"
       - "CHANGELOG.md"
-  schedule:
-    - cron: "0 0 * * *"
   workflow_dispatch:
 
 jobs:
   code-quality:
-    name: 📊 Check code quality
+    name: 📊 Check code coverage
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.10", "3.11", "3.12"]
     steps:
       - uses: actions/checkout@v4
 
@@ -33,10 +27,10 @@ jobs:
         with:
           enable-cache: true
 
-      - name: Setup Python ${{ matrix.python-version }}
+      - name: Setup Python 3.14
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: 3.14
 
       - name: Run containers
         run: docker compose -f .ci/docker-compose.yml up -d
@@ -45,7 +39,7 @@ jobs:
         run: |
           sudo echo "127.0.0.1 sonarr readarr radarr lidarr prowlarr bazarr whisparr dispatcharr deluge jackett" | sudo tee -a /etc/hosts
 
-      - name: sleep 30s for containers to start-up
+      - name: Sleep for 30s
         run: sleep 30s
         shell: bash
 
@@ -58,3 +52,8 @@ jobs:
       - name: 🧪 Check tests are passing
         run: |
           uv run nox -s tests
+
+      - name: 📤 Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+         token: ${{ secrets.CODECOV_TOKEN }}
