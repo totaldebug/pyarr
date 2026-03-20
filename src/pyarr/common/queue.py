@@ -39,7 +39,7 @@ class Queue(CommonActions):
             raise PyarrMissingArgument("sort_key and sort_dir must be used together")
 
         if kwargs:
-            params.update(kwargs)
+            params |= kwargs
 
         response = self.handler.request("queue", params=params)
         if isinstance(response, dict):

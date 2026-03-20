@@ -22,7 +22,7 @@ class Search(CommonActions):
         if indexer_ids:
             params["indexerIds"] = indexer_ids
         if kwargs:
-            params.update(kwargs)
+            params |= kwargs
 
         response = self.handler.request("search", params=params)
         if isinstance(response, list):

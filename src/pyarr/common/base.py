@@ -26,9 +26,7 @@ class CommonActions:
             Any: The response data.
         """
         endpoint = f"{path}{f'/{item_id}' if item_id else ''}"
-        response = self.handler.request(endpoint, params=params)
-
-        return response
+        return self.handler.request(endpoint, params=params)
 
     def _delete(self, path: str, item_id: Any) -> Any:
         """Helper method for standard DELETE requests.

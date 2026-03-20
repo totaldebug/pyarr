@@ -28,7 +28,7 @@ class Command(CommonActions):
         """
         json_data = {"name": name}
         if kwargs:
-            json_data.update(kwargs)
+            json_data |= kwargs
 
         response = self.handler.request("command", method="POST", json_data=json_data)
         if isinstance(response, dict):
