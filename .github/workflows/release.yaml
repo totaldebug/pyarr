@@ -21,8 +21,8 @@ jobs:
         id: release
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          config-file: release-please-config.json
-          manifest-file: .release-please-manifest.json
+          config-file: .github/release-please-config.json
+          manifest-file: .github/release-please-manifest.json
 
   # Full Release to PyPI when release-please PR is merged
   publish-release:
