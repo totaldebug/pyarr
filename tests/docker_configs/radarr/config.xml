@@ -13,4 +13,5 @@
   <SslCertPath></SslCertPath>
   <SslCertPassword></SslCertPassword>
   <InstanceName>Radarr</InstanceName>
+  <AuthenticationRequired>Enabled</AuthenticationRequired>
 </Config>

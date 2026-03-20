@@ -1,8 +1,0 @@
-{
-    "page": 1,
-    "pageSize": 10,
-    "sortKey": "Books.Id",
-    "sortDirection": "default",
-    "totalRecords": 0,
-    "records": []
-}

@@ -21,28 +21,38 @@ To use the package in your Python project, you will need to import the required 
 .. code-block:: python
    :linenos:
 
-    from pyarr import SonarrAPI
-    from pyarr import RadarrAPI
-    from pyarr import ReadarrAPI
-    from pyarr import LidarrAPI
+    from pyarr import Sonarr, Radarr, Readarr, Lidarr, Prowlarr, Bazarr, Whisparr, Dispatcharr
 
-All of the library modules are based on the same format the below example can be
-modified for each one by changing the `sonarr` referances to the required `arr` API:
+All of the library modules are based on the same format. The below example shows how to use Sonarr:
 
 .. code-block:: python
    :linenos:
 
-    # Import SonarrAPI Class
-    from pyarr import SonarrAPI
+    # Import Sonarr Class
+    from pyarr import Sonarr
 
-    # Set Host URL and API-Key
-    host_url = 'http://your-domain.com'
-
-    # You can find your API key in Settings > General.
+    # Set Host, API-Key and Port
+    host = 'your-domain.com'
     api_key = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+    port = 8989
 
-    # Instantiate SonarrAPI Object
-    sonarr = SonarrAPI(host_url, api_key)
+    # Instantiate Sonarr Object
+    sonarr = Sonarr(host, api_key, port)
 
-    # Get and print TV Shows
-    print(sonarr.get_series())
+    # Get and print TV Shows using the series component
+    print(sonarr.series.get())
+
+Composition-based Architecture
+##############################
+
+The new version of PyArr uses a composition-based architecture. Instead of a flat list of methods, functionality is grouped into components:
+
+*   ``client.series``: Manage TV series (Sonarr, Bazarr)
+*   ``client.movie``: Manage movies (Radarr, Bazarr, Whisparr)
+*   ``client.system``: System status, health, and operations
+*   ``client.tag``: Manage tags
+*   ``client.queue``: Monitor and manage the download queue
+*   ``client.history``: View activity history
+*   ... and many more.
+
+This structure makes the library more intuitive and easier to maintain.

@@ -27,7 +27,7 @@ services:
       - 7878:7878
     restart: unless-stopped
   readarr:
-    image: lscr.io/linuxserver/readarr:develop
+    image: lscr.io/linuxserver/readarr:0.4.18-develop
     container_name: readarr
     environment:
       - PUID=1000
@@ -50,27 +50,66 @@ services:
     ports:
       - 8686:8686
     restart: unless-stopped
-  #deluge:
-  #  image: lscr.io/linuxserver/deluge:latest
-  #  container_name: deluge
-  #  environment:
-  #    - PUID=1000
-  #    - PGID=1000
-  #    - TZ=Europe/London
-  #  volumes:
-  #    - ../tests/docker_configs/deluge/config:/config
-  #  ports:
-  #    - 8112:8112
-  #  restart: unless-stopped
-  #jackett:
-  #  image: lscr.io/linuxserver/jackett:latest
-  #  container_name: jackett
-  #  environment:
-  #    - PUID=1000
-  #    - PGID=1000
-  #    - TZ=Europe/London
-  #  volumes:
-  #    - ../tests/docker_configs/jackett/config:/config
-  #  ports:
-  #    - 9117:9117
-  #  restart: unless-stopped
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=1001
+      - PGID=123
+      - TZ=Europe/London
+    volumes:
+      - ../tests/docker_configs/prowlarr/config.xml:/config/config.xml:rw
+    ports:
+      - 9696:9696
+    restart: unless-stopped
+
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    environment:
+      - PUID=1001
+      - PGID=123
+      - TZ=Europe/London
+    volumes:
+      - ../tests/docker_configs/bazarr/config/config.yaml:/config/config.yaml:rw
+    ports:
+      - 6767:6767
+    restart: unless-stopped
+
+  whisparr:
+    image: ghcr.io/hotio/whisparr:latest
+    container_name: whisparr
+    environment:
+      - PUID=1001
+      - PGID=123
+      - TZ=Europe/London
+    volumes:
+      - ../tests/docker_configs/whisparr/config.xml:/config/config.xml:rw
+    ports:
+      - 6969:6969
+    restart: unless-stopped
+
+  dispatcharr:
+    image: ghcr.io/dispatcharr/dispatcharr:latest
+    container_name: dispatcharr
+    environment:
+      - DISPATCHARR_ENV=aio
+      - TZ=Europe/London
+    volumes:
+      - ../tests/docker_configs/dispatcharr/jwt:/data/jwt:rw
+    ports:
+      - 9191:9191
+    restart: unless-stopped
+
+  deluge:
+    image: lscr.io/linuxserver/deluge:latest
+    container_name: deluge
+    environment:
+      - PUID=1001
+      - PGID=123
+      - TZ=Europe/London
+    volumes:
+      - ../tests/docker_configs/deluge/core.conf:/config/core.conf:rw
+    ports:
+      - 8112:8112
+    restart: unless-stopped

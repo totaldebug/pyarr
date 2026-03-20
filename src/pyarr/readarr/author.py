@@ -1,0 +1,103 @@
+from pyarr.common.base import CommonActions
+from pyarr.types import JsonArray, JsonObject
+
+
+class Author(CommonActions):
+    """Author actions for Readarr."""
+
+    def get(self, item_id: int | None = None) -> JsonArray | JsonObject:
+        """Returns authors by ID or all authors.
+
+        Args:
+            item_id (int | None, optional): Database ID for author. Defaults to None.
+
+        Returns:
+            JsonArray | JsonObject: List of dictionaries with items or a single dictionary.
+        """
+        return self._get("author", item_id=item_id)
+
+    def add(
+        self,
+        author: JsonObject,
+        root_dir: str,
+        quality_profile_id: int,
+        metadata_profile_id: int,
+        monitored: bool = True,
+        author_monitor: str = "none",
+        author_search_for_missing_books: bool = False,
+    ) -> JsonObject:
+        """Adds an author based on data from lookup.
+
+        Args:
+            author (JsonObject): An author object from `lookup()`.
+            root_dir (str): Directory for books to be stored.
+            quality_profile_id (int): Quality profile ID.
+            metadata_profile_id (int): Metadata profile ID.
+            monitored (bool, optional): Should the author be monitored. Defaults to True.
+            author_monitor (str, optional): Monitor type. Defaults to "none".
+            author_search_for_missing_books (bool, optional): Search for missing books. Defaults to False.
+
+        Returns:
+            JsonObject: Dictionary of added record.
+        """
+        author["metadataProfileId"] = metadata_profile_id
+        author["qualityProfileId"] = quality_profile_id
+        author["rootFolderPath"] = root_dir
+        author["addOptions"] = {
+            "monitor": author_monitor,
+            "searchForMissingBooks": author_search_for_missing_books,
+        }
+        author["monitored"] = monitored
+
+        response = self.handler.request("author", method="POST", json_data=author)
+        if isinstance(response, dict):
+            return response
+        raise ValueError("Expected a dictionary response from the 'author' endpoint")
+
+    def update(self, item_id: int, data: JsonObject) -> JsonObject:
+        """Update the given author.
+
+        Args:
+            item_id (int): Author database ID to update.
+            data (JsonObject): Parameters to update author.
+
+        Returns:
+            JsonObject: Dictionary with updated record.
+        """
+        response = self.handler.request(f"author/{item_id}", method="PUT", json_data=data)
+        if isinstance(response, dict):
+            return response
+        raise ValueError(f"Expected a dictionary response from the 'author/{item_id}' endpoint")
+
+    def delete(
+        self,
+        item_id: int,
+        delete_files: bool = False,
+        import_list_exclusion: bool = False,
+    ) -> None:
+        """Delete the author with the given ID.
+
+        Args:
+            item_id (int): Database ID for author.
+            delete_files (bool, optional): Delete folder and files. Defaults to False.
+            import_list_exclusion (bool, optional): Add exclusion. Defaults to False.
+        """
+        params: dict[str, bool] = {
+            "deleteFiles": delete_files,
+            "addImportListExclusion": import_list_exclusion,
+        }
+        self.handler.request(f"author/{item_id}", method="DELETE", params=params)
+
+    def lookup(self, term: str) -> JsonArray:
+        """Searches for new authors using a term.
+
+        Args:
+            term (str): Author name or book.
+
+        Returns:
+            JsonArray: List of dictionaries with items.
+        """
+        response = self.handler.request("author/lookup", params={"term": term})
+        if isinstance(response, list):
+            return response
+        raise ValueError("Expected a list response from the 'author/lookup' endpoint")

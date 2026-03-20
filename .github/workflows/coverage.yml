@@ -3,10 +3,16 @@ name: coverage
 on:
   push:
     branches:
-      - beta
+      - main
   pull_request:
     branches:
-      - beta
+      - main
+    # Skip on release-please PRs
+    types: [opened, synchronize, reopened]
+    paths-ignore:
+      - "docs/**"
+      - "README.md"
+      - "CHANGELOG.md"
   workflow_dispatch:
 
 jobs:
@@ -14,28 +20,40 @@ jobs:
     name: 📊 Check code coverage
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
       - name: Setup Python 3.12
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: 3.12
+
       - name: Run containers
-        run: docker-compose -f .ci/docker-compose.yml up -d
+        run: docker compose -f .ci/docker-compose.yml up -d
+
       - name: Add hosts
         run: |
-          sudo echo "127.0.0.1 sonarr readarr radarr lidarr prowlarr deluge jackett" | sudo tee -a /etc/hosts
+          sudo echo "127.0.0.1 sonarr readarr radarr lidarr prowlarr bazarr whisparr dispatcharr deluge jackett" | sudo tee -a /etc/hosts
+
       - name: Sleep for 30s
         run: sleep 30s
         shell: bash
+
       - name: check ports are mapped
         run: docker ps
+
       - name: check one of the containers is up
         run: curl http://radarr:7878
+
       - name: 🧪 Check tests are passing
         run: |
-          pip install poetry nox
-          nox -s tests
+          uv run nox -s tests
+
       - name: 📤 Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
          token: ${{ secrets.CODECOV_TOKEN }}

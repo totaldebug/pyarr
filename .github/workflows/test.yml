@@ -3,11 +3,16 @@ name: tests
 on:
   push:
     branches:
-      - beta
+      - main
   pull_request:
     branches:
       - main
-      - beta
+    # Skip on release-please PRs
+    types: [opened, synchronize, reopened]
+    paths-ignore:
+      - "docs/**"
+      - "README.md"
+      - "CHANGELOG.md"
   schedule:
     - cron: "0 0 * * *"
   workflow_dispatch:
@@ -21,24 +26,35 @@ jobs:
       matrix:
         python-version: ["3.10", "3.11", "3.12"]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
       - name: Setup Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+
       - name: Run containers
-        run: docker-compose -f .ci/docker-compose.yml up -d
+        run: docker compose -f .ci/docker-compose.yml up -d
+
       - name: Add hosts
         run: |
-          sudo echo "127.0.0.1 sonarr readarr radarr lidarr prowlarr deluge jackett" | sudo tee -a /etc/hosts
+          sudo echo "127.0.0.1 sonarr readarr radarr lidarr prowlarr bazarr whisparr dispatcharr deluge jackett" | sudo tee -a /etc/hosts
+
       - name: sleep 30s for containers to start-up
         run: sleep 30s
         shell: bash
+
       - name: check ports are mapped
         run: docker ps
+
       - name: check one of the containers is up
         run: curl http://radarr:7878
+
       - name: 🧪 Check tests are passing
         run: |
-          pip install poetry nox
-          nox -s tests
+          uv run nox -s tests

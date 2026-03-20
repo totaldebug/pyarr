@@ -1,4 +1,3 @@
-
 .. toctree::
    :caption: Overview
    :titlesonly:
@@ -6,21 +5,23 @@
    quickstart
    installing
    contributing
+   MISSING_ENDPOINTS
 
 .. toctree::
    :caption: Modules
    :titlesonly:
 
+   modules/common
    modules/sonarr
    modules/radarr
    modules/readarr
    modules/lidarr
+   modules/prowlarr
+   modules/bazarr
+   modules/whisparr
+   modules/dispatcharr
 
 .. toctree::
-   :caption: Models
+   :caption: Literals
 
-   models/common
-   models/sonarr
-   models/radarr
-   models/readarr
-   models/lidarr
+   literals
