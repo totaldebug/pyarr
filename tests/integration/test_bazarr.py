@@ -1,15 +1,15 @@
-def test_bazarr_system_status(bazarr_client):
-    # Bazarr might have a different status endpoint or structure
-    # but BaseArrClient provides system.get_status()
+from pyarr import Bazarr
+
+
+def test_bazarr_system_status(bazarr_client: Bazarr):
     try:
         status = bazarr_client.system.get_status()
         assert isinstance(status, dict)
     except Exception:
-        # If Bazarr doesn't support the common system/status, we might need to override it
         pass
 
 
-def test_bazarr_subtitles(bazarr_client):
+def test_bazarr_subtitles(bazarr_client: Bazarr):
     try:
         subtitles = bazarr_client.subtitles.get()
         assert isinstance(subtitles, list)
@@ -17,7 +17,7 @@ def test_bazarr_subtitles(bazarr_client):
         pass
 
 
-def test_bazarr_providers(bazarr_client):
+def test_bazarr_providers(bazarr_client: Bazarr):
     try:
         providers = bazarr_client.providers.get()
         assert isinstance(providers, list)

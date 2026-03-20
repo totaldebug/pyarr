@@ -3,8 +3,8 @@ from pyarr.radarr import Radarr
 
 def test_radarr_tag(radarr_client: Radarr):
     # Create a tag
-    tag = radarr_client.tag.create(label="test_tag")
-    assert tag["label"] == "test_tag"
+    tag = radarr_client.tag.create(label="test-tag")
+    assert tag["label"] == "test-tag"
     assert "id" in tag
 
     # Get all tags
@@ -15,15 +15,15 @@ def test_radarr_tag(radarr_client: Radarr):
     # Get specific tag
     specific_tag = radarr_client.tag.get(item_id=tag["id"])
     assert specific_tag["id"] == tag["id"]
-    assert specific_tag["label"] == "test_tag"
+    assert specific_tag["label"] == "test-tag"
 
     # Get tag detail
     tag_detail = radarr_client.tag.get_detail(item_id=tag["id"])
     assert tag_detail["id"] == tag["id"]
 
     # Update tag
-    updated_tag = radarr_client.tag.update(item_id=tag["id"], label="updated_tag")
-    assert updated_tag["label"] == "updated_tag"
+    updated_tag = radarr_client.tag.update(item_id=tag["id"], label="updated-tag")
+    assert updated_tag["label"] == "updated-tag"
 
     # Delete tag
     radarr_client.tag.delete(tag["id"])

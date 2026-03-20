@@ -36,6 +36,25 @@ def docker_test(session: Session) -> None:
     session.notify("test_cleanup_containers")
 
 
+def get_project_name() -> str:
+    """Get the docker compose project name."""
+    try:
+        hostname = subprocess.check_output(["hostname"]).strip().decode("utf-8")
+        inspect_command = [
+            "docker",
+            "inspect",
+            "--format",
+            '{{ index .Config.Labels "com.docker.compose.project" }}',
+            hostname,
+        ]
+        project_name = subprocess.check_output(inspect_command).strip().decode("utf-8")
+        if not project_name:
+            return "pyarr-integration"
+        return project_name
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return "pyarr-integration"
+
+
 @nox.session(reuse_venv=True)
 def test_create_containers(session: Session) -> None:
     session.run(
@@ -44,20 +63,11 @@ def test_create_containers(session: Session) -> None:
         "docker",
         "compose",
         "-f",
-        ".devcontainer/docker-compose.yml",
+        ".ci/docker-compose.yml",
         "pull",
         external=True,
     )
-    hostname = subprocess.check_output(["hostname"]).strip().decode("utf-8")
-    inspect_command = [
-        "sudo",
-        "docker",
-        "inspect",
-        "--format",
-        '{{ index .Config.Labels "com.docker.compose.project" }}',
-        hostname,
-    ]
-    project_name = subprocess.check_output(inspect_command).strip().decode("utf-8")
+    project_name = get_project_name()
 
     session.run(
         "uv",
@@ -67,7 +77,7 @@ def test_create_containers(session: Session) -> None:
         "--project-name",
         project_name,
         "-f",
-        ".devcontainer/docker-compose.yml",
+        ".ci/docker-compose.yml",
         "up",
         "-d",
         external=True,
@@ -76,32 +86,28 @@ def test_create_containers(session: Session) -> None:
 
 @nox.session(reuse_venv=True)
 def test_cleanup_containers(session: Session) -> None:
-    hostname = subprocess.check_output(["hostname"]).strip().decode("utf-8")
-    inspect_command = [
-        "sudo",
-        "docker",
-        "inspect",
-        "--format",
-        '{{ index .Config.Labels "com.docker.compose.project" }}',
-        hostname,
-    ]
-    project_name = subprocess.check_output(inspect_command).strip().decode("utf-8")
+    project_name = get_project_name()
     container_filter = f"label=com.docker.compose.project={project_name}"
 
     # Execute the `docker ps` command and filter the output using grep
-    cmd1 = ["sudo", "docker", "ps", "-a", "-q", "--filter", container_filter]
-    cmd2 = ["grep", "-v", hostname]
+    cmd1 = ["docker", "ps", "-a", "-q", "--filter", container_filter]
     output1 = subprocess.run(cmd1, stdout=subprocess.PIPE)
-    output2 = subprocess.run(cmd2, input=output1.stdout, stdout=subprocess.PIPE)
 
-    # Get the container IDs from the output
-    container_ids = output2.stdout.decode("utf-8").strip().split()
+    try:
+        hostname = subprocess.check_output(["hostname"]).strip().decode("utf-8")
+        cmd2 = ["grep", "-v", hostname]
+        output2 = subprocess.run(cmd2, input=output1.stdout, stdout=subprocess.PIPE)
+        # Get the container IDs from the output
+        container_ids = output2.stdout.decode("utf-8").strip().split()
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        # If hostname/grep fails, just use all container IDs from output1
+        container_ids = output1.stdout.decode("utf-8").strip().split()
 
     # Kill and remove the containers, cant use docker compose down as that kills
     # the workspace container for devcontainer. this works just as well.
     for container_id in container_ids:
-        session.run("sudo", "docker", "kill", container_id, silent=True, external=True)
-        session.run("sudo", "docker", "rm", container_id, silent=True, external=True)
+        session.run("docker", "kill", container_id, silent=True, external=True)
+        session.run("docker", "rm", container_id, silent=True, external=True)
 
 
 @nox.session(reuse_venv=True)

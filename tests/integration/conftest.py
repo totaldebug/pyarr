@@ -1,6 +1,6 @@
 import pytest
 
-from pyarr import Bazarr, Dispatcharr, Lidarr, Prowlarr, Radarr, Sonarr, Whisparr
+from pyarr import Bazarr, Dispatcharr, Lidarr, Prowlarr, Radarr, Readarr, Sonarr, Whisparr
 
 
 @pytest.fixture
@@ -69,5 +69,15 @@ def dispatcharr_client():
         host="localhost",
         api_key="da96fdd18ce147b79b54c2fdadb7e19a",  # Placeholder
         port=9191,
+        tls=False,
+    )
+
+
+@pytest.fixture
+def readarr_client():
+    return Readarr(
+        host="localhost",
+        api_key="ccad0c53c68247ac99616747407c185b",
+        port=8787,
         tls=False,
     )

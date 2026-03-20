@@ -1,6 +1,5 @@
 ---
-
-version: '3'
+version: "3"
 services:
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
@@ -28,18 +27,18 @@ services:
       - 7878:7878
     restart: unless-stopped
 
-#  readarr:
-#    image: lscr.io/linuxserver/readarr:develop
-#    container_name: readarr
-#    environment:
-#      - PUID=1001
-#      - PGID=123
-#      - TZ=Europe/London
-#    volumes:
-#      - ../tests/docker_configs/readarr/config.xml:/config/config.xml:rw
-#    ports:
-#      - 8787:8787
-#    restart: unless-stopped
+  readarr:
+    image: lscr.io/linuxserver/readarr:0.4.18-develop
+    container_name: readarr
+    environment:
+      - PUID=1001
+      - PGID=123
+      - TZ=Europe/London
+    volumes:
+      - ../tests/docker_configs/readarr/config.xml:/config/config.xml:rw
+    ports:
+      - 8787:8787
+    restart: unless-stopped
 
   lidarr:
     image: lscr.io/linuxserver/lidarr:latest
