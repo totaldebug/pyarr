@@ -28,13 +28,10 @@ add this to requirements.txt:
 Via Git or Download
 ===================
 
-#. Go to `Pyarr Repo <https://github.com/totaldebug/pyarr>`
+#. Go to `Pyarr Repo <https://github.com/totaldebug/pyarr>`_
 #. Download a copy to your project folders
 #. Import as below
 
 .. code:: python
 
-    from pyarr import SonarrAPI
-    from pyarr import RadarrAPI
-    from pyarr import ReadarrAPI
-    from pyarr import LidarrAPI
+    from pyarr import Sonarr, Radarr, Readarr, Lidarr, Prowlarr, Bazarr, Whisparr, Dispatcharr

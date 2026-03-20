@@ -1,25 +1,25 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Contributing &mdash; pyarr  documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
   
-        <script src="_static/jquery.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="SonarrAPI" href="modules/sonarr.html" />
+    <link rel="next" title="Missing API Endpoints in PyArr" href="MISSING_ENDPOINTS.html" />
     <link rel="prev" title="Installation" href="installing.html" /> 
 </head>
 
@@ -34,9 +34,6 @@
           <a href="index.html">
             
           </a>
-              <div class="version">
-                5.2.0
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -50,21 +47,23 @@
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">🚀 Quick Start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installing.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MISSING_ENDPOINTS.html">Missing API Endpoints in PyArr</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Modules</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="modules/sonarr.html">SonarrAPI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/radarr.html">RadarrAPI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/readarr.html">ReadarrAPI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/lidarr.html">LidarrAPI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/common.html">Common Components</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/sonarr.html">Sonarr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/radarr.html">Radarr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/readarr.html">Readarr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/lidarr.html">Lidarr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/prowlarr.html">Prowlarr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/bazarr.html">Bazarr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/whisparr.html">Whisparr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/dispatcharr.html">Dispatcharr</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Models</span></p>
+<p class="caption" role="heading"><span class="caption-text">Literals</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="models/common.html">Common</a></li>
-<li class="toctree-l1"><a class="reference internal" href="models/sonarr.html">Sonarr</a></li>
-<li class="toctree-l1"><a class="reference internal" href="models/radarr.html">Radarr</a></li>
-<li class="toctree-l1"><a class="reference internal" href="models/readarr.html">Readarr</a></li>
-<li class="toctree-l1"><a class="reference internal" href="models/lidarr.html">Lidarr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="literals.html">Literals</a></li>
 </ul>
 
         </div>
@@ -92,7 +91,7 @@
            <div itemprop="articleBody">
              
   <section id="contributing">
-<h1>Contributing<a class="headerlink" href="#contributing" title="Permalink to this heading"></a></h1>
+<h1>Contributing<a class="headerlink" href="#contributing" title="Link to this heading"></a></h1>
 <p>It is recommended that contributions to this project are created within vscode,
 utilising the devcontainer functionality.</p>
 <p>This ensures that all developers are using the same environment and extentions,
@@ -103,7 +102,7 @@ reducing the risk of additional bugs / formatting issues within the project.</p>
 additional information can be found within the VSCode documentation.</p>
 </div>
 <section id="setup-your-environment">
-<h2>Setup your environment<a class="headerlink" href="#setup-your-environment" title="Permalink to this heading"></a></h2>
+<h2>Setup your environment<a class="headerlink" href="#setup-your-environment" title="Link to this heading"></a></h2>
 <ol class="arabic simple">
 <li><p>Fork the <a class="reference external" href="https://github.com/totaldebug/pyarr">repository</a></p></li>
 <li><p>Open the repository in VSCode</p></li>
@@ -116,9 +115,9 @@ additional information can be found within the VSCode documentation.</p>
 </ol>
 </section>
 <section id="updating-pyarr-module">
-<h2>Updating PyArr module<a class="headerlink" href="#updating-pyarr-module" title="Permalink to this heading"></a></h2>
+<h2>Updating PyArr module<a class="headerlink" href="#updating-pyarr-module" title="Link to this heading"></a></h2>
 <section id="style-formatting">
-<h3>Style &amp; formatting<a class="headerlink" href="#style-formatting" title="Permalink to this heading"></a></h3>
+<h3>Style &amp; formatting<a class="headerlink" href="#style-formatting" title="Link to this heading"></a></h3>
 <p>It is highly recommended to use vsCode devcontainer as this automatically adds the
 required formatting checks on pre-commit, this will allow for resolution of issues
 prior to the pull request being submitted.</p>
@@ -146,7 +145,7 @@ plugin which will auto fill.</p>
 </ul>
 </section>
 <section id="testing">
-<h3>Testing<a class="headerlink" href="#testing" title="Permalink to this heading"></a></h3>
+<h3>Testing<a class="headerlink" href="#testing" title="Link to this heading"></a></h3>
 <p>Tests can be run with the following command: <code class="docutils literal notranslate"><span class="pre">nox</span> <span class="pre">-s</span> <span class="pre">tests</span></code>. This command will check
 code style and typing compliance and will then execute all required``tests``</p>
 <p>If you are adding a new method to the library, a test must be added as well. This test should be
@@ -154,7 +153,7 @@ against the live API, if a mock is required then reason for this should be added
 </section>
 </section>
 <section id="updating-documentation">
-<h2>Updating Documentation<a class="headerlink" href="#updating-documentation" title="Permalink to this heading"></a></h2>
+<h2>Updating Documentation<a class="headerlink" href="#updating-documentation" title="Link to this heading"></a></h2>
 <p>The documentation for this project utilises <a class="reference external" href="https://www.sphinx-doc.org/">sphinx</a>.
 Sphinx allows for automatic documenting of all classes / functions via DocString.</p>
 <p>To Update static pages, you can amend the <code class="docutils literal notranslate"><span class="pre">.rst</span></code> files in the <code class="docutils literal notranslate"><span class="pre">sphinx-docs</span></code> folder.</p>
@@ -165,12 +164,12 @@ does not require any manual changes to be made.</p>
 <p>Sphinx documentation uses <a class="reference external" href="https://docutils.sourceforge.io/rst.html">reStructuredText</a> to format each of the pages.</p>
 </section>
 <section id="pull-requests-release">
-<h2>Pull Requests &amp; Release<a class="headerlink" href="#pull-requests-release" title="Permalink to this heading"></a></h2>
+<h2>Pull Requests &amp; Release<a class="headerlink" href="#pull-requests-release" title="Link to this heading"></a></h2>
 <p>Now that you have made the changes required for your enhancement, a pull request
 is required for the core team to review the changes, request amendments or approve
 the work that you have completed.</p>
 <section id="pull-requests">
-<h3>Pull Requests<a class="headerlink" href="#pull-requests" title="Permalink to this heading"></a></h3>
+<h3>Pull Requests<a class="headerlink" href="#pull-requests" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><dl class="simple">
 <dt>Each feature / bugfix should have its own PR. This makes code review more efficient</dt><dd><p>and allows for a clean changelog generation</p>
@@ -188,7 +187,7 @@ the work that you have completed.</p>
 </ul>
 </section>
 <section id="release-changes">
-<h3>Release Changes<a class="headerlink" href="#release-changes" title="Permalink to this heading"></a></h3>
+<h3>Release Changes<a class="headerlink" href="#release-changes" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>To release a new version of the module or documentation updates, the core team</dt><dd><p>will take the following steps:</p>
 </dd>
@@ -214,7 +213,7 @@ and also don’t require tagging.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="installing.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="modules/sonarr.html" class="btn btn-neutral float-right" title="SonarrAPI" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="MISSING_ENDPOINTS.html" class="btn btn-neutral float-right" title="Missing API Endpoints in PyArr" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

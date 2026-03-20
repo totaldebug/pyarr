@@ -1,0 +1,282 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Missing API Endpoints in PyArr &mdash; pyarr  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Common Components" href="modules/common.html" />
+    <link rel="prev" title="Contributing" href="contributing.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Overview</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">🚀 Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installing.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Missing API Endpoints in PyArr</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules/common.html">Common Components</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/sonarr.html">Sonarr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/radarr.html">Radarr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/readarr.html">Readarr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/lidarr.html">Lidarr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/prowlarr.html">Prowlarr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/bazarr.html">Bazarr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/whisparr.html">Whisparr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/dispatcharr.html">Dispatcharr</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Literals</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="literals.html">Literals</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pyarr</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Missing API Endpoints in PyArr</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/MISSING_ENDPOINTS.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="missing-api-endpoints-in-pyarr">
+<h1>Missing API Endpoints in PyArr<a class="headerlink" href="#missing-api-endpoints-in-pyarr" title="Link to this heading"></a></h1>
+<p>This document lists the API endpoints from the “Arr” suite that are currently missing or not fully implemented in the new <code class="docutils literal notranslate"><span class="pre">pyarr</span></code> structure. This list is based on the official OpenAPI specifications and documentation for each service.</p>
+<section id="common-components-shared-across-most-services">
+<h2>Common Components (Shared across most services)<a class="headerlink" href="#common-components-shared-across-most-services" title="Link to this heading"></a></h2>
+<p>The following endpoints are available in most services but may not be fully exposed in <code class="docutils literal notranslate"><span class="pre">pyarr</span></code>:</p>
+<ul class="simple">
+<li><p><strong>Config Management</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET/PUT</span> <span class="pre">/api/v3/config/host</span></code>: General host settings (port, API key, etc.).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET/PUT</span> <span class="pre">/api/v3/config/naming</span></code>: File and folder naming formats.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET/PUT</span> <span class="pre">/api/v3/config/ui</span></code>: User interface settings.</p></li>
+</ul>
+</li>
+<li><p><strong>System Operations</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/api/v3/system/backup/restore</span></code>: Restore from a backup.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/v3/system/routes</span></code>: List all available API routes.</p></li>
+</ul>
+</li>
+<li><p><strong>Media Management</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/v3/parse</span></code>: Parse a title or path to identify media.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/v3/rename</span></code>: List files that need renaming.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/api/v3/rename</span></code>: Execute renaming operations.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="sonarr-specific">
+<h2>Sonarr Specific<a class="headerlink" href="#sonarr-specific" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Series &amp; Episodes</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">/api/v3/series/editor</span></code>: Bulk update multiple series.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/api/v3/series/import</span></code>: Bulk import series from a path.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/api/v3/episode/monitor</span></code>: Bulk update episode monitored status.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/api/v3/episode/search</span></code>: Trigger search for specific episodes.</p></li>
+</ul>
+</li>
+<li><p><strong>Wanted List</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/v3/wanted/cutoff</span></code>: List episodes where the quality cutoff is unmet.</p></li>
+</ul>
+</li>
+<li><p><strong>Profiles</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET/POST/PUT/DELETE</span> <span class="pre">/api/v3/languageprofile</span></code>: Full CRUD for language profiles.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET/POST/PUT/DELETE</span> <span class="pre">/api/v3/delayprofile</span></code>: Full CRUD for delay profiles.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="radarr-specific">
+<h2>Radarr Specific<a class="headerlink" href="#radarr-specific" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Movies</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">/api/v3/movie/editor</span></code>: Bulk update multiple movies.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/api/v3/movie/import</span></code>: Bulk import movies from a path.</p></li>
+</ul>
+</li>
+<li><p><strong>Custom Formats</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET/POST/PUT/DELETE</span> <span class="pre">/api/v3/customformat</span></code>: Full CRUD for Custom Formats.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/v3/customformat/schema</span></code>: Get schema for custom formats.</p></li>
+</ul>
+</li>
+<li><p><strong>Collections</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/v3/collection</span></code>: List movie collections.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/v3/collection/{id}</span></code>: Get specific collection details.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="lidarr-specific">
+<h2>Lidarr Specific<a class="headerlink" href="#lidarr-specific" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Artists &amp; Albums</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">/api/v1/artist/editor</span></code>: Bulk update multiple artists.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">/api/v1/album/editor</span></code>: Bulk update multiple albums.</p></li>
+</ul>
+</li>
+<li><p><strong>Media Management</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/v1/retag</span></code>: List files that need retagging.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/api/v1/retag</span></code>: Execute retagging operations.</p></li>
+</ul>
+</li>
+<li><p><strong>Profiles</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET/POST/PUT/DELETE</span> <span class="pre">/api/v1/metadataprofile</span></code>: Full CRUD for metadata profiles.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="prowlarr-specific">
+<h2>Prowlarr Specific<a class="headerlink" href="#prowlarr-specific" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Indexer Management</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/api/v1/indexer/test</span></code>: Test a specific indexer configuration.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/api/v1/indexer/testall</span></code>: Test all configured indexers.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/v1/indexerstats</span></code>: Performance statistics for indexers.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/v1/indexerstatus</span></code>: Detailed health status for indexers.</p></li>
+</ul>
+</li>
+<li><p><strong>Sync Management</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET/POST/PUT/DELETE</span> <span class="pre">/api/v1/appprofile</span></code>: Manage application sync profiles.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="bazarr-specific">
+<h2>Bazarr Specific<a class="headerlink" href="#bazarr-specific" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Resource Management</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET/POST/PUT/DELETE</span> <span class="pre">/api/series</span></code>: Manage TV series within Bazarr.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET/POST/PUT/DELETE</span> <span class="pre">/api/movies</span></code>: Manage movies within Bazarr.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET/POST/PUT/DELETE</span> <span class="pre">/api/episodes</span></code>: Manage episodes within Bazarr.</p></li>
+</ul>
+</li>
+<li><p><strong>Subtitle Operations</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/subtitles/wanted</span></code>: List media missing subtitles.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/api/subtitles/search</span></code>: Trigger search for subtitles.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="dispatcharr-specific">
+<h2>Dispatcharr Specific<a class="headerlink" href="#dispatcharr-specific" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Exports</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/epg</span></code>: Export XMLTV data.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/m3u</span></code>: Export M3U playlist data.</p></li>
+</ul>
+</li>
+<li><p><strong>Management</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET/POST/PUT/DELETE</span> <span class="pre">/api/v1/series-rules</span></code>: Manage DVR/Series recording rules.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="contributing.html" class="btn btn-neutral float-left" title="Contributing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="modules/common.html" class="btn btn-neutral float-right" title="Common Components" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Steven Marks, TotalDebug.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
