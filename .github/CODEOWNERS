@@ -1,0 +1,8 @@
+# This file defines who is responsible for specific parts of the codebase.
+# See https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-codeowners
+
+# Default owners for everything
+* @marksie1988
+
+# The sync API is auto-generated. Manual changes are strictly forbidden.
+/src/pyarr/_sync/ @marksie1988

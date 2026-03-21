@@ -1,0 +1,72 @@
+name: Sync Check
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "src/pyarr/_async/**"
+      - "src/pyarr/_sync/**"
+      - "scripts/generate_sync.py"
+
+jobs:
+  check-sync:
+    name: 🔄 Verify Sync API Integrity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check for manual edits in _sync
+        run: |
+          # Check if any files in _sync were modified in this PR
+          SYNC_MODIFIED=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep "src/pyarr/_sync/" || true)
+          ASYNC_MODIFIED=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep "src/pyarr/_async/" || true)
+
+          if [ -n "$SYNC_MODIFIED" ] && [ -z "$ASYNC_MODIFIED" ]; then
+            echo "❌ ERROR: Detected manual edits in src/pyarr/_sync/ without corresponding changes in src/pyarr/_async/."
+            echo "Please only modify the async version. The sync version is automatically generated."
+            exit 1
+          fi
+
+      - name: Generate Sync API
+        run: uv run python3 scripts/generate_sync.py
+
+      - name: Verify parity
+        id: git-check
+        run: |
+          if ! git diff --exit-code src/pyarr/_sync; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "⚠️ WARNING: Synchronous API was out of sync with asynchronous API."
+          fi
+
+      - name: Auto-fix and Push (PRs only)
+        if: steps.git-check.outputs.changed == 'true' && github.event_name == 'pull_request'
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/pyarr/_sync
+          git commit -m "chore: auto-generate sync API from async changes"
+          git push
+          echo "✅ Successfully auto-fixed sync API parity."
+
+      - name: Fail if out of sync (Push to main)
+        if: steps.git-check.outputs.changed == 'true' && github.event_name == 'push'
+        run: |
+          echo "❌ ERROR: Synchronous API is out of sync on main branch!"
+          exit 1

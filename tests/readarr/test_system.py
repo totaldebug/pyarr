@@ -1,4 +1,4 @@
-from pyarr.readarr import Readarr
+from pyarr import Readarr
 
 
 def test_readarr_health(readarr_client: Readarr):

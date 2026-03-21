@@ -1,4 +1,4 @@
-from pyarr.readarr import Readarr
+from pyarr import Readarr
 
 
 def test_readarr_create_backup(readarr_client: Readarr):

@@ -1,0 +1,17 @@
+from pyarr._async.common.base import CommonActions
+from pyarr.types import JsonArray, JsonObject
+
+
+class Metadata(CommonActions):
+    """Metadata actions for Arr clients."""
+
+    async def get(self, item_id: int | None = None) -> JsonArray | JsonObject:
+        """Returns the list of metadata consumer settings or a specific record by ID.
+
+        Args:
+            item_id (int | None, optional): ID for specific metadata record. Defaults to None.
+
+        Returns:
+            JsonArray | JsonObject: List of dictionaries with items or a single dictionary.
+        """
+        return await self._get("metadata", item_id=item_id)

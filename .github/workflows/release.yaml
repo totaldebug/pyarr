@@ -37,6 +37,8 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version-file: "pyproject.toml"
+      - name: Generate Sync API
+        run: uv run python3 scripts/generate_sync.py
       - name: Build and Publish to PyPI
         run: |
           uv build
@@ -57,6 +59,8 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version-file: "pyproject.toml"
+      - name: Generate Sync API
+        run: uv run python3 scripts/generate_sync.py
 
       - name: Extract version and publish RC
         run: |

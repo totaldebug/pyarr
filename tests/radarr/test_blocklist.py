@@ -1,4 +1,4 @@
-from pyarr.radarr import Radarr
+from pyarr import Radarr
 
 
 def test_radarr_blocklist(radarr_client: Radarr):

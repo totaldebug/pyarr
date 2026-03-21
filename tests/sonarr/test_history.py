@@ -1,7 +1,6 @@
 import contextlib
 
-from pyarr.exceptions import PyarrMissingArgument
-from pyarr.sonarr import Sonarr
+from pyarr import PyarrMissingArgument, Sonarr
 
 
 def test_sonarr_get_history(sonarr_client: Sonarr):

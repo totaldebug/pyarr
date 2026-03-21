@@ -1,9 +1,6 @@
 import pytest
 
-from pyarr.lidarr import Lidarr
-from pyarr.radarr import Radarr
-from pyarr.readarr import Readarr
-from pyarr.sonarr import Sonarr
+from pyarr import Lidarr, Radarr, Readarr, Sonarr
 
 from . import (
     LIDARR_API_KEY,

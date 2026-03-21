@@ -1,12 +1,12 @@
 import pytest
 
+from pyarr import Sonarr
 from pyarr.exceptions import (
     PyarrBadRequest,
     PyarrMethodNotAllowed,
     PyarrResourceNotFound,
     PyarrUnauthorizedError,
 )
-from pyarr.sonarr import Sonarr
 
 
 def test_http_unauthorized():

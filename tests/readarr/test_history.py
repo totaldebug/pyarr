@@ -1,7 +1,6 @@
 import contextlib
 
-from pyarr.exceptions import PyarrMissingArgument
-from pyarr.readarr import Readarr
+from pyarr import PyarrMissingArgument, Readarr
 
 
 def test_readarr_get_history(readarr_client: Readarr):

@@ -1,0 +1,13 @@
+from pyarr._async.utils.http import RequestHandler
+
+
+class Config:
+    """Config actions for Radarr."""
+
+    def __init__(self, handler: RequestHandler):
+        """Initializes the config actions with the provided request handler.
+
+        Args:
+            handler (RequestHandler): The request handler to use for API requests.
+        """
+        self.handler = handler

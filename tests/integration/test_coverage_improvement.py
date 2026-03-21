@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 import pytest
 
-from pyarr.exceptions import PyarrMissingArgument, PyarrResourceNotFound
+from pyarr import PyarrMissingArgument, PyarrResourceNotFound
 
 
 def test_sonarr_download_client_extended(sonarr_client):

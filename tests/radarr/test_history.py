@@ -1,7 +1,6 @@
 import contextlib
 
-from pyarr.exceptions import PyarrMissingArgument
-from pyarr.radarr import Radarr
+from pyarr import PyarrMissingArgument, Radarr
 
 
 def test_radarr_get_history(radarr_client: Radarr):

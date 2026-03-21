@@ -19,6 +19,7 @@ def format(session: Session) -> None:
 def tests(session: Session) -> None:
     """Run the complete test suite"""
     if os.environ.get("GITHUB_ACTIONS") == "true":
+        session.notify("check_sync")
         session.notify("test_types")
         session.notify("test_style")
         session.notify("test_suite")
@@ -29,11 +30,26 @@ def tests(session: Session) -> None:
 @nox.session(reuse_venv=True)
 def docker_test(session: Session) -> None:
     """Run the complete test suite"""
+    session.notify("check_sync")
     session.notify("test_create_containers")
     session.notify("test_types")
     session.notify("test_style")
     session.notify("test_suite")
     session.notify("test_cleanup_containers")
+
+
+@nox.session(reuse_venv=True)
+def check_sync(session: Session) -> None:
+    """Check that the synchronous API is in sync with the asynchronous API"""
+    session.run("uv", "sync", external=True)
+    session.run("uv", "run", "python3", "scripts/generate_sync.py", external=True)
+    # Check if there are any changes in src/pyarr/_sync
+    result = subprocess.run(["git", "diff", "--exit-code", "src/pyarr/_sync"], capture_output=True)
+    if result.returncode != 0:
+        session.error(
+            "The synchronous API is out of sync with the asynchronous API. "
+            "Please run 'uv run python3 scripts/generate_sync.py' and commit the changes."
+        )
 
 
 def get_project_name() -> str:

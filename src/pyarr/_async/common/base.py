@@ -1,0 +1,42 @@
+from typing import Any
+
+from pyarr._async.utils.http import RequestHandler
+
+
+class CommonActions:
+    """Base class for common API actions."""
+
+    def __init__(self, handler: RequestHandler):
+        """Initializes the common actions with the provided request handler.
+
+        Args:
+            handler (RequestHandler): The request handler to use for API requests.
+        """
+        self.handler = handler
+
+    async def _get(self, path: str, item_id: Any = None, params: dict | None = None) -> Any:
+        """Helper method for standard GET requests (List or Detail).
+
+        Args:
+            path (str): The API endpoint path.
+            item_id (Any, optional): The ID of the item to retrieve. Defaults to None.
+            params (dict | None, optional): The query parameters to include. Defaults to None.
+
+        Returns:
+            Any: The response data.
+        """
+        endpoint = f"{path}{f'/{item_id}' if item_id else ''}"
+        return await self.handler.request(endpoint, params=params)
+
+    async def _delete(self, path: str, item_id: Any) -> Any:
+        """Helper method for standard DELETE requests.
+
+        Args:
+            path (str): The API endpoint path.
+            item_id (Any): The ID of the item to delete.
+
+        Returns:
+            Any: The response data.
+        """
+        endpoint = f"{path}/{item_id}"
+        return await self.handler.request(endpoint, method="DELETE")

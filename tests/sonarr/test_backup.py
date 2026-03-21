@@ -1,4 +1,4 @@
-from pyarr.sonarr import Sonarr
+from pyarr import Sonarr
 
 
 def test_sonarr_create_backup(sonarr_client: Sonarr):

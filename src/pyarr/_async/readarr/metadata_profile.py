@@ -1,0 +1,66 @@
+from pyarr._async.common.base import CommonActions
+from pyarr.types import JsonArray, JsonObject
+
+
+class MetadataProfile(CommonActions):
+    """Metadata profile actions for Readarr."""
+
+    async def get(self, item_id: int | None = None) -> JsonArray | JsonObject:
+        """Returns metadata profiles by ID or all profiles.
+
+        Args:
+            item_id (int | None, optional): Database ID for profile. Defaults to None.
+
+        Returns:
+            JsonArray | JsonObject: List of dictionaries with items or a single dictionary.
+        """
+        return await self._get("metadataprofile", item_id=item_id)
+
+    async def add(
+        self,
+        name: str,
+        min_popularity: int,
+        skip_missing_date: bool,
+        skip_missing_isbn: bool,
+        skip_parts_and_sets: bool,
+        skip_series_secondary: bool,
+        allowed_languages: str,
+        min_pages: int,
+    ) -> JsonObject:
+        """Add a metadata profile.
+
+        Args:
+            name (str): Name of the profile.
+            min_popularity (int): Minimum popularity.
+            skip_missing_date (bool): Skip missing dates.
+            skip_missing_isbn (bool): Skip missing ISBN.
+            skip_parts_and_sets (bool): Skip parts and sets.
+            skip_series_secondary (bool): Skip series secondary.
+            allowed_languages (str): List of allowed languages.
+            min_pages (int): Minimum pages.
+
+        Returns:
+            JsonObject: Dictionary of added record.
+        """
+        json_data = {
+            "name": name,
+            "minPopularity": min_popularity,
+            "skipMissingDate": skip_missing_date,
+            "skipMissingIsbn": skip_missing_isbn,
+            "skipPartsAndSets": skip_parts_and_sets,
+            "skipSeriesSecondary": skip_series_secondary,
+            "allowedLanguages": allowed_languages,
+            "minPages": min_pages,
+        }
+        response = await self.handler.request("metadataprofile", method="POST", json_data=json_data)
+        if isinstance(response, dict):
+            return response
+        raise ValueError("Expected a dictionary response from the 'metadataprofile' endpoint")
+
+    async def delete(self, item_id: int) -> None:
+        """Delete a metadata profile by ID.
+
+        Args:
+            item_id (int): Database ID for profile.
+        """
+        await self._delete("metadataprofile", item_id=item_id)
