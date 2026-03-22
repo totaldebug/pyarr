@@ -68,8 +68,12 @@ A Python library for the following `arr` API's:
 * Radarr
 * Readarr
 * Lidarr
+* Prowlarr
+* Dispatcharr
+* Bazarr
+* Whisparr
 
-The library returns results in JSON format for ease of use, this also reduces the risk of failue when the arr APIs are updated.
+The library supports both **Synchronous** and **Asynchronous** (asyncio) usage, providing a consistent API for both. It returns results in JSON format for ease of use, this also reduces the risk of failue when the arr APIs are updated.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

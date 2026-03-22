@@ -26,6 +26,9 @@ To use the package in your Python project, you will need to import the required 
 
 All of the library modules are based on the same format. The below example shows how to use Sonarr:
 
+Synchronous Usage
+-----------------
+
 .. code-block:: python
    :linenos:
 
@@ -42,6 +45,29 @@ All of the library modules are based on the same format. The below example shows
 
     # Get and print TV Shows using the series component
     print(sonarr.series.get())
+
+Asynchronous Usage
+------------------
+
+.. code-block:: python
+   :linenos:
+
+    import asyncio
+    # Import AsyncSonarr Class
+    from pyarr import AsyncSonarr
+
+    async def main():
+        # Set Host, API-Key and Port
+        host = 'your-domain.com'
+        api_key = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+        port = 8989
+
+        # Instantiate AsyncSonarr Object
+        async with AsyncSonarr(host, api_key, port) as sonarr:
+            # Get and print TV Shows using the series component
+            print(await sonarr.series.get())
+
+    asyncio.run(main())
 
 Composition-based Architecture
 ##############################

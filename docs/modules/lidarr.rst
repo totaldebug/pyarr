@@ -1,35 +1,38 @@
 Lidarr
 ======
+.. note::
+    An asynchronous version of this client is available as ``AsyncLidarr``.
+    The API is identical, but all methods are coroutines and must be awaited.
 
-.. automodule:: pyarr.lidarr
+.. automodule:: pyarr._sync.lidarr
     :members:
 
 Artist
 ------
-.. automodule:: pyarr.lidarr.artist
+.. automodule:: pyarr._sync.lidarr.artist
     :members:
 
 Album
 -----
-.. automodule:: pyarr.lidarr.album
+.. automodule:: pyarr._sync.lidarr.album
     :members:
 
 Track
 -----
-.. automodule:: pyarr.lidarr.track
+.. automodule:: pyarr._sync.lidarr.track
     :members:
 
 Track File
 ----------
-.. automodule:: pyarr.lidarr.track_file
+.. automodule:: pyarr._sync.lidarr.track_file
     :members:
 
 Release
 -------
-.. automodule:: pyarr.lidarr.release
+.. automodule:: pyarr._sync.lidarr.release
     :members:
 
 Manual Import
 -------------
-.. automodule:: pyarr.lidarr.manual_import
+.. automodule:: pyarr._sync.lidarr.manual_import
     :members:

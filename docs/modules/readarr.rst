@@ -1,40 +1,43 @@
 Readarr
 =======
+.. note::
+    An asynchronous version of this client is available as ``AsyncReadarr``.
+    The API is identical, but all methods are coroutines and must be awaited.
 
-.. automodule:: pyarr.readarr
+.. automodule:: pyarr._sync.readarr
     :members:
 
 Author
 ------
-.. automodule:: pyarr.readarr.author
+.. automodule:: pyarr._sync.readarr.author
     :members:
 
 Book
 ----
-.. automodule:: pyarr.readarr.book
+.. automodule:: pyarr._sync.readarr.book
     :members:
 
 Edition
 -------
-.. automodule:: pyarr.readarr.edition
+.. automodule:: pyarr._sync.readarr.edition
     :members:
 
 Metadata Profile
 ----------------
-.. automodule:: pyarr.readarr.metadata_profile
+.. automodule:: pyarr._sync.readarr.metadata_profile
     :members:
 
 Release Profile
 ---------------
-.. automodule:: pyarr.readarr.release_profile
+.. automodule:: pyarr._sync.readarr.release_profile
     :members:
 
 Delay Profile
 -------------
-.. automodule:: pyarr.readarr.delay_profile
+.. automodule:: pyarr._sync.readarr.delay_profile
     :members:
 
 Manual Import
 -------------
-.. automodule:: pyarr.readarr.manual_import
+.. automodule:: pyarr._sync.readarr.manual_import
     :members:
