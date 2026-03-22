@@ -1,30 +1,33 @@
 Radarr
 ======
+.. note::
+    An asynchronous version of this client is available as ``AsyncRadarr``.
+    The API is identical, but all methods are coroutines and must be awaited.
 
-.. automodule:: pyarr.radarr
+.. automodule:: pyarr._sync.radarr
     :members:
 
 Movie
 -----
-.. automodule:: pyarr.radarr.movie
+.. automodule:: pyarr._sync.radarr.movie
     :members:
 
 Movie File
 ----------
-.. automodule:: pyarr.radarr.movie_file
+.. automodule:: pyarr._sync.radarr.movie_file
     :members:
 
 Release
 -------
-.. automodule:: pyarr.radarr.release
+.. automodule:: pyarr._sync.radarr.release
     :members:
 
 Manual Import
 -------------
-.. automodule:: pyarr.radarr.manual_import
+.. automodule:: pyarr._sync.radarr.manual_import
     :members:
 
 Custom Filter
 -------------
-.. automodule:: pyarr.radarr.custom_filter
+.. automodule:: pyarr._sync.radarr.custom_filter
     :members:

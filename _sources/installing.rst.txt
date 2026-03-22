@@ -2,7 +2,11 @@
 Installation
 ************
 
-Install the package (or add it to your ``requirements.txt`` file):
+Install the package (or add it to your ``pyproject.toml`` or ``requirements.txt`` file):
+
+.. code:: shell
+
+    uv add pyarr
 
 .. code:: shell
 
@@ -34,4 +38,7 @@ Via Git or Download
 
 .. code:: python
 
-    from pyarr import Sonarr, Radarr, Readarr, Lidarr, Prowlarr, Bazarr, Whisparr, Dispatcharr
+    from pyarr import (
+        Sonarr, Radarr, Readarr, Lidarr, Prowlarr, Bazarr, Whisparr, Dispatcharr,
+        AsyncSonarr, AsyncRadarr, AsyncReadarr, AsyncLidarr, AsyncProwlarr, AsyncBazarr, AsyncWhisparr, AsyncDispatcharr
+    )

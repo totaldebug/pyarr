@@ -104,6 +104,8 @@
 </pre></div>
 </div>
 <p>All of the library modules are based on the same format. The below example shows how to use Sonarr:</p>
+<section id="synchronous-usage">
+<h3>Synchronous Usage<a class="headerlink" href="#synchronous-usage" title="Link to this heading"></a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span> <span class="c1"># Import Sonarr Class</span>
 <span class="linenos"> 2</span> <span class="kn">from</span><span class="w"> </span><span class="nn">pyarr</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sonarr</span>
 <span class="linenos"> 3</span>
@@ -119,6 +121,28 @@
 <span class="linenos">13</span> <span class="nb">print</span><span class="p">(</span><span class="n">sonarr</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">get</span><span class="p">())</span>
 </pre></div>
 </div>
+</section>
+<section id="asynchronous-usage">
+<h3>Asynchronous Usage<a class="headerlink" href="#asynchronous-usage" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span> <span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="linenos"> 2</span> <span class="c1"># Import AsyncSonarr Class</span>
+<span class="linenos"> 3</span> <span class="kn">from</span><span class="w"> </span><span class="nn">pyarr</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncSonarr</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span> <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<span class="linenos"> 6</span>     <span class="c1"># Set Host, API-Key and Port</span>
+<span class="linenos"> 7</span>     <span class="n">host</span> <span class="o">=</span> <span class="s1">&#39;your-domain.com&#39;</span>
+<span class="linenos"> 8</span>     <span class="n">api_key</span> <span class="o">=</span> <span class="s1">&#39;xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&#39;</span>
+<span class="linenos"> 9</span>     <span class="n">port</span> <span class="o">=</span> <span class="mi">8989</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span>     <span class="c1"># Instantiate AsyncSonarr Object</span>
+<span class="linenos">12</span>     <span class="k">async</span> <span class="k">with</span> <span class="n">AsyncSonarr</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">api_key</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span> <span class="k">as</span> <span class="n">sonarr</span><span class="p">:</span>
+<span class="linenos">13</span>         <span class="c1"># Get and print TV Shows using the series component</span>
+<span class="linenos">14</span>         <span class="nb">print</span><span class="p">(</span><span class="k">await</span> <span class="n">sonarr</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">get</span><span class="p">())</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
 </section>
 <section id="composition-based-architecture">
 <h2>Composition-based Architecture<a class="headerlink" href="#composition-based-architecture" title="Link to this heading"></a></h2>

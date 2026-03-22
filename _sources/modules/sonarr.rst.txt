@@ -1,30 +1,33 @@
 Sonarr
 ======
+.. note::
+    An asynchronous version of this client is available as ``AsyncSonarr``.
+    The API is identical, but all methods are coroutines and must be awaited.
 
-.. automodule:: pyarr.sonarr
+.. automodule:: pyarr._sync.sonarr
     :members:
 
 Series
 ------
-.. automodule:: pyarr.sonarr.series
+.. automodule:: pyarr._sync.sonarr.series
     :members:
 
 Episode
 -------
-.. automodule:: pyarr.sonarr.episode
+.. automodule:: pyarr._sync.sonarr.episode
     :members:
 
 Episode File
 ------------
-.. automodule:: pyarr.sonarr.episode_file
+.. automodule:: pyarr._sync.sonarr.episode_file
     :members:
 
 Release
 -------
-.. automodule:: pyarr.sonarr.release
+.. automodule:: pyarr._sync.sonarr.release
     :members:
 
 Manual Import
 -------------
-.. automodule:: pyarr.sonarr.manual_import
+.. automodule:: pyarr._sync.sonarr.manual_import
     :members:

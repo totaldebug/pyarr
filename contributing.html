@@ -116,6 +116,31 @@ additional information can be found within the VSCode documentation.</p>
 </section>
 <section id="updating-pyarr-module">
 <h2>Updating PyArr module<a class="headerlink" href="#updating-pyarr-module" title="Link to this heading"></a></h2>
+<section id="async-sync-code-generation">
+<h3>Async &amp; Sync Code Generation<a class="headerlink" href="#async-sync-code-generation" title="Link to this heading"></a></h3>
+<p>PyArr uses an “Async-first” development model. The core logic resides in <code class="docutils literal notranslate"><span class="pre">src/pyarr/_async/</span></code>
+and uses <code class="docutils literal notranslate"><span class="pre">httpx.AsyncClient</span></code>. The synchronous version in <code class="docutils literal notranslate"><span class="pre">src/pyarr/_sync/</span></code> is
+automatically generated using a tool called <code class="docutils literal notranslate"><span class="pre">unasync</span></code>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong>NEVER manually edit files in</strong> <code class="docutils literal notranslate"><span class="pre">src/pyarr/_sync/</span></code>.
+These files contain a header indicating they are auto-generated. Any manual changes
+will be overwritten by the CI or the generation script.</p>
+</div>
+<p><strong>When contributing:</strong></p>
+<ul class="simple">
+<li><p><strong>Only modify files in</strong> <code class="docutils literal notranslate"><span class="pre">src/pyarr/_async/</span></code>.</p></li>
+<li><p>If you modify the async code, you must update the sync version by running:</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>run<span class="w"> </span>python3<span class="w"> </span>scripts/generate_sync.py
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>The CI will check for parity. If you forget to run the script, the CI will attempt
+to auto-fix your PR by committing the generated sync code. However, if you
+manually edit <code class="docutils literal notranslate"><span class="pre">_sync</span></code> without changing <code class="docutils literal notranslate"><span class="pre">_async</span></code>, the CI will fail.</p></li>
+</ul>
+</section>
 <section id="style-formatting">
 <h3>Style &amp; formatting<a class="headerlink" href="#style-formatting" title="Link to this heading"></a></h3>
 <p>It is highly recommended to use vsCode devcontainer as this automatically adds the

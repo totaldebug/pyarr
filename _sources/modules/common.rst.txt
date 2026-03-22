@@ -5,95 +5,95 @@ These components are available on all Arr clients (Sonarr, Radarr, Lidarr, etc.)
 
 Backup
 ------
-.. automodule:: pyarr.common.backup
+.. automodule:: pyarr._sync.common.backup
     :members:
 
 Blocklist
 ---------
-.. automodule:: pyarr.common.blocklist
+.. automodule:: pyarr._sync.common.blocklist
     :members:
 
 Calendar
 --------
-.. automodule:: pyarr.common.calendar
+.. automodule:: pyarr._sync.common.calendar
     :members:
 
 Command
 -------
-.. automodule:: pyarr.common.command
+.. automodule:: pyarr._sync.common.command
     :members:
 
 Download Client
 ---------------
-.. automodule:: pyarr.common.download_client
+.. automodule:: pyarr._sync.common.download_client
     :members:
 
 History
 -------
-.. automodule:: pyarr.common.history
+.. automodule:: pyarr._sync.common.history
     :members:
 
 Import List
 -----------
-.. automodule:: pyarr.common.import_list
+.. automodule:: pyarr._sync.common.import_list
     :members:
 
 Indexer
 -------
-.. automodule:: pyarr.common.indexer
+.. automodule:: pyarr._sync.common.indexer
     :members:
 
 Log
 ---
-.. automodule:: pyarr.common.log
+.. automodule:: pyarr._sync.common.log
     :members:
 
 Metadata
 --------
-.. automodule:: pyarr.common.metadata
+.. automodule:: pyarr._sync.common.metadata
     :members:
 
 Notification
 ------------
-.. automodule:: pyarr.common.notification
+.. automodule:: pyarr._sync.common.notification
     :members:
 
 Quality Definition
 ------------------
-.. automodule:: pyarr.common.quality_definition
+.. automodule:: pyarr._sync.common.quality_definition
     :members:
 
 Quality Profile
 ---------------
-.. automodule:: pyarr.common.quality_profile
+.. automodule:: pyarr._sync.common.quality_profile
     :members:
 
 Queue
 -----
-.. automodule:: pyarr.common.queue
+.. automodule:: pyarr._sync.common.queue
     :members:
 
 Remote Path Mapping
 -------------------
-.. automodule:: pyarr.common.remote_path_mapping
+.. automodule:: pyarr._sync.common.remote_path_mapping
     :members:
 
 Root Folder
 -----------
-.. automodule:: pyarr.common.root_folder
+.. automodule:: pyarr._sync.common.root_folder
     :members:
 
 System
 ------
-.. automodule:: pyarr.common.system
+.. automodule:: pyarr._sync.common.system
     :members:
 
 Tag
 ---
-.. automodule:: pyarr.common.tag
+.. automodule:: pyarr._sync.common.tag
     :members:
 
 Update
 ------
-.. automodule:: pyarr.common.update
+.. automodule:: pyarr._sync.common.update
     :members:

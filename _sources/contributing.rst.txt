@@ -29,6 +29,31 @@ Setup your environment
 Updating PyArr module
 *********************
 
+Async & Sync Code Generation
+============================
+
+PyArr uses an "Async-first" development model. The core logic resides in ``src/pyarr/_async/``
+and uses ``httpx.AsyncClient``. The synchronous version in ``src/pyarr/_sync/`` is
+automatically generated using a tool called ``unasync``.
+
+.. warning::
+   **NEVER manually edit files in** ``src/pyarr/_sync/``.
+   These files contain a header indicating they are auto-generated. Any manual changes
+   will be overwritten by the CI or the generation script.
+
+**When contributing:**
+
+- **Only modify files in** ``src/pyarr/_async/``.
+- If you modify the async code, you must update the sync version by running:
+
+.. code:: bash
+
+   uv run python3 scripts/generate_sync.py
+
+- The CI will check for parity. If you forget to run the script, the CI will attempt
+  to auto-fix your PR by committing the generated sync code. However, if you
+  manually edit ``_sync`` without changing ``_async``, the CI will fail.
+
 Style & formatting
 ==================
 
