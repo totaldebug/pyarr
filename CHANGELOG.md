@@ -1,5 +1,18 @@
 # Changelog
 
+## [6.1.0](https://github.com/totaldebug/pyarr/compare/6.0.0...6.1.0) (2026-03-21)
+
+
+### Features
+
+* Add support for both sync and async ([a11a628](https://github.com/totaldebug/pyarr/commit/a11a628c4115e68f0d980ab6ad216af61ae87b91))
+
+
+### Documentation
+
+* Remove poerty references ([3c8e778](https://github.com/totaldebug/pyarr/commit/3c8e778e10362c8170020ae75e74e65f0af81344))
+* Resolve missing dependencies and errors when building ([bdd6823](https://github.com/totaldebug/pyarr/commit/bdd68233d786a0ad4d99bbf4a2a1610ba45a0b5f))
+
 ## [6.0.0](https://github.com/totaldebug/pyarr/compare/v5.2.0...6.0.0) (2026-03-20)
 
 
