@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.3.0](https://github.com/totaldebug/pyarr/compare/6.2.0...6.3.0) (2026-03-23)
+
+
+### Features
+
+* Improve Home Assistant compatibility ([1c12c74](https://github.com/totaldebug/pyarr/commit/1c12c74920c25699c05020cb8a24f70824ffd0de))
+
 ## [6.2.0](https://github.com/totaldebug/pyarr/compare/6.1.0...6.2.0) (2026-03-23)
 
 
