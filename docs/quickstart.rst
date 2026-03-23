@@ -69,6 +69,53 @@ Asynchronous Usage
 
     asyncio.run(main())
 
+Advanced Configuration
+######################
+
+PyArr supports several advanced configuration options to make it easier to integrate with other systems like Home Assistant.
+
+Full URL Support
+----------------
+
+You can now pass a full URL as the ``host`` parameter. PyArr will automatically extract the scheme, host, port, and subpath:
+
+.. code-block:: python
+   :linenos:
+
+    # All of these are valid ways to instantiate a client
+    sonarr = Sonarr("http://192.168.1.100:8989/sonarr", api_key)
+    sonarr = Sonarr("localhost", api_key, port=8989, tls=False)
+
+Custom Sessions
+---------------
+
+If you are using PyArr in an environment that manages its own HTTP sessions (like Home Assistant), you can pass an existing ``httpx.AsyncClient`` (for async) or ``httpx.Client`` (for sync):
+
+.. code-block:: python
+   :linenos:
+
+    import httpx
+    from pyarr import AsyncSonarr
+
+    async with httpx.AsyncClient() as session:
+        async with AsyncSonarr(host, api_key, session=session) as sonarr:
+            print(await sonarr.series.get())
+
+SSL Verification and Custom Headers
+-----------------------------------
+
+You can disable SSL verification (useful for self-signed certificates) and provide custom headers:
+
+.. code-block:: python
+   :linenos:
+
+    sonarr = Sonarr(
+        host,
+        api_key,
+        verify_ssl=False,
+        headers={"User-Agent": "MyCustomApp/1.0"}
+    )
+
 Composition-based Architecture
 ##############################
 
