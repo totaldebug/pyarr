@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.2.0](https://github.com/totaldebug/pyarr/compare/6.1.0...6.2.0) (2026-03-23)
+
+
+### Features
+
+* Add session, verify_ssl, and headers options to clients ([eb3b611](https://github.com/totaldebug/pyarr/commit/eb3b611babbf8c382df960f4b78d8ef8298561b1))
+
 ## [6.1.0](https://github.com/totaldebug/pyarr/compare/6.0.0...6.1.0) (2026-03-21)
 
 
