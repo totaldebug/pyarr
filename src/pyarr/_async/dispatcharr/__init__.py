@@ -1,3 +1,5 @@
+import httpx
+
 from pyarr._async.client import BaseArrClient
 from pyarr._async.dispatcharr.channels import Channels
 from pyarr._async.dispatcharr.streams import Streams
@@ -16,6 +18,9 @@ class Dispatcharr(BaseArrClient):
         base_path: str = "",
         request_timeout: int | None = None,
         api_ver: str | None = "v1",
+        session: httpx.AsyncClient | None = None,
+        verify_ssl: bool = True,
+        headers: dict[str, str] | None = None,
     ):
         """Initializes the Dispatcharr client.
 
@@ -27,6 +32,9 @@ class Dispatcharr(BaseArrClient):
             base_path (str, optional): The base path for the API. Defaults to "".
             request_timeout (int | None, optional): The timeout for requests. Defaults to None.
             api_ver (str | None, optional): The API version to use. Defaults to "v1".
+            session (httpx.AsyncClient | None, optional): An existing httpx.AsyncClient session. Defaults to None.
+            verify_ssl (bool, optional): Whether to verify SSL certificates. Defaults to True.
+            headers (dict[str, str] | None, optional): Default headers to include in requests. Defaults to None.
         """
         super().__init__(
             host,
@@ -36,6 +44,9 @@ class Dispatcharr(BaseArrClient):
             base_path=base_path,
             request_timeout=request_timeout,
             api_ver=api_ver,
+            session=session,
+            verify_ssl=verify_ssl,
+            headers=headers,
         )
         self.channels = Channels(self.http_utils)
         self.streams = Streams(self.http_utils)

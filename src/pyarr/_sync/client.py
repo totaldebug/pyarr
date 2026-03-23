@@ -5,6 +5,8 @@
 
 from typing import Any, TypeVar
 
+import httpx
+
 from pyarr._sync.common.backup import Backup
 from pyarr._sync.common.blocklist import Blocklist
 from pyarr._sync.common.calendar import Calendar
@@ -41,6 +43,9 @@ class BaseArrClient:
         base_path: str = "",
         request_timeout: int | None = None,
         api_ver: str | None = None,
+        session: httpx.Client | None = None,
+        verify_ssl: bool = True,
+        headers: dict[str, str] | None = None,
     ):
         """Initializes the client with the provided host, API key, and optional parameters.
 
@@ -52,6 +57,9 @@ class BaseArrClient:
             base_path (str, optional): The base path for the API. Defaults to "".
             request_timeout (int | None, optional): The timeout for requests. Defaults to None.
             api_ver (str | None, optional): The API version to use. Defaults to None, automatically detected.
+            session (httpx.Client | None, optional): An existing httpx.Client session. Defaults to None.
+            verify_ssl (bool, optional): Whether to verify SSL certificates. Defaults to True.
+            headers (dict[str, str] | None, optional): Default headers to include in requests. Defaults to None.
         """
         self.http_utils = RequestHandler(
             host,
@@ -61,6 +69,9 @@ class BaseArrClient:
             base_path=base_path,
             request_timeout=request_timeout,
             api_ver=api_ver,
+            session=session,
+            verify_ssl=verify_ssl,
+            headers=headers,
         )
         self.history = History(self.http_utils)
         self.backup = Backup(self.http_utils)

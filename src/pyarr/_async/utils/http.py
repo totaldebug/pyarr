@@ -31,6 +31,9 @@ class RequestHandler:
         base_path: str = "",
         request_timeout: int | None = None,
         api_ver: str | None = None,
+        session: httpx.AsyncClient | None = None,
+        verify_ssl: bool = True,
+        headers: dict[str, str] | None = None,
     ) -> None:
         """
         Initializes the HTTP client with the provided host, API key, and optional parameters.
@@ -43,11 +46,23 @@ class RequestHandler:
             base_path (str, optional): The base path for the API. Defaults to "".
             request_timeout (int | None, optional): The timeout for requests. Defaults to None.
             api_ver (str | None, optional): The API version to use, this is auto detected. Defaults to None.
+            session (httpx.AsyncClient | None, optional): An existing httpx.AsyncClient session. Defaults to None.
+            verify_ssl (bool, optional): Whether to verify SSL certificates. Defaults to True.
+            headers (dict[str, str] | None, optional): Default headers to include in requests. Defaults to None.
 
         Raises:
             ValueError: If no API Key is provided or if unable to retrieve API version automatically.
         """
-        scheme = "https" if tls else "http"
+        if "://" in host:
+            url = URL(host)
+            scheme = url.scheme
+            host = url.host or host
+            port = url.port or port
+            if url.path and url.path != "/":
+                base_path = str(url.path).rstrip("/") + "/" + base_path.lstrip("/")
+        else:
+            scheme = "https" if tls else "http"
+
         self.base_url = URL.build(
             scheme=scheme,
             host=host,
@@ -60,9 +75,20 @@ class RequestHandler:
 
         self.api_key = api_key  # Initialize api_key before making requests
         self.request_timeout = request_timeout
+        self.verify_ssl = verify_ssl
+        self.headers = headers or {}
         # Set default timeout to None to match requests behavior if not specified
         # Enable follow_redirects to match requests behavior
-        self.session: httpx.AsyncClient | None = httpx.AsyncClient(timeout=request_timeout, follow_redirects=True)
+        if session:
+            self.session: httpx.AsyncClient | None = session
+            self._owns_session = False
+        else:
+            self.session = httpx.AsyncClient(
+                timeout=request_timeout,
+                follow_redirects=True,
+                verify=verify_ssl,
+            )
+            self._owns_session = True
         self._api_ver = api_ver
         self.api_url: URL | None = None
         if api_ver:
@@ -84,7 +110,7 @@ class RequestHandler:
             exc_value (Any): The exception value.
             traceback (Any): The traceback.
         """
-        if self.session:
+        if self.session and self._owns_session:
             await self.session.aclose()
             self.session = None
 
@@ -160,11 +186,20 @@ class RequestHandler:
                 if isinstance(value, bool):
                     params_copy[key] = str(value).lower()
             params = params_copy
-        headers = headers or {}
-        headers["X-Api-Key"] = self.api_key
+
+        # Merge default headers with request-specific headers
+        request_headers = self.headers.copy()
+        if headers:
+            request_headers.update(headers)
+        request_headers["X-Api-Key"] = self.api_key
 
         if self.session is None:
-            self.session = httpx.AsyncClient(timeout=self.request_timeout, follow_redirects=True)
+            self.session = httpx.AsyncClient(
+                timeout=self.request_timeout,
+                follow_redirects=True,
+                verify=self.verify_ssl,
+            )
+            self._owns_session = True
 
         try:
             response = await self.session.request(
@@ -173,7 +208,7 @@ class RequestHandler:
                 data=data,
                 json=json_data,
                 params=params,
-                headers=headers,
+                headers=request_headers,
             )
         except httpx.TimeoutException as exception:
             msg = "Timeout occurred while connecting to your instance."

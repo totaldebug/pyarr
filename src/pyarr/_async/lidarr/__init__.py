@@ -1,3 +1,5 @@
+import httpx
+
 from pyarr._async.client import BaseArrClient
 from pyarr._async.lidarr.album import Album
 from pyarr._async.lidarr.artist import Artist
@@ -20,6 +22,9 @@ class Lidarr(BaseArrClient):
         base_path: str = "",
         request_timeout: int | None = None,
         api_ver: str | None = None,
+        session: httpx.AsyncClient | None = None,
+        verify_ssl: bool = True,
+        headers: dict[str, str] | None = None,
     ):
         """Initializes the Lidarr client with the provided host, API key, and optional parameters.
 
@@ -31,6 +36,9 @@ class Lidarr(BaseArrClient):
             base_path (str, optional): The base path for the API. Defaults to "".
             request_timeout (int | None, optional): The timeout for requests. Defaults to None.
             api_ver (str | None, optional): The API version to use. Defaults to None, automatically detected.
+            session (httpx.AsyncClient | None, optional): An existing httpx.AsyncClient session. Defaults to None.
+            verify_ssl (bool, optional): Whether to verify SSL certificates. Defaults to True.
+            headers (dict[str, str] | None, optional): Default headers to include in requests. Defaults to None.
         """
         super().__init__(
             host,
@@ -40,6 +48,9 @@ class Lidarr(BaseArrClient):
             base_path=base_path,
             request_timeout=request_timeout,
             api_ver=api_ver,
+            session=session,
+            verify_ssl=verify_ssl,
+            headers=headers,
         )
         self.config = Config(self.http_utils)
         self.artist = Artist(self.http_utils)
