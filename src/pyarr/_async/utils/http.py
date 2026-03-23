@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import inspect
 from collections.abc import Mapping
 from typing import Any
 
@@ -217,21 +218,32 @@ class RequestHandler:
             msg = "Error occurred while communicating with your instance."
             raise PyarrConnectionError(msg) from exception
 
-        if response.status_code // 100 in [4, 5]:
-            self._handle_error(response)
+        # Handle both httpx (.status_code) and aiohttp (.status)
+        status_code = int(getattr(response, "status", getattr(response, "status_code", 0)))
+
+        if status_code // 100 in [4, 5]:
+            await self._handle_error(response)
 
         content_type = response.headers.get("Content-Type", "")
         if "application/json" in content_type:
-            return response.json()
+            res_json = response.json()
+            if inspect.isawaitable(res_json):
+                return await res_json
+            return res_json
 
-        text = response.text
-        return {"message": text}
+        res_text = getattr(response, "text", "")
+        if callable(res_text):
+            res_text = res_text()
+        if inspect.isawaitable(res_text):
+            res_text = await res_text
 
-    def _handle_error(self, response: httpx.Response) -> None:
+        return {"message": res_text}
+
+    async def _handle_error(self, response: Any) -> None:
         """Handles error responses by raising appropriate exceptions.
 
         Args:
-            response (httpx.Response): The error response.
+            response (Any): The error response (httpx.Response or aiohttp.ClientResponse).
 
         Raises:
             PyarrBadRequest: 400 Bad Request.
@@ -243,12 +255,31 @@ class RequestHandler:
             PyarrBadGateway: 502 Bad Gateway.
             Exception: For other 4xx/5xx errors.
         """
-        status_code = response.status_code
+        status_code = int(getattr(response, "status", getattr(response, "status_code", 0)))
         try:
-            error_data = response.json()
-            message = error_data.get("message", response.text)
+            res_json = response.json()
+            if inspect.isawaitable(res_json):
+                error_data = await res_json
+            else:
+                error_data = res_json
+
+            res_text = getattr(response, "text", "")
+            if callable(res_text):
+                res_text = res_text()
+            if inspect.isawaitable(res_text):
+                res_text = await res_text
+
+            if isinstance(error_data, dict):
+                message = error_data.get("message", res_text)
+            else:
+                message = res_text
         except Exception:
-            message = response.text
+            res_text = getattr(response, "text", "")
+            if callable(res_text):
+                res_text = res_text()
+            if inspect.isawaitable(res_text):
+                res_text = await res_text
+            message = res_text
 
         if status_code == 400:
             raise PyarrBadRequest(message)
