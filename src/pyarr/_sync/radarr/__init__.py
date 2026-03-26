@@ -6,6 +6,7 @@
 import httpx
 
 from pyarr._sync.client import BaseArrClient
+from pyarr._sync.common.wanted import Wanted
 from pyarr._sync.radarr.config import Config
 from pyarr._sync.radarr.custom_filter import CustomFilter
 from pyarr._sync.radarr.manual_import import ManualImport
@@ -62,3 +63,4 @@ class Radarr(BaseArrClient):
         self.release = Release(self.http_utils)
         self.manual_import = ManualImport(self.http_utils)
         self.custom_filter = CustomFilter(self.http_utils)
+        self.wanted = Wanted(self.http_utils)

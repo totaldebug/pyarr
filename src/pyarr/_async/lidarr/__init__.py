@@ -1,6 +1,7 @@
 import httpx
 
 from pyarr._async.client import BaseArrClient
+from pyarr._async.common.wanted import Wanted
 from pyarr._async.lidarr.album import Album
 from pyarr._async.lidarr.artist import Artist
 from pyarr._async.lidarr.config import Config
@@ -59,3 +60,4 @@ class Lidarr(BaseArrClient):
         self.track_file = TrackFile(self.http_utils)
         self.release = Release(self.http_utils)
         self.manual_import = ManualImport(self.http_utils)
+        self.wanted = Wanted(self.http_utils)

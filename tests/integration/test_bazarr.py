@@ -9,6 +9,14 @@ def test_bazarr_system_status(bazarr_client: Bazarr):
         pass
 
 
+def test_bazarr_wanted(bazarr_client: Bazarr):
+    try:
+        wanted = bazarr_client.wanted.get(page=1, page_size=10)
+        assert isinstance(wanted, dict)
+    except Exception:
+        pass
+
+
 def test_bazarr_subtitles(bazarr_client: Bazarr):
     try:
         subtitles = bazarr_client.subtitles.get()

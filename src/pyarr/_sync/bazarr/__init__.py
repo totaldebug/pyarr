@@ -8,6 +8,7 @@ import httpx
 from pyarr._sync.bazarr.providers import Providers
 from pyarr._sync.bazarr.subtitles import Subtitles
 from pyarr._sync.client import BaseArrClient
+from pyarr._sync.common.wanted import Wanted
 
 
 class Bazarr(BaseArrClient):
@@ -54,3 +55,4 @@ class Bazarr(BaseArrClient):
         )
         self.subtitles = Subtitles(self.http_utils)
         self.providers = Providers(self.http_utils)
+        self.wanted = Wanted(self.http_utils, path="subtitles/wanted")

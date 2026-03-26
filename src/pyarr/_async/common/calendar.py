@@ -12,6 +12,7 @@ class Calendar(CommonActions):
         start_date: datetime | None = None,
         end_date: datetime | None = None,
         unmonitored: bool = True,
+        **kwargs,
     ) -> JsonArray:
         """Gets upcoming releases.
 
@@ -19,6 +20,7 @@ class Calendar(CommonActions):
             start_date (datetime | None, optional): Start datetime. Defaults to None.
             end_date (datetime | None, optional): End datetime. Defaults to None.
             unmonitored (bool, optional): Include unmonitored items. Defaults to True.
+            **kwargs: Additional parameters for specific clients.
 
         Returns:
             JsonArray: List of dictionaries with items.
@@ -28,6 +30,9 @@ class Calendar(CommonActions):
             params["start"] = start_date.strftime("%Y-%m-%d")
         if end_date:
             params["end"] = end_date.strftime("%Y-%m-%d")
+
+        if kwargs:
+            params.update(kwargs)
 
         response = await self.handler.request("calendar", params=params)
         if isinstance(response, list):

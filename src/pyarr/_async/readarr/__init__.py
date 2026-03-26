@@ -1,6 +1,7 @@
 import httpx
 
 from pyarr._async.client import BaseArrClient
+from pyarr._async.common.wanted import Wanted
 from pyarr._async.readarr.author import Author
 from pyarr._async.readarr.book import Book
 from pyarr._async.readarr.config import Config
@@ -61,3 +62,4 @@ class Readarr(BaseArrClient):
         self.release_profile = ReleaseProfile(self.http_utils)
         self.delay_profile = DelayProfile(self.http_utils)
         self.manual_import = ManualImport(self.http_utils)
+        self.wanted = Wanted(self.http_utils)

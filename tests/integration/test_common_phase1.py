@@ -12,6 +12,16 @@ def test_sonarr_calendar(sonarr_client):
     cal = sonarr_client.calendar.get(start_date=start, end_date=end)
     assert isinstance(cal, list)
 
+    # Test with kwargs
+    cal = sonarr_client.calendar.get(includeSeries=True)
+    assert isinstance(cal, list)
+
+
+def test_sonarr_wanted(sonarr_client):
+    wanted = sonarr_client.wanted.get(page=1, page_size=10)
+    assert isinstance(wanted, dict)
+    assert "records" in wanted
+
 
 def test_sonarr_root_folder(sonarr_client):
     root_folders = sonarr_client.root_folder.get()

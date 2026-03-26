@@ -1,6 +1,7 @@
 import httpx
 
 from pyarr._async.client import BaseArrClient
+from pyarr._async.common.wanted import Wanted
 from pyarr._async.sonarr.config import Config
 from pyarr._async.sonarr.episode import Episode
 from pyarr._async.sonarr.episode_file import EpisodeFile
@@ -57,3 +58,4 @@ class Sonarr(BaseArrClient):
         self.episode_file = EpisodeFile(self.http_utils)
         self.release = Release(self.http_utils)
         self.manual_import = ManualImport(self.http_utils)
+        self.wanted = Wanted(self.http_utils)
