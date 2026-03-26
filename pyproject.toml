@@ -1,6 +1,6 @@
 [project]
 name = "pyarr"
-version = "6.3.0"
+version = "6.4.0"
 description = "Synchronous Sonarr, Radarr, Lidarr, Prowlarr, Bazarr, Dispatcharr and Readarr API's for Python"
 authors = [
     { name = "Steven Marks", email = "marksie1988@users.noreply.github.com" }

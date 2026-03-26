@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.4.0](https://github.com/totaldebug/pyarr/compare/6.3.0...6.4.0) (2026-03-26)
+
+
+### Features
+
+* Add wanted and expand calendar with kwargs ([c4197f7](https://github.com/totaldebug/pyarr/commit/c4197f772305b3387f64237e6d34fb2eb8cf3951))
+
 ## [6.3.0](https://github.com/totaldebug/pyarr/compare/6.2.0...6.3.0) (2026-03-23)
 
 
