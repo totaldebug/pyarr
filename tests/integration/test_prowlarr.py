@@ -13,6 +13,12 @@ def test_prowlarr_indexer(prowlarr_client):
     assert isinstance(schemas, list)
     assert len(schemas) > 0
 
+    stats = prowlarr_client.indexer.get_stats()
+    assert isinstance(stats, dict)
+
+    status = prowlarr_client.indexer.get_status()
+    assert isinstance(status, list)
+
 
 def test_prowlarr_applications(prowlarr_client):
     apps = prowlarr_client.applications.get()

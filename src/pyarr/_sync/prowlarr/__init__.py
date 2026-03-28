@@ -6,8 +6,8 @@
 import httpx
 
 from pyarr._sync.client import BaseArrClient
-from pyarr._sync.common.indexer import Indexer
 from pyarr._sync.prowlarr.applications import Applications
+from pyarr._sync.prowlarr.indexer import Indexer
 from pyarr._sync.prowlarr.indexer_proxy import IndexerProxy
 from pyarr._sync.prowlarr.search import Search
 
