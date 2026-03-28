@@ -53,37 +53,3 @@ jobs:
           uv publish
         env:
           UV_PUBLISH_TOKEN: ${{ secrets.PYPI_PASSWORD }}
-
-  # Release Candidate to PyPI when release-please PR is updated (User PR merged to main)
-  publish-rc:
-    runs-on: ubuntu-latest
-    needs: release-please
-    if: ${{ !needs.release-please.outputs.release_created && needs.release-please.outputs.pr }}
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version-file: "pyproject.toml"
-      - name: Generate Sync API
-        run: uv run python3 scripts/generate_sync.py
-
-      - name: Extract version and publish RC
-        run: |
-          # Get the version from the release-please PR
-          VERSION=$(echo '${{ needs.release-please.outputs.pr }}' | jq -r '.version')
-          if [ -z "$VERSION" ]; then
-            echo "Could not extract version from PR"
-            exit 1
-          fi
-
-          # Update version in pyproject.toml to include RC suffix if not already there
-          # release-please should already have the rc version if configured
-          echo "Publishing version: $VERSION"
-
-          uv build
-          uv publish
-        env:
-          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_PASSWORD }}
