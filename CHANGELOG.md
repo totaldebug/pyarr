@@ -1,5 +1,13 @@
 # Changelog
 
+## [6.5.0](https://github.com/totaldebug/pyarr/compare/6.4.0...6.5.0) (2026-03-28)
+
+
+### Features
+
+* Add dispatcharr ([d6e33c3](https://github.com/totaldebug/pyarr/commit/d6e33c3bf3a45523106fbf5cfe4a1f818dea3e2c))
+* **prowlarr:** Add indexerStats and indexerStatus ([1bb690a](https://github.com/totaldebug/pyarr/commit/1bb690a49e5543f6bc33c78d63a794da151323cc))
+
 ## [6.4.0](https://github.com/totaldebug/pyarr/compare/6.3.0...6.4.0) (2026-03-26)
 
 
