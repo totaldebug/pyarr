@@ -1,0 +1,110 @@
+from pyarr._async.common.base import CommonActions
+from pyarr.types import JsonArray, JsonObject
+
+
+class Plugins(CommonActions):
+    """Plugin actions for Dispatcharr."""
+
+    async def get(self, item_id: str | None = None) -> JsonArray | JsonObject:
+        """Retrieve plugins.
+
+        Args:
+            item_id (str | None, optional): ID of the plugin to return. Defaults to None.
+
+        Returns:
+            JsonArray | JsonObject: The response data.
+        """
+        return await self._get("plugins/plugins", item_id=item_id)
+
+    async def delete(self, item_id: str) -> None:
+        """Delete a plugin.
+
+        Args:
+            item_id (str): Plugin ID.
+        """
+        await self._delete("plugins/plugins", item_id=item_id)
+
+    async def set_enabled(self, item_id: str, enabled: bool) -> JsonObject:
+        """Enable or disable a plugin.
+
+        Args:
+            item_id (str): Plugin ID.
+            enabled (bool): Whether the plugin should be enabled.
+
+        Returns:
+            JsonObject: The response data.
+        """
+        response = await self.handler.request(
+            f"plugins/plugins/{item_id}/enabled",
+            method="POST",
+            json_data={"enabled": enabled},
+        )
+        if isinstance(response, dict):
+            return response
+        raise ValueError(f"Expected a dictionary response from the 'plugins/plugins/{item_id}/enabled' endpoint")
+
+    async def get_logo(self, item_id: str) -> JsonObject:
+        """Retrieve plugin logo.
+
+        Args:
+            item_id (str): Plugin ID.
+
+        Returns:
+            JsonObject: The response data.
+        """
+        return await self._get(f"plugins/plugins/{item_id}/logo")
+
+    async def run(self, item_id: str, data: JsonObject) -> JsonObject:
+        """Run a plugin.
+
+        Args:
+            item_id (str): Plugin ID.
+            data (JsonObject): Run request data.
+
+        Returns:
+            JsonObject: The response data.
+        """
+        response = await self.handler.request(f"plugins/plugins/{item_id}/run", method="POST", json_data=data)
+        if isinstance(response, dict):
+            return response
+        raise ValueError(f"Expected a dictionary response from the 'plugins/plugins/{item_id}/run' endpoint")
+
+    async def set_settings(self, item_id: str, data: JsonObject) -> JsonObject:
+        """Set plugin settings.
+
+        Args:
+            item_id (str): Plugin ID.
+            data (JsonObject): Settings data.
+
+        Returns:
+            JsonObject: The response data.
+        """
+        response = await self.handler.request(f"plugins/plugins/{item_id}/settings", method="POST", json_data=data)
+        if isinstance(response, dict):
+            return response
+        raise ValueError(f"Expected a dictionary response from the 'plugins/plugins/{item_id}/settings' endpoint")
+
+    async def import_plugin(self, data: JsonObject) -> JsonObject:
+        """Import a plugin.
+
+        Args:
+            data (JsonObject): Import request data.
+
+        Returns:
+            JsonObject: The response data.
+        """
+        response = await self.handler.request("plugins/plugins/import", method="POST", json_data=data)
+        if isinstance(response, dict):
+            return response
+        raise ValueError("Expected a dictionary response from the 'plugins/plugins/import' endpoint")
+
+    async def reload(self) -> JsonObject:
+        """Reload plugins.
+
+        Returns:
+            JsonObject: The response data.
+        """
+        response = await self.handler.request("plugins/plugins/reload", method="POST")
+        if isinstance(response, dict):
+            return response
+        raise ValueError("Expected a dictionary response from the 'plugins/plugins/reload' endpoint")

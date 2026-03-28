@@ -67,7 +67,7 @@ def whisparr_client():
 def dispatcharr_client():
     return Dispatcharr(
         host="localhost",
-        api_key="da96fdd18ce147b79b54c2fdadb7e19a",  # Placeholder
+        api_key="9xXJVdkmKaRtczAfcbbm2XGlCvg6fSHZPeShQ1N8GSNczWBnNVO7a3KuF82t17uGl6aw1snO-bx4wafbshNC6g",
         port=9191,
         tls=False,
     )

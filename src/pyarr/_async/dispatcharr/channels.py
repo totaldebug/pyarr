@@ -1,3 +1,5 @@
+from typing import Any
+
 from pyarr._async.common.base import CommonActions
 from pyarr.types import JsonArray, JsonObject
 
@@ -5,16 +7,49 @@ from pyarr.types import JsonArray, JsonObject
 class Channels(CommonActions):
     """Channel actions for Dispatcharr."""
 
-    async def get(self, item_id: int | None = None) -> JsonArray | JsonObject:
+    async def get(
+        self,
+        item_id: int | None = None,
+        channel_group: str | None = None,
+        epg: str | None = None,
+        name: str | None = None,
+        ordering: str | None = None,
+        page: int | None = None,
+        page_size: int | None = None,
+        search: str | None = None,
+    ) -> JsonArray | JsonObject:
         """Returns the list of channels or a specific channel by ID.
 
         Args:
             item_id (int | None, optional): ID of the channel to return. Defaults to None.
+            channel_group (str | None, optional): Filter by channel group. Defaults to None.
+            epg (str | None, optional): Filter by EPG. Defaults to None.
+            name (str | None, optional): Filter by name. Defaults to None.
+            ordering (str | None, optional): Which field to use when ordering the results. Defaults to None.
+            page (int | None, optional): A page number within the paginated result set. Defaults to None.
+            page_size (int | None, optional): Number of results to return per page. Defaults to None.
+            search (str | None, optional): A search term. Defaults to None.
 
         Returns:
             JsonArray | JsonObject: The response data.
         """
-        return await self._get("channels", item_id=item_id)
+        params: dict[str, Any] = {}
+        if channel_group:
+            params["channel_group"] = channel_group
+        if epg:
+            params["epg"] = epg
+        if name:
+            params["name"] = name
+        if ordering:
+            params["ordering"] = ordering
+        if page:
+            params["page"] = page
+        if page_size:
+            params["page_size"] = page_size
+        if search:
+            params["search"] = search
+
+        return await self._get("channels/channels", item_id=item_id, params=params)
 
     async def add(self, data: JsonObject) -> JsonObject:
         """Add a new channel.
@@ -25,10 +60,10 @@ class Channels(CommonActions):
         Returns:
             JsonObject: Added channel details.
         """
-        response = await self.handler.request("channels", method="POST", json_data=data)
+        response = await self.handler.request("channels/channels", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'channels' endpoint")
+        raise ValueError("Expected a dictionary response from the 'channels/channels' endpoint")
 
     async def update(self, item_id: int, data: JsonObject) -> JsonObject:
         """Update an existing channel.
@@ -40,10 +75,25 @@ class Channels(CommonActions):
         Returns:
             JsonObject: Updated channel details.
         """
-        response = await self.handler.request(f"channels/{item_id}", method="PUT", json_data=data)
+        response = await self.handler.request(f"channels/channels/{item_id}", method="PUT", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'channels/{item_id}' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'channels/channels/{item_id}' endpoint")
+
+    async def partial_update(self, item_id: int, data: JsonObject) -> JsonObject:
+        """Partially update an existing channel.
+
+        Args:
+            item_id (int): Channel ID.
+            data (JsonObject): Updated configuration.
+
+        Returns:
+            JsonObject: Updated channel details.
+        """
+        response = await self.handler.request(f"channels/channels/{item_id}", method="PATCH", json_data=data)
+        if isinstance(response, dict):
+            return response
+        raise ValueError(f"Expected a dictionary response from the 'channels/channels/{item_id}' endpoint")
 
     async def delete(self, item_id: int) -> None:
         """Delete a channel.
@@ -51,4 +101,296 @@ class Channels(CommonActions):
         Args:
             item_id (int): Channel ID.
         """
-        await self._delete("channels", item_id=item_id)
+        await self._delete("channels/channels", item_id=item_id)
+
+    async def get_streams(self, channel_id: int) -> JsonArray | JsonObject:
+        """Retrieve streams for a specific channel.
+
+        Args:
+            channel_id (int): Channel ID.
+
+        Returns:
+            JsonArray | JsonObject: The response data.
+        """
+        return await self._get(f"channels/channels/{channel_id}/streams")
+
+    async def match_epg(self, item_id: int, data: JsonObject) -> JsonObject:
+        """Try to auto-match this specific channel with EPG data.
+
+        Args:
+            item_id (int): Channel ID.
+            data (JsonObject): Channel data.
+
+        Returns:
+            JsonObject: The response data.
+        """
+        response = await self.handler.request(f"channels/channels/{item_id}/match-epg", method="POST", json_data=data)
+        if isinstance(response, dict):
+            return response
+        raise ValueError(f"Expected a dictionary response from the 'channels/channels/{item_id}/match-epg' endpoint")
+
+    async def reorder(self, item_id: int, data: JsonObject) -> JsonObject:
+        """Reorder a channel.
+
+        Args:
+            item_id (int): Channel ID.
+            data (JsonObject): Reorder request data.
+
+        Returns:
+            JsonObject: The response data.
+        """
+        response = await self.handler.request(f"channels/channels/{item_id}/reorder", method="POST", json_data=data)
+        if isinstance(response, dict):
+            return response
+        raise ValueError(f"Expected a dictionary response from the 'channels/channels/{item_id}/reorder' endpoint")
+
+    async def set_epg(self, item_id: int, data: JsonObject) -> JsonObject:
+        """Set EPG data for a channel and refresh program data.
+
+        Args:
+            item_id (int): Channel ID.
+            data (JsonObject): EPG request data.
+
+        Returns:
+            JsonObject: The response data.
+        """
+        response = await self.handler.request(f"channels/channels/{item_id}/set-epg", method="POST", json_data=data)
+        if isinstance(response, dict):
+            return response
+        raise ValueError(f"Expected a dictionary response from the 'channels/channels/{item_id}/set-epg' endpoint")
+
+    async def assign(self, data: JsonObject) -> JsonObject:
+        """Auto-assign channel_number in bulk.
+
+        Args:
+            data (JsonObject): Assign channels request data.
+
+        Returns:
+            JsonObject: The response data.
+        """
+        response = await self.handler.request("channels/channels/assign", method="POST", json_data=data)
+        if isinstance(response, dict):
+            return response
+        raise ValueError("Expected a dictionary response from the 'channels/channels/assign' endpoint")
+
+    async def batch_set_epg(self, data: JsonObject) -> JsonObject:
+        """Associate multiple channels with EPG data.
+
+        Args:
+            data (JsonObject): Batch set EPG request data.
+
+        Returns:
+            JsonObject: The response data.
+        """
+        response = await self.handler.request("channels/channels/batch-set-epg", method="POST", json_data=data)
+        if isinstance(response, dict):
+            return response
+        raise ValueError("Expected a dictionary response from the 'channels/channels/batch-set-epg' endpoint")
+
+    async def bulk_delete(self, ids: list[int]) -> None:
+        """Bulk delete channels by ID.
+
+        Args:
+            ids (list[int]): List of channel IDs.
+        """
+        await self.handler.request("channels/channels/bulk-delete", method="DELETE", json_data={"ids": ids})
+
+    async def get_by_uuids(
+        self,
+        uuids: list[str],
+        channel_group: str | None = None,
+        epg: str | None = None,
+        name: str | None = None,
+        ordering: str | None = None,
+        page: int | None = None,
+        page_size: int | None = None,
+        search: str | None = None,
+    ) -> JsonArray | JsonObject:
+        """Retrieve channels by a list of UUIDs.
+
+        Args:
+            uuids (list[str]): List of UUIDs.
+            channel_group (str | None, optional): Filter by channel group. Defaults to None.
+            epg (str | None, optional): Filter by EPG. Defaults to None.
+            name (str | None, optional): Filter by name. Defaults to None.
+            ordering (str | None, optional): Which field to use when ordering the results. Defaults to None.
+            page (int | None, optional): A page number within the paginated result set. Defaults to None.
+            page_size (int | None, optional): Number of results to return per page. Defaults to None.
+            search (str | None, optional): A search term. Defaults to None.
+
+        Returns:
+            JsonArray | JsonObject: The response data.
+        """
+        params: dict[str, Any] = {}
+        if channel_group:
+            params["channel_group"] = channel_group
+        if epg:
+            params["epg"] = epg
+        if name:
+            params["name"] = name
+        if ordering:
+            params["ordering"] = ordering
+        if page:
+            params["page"] = page
+        if page_size:
+            params["page_size"] = page_size
+        if search:
+            params["search"] = search
+
+        response = await self.handler.request(
+            "channels/channels/by-uuids",
+            method="POST",
+            json_data={"uuids": uuids},
+            params=params,
+        )
+        return response
+
+    async def bulk_edit(self, data: JsonObject) -> JsonObject:
+        """Bulk edit channels efficiently.
+
+        Args:
+            data (JsonObject): Patched channel data.
+
+        Returns:
+            JsonObject: The response data.
+        """
+        response = await self.handler.request("channels/channels/edit/bulk", method="PATCH", json_data=data)
+        if isinstance(response, dict):
+            return response
+        raise ValueError("Expected a dictionary response from the 'channels/channels/edit/bulk' endpoint")
+
+    async def bulk_regex_rename(self, data: JsonObject) -> JsonObject:
+        """Bulk rename channel names using a regex find/replace.
+
+        Args:
+            data (JsonObject): Bulk regex rename request data.
+
+        Returns:
+            JsonObject: The response data.
+        """
+        response = await self.handler.request("channels/channels/edit/bulk-regex", method="POST", json_data=data)
+        if isinstance(response, dict):
+            return response
+        raise ValueError("Expected a dictionary response from the 'channels/channels/edit/bulk-regex' endpoint")
+
+    async def from_stream(self, data: JsonObject) -> JsonObject:
+        """Create a new channel from an existing stream.
+
+        Args:
+            data (JsonObject): From stream request data.
+
+        Returns:
+            JsonObject: Added channel details.
+        """
+        response = await self.handler.request("channels/channels/from-stream", method="POST", json_data=data)
+        if isinstance(response, dict):
+            return response
+        raise ValueError("Expected a dictionary response from the 'channels/channels/from-stream' endpoint")
+
+    async def from_stream_bulk(self, data: JsonObject) -> JsonObject:
+        """Asynchronously bulk create channels from stream IDs.
+
+        Args:
+            data (JsonObject): From stream bulk request data.
+
+        Returns:
+            JsonObject: The response data.
+        """
+        response = await self.handler.request("channels/channels/from-stream/bulk", method="POST", json_data=data)
+        if isinstance(response, dict):
+            return response
+        raise ValueError("Expected a dictionary response from the 'channels/channels/from-stream/bulk' endpoint")
+
+    async def get_ids(self) -> JsonArray | JsonObject:
+        """Retrieve all channel IDs.
+
+        Returns:
+            JsonArray | JsonObject: The response data.
+        """
+        return await self._get("channels/channels/ids")
+
+    async def match_epg_bulk(self, data: JsonObject) -> JsonObject:
+        """Kick off a Celery task that tries to fuzzy-match channels with EPG data.
+
+        Args:
+            data (JsonObject): Match EPG request data.
+
+        Returns:
+            JsonObject: The response data.
+        """
+        response = await self.handler.request("channels/channels/match-epg", method="POST", json_data=data)
+        if isinstance(response, dict):
+            return response
+        raise ValueError("Expected a dictionary response from the 'channels/channels/match-epg' endpoint")
+
+    async def set_logos_from_epg(self, data: JsonObject) -> JsonObject:
+        """Trigger a Celery task to set channel logos from EPG data.
+
+        Args:
+            data (JsonObject): Channel data.
+
+        Returns:
+            JsonObject: The response data.
+        """
+        response = await self.handler.request("channels/channels/set-logos-from-epg", method="POST", json_data=data)
+        if isinstance(response, dict):
+            return response
+        raise ValueError("Expected a dictionary response from the 'channels/channels/set-logos-from-epg' endpoint")
+
+    async def set_names_from_epg(self, data: JsonObject) -> JsonObject:
+        """Trigger a Celery task to set channel names from EPG data.
+
+        Args:
+            data (JsonObject): Channel data.
+
+        Returns:
+            JsonObject: The response data.
+        """
+        response = await self.handler.request("channels/channels/set-names-from-epg", method="POST", json_data=data)
+        if isinstance(response, dict):
+            return response
+        raise ValueError("Expected a dictionary response from the 'channels/channels/set-names-from-epg' endpoint")
+
+    async def set_tvg_ids_from_epg(self, data: JsonObject) -> JsonObject:
+        """Trigger a Celery task to set channel TVG-IDs from EPG data.
+
+        Args:
+            data (JsonObject): Channel data.
+
+        Returns:
+            JsonObject: The response data.
+        """
+        response = await self.handler.request("channels/channels/set-tvg-ids-from-epg", method="POST", json_data=data)
+        if isinstance(response, dict):
+            return response
+        raise ValueError("Expected a dictionary response from the 'channels/channels/set-tvg-ids-from-epg' endpoint")
+
+    async def get_summary(self) -> JsonArray | JsonObject:
+        """Return a lightweight list of channels for the TV Guide.
+
+        Returns:
+            JsonArray | JsonObject: The response data.
+        """
+        return await self._get("channels/channels/summary")
+
+    async def get_comskip_config(self) -> JsonObject:
+        """Inspect the custom comskip.ini used by DVR processing.
+
+        Returns:
+            JsonObject: The response data.
+        """
+        return await self._get("channels/dvr/comskip-config")
+
+    async def set_comskip_config(self, data: JsonObject) -> JsonObject:
+        """Upload the custom comskip.ini used by DVR processing.
+
+        Args:
+            data (JsonObject): Comskip config data.
+
+        Returns:
+            JsonObject: The response data.
+        """
+        response = await self.handler.request("channels/dvr/comskip-config", method="POST", json_data=data)
+        if isinstance(response, dict):
+            return response
+        raise ValueError("Expected a dictionary response from the 'channels/dvr/comskip-config' endpoint")

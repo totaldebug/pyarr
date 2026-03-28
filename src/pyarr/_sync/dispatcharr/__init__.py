@@ -6,8 +6,21 @@
 import httpx
 
 from pyarr._sync.client import BaseArrClient
+from pyarr._sync.dispatcharr.accounts import Accounts
+from pyarr._sync.dispatcharr.backups import Backups
+from pyarr._sync.dispatcharr.channel_groups import ChannelGroups
+from pyarr._sync.dispatcharr.channel_logos import ChannelLogos
+from pyarr._sync.dispatcharr.channel_profiles import ChannelProfiles
 from pyarr._sync.dispatcharr.channels import Channels
+from pyarr._sync.dispatcharr.connect import Connect
+from pyarr._sync.dispatcharr.epg import Epg
+from pyarr._sync.dispatcharr.hdhr import Hdhr
+from pyarr._sync.dispatcharr.live import Live
+from pyarr._sync.dispatcharr.m3u import M3u
+from pyarr._sync.dispatcharr.plugins import Plugins
+from pyarr._sync.dispatcharr.proxy import Proxy
 from pyarr._sync.dispatcharr.streams import Streams
+from pyarr._sync.dispatcharr.system import DispatcharrSystem
 from pyarr._sync.dispatcharr.vod import Vod
 
 
@@ -22,7 +35,7 @@ class Dispatcharr(BaseArrClient):
         tls: bool = True,
         base_path: str = "",
         request_timeout: int | None = None,
-        api_ver: str | None = "v1",
+        api_ver: str | None = "",
         session: httpx.Client | None = None,
         verify_ssl: bool = True,
         headers: dict[str, str] | None = None,
@@ -36,7 +49,7 @@ class Dispatcharr(BaseArrClient):
             tls (bool, optional): Whether to use TLS. Defaults to True.
             base_path (str, optional): The base path for the API. Defaults to "".
             request_timeout (int | None, optional): The timeout for requests. Defaults to None.
-            api_ver (str | None, optional): The API version to use. Defaults to "v1".
+            api_ver (str | None, optional): The API version to use. Defaults to "".
             session (httpx.Client | None, optional): An existing httpx.Client session. Defaults to None.
             verify_ssl (bool, optional): Whether to verify SSL certificates. Defaults to True.
             headers (dict[str, str] | None, optional): Default headers to include in requests. Defaults to None.
@@ -53,6 +66,19 @@ class Dispatcharr(BaseArrClient):
             verify_ssl=verify_ssl,
             headers=headers,
         )
+        self.accounts = Accounts(self.http_utils)
+        self.backups = Backups(self.http_utils)
         self.channels = Channels(self.http_utils)
+        self.channel_groups = ChannelGroups(self.http_utils)
+        self.channel_logos = ChannelLogos(self.http_utils)
+        self.channel_profiles = ChannelProfiles(self.http_utils)
+        self.connect = Connect(self.http_utils)
+        self.epg = Epg(self.http_utils)
+        self.hdhr = Hdhr(self.http_utils)
+        self.live = Live(self.http_utils)
+        self.m3u = M3u(self.http_utils)
+        self.plugins = Plugins(self.http_utils)
+        self.proxy = Proxy(self.http_utils)
         self.streams = Streams(self.http_utils)
+        self.system = DispatcharrSystem(self.http_utils)  # type: ignore
         self.vod = Vod(self.http_utils)

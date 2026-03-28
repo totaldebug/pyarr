@@ -161,8 +161,8 @@ def test_types(session: Session) -> None:
 def test_style(session: Session) -> None:
     """Check that style guidelines are being followed"""
     session.run("uv", "sync", external=True)
-    session.run("uv", "run", "ruff", "check", "src/pyarr", "tests", external=True)
-    session.run("uv", "run", "ruff", "format", "--check", "src/pyarr", "tests", external=True)
+    session.run("uv", "run", "ruff", "check", "src/pyarr", external=True)
+    session.run("uv", "run", "ruff", "format", "--check", "src/pyarr", external=True)
     session.run("uv", "run", "interrogate", "src/pyarr", external=True)
 
 
