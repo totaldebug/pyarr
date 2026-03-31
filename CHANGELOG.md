@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.5.1](https://github.com/totaldebug/pyarr/compare/6.5.0...6.5.1) (2026-03-31)
+
+
+### Bug Fixes
+
+* **dispatcharr:** Uses different method for connecting to api ([a1bb48c](https://github.com/totaldebug/pyarr/commit/a1bb48c398a8a0a52a3a5e080bf31d3bcf24b20a))
+
 ## [6.5.0](https://github.com/totaldebug/pyarr/compare/6.4.0...6.5.0) (2026-03-28)
 
 
