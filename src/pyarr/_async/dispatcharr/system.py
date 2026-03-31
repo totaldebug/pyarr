@@ -343,3 +343,11 @@ class DispatcharrSystem(CommonActions):
             JsonObject: The response data.
         """
         return await self._get("core/version/")
+
+    async def get_status(self) -> JsonObject:
+        """Retrieve system status (alias for get_version).
+
+        Returns:
+            JsonObject: The response data.
+        """
+        return await self.get_version()
