@@ -11,7 +11,7 @@ class Accounts(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        return await self._get("accounts/api-keys")
+        return await self._get("accounts/api-keys/")
 
     async def generate_api_key(self) -> JsonObject:
         """Generate a new API key.
@@ -19,10 +19,10 @@ class Accounts(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = await self.handler.request("accounts/api-keys/generate", method="POST")
+        response = await self.handler.request("accounts/api-keys/generate/", method="POST")
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'accounts/api-keys/generate' endpoint")
+        raise ValueError("Expected a dictionary response from the 'accounts/api-keys/generate/' endpoint")
 
     async def revoke_api_key(self) -> JsonObject:
         """Revoke an API key.
@@ -30,10 +30,10 @@ class Accounts(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = await self.handler.request("accounts/api-keys/revoke", method="POST")
+        response = await self.handler.request("accounts/api-keys/revoke/", method="POST")
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'accounts/api-keys/revoke' endpoint")
+        raise ValueError("Expected a dictionary response from the 'accounts/api-keys/revoke/' endpoint")
 
     async def login(self, data: JsonObject) -> JsonObject:
         """Authenticate and log in a user.
@@ -44,10 +44,10 @@ class Accounts(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = await self.handler.request("accounts/auth/login", method="POST", json_data=data)
+        response = await self.handler.request("accounts/auth/login/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'accounts/auth/login' endpoint")
+        raise ValueError("Expected a dictionary response from the 'accounts/auth/login/' endpoint")
 
     async def logout(self) -> JsonObject:
         """Log out the current user.
@@ -55,10 +55,10 @@ class Accounts(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = await self.handler.request("accounts/auth/logout", method="POST")
+        response = await self.handler.request("accounts/auth/logout/", method="POST")
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'accounts/auth/logout' endpoint")
+        raise ValueError("Expected a dictionary response from the 'accounts/auth/logout/' endpoint")
 
     async def get_groups(self, item_id: int | None = None) -> JsonArray | JsonObject:
         """Retrieve a list of groups or a specific group by ID.
@@ -69,7 +69,7 @@ class Accounts(CommonActions):
         Returns:
             JsonArray | JsonObject: The response data.
         """
-        return await self._get("accounts/groups", item_id=item_id)
+        return await self._get("accounts/groups/", item_id=item_id)
 
     async def add_group(self, data: JsonObject) -> JsonObject:
         """Create a new group.
@@ -80,10 +80,10 @@ class Accounts(CommonActions):
         Returns:
             JsonObject: Added group details.
         """
-        response = await self.handler.request("accounts/groups", method="POST", json_data=data)
+        response = await self.handler.request("accounts/groups/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'accounts/groups' endpoint")
+        raise ValueError("Expected a dictionary response from the 'accounts/groups/' endpoint")
 
     async def update_group(self, item_id: int, data: JsonObject) -> JsonObject:
         """Update a group.
@@ -95,10 +95,10 @@ class Accounts(CommonActions):
         Returns:
             JsonObject: Updated group details.
         """
-        response = await self.handler.request(f"accounts/groups/{item_id}", method="PUT", json_data=data)
+        response = await self.handler.request(f"accounts/groups/{item_id}/", method="PUT", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'accounts/groups/{item_id}' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'accounts/groups/{item_id}/' endpoint")
 
     async def partial_update_group(self, item_id: int, data: JsonObject) -> JsonObject:
         """Partially update a group.
@@ -110,10 +110,10 @@ class Accounts(CommonActions):
         Returns:
             JsonObject: Updated group details.
         """
-        response = await self.handler.request(f"accounts/groups/{item_id}", method="PATCH", json_data=data)
+        response = await self.handler.request(f"accounts/groups/{item_id}/", method="PATCH", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'accounts/groups/{item_id}' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'accounts/groups/{item_id}/' endpoint")
 
     async def delete_group(self, item_id: int) -> None:
         """Delete a group.
@@ -121,7 +121,7 @@ class Accounts(CommonActions):
         Args:
             item_id (int): Group ID.
         """
-        await self._delete("accounts/groups", item_id=item_id)
+        await self._delete("accounts/groups/", item_id=item_id)
 
     async def get_permissions(self) -> JsonArray:
         """Retrieve a list of all permissions.
@@ -129,7 +129,7 @@ class Accounts(CommonActions):
         Returns:
             JsonArray: The response data.
         """
-        return await self._get("accounts/permissions")
+        return await self._get("accounts/permissions/")
 
     async def create_token(self, data: JsonObject) -> JsonObject:
         """Takes a set of user credentials and returns an access and refresh JSON web token pair.
@@ -140,10 +140,10 @@ class Accounts(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = await self.handler.request("accounts/token", method="POST", json_data=data)
+        response = await self.handler.request("accounts/token/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'accounts/token' endpoint")
+        raise ValueError("Expected a dictionary response from the 'accounts/token/' endpoint")
 
     async def refresh_token(self, data: JsonObject) -> JsonObject:
         """Takes a refresh type JSON web token and returns an access type JSON web token.
@@ -154,10 +154,10 @@ class Accounts(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = await self.handler.request("accounts/token/refresh", method="POST", json_data=data)
+        response = await self.handler.request("accounts/token/refresh/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'accounts/token/refresh' endpoint")
+        raise ValueError("Expected a dictionary response from the 'accounts/token/refresh/' endpoint")
 
     async def get_users(self, item_id: int | None = None) -> JsonArray | JsonObject:
         """Retrieve a list of users or a specific user by ID.
@@ -168,7 +168,7 @@ class Accounts(CommonActions):
         Returns:
             JsonArray | JsonObject: The response data.
         """
-        return await self._get("accounts/users", item_id=item_id)
+        return await self._get("accounts/users/", item_id=item_id)
 
     async def add_user(self, data: JsonObject) -> JsonObject:
         """Create a new user.
@@ -179,10 +179,10 @@ class Accounts(CommonActions):
         Returns:
             JsonObject: Added user details.
         """
-        response = await self.handler.request("accounts/users", method="POST", json_data=data)
+        response = await self.handler.request("accounts/users/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'accounts/users' endpoint")
+        raise ValueError("Expected a dictionary response from the 'accounts/users/' endpoint")
 
     async def update_user(self, item_id: int, data: JsonObject) -> JsonObject:
         """Update a user.
@@ -194,10 +194,10 @@ class Accounts(CommonActions):
         Returns:
             JsonObject: Updated user details.
         """
-        response = await self.handler.request(f"accounts/users/{item_id}", method="PUT", json_data=data)
+        response = await self.handler.request(f"accounts/users/{item_id}/", method="PUT", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'accounts/users/{item_id}' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'accounts/users/{item_id}/' endpoint")
 
     async def partial_update_user(self, item_id: int, data: JsonObject) -> JsonObject:
         """Partially update a user.
@@ -209,10 +209,10 @@ class Accounts(CommonActions):
         Returns:
             JsonObject: Updated user details.
         """
-        response = await self.handler.request(f"accounts/users/{item_id}", method="PATCH", json_data=data)
+        response = await self.handler.request(f"accounts/users/{item_id}/", method="PATCH", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'accounts/users/{item_id}' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'accounts/users/{item_id}/' endpoint")
 
     async def delete_user(self, item_id: int) -> None:
         """Delete a user.
@@ -220,7 +220,7 @@ class Accounts(CommonActions):
         Args:
             item_id (int): User ID.
         """
-        await self._delete("accounts/users", item_id=item_id)
+        await self._delete("accounts/users/", item_id=item_id)
 
     async def get_me(self) -> JsonObject:
         """Get active user information.
@@ -228,7 +228,7 @@ class Accounts(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        return await self._get("accounts/users/me")
+        return await self._get("accounts/users/me/")
 
     async def partial_update_me(self, data: JsonObject) -> JsonObject:
         """Update active user information.
@@ -239,7 +239,7 @@ class Accounts(CommonActions):
         Returns:
             JsonObject: Updated user details.
         """
-        response = await self.handler.request("accounts/users/me", method="PATCH", json_data=data)
+        response = await self.handler.request("accounts/users/me/", method="PATCH", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'accounts/users/me' endpoint")
+        raise ValueError("Expected a dictionary response from the 'accounts/users/me/' endpoint")

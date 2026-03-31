@@ -14,7 +14,7 @@ class Plugins(CommonActions):
         Returns:
             JsonArray | JsonObject: The response data.
         """
-        return await self._get("plugins/plugins", item_id=item_id)
+        return await self._get("plugins/plugins/", item_id=item_id)
 
     async def delete(self, item_id: str) -> None:
         """Delete a plugin.
@@ -22,7 +22,7 @@ class Plugins(CommonActions):
         Args:
             item_id (str): Plugin ID.
         """
-        await self._delete("plugins/plugins", item_id=item_id)
+        await self._delete("plugins/plugins/", item_id=item_id)
 
     async def set_enabled(self, item_id: str, enabled: bool) -> JsonObject:
         """Enable or disable a plugin.
@@ -35,7 +35,7 @@ class Plugins(CommonActions):
             JsonObject: The response data.
         """
         response = await self.handler.request(
-            f"plugins/plugins/{item_id}/enabled",
+            f"plugins/plugins/{item_id}/enabled/",
             method="POST",
             json_data={"enabled": enabled},
         )
@@ -52,7 +52,7 @@ class Plugins(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        return await self._get(f"plugins/plugins/{item_id}/logo")
+        return await self._get(f"plugins/plugins/{item_id}/logo/")
 
     async def run(self, item_id: str, data: JsonObject) -> JsonObject:
         """Run a plugin.
@@ -64,10 +64,10 @@ class Plugins(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = await self.handler.request(f"plugins/plugins/{item_id}/run", method="POST", json_data=data)
+        response = await self.handler.request(f"plugins/plugins/{item_id}/run/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'plugins/plugins/{item_id}/run' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'plugins/plugins/{item_id}/run/' endpoint")
 
     async def set_settings(self, item_id: str, data: JsonObject) -> JsonObject:
         """Set plugin settings.
@@ -79,10 +79,10 @@ class Plugins(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = await self.handler.request(f"plugins/plugins/{item_id}/settings", method="POST", json_data=data)
+        response = await self.handler.request(f"plugins/plugins/{item_id}/settings/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'plugins/plugins/{item_id}/settings' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'plugins/plugins/{item_id}/settings/' endpoint")
 
     async def import_plugin(self, data: JsonObject) -> JsonObject:
         """Import a plugin.
@@ -93,10 +93,10 @@ class Plugins(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = await self.handler.request("plugins/plugins/import", method="POST", json_data=data)
+        response = await self.handler.request("plugins/plugins/import/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'plugins/plugins/import' endpoint")
+        raise ValueError("Expected a dictionary response from the 'plugins/plugins/import/' endpoint")
 
     async def reload(self) -> JsonObject:
         """Reload plugins.
@@ -104,7 +104,7 @@ class Plugins(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = await self.handler.request("plugins/plugins/reload", method="POST")
+        response = await self.handler.request("plugins/plugins/reload/", method="POST")
         if isinstance(response, dict):
             return response
         raise ValueError("Expected a dictionary response from the 'plugins/plugins/reload' endpoint")

@@ -14,7 +14,7 @@ class M3u(CommonActions):
         Returns:
             JsonArray | JsonObject: The response data.
         """
-        return await self._get("m3u/accounts", item_id=item_id)
+        return await self._get("m3u/accounts/", item_id=item_id)
 
     async def add_account(self, data: JsonObject) -> JsonObject:
         """Create a new M3U account.
@@ -25,10 +25,10 @@ class M3u(CommonActions):
         Returns:
             JsonObject: Added account details.
         """
-        response = await self.handler.request("m3u/accounts", method="POST", json_data=data)
+        response = await self.handler.request("m3u/accounts/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'm3u/accounts' endpoint")
+        raise ValueError("Expected a dictionary response from the 'm3u/accounts/' endpoint")
 
     async def update_account(self, item_id: int, data: JsonObject) -> JsonObject:
         """Update an M3U account.
@@ -40,10 +40,10 @@ class M3u(CommonActions):
         Returns:
             JsonObject: Updated account details.
         """
-        response = await self.handler.request(f"m3u/accounts/{item_id}", method="PUT", json_data=data)
+        response = await self.handler.request(f"m3u/accounts/{item_id}/", method="PUT", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'm3u/accounts/{item_id}' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'm3u/accounts/{item_id}/' endpoint")
 
     async def partial_update_account(self, item_id: int, data: JsonObject) -> JsonObject:
         """Partially update an M3U account.
@@ -55,10 +55,10 @@ class M3u(CommonActions):
         Returns:
             JsonObject: Updated account details.
         """
-        response = await self.handler.request(f"m3u/accounts/{item_id}", method="PATCH", json_data=data)
+        response = await self.handler.request(f"m3u/accounts/{item_id}/", method="PATCH", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'm3u/accounts/{item_id}' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'm3u/accounts/{item_id}/' endpoint")
 
     async def delete_account(self, item_id: int) -> None:
         """Delete an M3U account.
@@ -66,7 +66,7 @@ class M3u(CommonActions):
         Args:
             item_id (int): Account ID.
         """
-        await self._delete("m3u/accounts", item_id=item_id)
+        await self._delete("m3u/accounts/", item_id=item_id)
 
     async def partial_update_account_group_settings(self, item_id: int, data: JsonObject) -> JsonObject:
         """Partially update M3U account group settings.
@@ -78,10 +78,10 @@ class M3u(CommonActions):
         Returns:
             JsonObject: Updated settings.
         """
-        response = await self.handler.request(f"m3u/accounts/{item_id}/group-settings", method="PATCH", json_data=data)
+        response = await self.handler.request(f"m3u/accounts/{item_id}/group-settings/", method="PATCH", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'm3u/accounts/{item_id}/group-settings' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'm3u/accounts/{item_id}/group-settings/' endpoint")
 
     async def refresh_account_vod(self, item_id: int) -> JsonObject:
         """Refresh VOD for an M3U account.
@@ -92,10 +92,10 @@ class M3u(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = await self.handler.request(f"m3u/accounts/{item_id}/refresh-vod", method="POST")
+        response = await self.handler.request(f"m3u/accounts/{item_id}/refresh-vod/", method="POST")
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'm3u/accounts/{item_id}/refresh-vod' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'm3u/accounts/{item_id}/refresh-vod/' endpoint")
 
     async def get_account_filters(self, account_id: int, item_id: int | None = None) -> JsonArray | JsonObject:
         """Retrieve M3U account filters.
@@ -107,7 +107,7 @@ class M3u(CommonActions):
         Returns:
             JsonArray | JsonObject: The response data.
         """
-        return await self._get(f"m3u/accounts/{account_id}/filters", item_id=item_id)
+        return await self._get(f"m3u/accounts/{account_id}/filters/", item_id=item_id)
 
     async def add_account_filter(self, account_id: int, data: JsonObject) -> JsonObject:
         """Create a new M3U account filter.
@@ -119,10 +119,10 @@ class M3u(CommonActions):
         Returns:
             JsonObject: Added filter details.
         """
-        response = await self.handler.request(f"m3u/accounts/{account_id}/filters", method="POST", json_data=data)
+        response = await self.handler.request(f"m3u/accounts/{account_id}/filters/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'm3u/accounts/{account_id}/filters' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'm3u/accounts/{account_id}/filters/' endpoint")
 
     async def update_account_filter(self, account_id: int, item_id: int, data: JsonObject) -> JsonObject:
         """Update an M3U account filter.
@@ -136,14 +136,14 @@ class M3u(CommonActions):
             JsonObject: Updated filter details.
         """
         response = await self.handler.request(
-            f"m3u/accounts/{account_id}/filters/{item_id}",
+            f"m3u/accounts/{account_id}/filters/{item_id}/",
             method="PUT",
             json_data=data,
         )
         if isinstance(response, dict):
             return response
         raise ValueError(
-            f"Expected a dictionary response from the 'm3u/accounts/{account_id}/filters/{item_id}' endpoint"
+            f"Expected a dictionary response from the 'm3u/accounts/{account_id}/filters/{item_id}/' endpoint"
         )
 
     async def partial_update_account_filter(self, account_id: int, item_id: int, data: JsonObject) -> JsonObject:
@@ -158,14 +158,14 @@ class M3u(CommonActions):
             JsonObject: Updated filter details.
         """
         response = await self.handler.request(
-            f"m3u/accounts/{account_id}/filters/{item_id}",
+            f"m3u/accounts/{account_id}/filters/{item_id}/",
             method="PATCH",
             json_data=data,
         )
         if isinstance(response, dict):
             return response
         raise ValueError(
-            f"Expected a dictionary response from the 'm3u/accounts/{account_id}/filters/{item_id}' endpoint"
+            f"Expected a dictionary response from the 'm3u/accounts/{account_id}/filters/{item_id}/' endpoint"
         )
 
     async def delete_account_filter(self, account_id: int, item_id: int) -> None:
@@ -175,7 +175,7 @@ class M3u(CommonActions):
             account_id (int): Account ID.
             item_id (int): Filter ID.
         """
-        await self.handler.request(f"m3u/accounts/{account_id}/filters/{item_id}", method="DELETE")
+        await self.handler.request(f"m3u/accounts/{account_id}/filters/{item_id}/", method="DELETE")
 
     async def get_account_profiles(self, account_id: int, item_id: int | None = None) -> JsonArray | JsonObject:
         """Retrieve M3U account profiles.
@@ -187,7 +187,7 @@ class M3u(CommonActions):
         Returns:
             JsonArray | JsonObject: The response data.
         """
-        return await self._get(f"m3u/accounts/{account_id}/profiles", item_id=item_id)
+        return await self._get(f"m3u/accounts/{account_id}/profiles/", item_id=item_id)
 
     async def add_account_profile(self, account_id: int, data: JsonObject) -> JsonObject:
         """Create a new M3U account profile.
@@ -199,10 +199,10 @@ class M3u(CommonActions):
         Returns:
             JsonObject: Added profile details.
         """
-        response = await self.handler.request(f"m3u/accounts/{account_id}/profiles", method="POST", json_data=data)
+        response = await self.handler.request(f"m3u/accounts/{account_id}/profiles/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'm3u/accounts/{account_id}/profiles' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'm3u/accounts/{account_id}/profiles/' endpoint")
 
     async def update_account_profile(self, account_id: int, item_id: int, data: JsonObject) -> JsonObject:
         """Update an M3U account profile.
@@ -216,14 +216,14 @@ class M3u(CommonActions):
             JsonObject: Updated profile details.
         """
         response = await self.handler.request(
-            f"m3u/accounts/{account_id}/profiles/{item_id}",
+            f"m3u/accounts/{account_id}/profiles/{item_id}/",
             method="PUT",
             json_data=data,
         )
         if isinstance(response, dict):
             return response
         raise ValueError(
-            f"Expected a dictionary response from the 'm3u/accounts/{account_id}/profiles/{item_id}' endpoint"
+            f"Expected a dictionary response from the 'm3u/accounts/{account_id}/profiles/{item_id}/' endpoint"
         )
 
     async def partial_update_account_profile(self, account_id: int, item_id: int, data: JsonObject) -> JsonObject:
@@ -238,14 +238,14 @@ class M3u(CommonActions):
             JsonObject: Updated profile details.
         """
         response = await self.handler.request(
-            f"m3u/accounts/{account_id}/profiles/{item_id}",
+            f"m3u/accounts/{account_id}/profiles/{item_id}/",
             method="PATCH",
             json_data=data,
         )
         if isinstance(response, dict):
             return response
         raise ValueError(
-            f"Expected a dictionary response from the 'm3u/accounts/{account_id}/profiles/{item_id}' endpoint"
+            f"Expected a dictionary response from the 'm3u/accounts/{account_id}/profiles/{item_id}/' endpoint"
         )
 
     async def delete_account_profile(self, account_id: int, item_id: int) -> None:
@@ -255,7 +255,7 @@ class M3u(CommonActions):
             account_id (int): Account ID.
             item_id (int): Profile ID.
         """
-        await self.handler.request(f"m3u/accounts/{account_id}/profiles/{item_id}", method="DELETE")
+        await self.handler.request(f"m3u/accounts/{account_id}/profiles/{item_id}/", method="DELETE")
 
     async def refresh(self, data: JsonObject) -> JsonObject:
         """Refresh M3U data.
@@ -266,10 +266,10 @@ class M3u(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = await self.handler.request("m3u/refresh", method="POST", json_data=data)
+        response = await self.handler.request("m3u/refresh/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'm3u/refresh' endpoint")
+        raise ValueError("Expected a dictionary response from the 'm3u/refresh/' endpoint")
 
     async def refresh_account_info(self, data: JsonObject) -> JsonObject:
         """Refresh M3U account info.
@@ -280,10 +280,10 @@ class M3u(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = await self.handler.request("m3u/refresh-account-info", method="POST", json_data=data)
+        response = await self.handler.request("m3u/refresh-account-info/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'm3u/refresh-account-info' endpoint")
+        raise ValueError("Expected a dictionary response from the 'm3u/refresh-account-info/' endpoint")
 
     async def get_server_groups(self, item_id: int | None = None) -> JsonArray | JsonObject:
         """Retrieve M3U server groups.
@@ -294,7 +294,7 @@ class M3u(CommonActions):
         Returns:
             JsonArray | JsonObject: The response data.
         """
-        return await self._get("m3u/server-groups", item_id=item_id)
+        return await self._get("m3u/server-groups/", item_id=item_id)
 
     async def add_server_group(self, data: JsonObject) -> JsonObject:
         """Create a new M3U server group.
@@ -305,10 +305,10 @@ class M3u(CommonActions):
         Returns:
             JsonObject: Added group details.
         """
-        response = await self.handler.request("m3u/server-groups", method="POST", json_data=data)
+        response = await self.handler.request("m3u/server-groups/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'm3u/server-groups' endpoint")
+        raise ValueError("Expected a dictionary response from the 'm3u/server-groups/' endpoint")
 
     async def update_server_group(self, item_id: int, data: JsonObject) -> JsonObject:
         """Update an M3U server group.
@@ -320,10 +320,10 @@ class M3u(CommonActions):
         Returns:
             JsonObject: Updated group details.
         """
-        response = await self.handler.request(f"m3u/server-groups/{item_id}", method="PUT", json_data=data)
+        response = await self.handler.request(f"m3u/server-groups/{item_id}/", method="PUT", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'm3u/server-groups/{item_id}' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'm3u/server-groups/{item_id}/' endpoint")
 
     async def partial_update_server_group(self, item_id: int, data: JsonObject) -> JsonObject:
         """Partially update an M3U server group.
@@ -335,10 +335,10 @@ class M3u(CommonActions):
         Returns:
             JsonObject: Updated group details.
         """
-        response = await self.handler.request(f"m3u/server-groups/{item_id}", method="PATCH", json_data=data)
+        response = await self.handler.request(f"m3u/server-groups/{item_id}/", method="PATCH", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'm3u/server-groups/{item_id}' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'm3u/server-groups/{item_id}/' endpoint")
 
     async def delete_server_group(self, item_id: int) -> None:
         """Delete an M3U server group.
@@ -346,4 +346,4 @@ class M3u(CommonActions):
         Args:
             item_id (int): Group ID.
         """
-        await self._delete("m3u/server-groups", item_id=item_id)
+        await self._delete("m3u/server-groups/", item_id=item_id)

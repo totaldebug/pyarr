@@ -54,7 +54,7 @@ class Channels(CommonActions):
         if search:
             params["search"] = search
 
-        return self._get("channels/channels", item_id=item_id, params=params)
+        return self._get("channels/channels/", item_id=item_id, params=params)
 
     def add(self, data: JsonObject) -> JsonObject:
         """Add a new channel.
@@ -65,10 +65,10 @@ class Channels(CommonActions):
         Returns:
             JsonObject: Added channel details.
         """
-        response = self.handler.request("channels/channels", method="POST", json_data=data)
+        response = self.handler.request("channels/channels/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'channels/channels' endpoint")
+        raise ValueError("Expected a dictionary response from the 'channels/channels/' endpoint")
 
     def update(self, item_id: int, data: JsonObject) -> JsonObject:
         """Update an existing channel.
@@ -80,10 +80,10 @@ class Channels(CommonActions):
         Returns:
             JsonObject: Updated channel details.
         """
-        response = self.handler.request(f"channels/channels/{item_id}", method="PUT", json_data=data)
+        response = self.handler.request(f"channels/channels/{item_id}/", method="PUT", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'channels/channels/{item_id}' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'channels/channels/{item_id}/' endpoint")
 
     def partial_update(self, item_id: int, data: JsonObject) -> JsonObject:
         """Partially update an existing channel.
@@ -95,10 +95,10 @@ class Channels(CommonActions):
         Returns:
             JsonObject: Updated channel details.
         """
-        response = self.handler.request(f"channels/channels/{item_id}", method="PATCH", json_data=data)
+        response = self.handler.request(f"channels/channels/{item_id}/", method="PATCH", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'channels/channels/{item_id}' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'channels/channels/{item_id}/' endpoint")
 
     def delete(self, item_id: int) -> None:
         """Delete a channel.
@@ -106,7 +106,7 @@ class Channels(CommonActions):
         Args:
             item_id (int): Channel ID.
         """
-        self._delete("channels/channels", item_id=item_id)
+        self._delete("channels/channels/", item_id=item_id)
 
     def get_streams(self, channel_id: int) -> JsonArray | JsonObject:
         """Retrieve streams for a specific channel.
@@ -117,7 +117,7 @@ class Channels(CommonActions):
         Returns:
             JsonArray | JsonObject: The response data.
         """
-        return self._get(f"channels/channels/{channel_id}/streams")
+        return self._get(f"channels/channels/{channel_id}/streams/")
 
     def match_epg(self, item_id: int, data: JsonObject) -> JsonObject:
         """Try to auto-match this specific channel with EPG data.
@@ -129,10 +129,10 @@ class Channels(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = self.handler.request(f"channels/channels/{item_id}/match-epg", method="POST", json_data=data)
+        response = self.handler.request(f"channels/channels/{item_id}/match-epg/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'channels/channels/{item_id}/match-epg' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'channels/channels/{item_id}/match-epg/' endpoint")
 
     def reorder(self, item_id: int, data: JsonObject) -> JsonObject:
         """Reorder a channel.
@@ -144,10 +144,10 @@ class Channels(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = self.handler.request(f"channels/channels/{item_id}/reorder", method="POST", json_data=data)
+        response = self.handler.request(f"channels/channels/{item_id}/reorder/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'channels/channels/{item_id}/reorder' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'channels/channels/{item_id}/reorder/' endpoint")
 
     def set_epg(self, item_id: int, data: JsonObject) -> JsonObject:
         """Set EPG data for a channel and refresh program data.
@@ -159,10 +159,10 @@ class Channels(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = self.handler.request(f"channels/channels/{item_id}/set-epg", method="POST", json_data=data)
+        response = self.handler.request(f"channels/channels/{item_id}/set-epg/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'channels/channels/{item_id}/set-epg' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'channels/channels/{item_id}/set-epg/' endpoint")
 
     def assign(self, data: JsonObject) -> JsonObject:
         """Auto-assign channel_number in bulk.
@@ -173,10 +173,10 @@ class Channels(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = self.handler.request("channels/channels/assign", method="POST", json_data=data)
+        response = self.handler.request("channels/channels/assign/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'channels/channels/assign' endpoint")
+        raise ValueError("Expected a dictionary response from the 'channels/channels/assign/' endpoint")
 
     def batch_set_epg(self, data: JsonObject) -> JsonObject:
         """Associate multiple channels with EPG data.
@@ -187,10 +187,10 @@ class Channels(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = self.handler.request("channels/channels/batch-set-epg", method="POST", json_data=data)
+        response = self.handler.request("channels/channels/batch-set-epg/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'channels/channels/batch-set-epg' endpoint")
+        raise ValueError("Expected a dictionary response from the 'channels/channels/batch-set-epg/' endpoint")
 
     def bulk_delete(self, ids: list[int]) -> None:
         """Bulk delete channels by ID.
@@ -198,7 +198,7 @@ class Channels(CommonActions):
         Args:
             ids (list[int]): List of channel IDs.
         """
-        self.handler.request("channels/channels/bulk-delete", method="DELETE", json_data={"ids": ids})
+        self.handler.request("channels/channels/bulk-delete/", method="DELETE", json_data={"ids": ids})
 
     def get_by_uuids(
         self,
@@ -243,7 +243,7 @@ class Channels(CommonActions):
             params["search"] = search
 
         response = self.handler.request(
-            "channels/channels/by-uuids",
+            "channels/channels/by-uuids/",
             method="POST",
             json_data={"uuids": uuids},
             params=params,
@@ -259,10 +259,10 @@ class Channels(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = self.handler.request("channels/channels/edit/bulk", method="PATCH", json_data=data)
+        response = self.handler.request("channels/channels/edit/bulk/", method="PATCH", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'channels/channels/edit/bulk' endpoint")
+        raise ValueError("Expected a dictionary response from the 'channels/channels/edit/bulk/' endpoint")
 
     def bulk_regex_rename(self, data: JsonObject) -> JsonObject:
         """Bulk rename channel names using a regex find/replace.
@@ -273,10 +273,10 @@ class Channels(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = self.handler.request("channels/channels/edit/bulk-regex", method="POST", json_data=data)
+        response = self.handler.request("channels/channels/edit/bulk-regex/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'channels/channels/edit/bulk-regex' endpoint")
+        raise ValueError("Expected a dictionary response from the 'channels/channels/edit/bulk-regex/' endpoint")
 
     def from_stream(self, data: JsonObject) -> JsonObject:
         """Create a new channel from an existing stream.
@@ -287,10 +287,10 @@ class Channels(CommonActions):
         Returns:
             JsonObject: Added channel details.
         """
-        response = self.handler.request("channels/channels/from-stream", method="POST", json_data=data)
+        response = self.handler.request("channels/channels/from-stream/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'channels/channels/from-stream' endpoint")
+        raise ValueError("Expected a dictionary response from the 'channels/channels/from-stream/' endpoint")
 
     def from_stream_bulk(self, data: JsonObject) -> JsonObject:
         """Asynchronously bulk create channels from stream IDs.
@@ -301,10 +301,10 @@ class Channels(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = self.handler.request("channels/channels/from-stream/bulk", method="POST", json_data=data)
+        response = self.handler.request("channels/channels/from-stream/bulk/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'channels/channels/from-stream/bulk' endpoint")
+        raise ValueError("Expected a dictionary response from the 'channels/channels/from-stream/bulk/' endpoint")
 
     def get_ids(self) -> JsonArray | JsonObject:
         """Retrieve all channel IDs.
@@ -312,7 +312,7 @@ class Channels(CommonActions):
         Returns:
             JsonArray | JsonObject: The response data.
         """
-        return self._get("channels/channels/ids")
+        return self._get("channels/channels/ids/")
 
     def match_epg_bulk(self, data: JsonObject) -> JsonObject:
         """Kick off a Celery task that tries to fuzzy-match channels with EPG data.
@@ -323,10 +323,10 @@ class Channels(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = self.handler.request("channels/channels/match-epg", method="POST", json_data=data)
+        response = self.handler.request("channels/channels/match-epg/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'channels/channels/match-epg' endpoint")
+        raise ValueError("Expected a dictionary response from the 'channels/channels/match-epg/' endpoint")
 
     def set_logos_from_epg(self, data: JsonObject) -> JsonObject:
         """Trigger a Celery task to set channel logos from EPG data.
@@ -337,10 +337,10 @@ class Channels(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = self.handler.request("channels/channels/set-logos-from-epg", method="POST", json_data=data)
+        response = self.handler.request("channels/channels/set-logos-from-epg/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'channels/channels/set-logos-from-epg' endpoint")
+        raise ValueError("Expected a dictionary response from the 'channels/channels/set-logos-from-epg/' endpoint")
 
     def set_names_from_epg(self, data: JsonObject) -> JsonObject:
         """Trigger a Celery task to set channel names from EPG data.
@@ -351,10 +351,10 @@ class Channels(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = self.handler.request("channels/channels/set-names-from-epg", method="POST", json_data=data)
+        response = self.handler.request("channels/channels/set-names-from-epg/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'channels/channels/set-names-from-epg' endpoint")
+        raise ValueError("Expected a dictionary response from the 'channels/channels/set-names-from-epg/' endpoint")
 
     def set_tvg_ids_from_epg(self, data: JsonObject) -> JsonObject:
         """Trigger a Celery task to set channel TVG-IDs from EPG data.
@@ -365,10 +365,10 @@ class Channels(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = self.handler.request("channels/channels/set-tvg-ids-from-epg", method="POST", json_data=data)
+        response = self.handler.request("channels/channels/set-tvg-ids-from-epg/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'channels/channels/set-tvg-ids-from-epg' endpoint")
+        raise ValueError("Expected a dictionary response from the 'channels/channels/set-tvg-ids-from-epg/' endpoint")
 
     def get_summary(self) -> JsonArray | JsonObject:
         """Return a lightweight list of channels for the TV Guide.
@@ -376,7 +376,7 @@ class Channels(CommonActions):
         Returns:
             JsonArray | JsonObject: The response data.
         """
-        return self._get("channels/channels/summary")
+        return self._get("channels/channels/summary/")
 
     def get_comskip_config(self) -> JsonObject:
         """Inspect the custom comskip.ini used by DVR processing.
@@ -384,7 +384,7 @@ class Channels(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        return self._get("channels/dvr/comskip-config")
+        return self._get("channels/dvr/comskip-config/")
 
     def set_comskip_config(self, data: JsonObject) -> JsonObject:
         """Upload the custom comskip.ini used by DVR processing.
@@ -395,7 +395,7 @@ class Channels(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = self.handler.request("channels/dvr/comskip-config", method="POST", json_data=data)
+        response = self.handler.request("channels/dvr/comskip-config/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'channels/dvr/comskip-config' endpoint")
+        raise ValueError("Expected a dictionary response from the 'channels/dvr/comskip-config/' endpoint")

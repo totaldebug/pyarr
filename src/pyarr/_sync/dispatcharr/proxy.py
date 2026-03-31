@@ -19,9 +19,9 @@ class Proxy(CommonActions):
         Returns:
             JsonArray | JsonObject: The response data.
         """
-        endpoint = "proxy/ts/status"
+        endpoint = "proxy/ts/status/"
         if channel_id:
-            endpoint = f"{endpoint}/{channel_id}"
+            endpoint = f"{endpoint}{channel_id}/"
         return self.handler.request(endpoint, method="GET")
 
     def change_ts_stream(self, channel_id: int) -> JsonObject:
@@ -33,7 +33,7 @@ class Proxy(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        return self.handler.request(f"proxy/ts/change_stream/{channel_id}", method="POST")
+        return self.handler.request(f"proxy/ts/change_stream/{channel_id}/", method="POST")
 
     def next_ts_stream(self, channel_id: int) -> JsonObject:
         """Switch to next TS stream for a channel.
@@ -44,7 +44,7 @@ class Proxy(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        return self.handler.request(f"proxy/ts/next_stream/{channel_id}", method="POST")
+        return self.handler.request(f"proxy/ts/next_stream/{channel_id}/", method="POST")
 
     def stop_ts_stream(self, channel_id: int) -> JsonObject:
         """Stop TS stream for a channel.
@@ -55,7 +55,7 @@ class Proxy(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        return self.handler.request(f"proxy/ts/stop/{channel_id}", method="POST")
+        return self.handler.request(f"proxy/ts/stop/{channel_id}/", method="POST")
 
     def delete_ts_stream(self, channel_id: int) -> None:
         """Delete TS stream for a channel.
@@ -63,7 +63,7 @@ class Proxy(CommonActions):
         Args:
             channel_id (int): Channel ID.
         """
-        self.handler.request(f"proxy/ts/stop/{channel_id}", method="DELETE")
+        self.handler.request(f"proxy/ts/stop/{channel_id}/", method="DELETE")
 
     def stop_ts_client(self, channel_id: int) -> JsonObject:
         """Stop TS client for a channel.
@@ -74,7 +74,7 @@ class Proxy(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        return self.handler.request(f"proxy/ts/stop_client/{channel_id}", method="POST")
+        return self.handler.request(f"proxy/ts/stop_client/{channel_id}/", method="POST")
 
     def get_ts_stream(self, channel_id: int) -> JsonObject:
         """Retrieve TS stream for a channel.
@@ -85,7 +85,7 @@ class Proxy(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        return self.handler.request(f"proxy/ts/stream/{channel_id}", method="GET")
+        return self.handler.request(f"proxy/ts/stream/{channel_id}/", method="GET")
 
     def stop_vod_client(self) -> JsonObject:
         """Stop VOD client.

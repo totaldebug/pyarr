@@ -16,7 +16,7 @@ class Hdhr(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        return self._get("hdhr/device.xml")
+        return self._get("hdhr/device.xml/")
 
     def get_devices(self, item_id: int | None = None) -> JsonArray | JsonObject:
         """Retrieve HDHR devices.
@@ -27,7 +27,7 @@ class Hdhr(CommonActions):
         Returns:
             JsonArray | JsonObject: The response data.
         """
-        return self._get("hdhr/devices", item_id=item_id)
+        return self._get("hdhr/devices/", item_id=item_id)
 
     def add_device(self, data: JsonObject) -> JsonObject:
         """Create a new HDHR device.
@@ -38,10 +38,10 @@ class Hdhr(CommonActions):
         Returns:
             JsonObject: Added device details.
         """
-        response = self.handler.request("hdhr/devices", method="POST", json_data=data)
+        response = self.handler.request("hdhr/devices/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'hdhr/devices' endpoint")
+        raise ValueError("Expected a dictionary response from the 'hdhr/devices/' endpoint")
 
     def update_device(self, item_id: int, data: JsonObject) -> JsonObject:
         """Update an HDHR device.
@@ -53,10 +53,10 @@ class Hdhr(CommonActions):
         Returns:
             JsonObject: Updated device details.
         """
-        response = self.handler.request(f"hdhr/devices/{item_id}", method="PUT", json_data=data)
+        response = self.handler.request(f"hdhr/devices/{item_id}/", method="PUT", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'hdhr/devices/{item_id}' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'hdhr/devices/{item_id}/' endpoint")
 
     def partial_update_device(self, item_id: int, data: JsonObject) -> JsonObject:
         """Partially update an HDHR device.
@@ -68,10 +68,10 @@ class Hdhr(CommonActions):
         Returns:
             JsonObject: Updated device details.
         """
-        response = self.handler.request(f"hdhr/devices/{item_id}", method="PATCH", json_data=data)
+        response = self.handler.request(f"hdhr/devices/{item_id}/", method="PATCH", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'hdhr/devices/{item_id}' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'hdhr/devices/{item_id}/' endpoint")
 
     def delete_device(self, item_id: int) -> None:
         """Delete an HDHR device.
@@ -79,7 +79,7 @@ class Hdhr(CommonActions):
         Args:
             item_id (int): Device ID.
         """
-        self._delete("hdhr/devices", item_id=item_id)
+        self._delete("hdhr/devices/", item_id=item_id)
 
     def discover(self) -> JsonObject:
         """Retrieve HDHR discover JSON.
@@ -87,7 +87,7 @@ class Hdhr(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        return self._get("hdhr/discover.json")
+        return self._get("hdhr/discover.json/")
 
     def get_lineup(self) -> JsonArray:
         """Retrieve HDHR lineup JSON.
@@ -95,7 +95,7 @@ class Hdhr(CommonActions):
         Returns:
             JsonArray: The response data.
         """
-        return self._get("hdhr/lineup.json")
+        return self._get("hdhr/lineup.json/")
 
     def get_lineup_status(self) -> JsonObject:
         """Retrieve HDHR lineup status JSON.
@@ -103,4 +103,4 @@ class Hdhr(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        return self._get("hdhr/lineup_status.json")
+        return self._get("hdhr/lineup_status.json/")

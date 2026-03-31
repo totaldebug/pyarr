@@ -21,9 +21,9 @@ class Live(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        # This hits /{username}/{password}/{channel_id}
+        # This hits /{username}/{password}/{channel_id}/
         # Since api_url is base_url/api/, we need to go up one level
-        return self.handler.request(f"../{username}/{password}/{channel_id}", method="GET")
+        return self.handler.request(f"../{username}/{password}/{channel_id}/", method="GET")
 
     def get_live_stream(self, username: str, password: str, channel_id: str) -> JsonObject:
         """Retrieve live stream via /live endpoint.
@@ -36,5 +36,5 @@ class Live(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        # This hits /live/{username}/{password}/{channel_id}
-        return self.handler.request(f"../live/{username}/{password}/{channel_id}", method="GET")
+        # This hits /live/{username}/{password}/{channel_id}/
+        return self.handler.request(f"../live/{username}/{password}/{channel_id}/", method="GET")

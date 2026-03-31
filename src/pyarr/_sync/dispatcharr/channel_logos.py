@@ -19,7 +19,7 @@ class ChannelLogos(CommonActions):
         Returns:
             JsonArray | JsonObject: The response data.
         """
-        return self._get("channels/logos", item_id=item_id)
+        return self._get("channels/logos/", item_id=item_id)
 
     def add(self, data: JsonObject) -> JsonObject:
         """Create a new logo entry.
@@ -30,10 +30,10 @@ class ChannelLogos(CommonActions):
         Returns:
             JsonObject: Added logo details.
         """
-        response = self.handler.request("channels/logos", method="POST", json_data=data)
+        response = self.handler.request("channels/logos/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'channels/logos' endpoint")
+        raise ValueError("Expected a dictionary response from the 'channels/logos/' endpoint")
 
     def update(self, item_id: int, data: JsonObject) -> JsonObject:
         """Update an existing logo.
@@ -45,10 +45,10 @@ class ChannelLogos(CommonActions):
         Returns:
             JsonObject: Updated logo details.
         """
-        response = self.handler.request(f"channels/logos/{item_id}", method="PUT", json_data=data)
+        response = self.handler.request(f"channels/logos/{item_id}/", method="PUT", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'channels/logos/{item_id}' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'channels/logos/{item_id}/' endpoint")
 
     def partial_update(self, item_id: int, data: JsonObject) -> JsonObject:
         """Partially update an existing logo.
@@ -60,10 +60,10 @@ class ChannelLogos(CommonActions):
         Returns:
             JsonObject: Updated logo details.
         """
-        response = self.handler.request(f"channels/logos/{item_id}", method="PATCH", json_data=data)
+        response = self.handler.request(f"channels/logos/{item_id}/", method="PATCH", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'channels/logos/{item_id}' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'channels/logos/{item_id}/' endpoint")
 
     def delete(self, item_id: int) -> None:
         """Delete a logo.
@@ -71,7 +71,7 @@ class ChannelLogos(CommonActions):
         Args:
             item_id (int): Logo ID.
         """
-        self._delete("channels/logos", item_id=item_id)
+        self._delete("channels/logos/", item_id=item_id)
 
     def get_cache(self, item_id: int) -> JsonObject:
         """Retrieve cached logo.
@@ -82,7 +82,7 @@ class ChannelLogos(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        return self._get(f"channels/logos/{item_id}/cache")
+        return self._get(f"channels/logos/{item_id}/cache/")
 
     def bulk_delete(self, ids: list[int]) -> None:
         """Bulk delete logos by ID.
@@ -90,7 +90,7 @@ class ChannelLogos(CommonActions):
         Args:
             ids (list[int]): List of logo IDs.
         """
-        self.handler.request("channels/logos/bulk-delete", method="DELETE", json_data={"ids": ids})
+        self.handler.request("channels/logos/bulk-delete/", method="DELETE", json_data={"ids": ids})
 
     def cleanup(self, data: JsonObject) -> None:
         """Delete all channel logos that are not used.
@@ -98,7 +98,7 @@ class ChannelLogos(CommonActions):
         Args:
             data (JsonObject): Cleanup request data.
         """
-        self.handler.request("channels/logos/cleanup", method="POST", json_data=data)
+        self.handler.request("channels/logos/cleanup/", method="POST", json_data=data)
 
     def upload(self, data: JsonObject) -> JsonObject:
         """Upload a logo.
@@ -109,7 +109,7 @@ class ChannelLogos(CommonActions):
         Returns:
             JsonObject: Added logo details.
         """
-        response = self.handler.request("channels/logos/upload", method="POST", json_data=data)
+        response = self.handler.request("channels/logos/upload/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'channels/logos/upload' endpoint")
+        raise ValueError("Expected a dictionary response from the 'channels/logos/upload/' endpoint")

@@ -19,7 +19,7 @@ class Epg(CommonActions):
         Returns:
             JsonArray | JsonObject: The response data.
         """
-        response = self.handler.request("epg/current-programs", method="POST", json_data=data)
+        response = self.handler.request("epg/current-programs/", method="POST", json_data=data)
         return response
 
     def get_epg_data(self, item_id: int | None = None) -> JsonArray | JsonObject:
@@ -31,7 +31,7 @@ class Epg(CommonActions):
         Returns:
             JsonArray | JsonObject: The response data.
         """
-        return self._get("epg/epgdata", item_id=item_id)
+        return self._get("epg/epgdata/", item_id=item_id)
 
     def get_grid(self) -> JsonArray:
         """Retrieve EPG grid.
@@ -39,7 +39,7 @@ class Epg(CommonActions):
         Returns:
             JsonArray: The response data.
         """
-        return self._get("epg/grid")
+        return self._get("epg/grid/")
 
     def import_epg(self, data: JsonObject) -> JsonObject:
         """Import EPG data.
@@ -50,10 +50,10 @@ class Epg(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = self.handler.request("epg/import", method="POST", json_data=data)
+        response = self.handler.request("epg/import/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'epg/import' endpoint")
+        raise ValueError("Expected a dictionary response from the 'epg/import/' endpoint")
 
     def get_programs(self, item_id: int | None = None) -> JsonArray | JsonObject:
         """Retrieve EPG programs.
@@ -64,7 +64,7 @@ class Epg(CommonActions):
         Returns:
             JsonArray | JsonObject: The response data.
         """
-        return self._get("epg/programs", item_id=item_id)
+        return self._get("epg/programs/", item_id=item_id)
 
     def add_program(self, data: JsonObject) -> JsonObject:
         """Create a new EPG program.
@@ -75,10 +75,10 @@ class Epg(CommonActions):
         Returns:
             JsonObject: Added program details.
         """
-        response = self.handler.request("epg/programs", method="POST", json_data=data)
+        response = self.handler.request("epg/programs/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'epg/programs' endpoint")
+        raise ValueError("Expected a dictionary response from the 'epg/programs/' endpoint")
 
     def update_program(self, item_id: int, data: JsonObject) -> JsonObject:
         """Update an EPG program.
@@ -90,10 +90,10 @@ class Epg(CommonActions):
         Returns:
             JsonObject: Updated program details.
         """
-        response = self.handler.request(f"epg/programs/{item_id}", method="PUT", json_data=data)
+        response = self.handler.request(f"epg/programs/{item_id}/", method="PUT", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'epg/programs/{item_id}' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'epg/programs/{item_id}/' endpoint")
 
     def partial_update_program(self, item_id: int, data: JsonObject) -> JsonObject:
         """Partially update an EPG program.
@@ -105,10 +105,10 @@ class Epg(CommonActions):
         Returns:
             JsonObject: Updated program details.
         """
-        response = self.handler.request(f"epg/programs/{item_id}", method="PATCH", json_data=data)
+        response = self.handler.request(f"epg/programs/{item_id}/", method="PATCH", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'epg/programs/{item_id}' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'epg/programs/{item_id}/' endpoint")
 
     def delete_program(self, item_id: int) -> None:
         """Delete an EPG program.
@@ -116,7 +116,7 @@ class Epg(CommonActions):
         Args:
             item_id (int): Program ID.
         """
-        self._delete("epg/programs", item_id=item_id)
+        self._delete("epg/programs/", item_id=item_id)
 
     def get_sources(self, item_id: int | None = None) -> JsonArray | JsonObject:
         """Retrieve EPG sources.
@@ -127,7 +127,7 @@ class Epg(CommonActions):
         Returns:
             JsonArray | JsonObject: The response data.
         """
-        return self._get("epg/sources", item_id=item_id)
+        return self._get("epg/sources/", item_id=item_id)
 
     def add_source(self, data: JsonObject) -> JsonObject:
         """Create a new EPG source.
@@ -138,10 +138,10 @@ class Epg(CommonActions):
         Returns:
             JsonObject: Added source details.
         """
-        response = self.handler.request("epg/sources", method="POST", json_data=data)
+        response = self.handler.request("epg/sources/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'epg/sources' endpoint")
+        raise ValueError("Expected a dictionary response from the 'epg/sources/' endpoint")
 
     def update_source(self, item_id: int, data: JsonObject) -> JsonObject:
         """Update an EPG source.
@@ -153,10 +153,10 @@ class Epg(CommonActions):
         Returns:
             JsonObject: Updated source details.
         """
-        response = self.handler.request(f"epg/sources/{item_id}", method="PUT", json_data=data)
+        response = self.handler.request(f"epg/sources/{item_id}/", method="PUT", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'epg/sources/{item_id}' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'epg/sources/{item_id}/' endpoint")
 
     def partial_update_source(self, item_id: int, data: JsonObject) -> JsonObject:
         """Partially update an EPG source.
@@ -168,10 +168,10 @@ class Epg(CommonActions):
         Returns:
             JsonObject: Updated source details.
         """
-        response = self.handler.request(f"epg/sources/{item_id}", method="PATCH", json_data=data)
+        response = self.handler.request(f"epg/sources/{item_id}/", method="PATCH", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'epg/sources/{item_id}' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'epg/sources/{item_id}/' endpoint")
 
     def delete_source(self, item_id: int) -> None:
         """Delete an EPG source.
@@ -179,7 +179,7 @@ class Epg(CommonActions):
         Args:
             item_id (int): Source ID.
         """
-        self._delete("epg/sources", item_id=item_id)
+        self._delete("epg/sources/", item_id=item_id)
 
     def upload_source(self, data: JsonObject) -> JsonObject:
         """Upload an EPG source.
@@ -190,7 +190,7 @@ class Epg(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = self.handler.request("epg/sources/upload", method="POST", json_data=data)
+        response = self.handler.request("epg/sources/upload/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'epg/sources/upload' endpoint")
+        raise ValueError("Expected a dictionary response from the 'epg/sources/upload/' endpoint")

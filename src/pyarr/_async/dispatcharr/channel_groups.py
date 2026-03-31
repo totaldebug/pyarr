@@ -14,7 +14,7 @@ class ChannelGroups(CommonActions):
         Returns:
             JsonArray | JsonObject: The response data.
         """
-        return await self._get("channels/groups", item_id=item_id)
+        return await self._get("channels/groups/", item_id=item_id)
 
     async def add(self, data: JsonObject) -> JsonObject:
         """Create a new channel group.
@@ -25,10 +25,10 @@ class ChannelGroups(CommonActions):
         Returns:
             JsonObject: Added group details.
         """
-        response = await self.handler.request("channels/groups", method="POST", json_data=data)
+        response = await self.handler.request("channels/groups/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'channels/groups' endpoint")
+        raise ValueError("Expected a dictionary response from the 'channels/groups/' endpoint")
 
     async def update(self, item_id: int, data: JsonObject) -> JsonObject:
         """Update a channel group.
@@ -40,10 +40,10 @@ class ChannelGroups(CommonActions):
         Returns:
             JsonObject: Updated group details.
         """
-        response = await self.handler.request(f"channels/groups/{item_id}", method="PUT", json_data=data)
+        response = await self.handler.request(f"channels/groups/{item_id}/", method="PUT", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'channels/groups/{item_id}' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'channels/groups/{item_id}/' endpoint")
 
     async def partial_update(self, item_id: int, data: JsonObject) -> JsonObject:
         """Partially update a channel group.
@@ -55,10 +55,10 @@ class ChannelGroups(CommonActions):
         Returns:
             JsonObject: Updated group details.
         """
-        response = await self.handler.request(f"channels/groups/{item_id}", method="PATCH", json_data=data)
+        response = await self.handler.request(f"channels/groups/{item_id}/", method="PATCH", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'channels/groups/{item_id}' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'channels/groups/{item_id}/' endpoint")
 
     async def delete(self, item_id: int) -> None:
         """Delete a channel group.
@@ -66,7 +66,7 @@ class ChannelGroups(CommonActions):
         Args:
             item_id (int): Group ID.
         """
-        await self._delete("channels/groups", item_id=item_id)
+        await self._delete("channels/groups/", item_id=item_id)
 
     async def cleanup(self, data: JsonObject) -> JsonObject:
         """Delete all channel groups that have no associations.
@@ -77,7 +77,7 @@ class ChannelGroups(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = await self.handler.request("channels/groups/cleanup", method="POST", json_data=data)
+        response = await self.handler.request("channels/groups/cleanup/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'channels/groups/cleanup' endpoint")
+        raise ValueError("Expected a dictionary response from the 'channels/groups/cleanup/' endpoint")

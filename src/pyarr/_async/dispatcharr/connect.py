@@ -14,7 +14,7 @@ class Connect(CommonActions):
         Returns:
             JsonArray | JsonObject: The response data.
         """
-        return await self._get("connect/integrations", item_id=item_id)
+        return await self._get("connect/integrations/", item_id=item_id)
 
     async def add_integration(self, data: JsonObject) -> JsonObject:
         """Create a new integration.
@@ -25,10 +25,10 @@ class Connect(CommonActions):
         Returns:
             JsonObject: Added integration details.
         """
-        response = await self.handler.request("connect/integrations", method="POST", json_data=data)
+        response = await self.handler.request("connect/integrations/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'connect/integrations' endpoint")
+        raise ValueError("Expected a dictionary response from the 'connect/integrations/' endpoint")
 
     async def update_integration(self, item_id: int, data: JsonObject) -> JsonObject:
         """Update an integration.
@@ -40,10 +40,10 @@ class Connect(CommonActions):
         Returns:
             JsonObject: Updated integration details.
         """
-        response = await self.handler.request(f"connect/integrations/{item_id}", method="PUT", json_data=data)
+        response = await self.handler.request(f"connect/integrations/{item_id}/", method="PUT", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'connect/integrations/{item_id}' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'connect/integrations/{item_id}/' endpoint")
 
     async def partial_update_integration(self, item_id: int, data: JsonObject) -> JsonObject:
         """Partially update an integration.
@@ -55,10 +55,10 @@ class Connect(CommonActions):
         Returns:
             JsonObject: Updated integration details.
         """
-        response = await self.handler.request(f"connect/integrations/{item_id}", method="PATCH", json_data=data)
+        response = await self.handler.request(f"connect/integrations/{item_id}/", method="PATCH", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'connect/integrations/{item_id}' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'connect/integrations/{item_id}/' endpoint")
 
     async def delete_integration(self, item_id: int) -> None:
         """Delete an integration.
@@ -66,7 +66,7 @@ class Connect(CommonActions):
         Args:
             item_id (int): Integration ID.
         """
-        await self._delete("connect/integrations", item_id=item_id)
+        await self._delete("connect/integrations/", item_id=item_id)
 
     async def get_integration_subscriptions(self, item_id: int) -> JsonArray | JsonObject:
         """Retrieve subscriptions for a specific integration.
@@ -77,7 +77,7 @@ class Connect(CommonActions):
         Returns:
             JsonArray | JsonObject: The response data.
         """
-        return await self._get(f"connect/integrations/{item_id}/subscriptions")
+        return await self._get(f"connect/integrations/{item_id}/subscriptions/")
 
     async def update_integration_subscriptions(self, item_id: int, data: JsonObject) -> JsonObject:
         """Update subscriptions for an integration.
@@ -90,14 +90,14 @@ class Connect(CommonActions):
             JsonObject: Updated details.
         """
         response = await self.handler.request(
-            f"connect/integrations/{item_id}/subscriptions/set",
+            f"connect/integrations/{item_id}/subscriptions/set/",
             method="PUT",
             json_data=data,
         )
         if isinstance(response, dict):
             return response
         raise ValueError(
-            f"Expected a dictionary response from the 'connect/integrations/{item_id}/subscriptions/set' endpoint"
+            f"Expected a dictionary response from the 'connect/integrations/{item_id}/subscriptions/set/' endpoint"
         )
 
     async def test_integration(self, item_id: int) -> JsonObject:
@@ -109,10 +109,10 @@ class Connect(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = await self.handler.request(f"connect/integrations/{item_id}/test", method="POST")
+        response = await self.handler.request(f"connect/integrations/{item_id}/test/", method="POST")
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'connect/integrations/{item_id}/test' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'connect/integrations/{item_id}/test/' endpoint")
 
     async def get_logs(self, item_id: int | None = None) -> JsonArray | JsonObject:
         """Retrieve connect logs.
@@ -123,7 +123,7 @@ class Connect(CommonActions):
         Returns:
             JsonArray | JsonObject: The response data.
         """
-        return await self._get("connect/logs", item_id=item_id)
+        return await self._get("connect/logs/", item_id=item_id)
 
     async def get_subscriptions(self, item_id: int | None = None) -> JsonArray | JsonObject:
         """Retrieve subscriptions.
@@ -134,7 +134,7 @@ class Connect(CommonActions):
         Returns:
             JsonArray | JsonObject: The response data.
         """
-        return await self._get("connect/subscriptions", item_id=item_id)
+        return await self._get("connect/subscriptions/", item_id=item_id)
 
     async def add_subscription(self, data: JsonObject) -> JsonObject:
         """Create a new subscription.
@@ -145,10 +145,10 @@ class Connect(CommonActions):
         Returns:
             JsonObject: Added subscription details.
         """
-        response = await self.handler.request("connect/subscriptions", method="POST", json_data=data)
+        response = await self.handler.request("connect/subscriptions/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'connect/subscriptions' endpoint")
+        raise ValueError("Expected a dictionary response from the 'connect/subscriptions/' endpoint")
 
     async def update_subscription(self, item_id: int, data: JsonObject) -> JsonObject:
         """Update a subscription.
@@ -160,10 +160,10 @@ class Connect(CommonActions):
         Returns:
             JsonObject: Updated subscription details.
         """
-        response = await self.handler.request(f"connect/subscriptions/{item_id}", method="PUT", json_data=data)
+        response = await self.handler.request(f"connect/subscriptions/{item_id}/", method="PUT", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'connect/subscriptions/{item_id}' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'connect/subscriptions/{item_id}/' endpoint")
 
     async def partial_update_subscription(self, item_id: int, data: JsonObject) -> JsonObject:
         """Partially update a subscription.
@@ -175,10 +175,10 @@ class Connect(CommonActions):
         Returns:
             JsonObject: Updated subscription details.
         """
-        response = await self.handler.request(f"connect/subscriptions/{item_id}", method="PATCH", json_data=data)
+        response = await self.handler.request(f"connect/subscriptions/{item_id}/", method="PATCH", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'connect/subscriptions/{item_id}' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'connect/subscriptions/{item_id}/' endpoint")
 
     async def delete_subscription(self, item_id: int) -> None:
         """Delete a subscription.
@@ -186,4 +186,4 @@ class Connect(CommonActions):
         Args:
             item_id (int): Subscription ID.
         """
-        await self._delete("connect/subscriptions", item_id=item_id)
+        await self._delete("connect/subscriptions/", item_id=item_id)

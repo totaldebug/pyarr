@@ -19,7 +19,7 @@ class Connect(CommonActions):
         Returns:
             JsonArray | JsonObject: The response data.
         """
-        return self._get("connect/integrations", item_id=item_id)
+        return self._get("connect/integrations/", item_id=item_id)
 
     def add_integration(self, data: JsonObject) -> JsonObject:
         """Create a new integration.
@@ -30,10 +30,10 @@ class Connect(CommonActions):
         Returns:
             JsonObject: Added integration details.
         """
-        response = self.handler.request("connect/integrations", method="POST", json_data=data)
+        response = self.handler.request("connect/integrations/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'connect/integrations' endpoint")
+        raise ValueError("Expected a dictionary response from the 'connect/integrations/' endpoint")
 
     def update_integration(self, item_id: int, data: JsonObject) -> JsonObject:
         """Update an integration.
@@ -45,10 +45,10 @@ class Connect(CommonActions):
         Returns:
             JsonObject: Updated integration details.
         """
-        response = self.handler.request(f"connect/integrations/{item_id}", method="PUT", json_data=data)
+        response = self.handler.request(f"connect/integrations/{item_id}/", method="PUT", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'connect/integrations/{item_id}' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'connect/integrations/{item_id}/' endpoint")
 
     def partial_update_integration(self, item_id: int, data: JsonObject) -> JsonObject:
         """Partially update an integration.
@@ -60,10 +60,10 @@ class Connect(CommonActions):
         Returns:
             JsonObject: Updated integration details.
         """
-        response = self.handler.request(f"connect/integrations/{item_id}", method="PATCH", json_data=data)
+        response = self.handler.request(f"connect/integrations/{item_id}/", method="PATCH", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'connect/integrations/{item_id}' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'connect/integrations/{item_id}/' endpoint")
 
     def delete_integration(self, item_id: int) -> None:
         """Delete an integration.
@@ -71,7 +71,7 @@ class Connect(CommonActions):
         Args:
             item_id (int): Integration ID.
         """
-        self._delete("connect/integrations", item_id=item_id)
+        self._delete("connect/integrations/", item_id=item_id)
 
     def get_integration_subscriptions(self, item_id: int) -> JsonArray | JsonObject:
         """Retrieve subscriptions for a specific integration.
@@ -82,7 +82,7 @@ class Connect(CommonActions):
         Returns:
             JsonArray | JsonObject: The response data.
         """
-        return self._get(f"connect/integrations/{item_id}/subscriptions")
+        return self._get(f"connect/integrations/{item_id}/subscriptions/")
 
     def update_integration_subscriptions(self, item_id: int, data: JsonObject) -> JsonObject:
         """Update subscriptions for an integration.
@@ -95,14 +95,14 @@ class Connect(CommonActions):
             JsonObject: Updated details.
         """
         response = self.handler.request(
-            f"connect/integrations/{item_id}/subscriptions/set",
+            f"connect/integrations/{item_id}/subscriptions/set/",
             method="PUT",
             json_data=data,
         )
         if isinstance(response, dict):
             return response
         raise ValueError(
-            f"Expected a dictionary response from the 'connect/integrations/{item_id}/subscriptions/set' endpoint"
+            f"Expected a dictionary response from the 'connect/integrations/{item_id}/subscriptions/set/' endpoint"
         )
 
     def test_integration(self, item_id: int) -> JsonObject:
@@ -114,10 +114,10 @@ class Connect(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = self.handler.request(f"connect/integrations/{item_id}/test", method="POST")
+        response = self.handler.request(f"connect/integrations/{item_id}/test/", method="POST")
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'connect/integrations/{item_id}/test' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'connect/integrations/{item_id}/test/' endpoint")
 
     def get_logs(self, item_id: int | None = None) -> JsonArray | JsonObject:
         """Retrieve connect logs.
@@ -128,7 +128,7 @@ class Connect(CommonActions):
         Returns:
             JsonArray | JsonObject: The response data.
         """
-        return self._get("connect/logs", item_id=item_id)
+        return self._get("connect/logs/", item_id=item_id)
 
     def get_subscriptions(self, item_id: int | None = None) -> JsonArray | JsonObject:
         """Retrieve subscriptions.
@@ -139,7 +139,7 @@ class Connect(CommonActions):
         Returns:
             JsonArray | JsonObject: The response data.
         """
-        return self._get("connect/subscriptions", item_id=item_id)
+        return self._get("connect/subscriptions/", item_id=item_id)
 
     def add_subscription(self, data: JsonObject) -> JsonObject:
         """Create a new subscription.
@@ -150,10 +150,10 @@ class Connect(CommonActions):
         Returns:
             JsonObject: Added subscription details.
         """
-        response = self.handler.request("connect/subscriptions", method="POST", json_data=data)
+        response = self.handler.request("connect/subscriptions/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'connect/subscriptions' endpoint")
+        raise ValueError("Expected a dictionary response from the 'connect/subscriptions/' endpoint")
 
     def update_subscription(self, item_id: int, data: JsonObject) -> JsonObject:
         """Update a subscription.
@@ -165,10 +165,10 @@ class Connect(CommonActions):
         Returns:
             JsonObject: Updated subscription details.
         """
-        response = self.handler.request(f"connect/subscriptions/{item_id}", method="PUT", json_data=data)
+        response = self.handler.request(f"connect/subscriptions/{item_id}/", method="PUT", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'connect/subscriptions/{item_id}' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'connect/subscriptions/{item_id}/' endpoint")
 
     def partial_update_subscription(self, item_id: int, data: JsonObject) -> JsonObject:
         """Partially update a subscription.
@@ -180,10 +180,10 @@ class Connect(CommonActions):
         Returns:
             JsonObject: Updated subscription details.
         """
-        response = self.handler.request(f"connect/subscriptions/{item_id}", method="PATCH", json_data=data)
+        response = self.handler.request(f"connect/subscriptions/{item_id}/", method="PATCH", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'connect/subscriptions/{item_id}' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'connect/subscriptions/{item_id}/' endpoint")
 
     def delete_subscription(self, item_id: int) -> None:
         """Delete a subscription.
@@ -191,4 +191,4 @@ class Connect(CommonActions):
         Args:
             item_id (int): Subscription ID.
         """
-        self._delete("connect/subscriptions", item_id=item_id)
+        self._delete("connect/subscriptions/", item_id=item_id)

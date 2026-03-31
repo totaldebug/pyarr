@@ -16,7 +16,7 @@ class Backups(CommonActions):
         Returns:
             JsonArray: The response data.
         """
-        return self._get("backups")
+        return self._get("backups/")
 
     def delete(self, filename: str) -> None:
         """Delete a backup file.
@@ -24,7 +24,7 @@ class Backups(CommonActions):
         Args:
             filename (str): The name of the backup file to delete.
         """
-        self.handler.request(f"backups/{filename}/delete", method="DELETE")
+        self.handler.request(f"backups/{filename}/delete/", method="DELETE")
 
     def download(self, filename: str, token: str | None = None) -> JsonObject:
         """Download a backup file.
@@ -39,7 +39,7 @@ class Backups(CommonActions):
         params = {}
         if token:
             params["download_token"] = token
-        return self._get(f"backups/{filename}/download", params=params)
+        return self._get(f"backups/{filename}/download/", params=params)
 
     def get_download_token(self, filename: str) -> JsonObject:
         """Get a signed token for downloading a backup file.
@@ -50,7 +50,7 @@ class Backups(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        return self._get(f"backups/{filename}/download-token")
+        return self._get(f"backups/{filename}/download-token/")
 
     def restore(self, filename: str) -> JsonObject:
         """Restore from a backup file.
@@ -61,10 +61,10 @@ class Backups(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = self.handler.request(f"backups/{filename}/restore", method="POST")
+        response = self.handler.request(f"backups/{filename}/restore/", method="POST")
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'backups/{filename}/restore' endpoint")
+        raise ValueError(f"Expected a dictionary response from the 'backups/{filename}/restore/' endpoint")
 
     def create(self) -> JsonObject:
         """Create a new backup.
@@ -72,10 +72,10 @@ class Backups(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = self.handler.request("backups/create", method="POST")
+        response = self.handler.request("backups/create/", method="POST")
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'backups/create' endpoint")
+        raise ValueError("Expected a dictionary response from the 'backups/create/' endpoint")
 
     def get_schedule(self) -> JsonObject:
         """Get backup schedule settings.
@@ -83,7 +83,7 @@ class Backups(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        return self._get("backups/schedule")
+        return self._get("backups/schedule/")
 
     def update_schedule(self, data: JsonObject) -> JsonObject:
         """Update backup schedule settings.
@@ -94,10 +94,10 @@ class Backups(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = self.handler.request("backups/schedule/update", method="PUT", json_data=data)
+        response = self.handler.request("backups/schedule/update/", method="PUT", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'backups/schedule/update' endpoint")
+        raise ValueError("Expected a dictionary response from the 'backups/schedule/update/' endpoint")
 
     def get_status(self, task_id: str, token: str | None = None) -> JsonObject:
         """Check the status of a backup/restore task.
@@ -112,7 +112,7 @@ class Backups(CommonActions):
         params = {}
         if token:
             params["task_token"] = token
-        return self._get(f"backups/status/{task_id}", params=params)
+        return self._get(f"backups/status/{task_id}/", params=params)
 
     def upload(self, data: JsonObject) -> JsonObject:
         """Upload a backup file for restoration.
@@ -123,7 +123,7 @@ class Backups(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        response = self.handler.request("backups/upload", method="POST", json_data=data)
+        response = self.handler.request("backups/upload/", method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'backups/upload' endpoint")
+        raise ValueError("Expected a dictionary response from the 'backups/upload/' endpoint")
