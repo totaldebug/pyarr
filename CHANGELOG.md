@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.6.0](https://github.com/totaldebug/pyarr/compare/6.5.1...6.6.0) (2026-03-31)
+
+
+### Features
+
+* **dispatcharr:** Add get_Status to match other arrs ([0a9b54f](https://github.com/totaldebug/pyarr/commit/0a9b54f4c3c21cd1153168eef42236714f6184ed))
+
 ## [6.5.1](https://github.com/totaldebug/pyarr/compare/6.5.0...6.5.1) (2026-03-31)
 
 
