@@ -148,7 +148,7 @@ class RequestHandler:
         endpoint: str,
         method: str = "GET",
         data: Any = None,
-        json_data: dict[str, Any] | None = None,
+        json_data: dict[str, Any] | list[Any] | None = None,
         params: Mapping[str, Any] | None = None,
         headers: dict | None = None,
     ) -> Any:
@@ -158,7 +158,8 @@ class RequestHandler:
             endpoint (str): The endpoint to send the request to.
             method (str, optional): The HTTP method to use. Defaults to "GET".
             data (Any, optional): The data to send in the request body. Defaults to None.
-            json_data (dict[str, Any] | None, optional): The JSON data to send in the request body. Defaults to None.
+            json_data (dict[str, Any] | list[Any] | None, optional): The JSON data to send in the request body.
+                Some endpoints, such as manualimport, take a JSON array. Defaults to None.
             params (Mapping[str, Any] | None, optional): The parameters to include in the request URL. Defaults to None.
             headers (Optional[dict], optional): The headers to include in the request. Defaults to None.
 
