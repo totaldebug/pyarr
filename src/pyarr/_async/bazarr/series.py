@@ -1,0 +1,28 @@
+from typing import Any
+
+from pyarr._async.common.base import CommonActions
+from pyarr.types import JsonObject
+
+
+class Series(CommonActions):
+    """Series actions for Bazarr."""
+
+    async def get(self, series_id: int | list[int] | None = None, **kwargs) -> JsonObject:
+        """Returns the series Bazarr knows about.
+
+        Args:
+            series_id (int | list[int] | None, optional): Limit the results to one or more Sonarr series IDs.
+                Sent as the ``seriesid[]`` parameter, repeated once per ID. Defaults to None (all series).
+            **kwargs: Additional parameters, such as ``start`` and ``length`` for paging.
+
+        Returns:
+            JsonObject: Dictionary with a ``data`` list of series and a ``total`` count.
+        """
+        params: dict[str, Any] = dict(kwargs)
+        if series_id is not None:
+            params["seriesid[]"] = series_id
+
+        response = await self.handler.request("series", params=params)
+        if isinstance(response, dict):
+            return response
+        raise ValueError("Expected a dictionary response from the 'series' endpoint")
