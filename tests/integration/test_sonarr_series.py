@@ -29,6 +29,7 @@ def test_sonarr_series_add_update_delete(sonarr_client: Sonarr):
     if not root_folders:
         sonarr_client.root_folder.add(path="/config")
         root_folders = sonarr_client.root_folder.get()
+    assert isinstance(root_folders, list)
 
     # Lookup "The Simpsons" (TVDB: 71663)
     lookup = sonarr_client.series.lookup(item_id=71663)
@@ -37,6 +38,7 @@ def test_sonarr_series_add_update_delete(sonarr_client: Sonarr):
 
     # Check if already exists and delete it
     all_series = sonarr_client.series.get()
+    assert isinstance(all_series, list)
     for s in all_series:
         if s["tvdbId"] == 71663:
             sonarr_client.series.delete(item_id=s["id"])

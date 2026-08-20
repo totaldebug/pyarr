@@ -10,6 +10,7 @@ def test_sonarr_episode(sonarr_client: Sonarr):
         if not root_folders:
             sonarr_client.root_folder.add(path="/config")
             root_folders = sonarr_client.root_folder.get()
+        assert isinstance(root_folders, list)
 
         lookup = sonarr_client.series.lookup(item_id=71663)
         sonarr_client.series.add(
@@ -20,6 +21,7 @@ def test_sonarr_episode(sonarr_client: Sonarr):
         )
         series = sonarr_client.series.get()
 
+    assert isinstance(series, list)
     series_id = series[0]["id"]
 
     # Get episodes for series
