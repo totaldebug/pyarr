@@ -61,3 +61,47 @@ def test_sonarr_series_add_update_delete(sonarr_client: Sonarr):
 
     # Delete series
     assert sonarr_client.series.delete(item_id=series_id) is True
+
+
+def test_sonarr_series_bulk_update_and_bulk_delete(sonarr_client: Sonarr):
+    root_folders = sonarr_client.root_folder.get()
+    if not root_folders:
+        sonarr_client.root_folder.add(path="/config")
+        root_folders = sonarr_client.root_folder.get()
+    assert isinstance(root_folders, list)
+
+    # The Simpsons (71663) and Futurama (73871)
+    tvdb_ids = [71663, 73871]
+
+    # Remove any existing copies so the add below always succeeds
+    all_series = sonarr_client.series.get()
+    assert isinstance(all_series, list)
+    existing = [s["id"] for s in all_series if s["tvdbId"] in tvdb_ids]
+    if existing:
+        sonarr_client.series.delete(item_id=existing)
+
+    series_ids = []
+    for tvdb_id in tvdb_ids:
+        lookup = sonarr_client.series.lookup(item_id=tvdb_id)
+        assert len(lookup) > 0
+        added = sonarr_client.series.add(
+            series=lookup[0],
+            quality_profile_id=1,
+            language_profile_id=1,
+            root_dir=root_folders[0]["path"],
+            monitored=False,
+        )
+        series_ids.append(added["id"])
+
+    # Bulk update both series in a single request
+    updated = sonarr_client.series.bulk_update(data={"seriesIds": series_ids, "monitored": True})
+    assert isinstance(updated, list)
+    assert {s["id"] for s in updated} == set(series_ids)
+    assert all(s["monitored"] is True for s in updated)
+
+    # Bulk delete both series in a single request
+    assert sonarr_client.series.delete(item_id=series_ids, delete_files=True) is True
+
+    remaining = sonarr_client.series.get()
+    assert isinstance(remaining, list)
+    assert not [s for s in remaining if s["id"] in series_ids]

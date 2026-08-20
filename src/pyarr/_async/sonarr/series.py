@@ -95,17 +95,47 @@ class Series(CommonActions):
             return response
         raise ValueError("Expected a dictionary response from the 'series' endpoint")
 
-    async def delete(self, item_id: int, delete_files: bool = False) -> bool:
-        """Delete a series from the database.
+    async def bulk_update(self, data: JsonObject) -> JsonArray:
+        """Bulk update multiple series in the database.
 
         Args:
-            item_id (int): series id.
-            delete_files (bool, optional): Also delete files associated with the series. Defaults to False.
+            data (JsonObject): Dictionary containing a `seriesIds` list of the series to change, along with
+                the fields to apply to them, e.g. `{"seriesIds": [1, 2], "monitored": False}`.
 
         Returns:
-            bool: True if series was deleted.
+            JsonArray: List of dictionaries with the updated records.
         """
-        await self.handler.request(f"series/{item_id}", method="DELETE", params={"deleteFiles": delete_files})
+        response = await self.handler.request("series/editor", method="PUT", json_data=data)
+        if isinstance(response, list):
+            return response
+        raise ValueError("Expected a list response from the 'series/editor' endpoint")
+
+    async def delete(
+        self,
+        item_id: int | list[int],
+        delete_files: bool = False,
+        add_exclusion: bool = False,
+    ) -> bool:
+        """Delete a single series or multiple series from the database.
+
+        Args:
+            item_id (int | list[int]): Single series ID or list of series IDs to delete.
+            delete_files (bool, optional): Also delete files associated with the series. Defaults to False.
+            add_exclusion (bool, optional): Add the series to the import list exclusions. Defaults to False.
+
+        Returns:
+            bool: True if the series were deleted.
+        """
+        data: dict[str, bool | list[int]] = {
+            "deleteFiles": delete_files,
+            "addImportListExclusion": add_exclusion,
+        }
+
+        if isinstance(item_id, list):
+            data["seriesIds"] = item_id
+            await self.handler.request("series/editor", method="DELETE", json_data=data)
+        else:
+            await self.handler.request(f"series/{item_id}", method="DELETE", params=data)
         return True
 
     async def lookup(self, term: str | None = None, item_id: int | None = None) -> JsonArray:

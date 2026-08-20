@@ -23,7 +23,6 @@ The following endpoints are available in most services but may not be fully expo
 ## Sonarr Specific
 
 - **Series & Episodes**:
-  - `PUT /api/v3/series/editor`: Bulk update multiple series.
   - `POST /api/v3/series/import`: Bulk import series from a path.
   - `POST /api/v3/episode/monitor`: Bulk update episode monitored status.
   - `POST /api/v3/episode/search`: Trigger search for specific episodes.
