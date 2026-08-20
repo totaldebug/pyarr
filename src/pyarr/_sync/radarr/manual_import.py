@@ -4,7 +4,7 @@
 # """
 
 from pyarr._sync.common.base import CommonActions
-from pyarr.types import JsonArray, JsonObject
+from pyarr.types import JsonArray
 
 
 class ManualImport(CommonActions):
@@ -44,16 +44,16 @@ class ManualImport(CommonActions):
             return response
         raise ValueError("Expected a list response from the 'manualimport' endpoint")
 
-    def update(self, data: JsonObject) -> JsonObject:
-        """Update a manual import.
+    def update(self, data: JsonArray) -> JsonArray:
+        """Process the given manual import items.
 
         Args:
-            data (JsonObject): Data containing changes.
+            data (JsonArray): List of manual import items, as returned by get().
 
         Returns:
-            JsonObject: Dictionary of updated record.
+            JsonArray: List of dictionaries with the processed items.
         """
-        response = self.handler.request("manualimport", method="PUT", json_data=data)
-        if isinstance(response, dict):
+        response = self.handler.request("manualimport", method="POST", json_data=data)
+        if isinstance(response, list):
             return response
-        raise ValueError("Expected a dictionary response from the 'manualimport' endpoint")
+        raise ValueError("Expected a list response from the 'manualimport' endpoint")
