@@ -61,3 +61,14 @@ async def test_async_manual_import_update_posts_a_list(manual_import_class):
     assert await manual_import.update(items) == []
 
     mock_handler.request.assert_called_once_with("manualimport", method="POST", json_data=items)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("manual_import_class", ASYNC_CLASSES)
+async def test_async_manual_import_update_rejects_non_list_response(manual_import_class):
+    mock_handler = AsyncMock(spec=AsyncRequestHandler)
+    mock_handler.request.return_value = {"message": "not a list"}
+    manual_import = manual_import_class(mock_handler)
+
+    with pytest.raises(ValueError, match="Expected a list response"):
+        await manual_import.update([])
