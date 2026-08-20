@@ -1,5 +1,15 @@
 # Changelog
 
+## [6.7.0](https://github.com/totaldebug/pyarr/compare/6.6.1...6.7.0) (2026-08-20)
+
+
+### Features
+
+* **bazarr:** Add series, movies and episodes endpoints ([#201](https://github.com/totaldebug/pyarr/issues/201)) ([8953647](https://github.com/totaldebug/pyarr/commit/895364731f0ccf13efa56439e057472c78629923))
+* **exclusions:** Add import list exclusion management ([#202](https://github.com/totaldebug/pyarr/issues/202)) ([42b273d](https://github.com/totaldebug/pyarr/commit/42b273df1f65da45285fbd14a1ccdced1e0d08c4))
+* **indexer:** Support forceSave when updating indexers ([#199](https://github.com/totaldebug/pyarr/issues/199)) ([444855f](https://github.com/totaldebug/pyarr/commit/444855f9585917917e466bd92f5d6c490e10a318))
+* **series:** Add bulk series editor support ([#200](https://github.com/totaldebug/pyarr/issues/200)) ([da9155d](https://github.com/totaldebug/pyarr/commit/da9155d207aec216492a103fd130356fc920e194))
+
 ## [6.6.1](https://github.com/totaldebug/pyarr/compare/6.6.0...6.6.1) (2026-08-20)
 
 
