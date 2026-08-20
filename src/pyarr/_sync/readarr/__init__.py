@@ -6,6 +6,7 @@
 import httpx
 
 from pyarr._sync.client import BaseArrClient
+from pyarr._sync.common.import_list_exclusion import ImportListExclusion
 from pyarr._sync.common.wanted import Wanted
 from pyarr._sync.readarr.author import Author
 from pyarr._sync.readarr.book import Book
@@ -68,3 +69,4 @@ class Readarr(BaseArrClient):
         self.delay_profile = DelayProfile(self.http_utils)
         self.manual_import = ManualImport(self.http_utils)
         self.wanted = Wanted(self.http_utils)
+        self.import_list_exclusion = ImportListExclusion(self.http_utils)

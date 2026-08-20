@@ -1,6 +1,7 @@
 import httpx
 
 from pyarr._async.client import BaseArrClient
+from pyarr._async.common.import_list_exclusion import ImportListExclusion
 from pyarr._async.common.wanted import Wanted
 from pyarr._async.lidarr.album import Album
 from pyarr._async.lidarr.artist import Artist
@@ -61,3 +62,4 @@ class Lidarr(BaseArrClient):
         self.release = Release(self.http_utils)
         self.manual_import = ManualImport(self.http_utils)
         self.wanted = Wanted(self.http_utils)
+        self.import_list_exclusion = ImportListExclusion(self.http_utils)

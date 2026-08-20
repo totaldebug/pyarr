@@ -38,6 +38,16 @@ Import List
 .. automodule:: pyarr._sync.common.import_list
     :members:
 
+Import List Exclusion
+---------------------
+
+Available on Radarr, Sonarr, Lidarr, Readarr and Whisparr. Radarr serves the exclusion list
+from ``exclusions``, the others from ``importlistexclusion``; the client wires the correct
+path for you.
+
+.. automodule:: pyarr._sync.common.import_list_exclusion
+    :members:
+
 Indexer
 -------
 .. automodule:: pyarr._sync.common.indexer
