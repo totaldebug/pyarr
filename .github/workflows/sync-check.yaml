@@ -19,7 +19,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}
+          # Fork PRs have no branch in this repository, so head_ref cannot be checked out.
+          # Use the PR merge ref for those, and keep the real branch for same-repo PRs so
+          # the auto-fix step below still has somewhere to push.
+          ref: >-
+            ${{ github.event_name != 'pull_request' && github.ref
+            || github.event.pull_request.head.repo.full_name == github.repository && github.head_ref
+            || format('refs/pull/{0}/merge', github.event.pull_request.number) }}
           fetch-depth: 0
 
       - name: Install uv
@@ -33,6 +39,7 @@ jobs:
           python-version: "3.12"
 
       - name: Check for manual edits in _sync
+        if: github.event_name == 'pull_request'
         run: |
           # Check if any files in _sync were modified in this PR
           SYNC_MODIFIED=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep "src/pyarr/_sync/" || true)
@@ -55,8 +62,10 @@ jobs:
             echo "⚠️ WARNING: Synchronous API was out of sync with asynchronous API."
           fi
 
-      - name: Auto-fix and Push (PRs only)
-        if: steps.git-check.outputs.changed == 'true' && github.event_name == 'pull_request'
+      - name: Auto-fix and Push (same-repo PRs only)
+        if: >-
+          steps.git-check.outputs.changed == 'true' && github.event_name == 'pull_request'
+          && github.event.pull_request.head.repo.full_name == github.repository
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -64,6 +73,16 @@ jobs:
           git commit -m "chore: auto-generate sync API from async changes"
           git push
           echo "✅ Successfully auto-fixed sync API parity."
+
+      - name: Fail if out of sync (fork PRs)
+        if: >-
+          steps.git-check.outputs.changed == 'true' && github.event_name == 'pull_request'
+          && github.event.pull_request.head.repo.full_name != github.repository
+        run: |
+          echo "❌ ERROR: Synchronous API is out of sync with the asynchronous API."
+          echo "This PR comes from a fork, so it cannot be auto-fixed."
+          echo "Please run 'uv run python3 scripts/generate_sync.py' and commit the changes."
+          exit 1
 
       - name: Fail if out of sync (Push to main)
         if: steps.git-check.outputs.changed == 'true' && github.event_name == 'push'
