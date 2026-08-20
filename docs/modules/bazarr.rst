@@ -7,9 +7,24 @@ Bazarr
 .. automodule:: pyarr._sync.bazarr
     :members:
 
+Episodes
+--------
+.. automodule:: pyarr._sync.bazarr.episodes
+    :members:
+
+Movies
+------
+.. automodule:: pyarr._sync.bazarr.movies
+    :members:
+
 Providers
 ---------
 .. automodule:: pyarr._sync.bazarr.providers
+    :members:
+
+Series
+------
+.. automodule:: pyarr._sync.bazarr.series
     :members:
 
 Subtitles

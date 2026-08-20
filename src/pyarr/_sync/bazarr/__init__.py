@@ -5,7 +5,10 @@
 
 import httpx
 
+from pyarr._sync.bazarr.episodes import Episodes
+from pyarr._sync.bazarr.movies import Movies
 from pyarr._sync.bazarr.providers import Providers
+from pyarr._sync.bazarr.series import Series
 from pyarr._sync.bazarr.subtitles import Subtitles
 from pyarr._sync.client import BaseArrClient
 from pyarr._sync.common.wanted import Wanted
@@ -55,4 +58,7 @@ class Bazarr(BaseArrClient):
         )
         self.subtitles = Subtitles(self.http_utils)
         self.providers = Providers(self.http_utils)
+        self.series = Series(self.http_utils)
+        self.movies = Movies(self.http_utils)
+        self.episodes = Episodes(self.http_utils)
         self.wanted = Wanted(self.http_utils, path="subtitles/wanted")
