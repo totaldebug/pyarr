@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.6.1](https://github.com/totaldebug/pyarr/compare/6.6.0...6.6.1) (2026-08-20)
+
+
+### Bug Fixes
+
+* **manual_import:** Post manual imports instead of putting them ([#197](https://github.com/totaldebug/pyarr/issues/197)) ([4806795](https://github.com/totaldebug/pyarr/commit/48067950bc42e6d7c3cb3b6a7fad57e475f9225b))
+
 ## [6.6.0](https://github.com/totaldebug/pyarr/compare/6.5.1...6.6.0) (2026-03-31)
 
 
