@@ -95,16 +95,16 @@ class Movie(CommonActions):
             delete_files (bool, optional): Delete movie files. Defaults to False.
             add_exclusion (bool, optional): Add to List Exclusions. Defaults to False.
         """
-        params: dict[str, bool] = {
+        data: dict[str, bool | list[int]] = {
             "deleteFiles": delete_files,
             "addImportExclusion": add_exclusion,
         }
 
         if isinstance(item_id, list):
-            json_data = {"movieIds": item_id}
-            await self.handler.request("movie/editor", method="DELETE", json_data=json_data, params=params)
+            data["movieIds"] = item_id
+            await self.handler.request("movie/editor", method="DELETE", json_data=data)
         else:
-            await self.handler.request(f"movie/{item_id}", method="DELETE", params=params)
+            await self.handler.request(f"movie/{item_id}", method="DELETE", params=data)
 
     async def lookup(self, term: str) -> JsonArray:
         """Search for a movie to add to the database.
