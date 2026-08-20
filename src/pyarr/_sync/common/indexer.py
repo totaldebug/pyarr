@@ -38,17 +38,20 @@ class Indexer(CommonActions):
             return [item for item in response if item["implementation"] == implementation]
         return response
 
-    def update(self, item_id: int, data: JsonObject) -> JsonObject:
+    def update(self, item_id: int, data: JsonObject, force_save: bool = False) -> JsonObject:
         """Edit an indexer by database id.
 
         Args:
             item_id (int): Indexer database id.
             data (JsonObject): Data to be updated within indexer.
+            force_save (bool, optional): Save the indexer even when validation raises warnings,
+                for example setting the minimum number of seeders to 0. Defaults to False.
 
         Returns:
             JsonObject: Dictionary of updated record.
         """
-        response = self.handler.request(f"indexer/{item_id}", method="PUT", json_data=data)
+        params: dict[str, bool] = {"forceSave": force_save}
+        response = self.handler.request(f"indexer/{item_id}", method="PUT", json_data=data, params=params)
         if isinstance(response, dict):
             return response
         raise ValueError(f"Expected a dictionary response from the 'indexer/{item_id}' endpoint")
