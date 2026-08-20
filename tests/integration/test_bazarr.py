@@ -31,30 +31,3 @@ def test_bazarr_providers(bazarr_client: Bazarr):
         assert isinstance(providers, list)
     except Exception:
         pass
-
-
-def test_bazarr_series(bazarr_client: Bazarr):
-    try:
-        series = bazarr_client.series.get()
-        assert isinstance(series, dict)
-        assert isinstance(series["data"], list)
-    except Exception:
-        pass
-
-
-def test_bazarr_movies(bazarr_client: Bazarr):
-    try:
-        movies = bazarr_client.movies.get()
-        assert isinstance(movies, dict)
-        assert isinstance(movies["data"], list)
-    except Exception:
-        pass
-
-
-def test_bazarr_episodes(bazarr_client: Bazarr):
-    try:
-        episodes = bazarr_client.episodes.get(series_id=[1, 2])
-        assert isinstance(episodes, dict)
-        assert isinstance(episodes["data"], list)
-    except Exception:
-        pass

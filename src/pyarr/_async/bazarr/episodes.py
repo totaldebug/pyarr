@@ -31,14 +31,14 @@ class Episodes(CommonActions):
         Raises:
             PyarrMissingArgument: If neither a series nor an episode ID is provided.
         """
+        if series_id is None and episode_id is None:
+            raise PyarrMissingArgument("series_id or episode_id must be provided")
+
         params: dict[str, Any] = dict(kwargs)
         if series_id is not None:
             params["seriesid[]"] = series_id
         if episode_id is not None:
             params["episodeid[]"] = episode_id
-
-        if not params:
-            raise PyarrMissingArgument("series_id or episode_id must be provided")
 
         response = await self.handler.request("episodes", params=params)
         if isinstance(response, dict):

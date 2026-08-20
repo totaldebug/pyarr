@@ -123,6 +123,17 @@ def test_episodes_get_requires_an_id():
     mock_handler.request.assert_not_called()
 
 
+def test_episodes_get_requires_an_id_even_with_kwargs():
+    """Other params must not satisfy the ID requirement - the request would still 404."""
+    mock_handler = MagicMock(spec=RequestHandler)
+    episodes = Episodes(mock_handler)
+
+    with pytest.raises(PyarrMissingArgument):
+        episodes.get(start=0, length=10)
+
+    mock_handler.request.assert_not_called()
+
+
 def test_episodes_get_rejects_non_dict_response():
     mock_handler = MagicMock(spec=RequestHandler)
     mock_handler.request.return_value = []
