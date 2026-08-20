@@ -1,6 +1,7 @@
 import httpx
 
 from pyarr._async.client import BaseArrClient
+from pyarr._async.common.import_list_exclusion import ImportListExclusion
 from pyarr._async.common.wanted import Wanted
 from pyarr._async.radarr.config import Config
 from pyarr._async.radarr.custom_filter import CustomFilter
@@ -59,3 +60,4 @@ class Whisparr(BaseArrClient):
         self.manual_import = ManualImport(self.http_utils)
         self.custom_filter = CustomFilter(self.http_utils)
         self.wanted = Wanted(self.http_utils)
+        self.import_list_exclusion = ImportListExclusion(self.http_utils)
