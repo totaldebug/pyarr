@@ -11,6 +11,7 @@ def test_lidarr_artist(lidarr_client: Lidarr):
             default_metadata_profile_id=1,
         )
         root_folders = lidarr_client.root_folder.get()
+    assert isinstance(root_folders, list)
 
     artists = lidarr_client.artist.get()
     if not artists:
@@ -24,6 +25,7 @@ def test_lidarr_artist(lidarr_client: Lidarr):
         )
         artists = lidarr_client.artist.get()
 
+    assert isinstance(artists, list)
     artist_id = artists[0]["id"]
     artist = lidarr_client.artist.get(item_id=artist_id)
     assert isinstance(artist, dict)
@@ -41,6 +43,7 @@ def test_lidarr_album(lidarr_client: Lidarr):
         test_lidarr_artist(lidarr_client)
         artists = lidarr_client.artist.get()
 
+    assert isinstance(artists, list)
     artist_id = artists[0]["id"]
     albums = lidarr_client.album.get(artist_id=artist_id)
     assert isinstance(albums, list)
@@ -59,6 +62,7 @@ def test_lidarr_album(lidarr_client: Lidarr):
 
 def test_lidarr_track(lidarr_client: Lidarr):
     artists = lidarr_client.artist.get()
+    assert isinstance(artists, list)
     if artists:
         artist_id = artists[0]["id"]
         tracks = lidarr_client.track.get(artist_id=artist_id)
@@ -67,6 +71,7 @@ def test_lidarr_track(lidarr_client: Lidarr):
 
 def test_lidarr_track_file(lidarr_client: Lidarr):
     artists = lidarr_client.artist.get()
+    assert isinstance(artists, list)
     if artists:
         artist_id = artists[0]["id"]
         files = lidarr_client.track_file.get(artist_id=artist_id)
@@ -75,6 +80,7 @@ def test_lidarr_track_file(lidarr_client: Lidarr):
 
 def test_lidarr_release(lidarr_client: Lidarr):
     artists = lidarr_client.artist.get()
+    assert isinstance(artists, list)
     if artists:
         releases = lidarr_client.release.get(artist_id=artists[0]["id"])
         assert isinstance(releases, list)
