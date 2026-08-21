@@ -27,7 +27,7 @@
   <h3 align="center">Pyarr</h3>
 
   <p align="center">
-    A Python library for interacting with the `arr` API's
+    A Python library for interacting with the `arr` APIs
   </p>
     <br />
     <br />
@@ -62,7 +62,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-A Python library for the following `arr` API's:
+A Python library for the following `arr` APIs:
 
 * Sonarr
 * Radarr
@@ -73,7 +73,7 @@ A Python library for the following `arr` API's:
 * Bazarr
 * Whisparr
 
-The library supports both **Synchronous** and **Asynchronous** (asyncio) usage, providing a consistent API for both. It returns results in JSON format for ease of use, this also reduces the risk of failue when the arr APIs are updated.
+The library supports both **Synchronous** and **Asynchronous** (asyncio) usage, providing a consistent API for both. It returns results in JSON format for ease of use, this also reduces the risk of failure when the arr APIs are updated.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
