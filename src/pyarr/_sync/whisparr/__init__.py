@@ -5,7 +5,7 @@
 
 import httpx
 
-from pyarr._sync.client import BaseArrClient
+from pyarr._sync.client import MediaArrClient
 from pyarr._sync.common.import_list_exclusion import ImportListExclusion
 from pyarr._sync.common.wanted import Wanted
 from pyarr._sync.radarr.config import Config
@@ -16,7 +16,7 @@ from pyarr._sync.radarr.movie_file import MovieFile
 from pyarr._sync.radarr.release import Release
 
 
-class Whisparr(BaseArrClient):
+class Whisparr(MediaArrClient):
     """Whisparr API client (Radarr fork)."""
 
     def __init__(

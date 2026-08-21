@@ -1,7 +1,35 @@
 Common Components
 =================
 
-These components are available on all Arr clients (Sonarr, Radarr, Lidarr, etc.).
+These components are shared between clients, but they are **not** available on every
+client - each Arr only exposes the ones its API actually answers. Accessing one that a
+client does not support raises ``AttributeError``, so a mistake surfaces immediately
+rather than as a 404 or, on Bazarr and Dispatcharr, a 200 carrying their web page.
+
+The support below was established by probing live instances.
+
+.. list-table::
+    :header-rows: 1
+    :widths: 40 60
+
+    * - Component
+      - Available on
+    * - System
+      - Every client
+    * - Backup, Command, Download Client, History, Log, Notification, Tag, Update
+      - Sonarr, Radarr, Lidarr, Readarr, Whisparr, Prowlarr
+    * - Indexer
+      - Sonarr, Radarr, Lidarr, Readarr, Whisparr, Prowlarr
+    * - Blocklist, Calendar, Import List, Metadata, Quality Definition, Quality Profile,
+        Queue, Remote Path Mapping, Root Folder, Wanted
+      - Sonarr, Radarr, Lidarr, Readarr, Whisparr
+    * - Import List Exclusion
+      - Sonarr, Radarr, Lidarr, Readarr, Whisparr
+    * - Any of the above not listed for a client
+      - Not exposed on that client
+
+Bazarr and Dispatcharr have their own APIs and expose only ``system`` from this set,
+alongside their own client-specific components.
 
 Backup
 ------

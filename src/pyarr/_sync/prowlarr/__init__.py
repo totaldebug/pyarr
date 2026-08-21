@@ -6,6 +6,14 @@
 import httpx
 
 from pyarr._sync.client import BaseArrClient
+from pyarr._sync.common.backup import Backup
+from pyarr._sync.common.command import Command
+from pyarr._sync.common.download_client import DownloadClient
+from pyarr._sync.common.history import History
+from pyarr._sync.common.log import Log
+from pyarr._sync.common.notification import Notification
+from pyarr._sync.common.tag import Tag
+from pyarr._sync.common.update import Update
 from pyarr._sync.prowlarr.applications import Applications
 from pyarr._sync.prowlarr.indexer import Indexer
 from pyarr._sync.prowlarr.indexer_proxy import IndexerProxy
@@ -55,6 +63,14 @@ class Prowlarr(BaseArrClient):
             headers=headers,
         )
         self.indexer = Indexer(self.http_utils)
+        self.command = Command(self.http_utils)
+        self.download_client = DownloadClient(self.http_utils)
+        self.history = History(self.http_utils)
+        self.log = Log(self.http_utils)
+        self.notification = Notification(self.http_utils)
+        self.backup = Backup(self.http_utils)
+        self.tag = Tag(self.http_utils)
+        self.update = Update(self.http_utils)
         self.search = Search(self.http_utils)
         self.applications = Applications(self.http_utils)
         self.indexer_proxy = IndexerProxy(self.http_utils)

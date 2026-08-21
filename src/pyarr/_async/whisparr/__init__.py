@@ -1,6 +1,6 @@
 import httpx
 
-from pyarr._async.client import BaseArrClient
+from pyarr._async.client import MediaArrClient
 from pyarr._async.common.import_list_exclusion import ImportListExclusion
 from pyarr._async.common.wanted import Wanted
 from pyarr._async.radarr.config import Config
@@ -11,7 +11,7 @@ from pyarr._async.radarr.movie_file import MovieFile
 from pyarr._async.radarr.release import Release
 
 
-class Whisparr(BaseArrClient):
+class Whisparr(MediaArrClient):
     """Whisparr API client (Radarr fork)."""
 
     def __init__(
