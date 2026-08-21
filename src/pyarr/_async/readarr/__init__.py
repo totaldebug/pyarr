@@ -1,6 +1,6 @@
 import httpx
 
-from pyarr._async.client import BaseArrClient
+from pyarr._async.client import MediaArrClient
 from pyarr._async.common.import_list_exclusion import ImportListExclusion
 from pyarr._async.common.wanted import Wanted
 from pyarr._async.readarr.author import Author
@@ -13,7 +13,7 @@ from pyarr._async.readarr.metadata_profile import MetadataProfile
 from pyarr._async.readarr.release_profile import ReleaseProfile
 
 
-class Readarr(BaseArrClient):
+class Readarr(MediaArrClient):
     """Readarr API client."""
 
     def __init__(

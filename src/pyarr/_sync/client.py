@@ -73,25 +73,7 @@ class BaseArrClient:
             verify_ssl=verify_ssl,
             headers=headers,
         )
-        self.history = History(self.http_utils)
-        self.backup = Backup(self.http_utils)
         self.system = System(self.http_utils)
-        self.tag = Tag(self.http_utils)
-        self.blocklist = Blocklist(self.http_utils)
-        self.calendar = Calendar(self.http_utils)
-        self.root_folder = RootFolder(self.http_utils)
-        self.update = Update(self.http_utils)
-        self.metadata = Metadata(self.http_utils)
-        self.log = Log(self.http_utils)
-        self.indexer = Indexer(self.http_utils)
-        self.download_client = DownloadClient(self.http_utils)
-        self.import_list = ImportList(self.http_utils)
-        self.notification = Notification(self.http_utils)
-        self.quality_profile = QualityProfile(self.http_utils)
-        self.quality_definition = QualityDefinition(self.http_utils)
-        self.queue = Queue(self.http_utils)
-        self.remote_path_mapping = RemotePathMapping(self.http_utils)
-        self.command = Command(self.http_utils)
 
     def __enter__(self: T) -> T:
         """Enter the runtime context related to this object.
@@ -113,3 +95,39 @@ class BaseArrClient:
         """
         # Clean up resources
         self.http_utils.__exit__(exc_type, exc_value, traceback)
+
+
+class MediaArrClient(BaseArrClient):
+    """Base class for the media manager Arr clients.
+
+    Sonarr, Radarr, Lidarr, Readarr and Whisparr share the Servarr media management API, so
+    they all answer the components attached here. Prowlarr, Bazarr and Dispatcharr do not,
+    which is why these live on this tier rather than on :class:`BaseArrClient`.
+    """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        """Initializes the client and attaches the shared media management components.
+
+        Args:
+            *args (Any): Positional arguments for BaseArrClient.
+            **kwargs (Any): Keyword arguments for BaseArrClient.
+        """
+        super().__init__(*args, **kwargs)
+        self.history = History(self.http_utils)
+        self.backup = Backup(self.http_utils)
+        self.tag = Tag(self.http_utils)
+        self.blocklist = Blocklist(self.http_utils)
+        self.calendar = Calendar(self.http_utils)
+        self.root_folder = RootFolder(self.http_utils)
+        self.update = Update(self.http_utils)
+        self.metadata = Metadata(self.http_utils)
+        self.log = Log(self.http_utils)
+        self.indexer = Indexer(self.http_utils)
+        self.download_client = DownloadClient(self.http_utils)
+        self.import_list = ImportList(self.http_utils)
+        self.notification = Notification(self.http_utils)
+        self.quality_profile = QualityProfile(self.http_utils)
+        self.quality_definition = QualityDefinition(self.http_utils)
+        self.queue = Queue(self.http_utils)
+        self.remote_path_mapping = RemotePathMapping(self.http_utils)
+        self.command = Command(self.http_utils)

@@ -5,7 +5,7 @@
 
 import httpx
 
-from pyarr._sync.client import BaseArrClient
+from pyarr._sync.client import MediaArrClient
 from pyarr._sync.common.import_list_exclusion import ImportListExclusion
 from pyarr._sync.common.wanted import Wanted
 from pyarr._sync.lidarr.album import Album
@@ -17,7 +17,7 @@ from pyarr._sync.lidarr.track import Track
 from pyarr._sync.lidarr.track_file import TrackFile
 
 
-class Lidarr(BaseArrClient):
+class Lidarr(MediaArrClient):
     """Lidarr API client."""
 
     def __init__(

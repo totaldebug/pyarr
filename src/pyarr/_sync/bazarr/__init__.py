@@ -61,4 +61,7 @@ class Bazarr(BaseArrClient):
         self.series = Series(self.http_utils)
         self.movies = Movies(self.http_utils)
         self.episodes = Episodes(self.http_utils)
-        self.wanted = Wanted(self.http_utils, path="subtitles/wanted")
+        # Bazarr has no combined wanted endpoint. subtitles/wanted does not exist and is
+        # answered with the SPA HTML page rather than a 404, so it looked like it worked.
+        self.wanted_episodes = Wanted(self.http_utils, path="episodes/wanted")
+        self.wanted_movies = Wanted(self.http_utils, path="movies/wanted")

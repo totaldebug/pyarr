@@ -5,7 +5,7 @@
 
 import httpx
 
-from pyarr._sync.client import BaseArrClient
+from pyarr._sync.client import MediaArrClient
 from pyarr._sync.common.import_list_exclusion import ImportListExclusion
 from pyarr._sync.common.wanted import Wanted
 from pyarr._sync.sonarr.config import Config
@@ -16,7 +16,7 @@ from pyarr._sync.sonarr.release import Release
 from pyarr._sync.sonarr.series import Series
 
 
-class Sonarr(BaseArrClient):
+class Sonarr(MediaArrClient):
     """Sonarr API client."""
 
     def __init__(
