@@ -303,3 +303,8 @@ ReadarrSearchType = Literal["asin", "edition", "isbn", "author", "work"]
 
 #: Readarr author monitor options
 ReadarrAuthorMonitor = Literal["all", "future", "missing", "existing", "first", "latest", "none"]
+
+# --- Bazarr Literals ---
+
+#: Bazarr actions that can be run against the series and movies endpoints
+BazarrActions = Literal["scan-disk", "search-missing", "search-wanted", "sync"]
