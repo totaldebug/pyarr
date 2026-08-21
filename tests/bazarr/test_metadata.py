@@ -10,6 +10,7 @@ from pyarr._async.bazarr.movies import Movies as AsyncMovies
 from pyarr._async.bazarr.series import Series as AsyncSeries
 from pyarr._async.utils.http import RequestHandler as AsyncRequestHandler
 from pyarr._sync.bazarr.episodes import Episodes
+from pyarr._sync.bazarr.providers import Providers
 from pyarr._sync.bazarr.movies import Movies
 from pyarr._sync.bazarr.series import Series
 from pyarr._sync.utils.http import RequestHandler
@@ -250,3 +251,22 @@ async def test_async_episodes_get_rejects_non_dict_response():
 
     with pytest.raises(ValueError, match="Expected a dictionary response"):
         await episodes.get(series_id=101)
+
+
+def test_providers_get():
+    """Bazarr answers /api/providers with an enveloped object, not a bare list."""
+    mock_handler = MagicMock(spec=RequestHandler)
+    mock_handler.request.return_value = {"data": []}
+    providers = Providers(mock_handler)
+
+    assert providers.get() == {"data": []}
+    mock_handler.request.assert_called_once_with("providers")
+
+
+def test_providers_get_rejects_non_dict_response():
+    mock_handler = MagicMock(spec=RequestHandler)
+    mock_handler.request.return_value = []
+    providers = Providers(mock_handler)
+
+    with pytest.raises(ValueError, match="Expected a dictionary response"):
+        providers.get()
