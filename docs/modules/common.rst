@@ -29,7 +29,7 @@ The support below was established by probing live instances.
       - Not exposed on that client
 
 Bazarr and Dispatcharr have their own APIs and expose only ``system`` from this set,
-alongside their own client specific components.
+alongside their own client-specific components.
 
 Backup
 ------

@@ -9,6 +9,14 @@ single page app HTML rather than a 404, which is what made the gap so hard to sp
 import pytest
 
 from pyarr import Bazarr, Dispatcharr, Lidarr, Prowlarr, Radarr, Readarr, Sonarr, Whisparr
+from pyarr._async.bazarr import Bazarr as AsyncBazarr
+from pyarr._async.dispatcharr import Dispatcharr as AsyncDispatcharr
+from pyarr._async.lidarr import Lidarr as AsyncLidarr
+from pyarr._async.prowlarr import Prowlarr as AsyncProwlarr
+from pyarr._async.radarr import Radarr as AsyncRadarr
+from pyarr._async.readarr import Readarr as AsyncReadarr
+from pyarr._async.sonarr import Sonarr as AsyncSonarr
+from pyarr._async.whisparr import Whisparr as AsyncWhisparr
 
 MEDIA_COMPONENTS = [
     "backup",
@@ -64,8 +72,12 @@ def test_prowlarr_exposes_supported_components(component):
 
 @pytest.mark.parametrize("component", PROWLARR_UNSUPPORTED)
 def test_prowlarr_hides_unsupported_components(component):
-    """Prowlarr answers these with a 404, so the attribute must not exist."""
-    assert not hasattr(_client(Prowlarr, "v1"), component)
+    """Prowlarr answers these with a 404, so accessing one must raise rather than 404."""
+    client = _client(Prowlarr, "v1")
+
+    assert not hasattr(client, component)
+    with pytest.raises(AttributeError, match=component):
+        getattr(client, component)
 
 
 @pytest.mark.parametrize("client_class", [Bazarr, Dispatcharr])
@@ -87,6 +99,36 @@ def test_every_client_exposes_system(client_class, api_ver):
 def test_bazarr_wanted_is_split_by_media_type():
     """Bazarr has no combined wanted endpoint - subtitles/wanted returned the HTML page."""
     client = _client(Bazarr, "")
+
+    assert not hasattr(client, "wanted")
+    assert client.wanted_episodes.path == "episodes/wanted"
+    assert client.wanted_movies.path == "movies/wanted"
+
+
+@pytest.mark.parametrize("client_class", [AsyncSonarr, AsyncRadarr, AsyncLidarr, AsyncReadarr, AsyncWhisparr])
+@pytest.mark.parametrize("component", MEDIA_COMPONENTS)
+def test_async_media_clients_expose_every_media_component(client_class, component):
+    assert hasattr(_client(client_class, "v3"), component)
+
+
+@pytest.mark.parametrize("component", PROWLARR_UNSUPPORTED)
+def test_async_prowlarr_hides_unsupported_components(component):
+    client = _client(AsyncProwlarr, "v1")
+
+    assert not hasattr(client, component)
+    with pytest.raises(AttributeError, match=component):
+        getattr(client, component)
+
+
+@pytest.mark.parametrize("client_class", [AsyncBazarr, AsyncDispatcharr])
+@pytest.mark.parametrize("component", MEDIA_COMPONENTS)
+def test_async_non_media_clients_hide_media_components(client_class, component):
+    assert not hasattr(_client(client_class, ""), component)
+
+
+def test_async_bazarr_wanted_is_split_by_media_type():
+    """The async client is a separate source file, so it gets the same guard."""
+    client = _client(AsyncBazarr, "")
 
     assert not hasattr(client, "wanted")
     assert client.wanted_episodes.path == "episodes/wanted"
