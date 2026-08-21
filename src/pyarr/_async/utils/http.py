@@ -170,7 +170,7 @@ class RequestHandler:
             Exception: If the response status code indicates an error.
 
         Returns:
-            Any: The response data as a dictionary, list, or httpx.Response object.
+            Any: The response data as a dictionary or list, or None when the response is a 204 No Content.
         """
         if endpoint == "api":
             url = self.base_url.joinpath(endpoint)
@@ -224,6 +224,10 @@ class RequestHandler:
 
         if status_code // 100 in [4, 5]:
             await self._handle_error(response)
+
+        if status_code == 204:
+            # No Content, there is no body to decode even when the server advertises a JSON content type.
+            return None
 
         content_type = response.headers.get("Content-Type", "")
         if "application/json" in content_type:
