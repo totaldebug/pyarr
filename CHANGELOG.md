@@ -1,5 +1,18 @@
 # Changelog
 
+## [6.8.0](https://github.com/totaldebug/pyarr/compare/6.7.0...6.8.0) (2026-08-21)
+
+
+### Features
+
+* **bazarr:** Add actions and profile assignment for series and movies ([#208](https://github.com/totaldebug/pyarr/issues/208)) ([f1b07cb](https://github.com/totaldebug/pyarr/commit/f1b07cb1eef338a3afdd19ef08c0c549abaab36b))
+
+
+### Bug Fixes
+
+* **bazarr:** Mount the test config where Bazarr reads it and fix providers ([#205](https://github.com/totaldebug/pyarr/issues/205)) ([9ae2f05](https://github.com/totaldebug/pyarr/commit/9ae2f05ba12f78cad17ee7bd40a08cba2f11bd1f))
+* **client:** Expose common components only on clients that support them ([#209](https://github.com/totaldebug/pyarr/issues/209)) ([b7afd8f](https://github.com/totaldebug/pyarr/commit/b7afd8f6e52941c97e3ca9d15eae9f8f93cb8fad))
+
 ## [6.7.0](https://github.com/totaldebug/pyarr/compare/6.6.1...6.7.0) (2026-08-20)
 
 
