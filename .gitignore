@@ -39,3 +39,6 @@ tests/docker_configs/jackett/*
 !tests/docker_configs/jackett/config/jackett/Jackett/ServerConfig.json
 core.*
 dispatcharr-api.yaml
+
+# Claude Code local state and agent worktrees
+.claude/
