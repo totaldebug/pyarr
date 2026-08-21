@@ -4,19 +4,19 @@
 # """
 
 from pyarr._sync.common.base import CommonActions
-from pyarr.types import JsonArray
+from pyarr.types import JsonObject
 
 
 class Providers(CommonActions):
     """Subtitle provider actions for Bazarr."""
 
-    def get(self) -> JsonArray:
-        """Returns the list of subtitle providers.
+    def get(self) -> JsonObject:
+        """Returns the subtitle providers Bazarr knows about.
 
         Returns:
-            JsonArray: List of dictionaries with items.
+            JsonObject: Dictionary with a ``data`` list of providers.
         """
         response = self.handler.request("providers")
-        if isinstance(response, list):
+        if isinstance(response, dict):
             return response
-        raise ValueError("Expected a list response from the 'providers' endpoint")
+        raise ValueError("Expected a dictionary response from the 'providers' endpoint")

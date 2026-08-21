@@ -74,7 +74,8 @@ services:
       - PGID=123
       - TZ=Europe/London
     volumes:
-      - ../tests/docker_configs/bazarr/config/config.yaml:/config/config.yaml:rw
+      # Bazarr reads /config/config/config.yaml, not /config/config.yaml
+      - ../tests/docker_configs/bazarr/config/config.yaml:/config/config/config.yaml:rw
     ports:
       - 6767:6767
     restart: unless-stopped
