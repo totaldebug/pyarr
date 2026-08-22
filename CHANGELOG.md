@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.9.0](https://github.com/totaldebug/pyarr/compare/6.8.0...6.9.0) (2026-08-22)
+
+
+### Features
+
+* **lidarr:** Add metadata profile support ([#211](https://github.com/totaldebug/pyarr/issues/211)) ([39a1590](https://github.com/totaldebug/pyarr/commit/39a159038248a878a469984a826b7cf78db9c17b))
+
 ## [6.8.0](https://github.com/totaldebug/pyarr/compare/6.7.0...6.8.0) (2026-08-21)
 
 
