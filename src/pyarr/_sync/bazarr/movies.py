@@ -92,3 +92,55 @@ class Movies(CommonActions):
         params: dict[str, Any] = {"radarrid": movie_ids, "profileid": profile_ids}
 
         self.handler.request("movies", method="POST", params=params)
+
+    def download_subtitle(
+        self,
+        movie_id: int,
+        language: str,
+        forced: bool = False,
+        hi: bool = False,
+    ) -> JsonObject:
+        """Searches for and downloads a subtitle for a movie.
+
+        Args:
+            movie_id (int): The Radarr movie ID, sent as the ``radarrid`` parameter.
+            language (str): Two letter language code.
+            forced (bool, optional): Download a forced subtitle. Defaults to False.
+            hi (bool, optional): Download a hearing impaired subtitle. Defaults to False.
+
+        Returns:
+            JsonObject: The response data.
+        """
+        params: dict[str, Any] = {
+            "radarrid": movie_id,
+            "language": language,
+            "forced": forced,
+            "hi": hi,
+        }
+        return self.handler.request("movies/subtitles", method="PATCH", params=params)
+
+    def delete_subtitle(
+        self,
+        movie_id: int,
+        language: str,
+        path: str,
+        forced: bool = False,
+        hi: bool = False,
+    ) -> None:
+        """Deletes a subtitle file from a movie.
+
+        Args:
+            movie_id (int): The Radarr movie ID, sent as the ``radarrid`` parameter.
+            language (str): Two letter language code.
+            path (str): Path of the subtitle file to delete.
+            forced (bool, optional): The subtitle is a forced subtitle. Defaults to False.
+            hi (bool, optional): The subtitle is hearing impaired. Defaults to False.
+        """
+        params: dict[str, Any] = {
+            "radarrid": movie_id,
+            "language": language,
+            "path": path,
+            "forced": forced,
+            "hi": hi,
+        }
+        self.handler.request("movies/subtitles", method="DELETE", params=params)

@@ -16,7 +16,7 @@ class Hdhr(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        return self._get("hdhr/device.xml/")
+        return self._get("hdhr/device.xml")
 
     def get_devices(self, item_id: int | None = None) -> JsonArray | JsonObject:
         """Retrieve HDHR devices.
@@ -87,7 +87,7 @@ class Hdhr(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        return self._get("hdhr/discover.json/")
+        return self._get("hdhr/discover.json")
 
     def get_lineup(self) -> JsonArray:
         """Retrieve HDHR lineup JSON.
@@ -95,7 +95,7 @@ class Hdhr(CommonActions):
         Returns:
             JsonArray: The response data.
         """
-        return self._get("hdhr/lineup.json/")
+        return self._get("hdhr/lineup.json")
 
     def get_lineup_status(self) -> JsonObject:
         """Retrieve HDHR lineup status JSON.
@@ -103,4 +103,4 @@ class Hdhr(CommonActions):
         Returns:
             JsonObject: The response data.
         """
-        return self._get("hdhr/lineup_status.json/")
+        return self._get("hdhr/lineup_status.json")

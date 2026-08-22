@@ -5,12 +5,15 @@ from pyarr._async.bazarr.movies import Movies
 from pyarr._async.bazarr.providers import Providers
 from pyarr._async.bazarr.series import Series
 from pyarr._async.bazarr.subtitles import Subtitles
+from pyarr._async.bazarr.system import BazarrSystem
+from pyarr._async.bazarr.wanted import BazarrWanted
 from pyarr._async.client import BaseArrClient
-from pyarr._async.common.wanted import Wanted
 
 
 class Bazarr(BaseArrClient):
     """Bazarr API client."""
+
+    system: BazarrSystem  # type: ignore[assignment]
 
     def __init__(
         self,
@@ -58,5 +61,8 @@ class Bazarr(BaseArrClient):
         self.episodes = Episodes(self.http_utils)
         # Bazarr has no combined wanted endpoint. subtitles/wanted does not exist and is
         # answered with the SPA HTML page rather than a 404, so it looked like it worked.
-        self.wanted_episodes = Wanted(self.http_utils, path="episodes/wanted")
-        self.wanted_movies = Wanted(self.http_utils, path="movies/wanted")
+        self.wanted_episodes = BazarrWanted(self.http_utils, path="episodes/wanted")
+        self.wanted_movies = BazarrWanted(self.http_utils, path="movies/wanted")
+        # Bazarr does not answer the shared Servarr system paths, so replace the component
+        # BaseArrClient attached with one that targets Bazarr's own routes.
+        self.system = BazarrSystem(self.http_utils)

@@ -49,3 +49,61 @@ class Episodes(CommonActions):
         if isinstance(response, dict):
             return response
         raise ValueError("Expected a dictionary response from the 'episodes' endpoint")
+
+    def download_subtitle(
+        self,
+        series_id: int,
+        episode_id: int,
+        language: str,
+        forced: bool = False,
+        hi: bool = False,
+    ) -> JsonObject:
+        """Searches for and downloads a subtitle for an episode.
+
+        Args:
+            series_id (int): The Sonarr series ID, sent as the ``seriesid`` parameter.
+            episode_id (int): The Sonarr episode ID, sent as the ``episodeid`` parameter.
+            language (str): Two letter language code.
+            forced (bool, optional): Download a forced subtitle. Defaults to False.
+            hi (bool, optional): Download a hearing impaired subtitle. Defaults to False.
+
+        Returns:
+            JsonObject: The response data.
+        """
+        params: dict[str, Any] = {
+            "seriesid": series_id,
+            "episodeid": episode_id,
+            "language": language,
+            "forced": forced,
+            "hi": hi,
+        }
+        return self.handler.request("episodes/subtitles", method="PATCH", params=params)
+
+    def delete_subtitle(
+        self,
+        series_id: int,
+        episode_id: int,
+        language: str,
+        path: str,
+        forced: bool = False,
+        hi: bool = False,
+    ) -> None:
+        """Deletes a subtitle file from an episode.
+
+        Args:
+            series_id (int): The Sonarr series ID, sent as the ``seriesid`` parameter.
+            episode_id (int): The Sonarr episode ID, sent as the ``episodeid`` parameter.
+            language (str): Two letter language code.
+            path (str): Path of the subtitle file to delete.
+            forced (bool, optional): The subtitle is a forced subtitle. Defaults to False.
+            hi (bool, optional): The subtitle is hearing impaired. Defaults to False.
+        """
+        params: dict[str, Any] = {
+            "seriesid": series_id,
+            "episodeid": episode_id,
+            "language": language,
+            "path": path,
+            "forced": forced,
+            "hi": hi,
+        }
+        self.handler.request("episodes/subtitles", method="DELETE", params=params)

@@ -1,13 +1,28 @@
-from pyarr._async.utils.http import RequestHandler
+from pyarr._async.common.config import MediaConfig
+from pyarr.types import JsonObject
 
 
-class Config:
-    """Config actions for Lidarr."""
+class Config(MediaConfig):
+    """Config actions for Lidarr.
 
-    def __init__(self, handler: RequestHandler):
-        """Initializes the config actions with the provided request handler.
+    Adds the metadata provider options on top of the shared media manager sections.
+    """
+
+    async def get_metadata_provider(self) -> JsonObject:
+        """Get the metadata provider options.
+
+        Returns:
+            JsonObject: Dictionary with metadata provider options.
+        """
+        return await self._get_section("metadataProvider")
+
+    async def update_metadata_provider(self, data: JsonObject) -> JsonObject:
+        """Edit the metadata provider options.
 
         Args:
-            handler (RequestHandler): The request handler to use for API requests.
+            data (JsonObject): Data to be updated within the metadata provider options.
+
+        Returns:
+            JsonObject: Dictionary of the updated metadata provider options.
         """
-        self.handler = handler
+        return await self._update_section("metadataProvider", data)
