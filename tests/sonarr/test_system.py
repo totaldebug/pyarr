@@ -1,3 +1,5 @@
+import pytest
+
 from pyarr import Sonarr
 
 
@@ -27,6 +29,7 @@ def test_get_task(sonarr_client: Sonarr):
     assert isinstance(response, dict)
 
 
+@pytest.mark.destructive
 def test_request_restart(sonarr_client: Sonarr):
     response = sonarr_client.system.request_restart()
     assert isinstance(response, dict)
