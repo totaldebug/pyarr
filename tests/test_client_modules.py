@@ -133,3 +133,43 @@ def test_async_bazarr_wanted_is_split_by_media_type():
     assert not hasattr(client, "wanted")
     assert client.wanted_episodes.path == "episodes/wanted"
     assert client.wanted_movies.path == "movies/wanted"
+
+
+@pytest.mark.parametrize(
+    ("client_class", "api_ver"), [(Lidarr, "v1"), (AsyncLidarr, "v1")]
+)
+def test_lidarr_exposes_metadata_profile(client_class, api_ver):
+    """Lidarr serves /metadataprofile, verified against Lidarr 3.1.0.4875."""
+    client = _client(client_class, api_ver)
+
+    assert hasattr(client, "metadata_profile")
+    for method in ("get", "get_schema", "add", "update", "delete"):
+        assert hasattr(client.metadata_profile, method)
+
+
+@pytest.mark.parametrize(
+    "client_class", [Sonarr, Radarr, Whisparr, Prowlarr, Bazarr, Dispatcharr]
+)
+def test_metadata_profile_only_on_clients_that_serve_it(client_class):
+    """Only Lidarr and Readarr have metadata profiles; the rest must not offer one."""
+    api_ver = "v1" if client_class is Prowlarr else "" if client_class in (Bazarr, Dispatcharr) else "v3"
+
+    assert not hasattr(_client(client_class, api_ver), "metadata_profile")
+
+
+def test_lidarr_and_readarr_metadata_profiles_are_distinct_resources():
+    """
+    Both serve /metadataprofile, but the resources share nothing but the path.
+
+    Lidarr's profile carries album types and release statuses; Readarr's carries
+    book fields such as minPages and skipMissingIsbn. Readarr's `add` therefore
+    takes explicit keyword arguments while Lidarr's takes the profile dict, and
+    only Lidarr exposes a schema endpoint.
+    """
+    lidarr = _client(Lidarr, "v1").metadata_profile
+    readarr = _client(Readarr, "v1").metadata_profile
+
+    assert type(lidarr) is not type(readarr)
+    assert hasattr(lidarr, "get_schema")
+    assert not hasattr(readarr, "get_schema")
+    assert hasattr(lidarr, "update")

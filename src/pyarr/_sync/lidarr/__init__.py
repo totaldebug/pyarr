@@ -12,6 +12,7 @@ from pyarr._sync.lidarr.album import Album
 from pyarr._sync.lidarr.artist import Artist
 from pyarr._sync.lidarr.config import Config
 from pyarr._sync.lidarr.manual_import import ManualImport
+from pyarr._sync.lidarr.metadata_profile import MetadataProfile
 from pyarr._sync.lidarr.release import Release
 from pyarr._sync.lidarr.track import Track
 from pyarr._sync.lidarr.track_file import TrackFile
@@ -66,5 +67,6 @@ class Lidarr(MediaArrClient):
         self.track_file = TrackFile(self.http_utils)
         self.release = Release(self.http_utils)
         self.manual_import = ManualImport(self.http_utils)
+        self.metadata_profile = MetadataProfile(self.http_utils)
         self.wanted = Wanted(self.http_utils)
         self.import_list_exclusion = ImportListExclusion(self.http_utils)

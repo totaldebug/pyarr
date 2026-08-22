@@ -31,6 +31,13 @@ The support below was established by probing live instances.
 Bazarr and Dispatcharr have their own APIs and expose only ``system`` from this set,
 alongside their own client-specific components.
 
+.. note::
+    ``metadata`` above is the metadata *consumer* settings - the nfo writers - and is
+    not the same thing as metadata *profiles*. Metadata profiles are client-specific
+    and differ between clients, so they are documented per client: see
+    :doc:`lidarr` and :doc:`readarr`. Lidarr's profile carries album types and release
+    statuses, Readarr's carries book fields, and no other client has them.
+
 Backup
 ------
 .. automodule:: pyarr._sync.common.backup
