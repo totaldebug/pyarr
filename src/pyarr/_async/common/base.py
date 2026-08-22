@@ -24,6 +24,9 @@ class CommonActions:
         path that already ends in a slash produces a double slash, which Dispatcharr
         answers with its single page application's HTML at HTTP 200 rather than a 404.
 
+        ``None`` is the only value meaning "no item", matching every caller's signature.
+        Testing truthiness instead would send a delete for item 0 to the collection.
+
         Args:
             path (str): The API endpoint path for the collection.
             item_id (Any, optional): The ID of a single item. Defaults to None.
@@ -31,7 +34,7 @@ class CommonActions:
         Returns:
             str: The endpoint to request.
         """
-        if not item_id:
+        if item_id is None:
             return path
         if path.endswith("/"):
             return f"{path}{item_id}/"
