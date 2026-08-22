@@ -24,10 +24,13 @@ class Plugins(CommonActions):
     def delete(self, item_id: str) -> None:
         """Delete a plugin.
 
+        Dispatcharr deletes plugins through a dedicated action route rather than a plain
+        DELETE on the detail route, so this does not use the generic helper.
+
         Args:
             item_id (str): Plugin ID.
         """
-        self._delete("plugins/plugins/", item_id=item_id)
+        self.handler.request(f"plugins/plugins/{item_id}/delete/", method="DELETE")
 
     def set_enabled(self, item_id: str, enabled: bool) -> JsonObject:
         """Enable or disable a plugin.

@@ -22,6 +22,8 @@ from pyarr._async.dispatcharr.vod import Vod
 class Dispatcharr(BaseArrClient):
     """Dispatcharr API client."""
 
+    system: DispatcharrSystem  # type: ignore[assignment]
+
     def __init__(
         self,
         host: str,
@@ -34,6 +36,7 @@ class Dispatcharr(BaseArrClient):
         session: httpx.AsyncClient | None = None,
         verify_ssl: bool = True,
         headers: dict[str, str] | None = None,
+        auth_scheme: str = "bearer",
     ):
         """Initializes the Dispatcharr client.
 
@@ -48,6 +51,11 @@ class Dispatcharr(BaseArrClient):
             session (httpx.AsyncClient | None, optional): An existing httpx.AsyncClient session. Defaults to None.
             verify_ssl (bool, optional): Whether to verify SSL certificates. Defaults to True.
             headers (dict[str, str] | None, optional): Default headers to include in requests. Defaults to None.
+            auth_scheme (str, optional): How to present the credential. Dispatcharr issues
+                JWT access tokens from ``accounts/token/`` and expects them in an
+                ``Authorization: Bearer`` header, so this defaults to ``"bearer"``. Pass
+                ``"apikey"`` when authenticating with a generated API key instead, which
+                Dispatcharr accepts in the ``X-API-Key`` header.
         """
         super().__init__(
             host,
@@ -60,6 +68,7 @@ class Dispatcharr(BaseArrClient):
             session=session,
             verify_ssl=verify_ssl,
             headers=headers,
+            auth_scheme=auth_scheme,
         )
         self.accounts = Accounts(self.http_utils)
         self.backups = Backups(self.http_utils)
@@ -75,5 +84,5 @@ class Dispatcharr(BaseArrClient):
         self.plugins = Plugins(self.http_utils)
         self.proxy = Proxy(self.http_utils)
         self.streams = Streams(self.http_utils)
-        self.system = DispatcharrSystem(self.http_utils)  # type: ignore
+        self.system = DispatcharrSystem(self.http_utils)
         self.vod = Vod(self.http_utils)

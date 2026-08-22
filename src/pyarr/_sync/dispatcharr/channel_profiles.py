@@ -87,20 +87,22 @@ class ChannelProfiles(CommonActions):
             return response
         raise ValueError(f"Expected a dictionary response from the 'channels/profiles/{item_id}/duplicate/' endpoint")
 
-    def partial_update_channels(self, item_id: int, data: JsonObject) -> JsonObject:
-        """Partially update channels in a profile.
+    def partial_update_channel(self, item_id: int, channel_id: int, data: JsonObject) -> JsonObject:
+        """Partially update a single channel's membership of a profile.
 
         Args:
             item_id (int): Profile ID.
+            channel_id (int): ID of the channel within that profile.
             data (JsonObject): Updated configuration.
 
         Returns:
             JsonObject: Updated profile details.
         """
-        response = self.handler.request(f"channels/profiles/{item_id}/channels/", method="PATCH", json_data=data)
+        endpoint = f"channels/profiles/{item_id}/channels/{channel_id}/"
+        response = self.handler.request(endpoint, method="PATCH", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError(f"Expected a dictionary response from the 'channels/profiles/{item_id}/channels/' endpoint")
+        raise ValueError(f"Expected a dictionary response from the '{endpoint}' endpoint")
 
     def bulk_update_channels(self, item_id: int, data: JsonObject) -> JsonObject:
         """Bulk update channels in a profile.

@@ -276,19 +276,22 @@ class M3u(CommonActions):
             return response
         raise ValueError("Expected a dictionary response from the 'm3u/refresh/' endpoint")
 
-    def refresh_account_info(self, data: JsonObject) -> JsonObject:
-        """Refresh M3U account info.
+    def refresh_account_info(self, profile_id: int, data: JsonObject | None = None) -> JsonObject:
+        """Refresh M3U account info for a single profile.
 
         Args:
-            data (JsonObject): Refresh request data.
+            profile_id (int): ID of the M3U profile to refresh. Dispatcharr takes this in
+                the path, not the body.
+            data (JsonObject | None, optional): Refresh request data. Defaults to None.
 
         Returns:
             JsonObject: The response data.
         """
-        response = self.handler.request("m3u/refresh-account-info/", method="POST", json_data=data)
+        endpoint = f"m3u/refresh-account-info/{profile_id}/"
+        response = self.handler.request(endpoint, method="POST", json_data=data)
         if isinstance(response, dict):
             return response
-        raise ValueError("Expected a dictionary response from the 'm3u/refresh-account-info/' endpoint")
+        raise ValueError(f"Expected a dictionary response from the '{endpoint}' endpoint")
 
     def get_server_groups(self, item_id: int | None = None) -> JsonArray | JsonObject:
         """Retrieve M3U server groups.
