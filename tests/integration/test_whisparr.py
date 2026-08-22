@@ -7,9 +7,17 @@ def test_whisparr_system_status(whisparr_client):
         pass
 
 
-def test_whisparr_movie(whisparr_client):
-    try:
-        movies = whisparr_client.movie.get()
-        assert isinstance(movies, list)
-    except Exception:
-        pass
+def test_whisparr_series(whisparr_client):
+    """Whisparr V2 forks Sonarr v3, so its library is series rather than movies.
+
+    Asserted rather than wrapped in a bare except: swallowing every exception is what
+    let this file keep calling the long-gone movie resource without anything noticing.
+    """
+    series = whisparr_client.series.get()
+    assert isinstance(series, list)
+
+
+def test_whisparr_has_no_movie_resource(whisparr_client):
+    """/api/v3/movie and /moviefile return an unrouted 404 on this fork."""
+    assert not hasattr(whisparr_client, "movie")
+    assert not hasattr(whisparr_client, "movie_file")
