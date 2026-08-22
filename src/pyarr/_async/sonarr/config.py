@@ -1,13 +1,28 @@
-from pyarr._async.utils.http import RequestHandler
+from pyarr._async.common.config import MediaConfig
+from pyarr.types import JsonObject
 
 
-class Config:
-    """Config actions for Sonarr."""
+class Config(MediaConfig):
+    """Config actions for Sonarr.
 
-    def __init__(self, handler: RequestHandler):
-        """Initializes the config actions with the provided request handler.
+    Adds the import list options on top of the shared media manager sections.
+    """
+
+    async def get_import_list(self) -> JsonObject:
+        """Get the import list options.
+
+        Returns:
+            JsonObject: Dictionary with import list options.
+        """
+        return await self._get_section("importlist")
+
+    async def update_import_list(self, data: JsonObject) -> JsonObject:
+        """Edit the import list options.
 
         Args:
-            handler (RequestHandler): The request handler to use for API requests.
+            data (JsonObject): Data to be updated within the import list options.
+
+        Returns:
+            JsonObject: Dictionary of the updated import list options.
         """
-        self.handler = handler
+        return await self._update_section("importlist", data)
