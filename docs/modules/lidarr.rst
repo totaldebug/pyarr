@@ -36,3 +36,8 @@ Manual Import
 -------------
 .. automodule:: pyarr._sync.lidarr.manual_import
     :members:
+
+Metadata Profile
+----------------
+.. automodule:: pyarr._sync.lidarr.metadata_profile
+    :members:
