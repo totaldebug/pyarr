@@ -6,18 +6,25 @@
 import httpx
 
 from pyarr._sync.client import MediaArrClient
+from pyarr._sync.common.config import MediaConfig
 from pyarr._sync.common.import_list_exclusion import ImportListExclusion
 from pyarr._sync.common.wanted import Wanted
-from pyarr._sync.radarr.config import Config
 from pyarr._sync.radarr.custom_filter import CustomFilter
-from pyarr._sync.radarr.manual_import import ManualImport
-from pyarr._sync.radarr.movie import Movie
-from pyarr._sync.radarr.movie_file import MovieFile
-from pyarr._sync.radarr.release import Release
+from pyarr._sync.sonarr.episode import Episode
+from pyarr._sync.sonarr.episode_file import EpisodeFile
+from pyarr._sync.sonarr.manual_import import ManualImport
+from pyarr._sync.sonarr.release import Release
+from pyarr._sync.sonarr.series import Series
 
 
 class Whisparr(MediaArrClient):
-    """Whisparr API client (Radarr fork)."""
+    """Whisparr API client.
+
+    Whisparr V2 ("Eros") forks Sonarr v3, not Radarr, so its library primitives are
+    ``series`` (shown as Sites in the web interface) and ``episode`` (shown as Scenes).
+    It serves no ``movie`` or ``moviefile`` routes at all, which is why the Sonarr
+    components are reused here.
+    """
 
     def __init__(
         self,
@@ -58,9 +65,10 @@ class Whisparr(MediaArrClient):
             verify_ssl=verify_ssl,
             headers=headers,
         )
-        self.config = Config(self.http_utils)
-        self.movie = Movie(self.http_utils)
-        self.movie_file = MovieFile(self.http_utils)
+        self.config = MediaConfig(self.http_utils)
+        self.series = Series(self.http_utils)
+        self.episode = Episode(self.http_utils)
+        self.episode_file = EpisodeFile(self.http_utils)
         self.release = Release(self.http_utils)
         self.manual_import = ManualImport(self.http_utils)
         self.custom_filter = CustomFilter(self.http_utils)

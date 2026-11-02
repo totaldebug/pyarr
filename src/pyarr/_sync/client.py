@@ -23,7 +23,7 @@ from pyarr._sync.common.quality_profile import QualityProfile
 from pyarr._sync.common.queue import Queue
 from pyarr._sync.common.remote_path_mapping import RemotePathMapping
 from pyarr._sync.common.root_folder import RootFolder
-from pyarr._sync.common.system import System
+from pyarr._sync.common.system import MediaSystem, System
 from pyarr._sync.common.tag import Tag
 from pyarr._sync.common.update import Update
 from pyarr._sync.utils.http import RequestHandler
@@ -33,6 +33,8 @@ T = TypeVar("T", bound="BaseArrClient")
 
 class BaseArrClient:
     """Base class for all Arr clients."""
+
+    system: System
 
     def __init__(
         self,
@@ -46,6 +48,7 @@ class BaseArrClient:
         session: httpx.Client | None = None,
         verify_ssl: bool = True,
         headers: dict[str, str] | None = None,
+        auth_scheme: str = "apikey",
     ):
         """Initializes the client with the provided host, API key, and optional parameters.
 
@@ -60,6 +63,8 @@ class BaseArrClient:
             session (httpx.Client | None, optional): An existing httpx.Client session. Defaults to None.
             verify_ssl (bool, optional): Whether to verify SSL certificates. Defaults to True.
             headers (dict[str, str] | None, optional): Default headers to include in requests. Defaults to None.
+            auth_scheme (str, optional): How to present the credential, either ``"apikey"``
+                or ``"bearer"``. Defaults to ``"apikey"``.
         """
         self.http_utils = RequestHandler(
             host,
@@ -72,6 +77,7 @@ class BaseArrClient:
             session=session,
             verify_ssl=verify_ssl,
             headers=headers,
+            auth_scheme=auth_scheme,
         )
         self.system = System(self.http_utils)
 
@@ -105,6 +111,8 @@ class MediaArrClient(BaseArrClient):
     which is why these live on this tier rather than on :class:`BaseArrClient`.
     """
 
+    system: MediaSystem
+
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         """Initializes the client and attaches the shared media management components.
 
@@ -131,3 +139,5 @@ class MediaArrClient(BaseArrClient):
         self.queue = Queue(self.http_utils)
         self.remote_path_mapping = RemotePathMapping(self.http_utils)
         self.command = Command(self.http_utils)
+        # Upgrades the BaseArrClient system component with the media-only diskspace endpoint.
+        self.system = MediaSystem(self.http_utils)

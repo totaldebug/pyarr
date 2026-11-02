@@ -1,9 +1,15 @@
 from pyarr._async.common.base import CommonActions
-from pyarr.types import JsonArray, JsonObject
+from pyarr.types import JsonArray
 
 
 class Subtitles(CommonActions):
-    """Subtitle actions for Bazarr."""
+    """Subtitle actions for Bazarr.
+
+    Bazarr has no ``subtitles/{id}`` route, so a subtitle cannot be downloaded or deleted
+    on its own. Those actions belong to the media the subtitle is attached to and live on
+    :class:`pyarr._async.bazarr.episodes.Episodes` and
+    :class:`pyarr._async.bazarr.movies.Movies` instead.
+    """
 
     async def get(self, **kwargs) -> JsonArray:
         """Returns the list of subtitles.
@@ -18,25 +24,3 @@ class Subtitles(CommonActions):
         if isinstance(response, list):
             return response
         raise ValueError("Expected a list response from the 'subtitles' endpoint")
-
-    async def download(self, subtitle_id: str) -> JsonObject:
-        """Download a specific subtitle.
-
-        Args:
-            subtitle_id (str): ID of the subtitle to download.
-
-        Returns:
-            JsonObject: Download status.
-        """
-        response = await self.handler.request(f"subtitles/{subtitle_id}", method="POST")
-        if isinstance(response, dict):
-            return response
-        raise ValueError(f"Expected a dictionary response from the 'subtitles/{subtitle_id}' endpoint")
-
-    async def delete(self, subtitle_id: str) -> None:
-        """Delete a specific subtitle.
-
-        Args:
-            subtitle_id (str): ID of the subtitle to delete.
-        """
-        await self.handler.request(f"subtitles/{subtitle_id}", method="DELETE")

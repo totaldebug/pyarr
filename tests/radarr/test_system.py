@@ -1,3 +1,5 @@
+import pytest
+
 from pyarr import Radarr
 
 
@@ -27,6 +29,7 @@ def test_get_task(radarr_client: Radarr):
     assert isinstance(response, dict)
 
 
+@pytest.mark.destructive
 def test_request_restart(radarr_client: Radarr):
     response = radarr_client.system.request_restart()
     assert isinstance(response, dict)

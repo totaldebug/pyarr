@@ -64,6 +64,12 @@ dev = [
 requires = ["uv_build>=0.10.0,<0.11.0"]
 build-backend = "uv_build"
 
+[tool.pytest.ini_options]
+markers = [
+    "destructive: restarts or shuts down the application under test. Deselected by default, because the app is unavailable for several seconds afterwards and sometimes fails to rebind its port entirely, which breaks every test that follows. Run explicitly with `pytest -m destructive`.",
+]
+addopts = ["-m", "not destructive"]
+
 [tool.ruff]
 line-length = 120
 target-version = "py312"

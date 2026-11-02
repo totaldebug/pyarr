@@ -40,6 +40,7 @@ class RequestHandler:
         session: httpx.Client | None = None,
         verify_ssl: bool = True,
         headers: dict[str, str] | None = None,
+        auth_scheme: str = "apikey",
     ) -> None:
         """
         Initializes the HTTP client with the provided host, API key, and optional parameters.
@@ -55,9 +56,14 @@ class RequestHandler:
             session (httpx.Client | None, optional): An existing httpx.Client session. Defaults to None.
             verify_ssl (bool, optional): Whether to verify SSL certificates. Defaults to True.
             headers (dict[str, str] | None, optional): Default headers to include in requests. Defaults to None.
+            auth_scheme (str, optional): How to present the credential. ``"apikey"`` sends an
+                ``X-Api-Key`` header, which is what every Servarr application expects.
+                ``"bearer"`` sends an ``Authorization: Bearer`` header, which Dispatcharr
+                requires for JWT access tokens. Defaults to ``"apikey"``.
 
         Raises:
-            ValueError: If no API Key is provided or if unable to retrieve API version automatically.
+            ValueError: If no API Key is provided, if the auth scheme is unknown, or if
+                unable to retrieve API version automatically.
         """
         if "://" in host:
             url = URL(host)
@@ -78,6 +84,11 @@ class RequestHandler:
 
         if not api_key:
             raise ValueError("No API Key provided")
+
+        if auth_scheme not in ("apikey", "bearer"):
+            raise ValueError(f"Unknown auth scheme '{auth_scheme}', expected 'apikey' or 'bearer'")
+
+        self.auth_scheme = auth_scheme
 
         self.api_key = api_key  # Initialize api_key before making requests
         self.request_timeout = request_timeout
@@ -198,7 +209,10 @@ class RequestHandler:
         request_headers = self.headers.copy()
         if headers:
             request_headers.update(headers)
-        request_headers["X-Api-Key"] = self.api_key
+        if self.auth_scheme == "bearer":
+            request_headers["Authorization"] = f"Bearer {self.api_key}"
+        else:
+            request_headers["X-Api-Key"] = self.api_key
 
         if self.session is None:
             self.session = httpx.Client(

@@ -14,6 +14,32 @@ class CommonActions:
         """
         self.handler = handler
 
+    @staticmethod
+    def _detail_path(path: str, item_id: Any = None) -> str:
+        """Builds the endpoint for a collection or one of its items.
+
+        The trailing slash convention of ``path`` is preserved, because the two API
+        families disagree about it. Servarr wants ``series/1``, while Dispatcharr's
+        Django routes want ``channels/channels/1/``. Naively appending ``/{item_id}`` to a
+        path that already ends in a slash produces a double slash, which Dispatcharr
+        answers with its single page application's HTML at HTTP 200 rather than a 404.
+
+        ``None`` is the only value meaning "no item", matching every caller's signature.
+        Testing truthiness instead would send a delete for item 0 to the collection.
+
+        Args:
+            path (str): The API endpoint path for the collection.
+            item_id (Any, optional): The ID of a single item. Defaults to None.
+
+        Returns:
+            str: The endpoint to request.
+        """
+        if item_id is None:
+            return path
+        if path.endswith("/"):
+            return f"{path}{item_id}/"
+        return f"{path}/{item_id}"
+
     async def _get(self, path: str, item_id: Any = None, params: dict | None = None) -> Any:
         """Helper method for standard GET requests (List or Detail).
 
@@ -25,8 +51,7 @@ class CommonActions:
         Returns:
             Any: The response data.
         """
-        endpoint = f"{path}{f'/{item_id}' if item_id else ''}"
-        return await self.handler.request(endpoint, params=params)
+        return await self.handler.request(self._detail_path(path, item_id), params=params)
 
     async def _delete(self, path: str, item_id: Any) -> Any:
         """Helper method for standard DELETE requests.
@@ -38,5 +63,4 @@ class CommonActions:
         Returns:
             Any: The response data.
         """
-        endpoint = f"{path}/{item_id}"
-        return await self.handler.request(endpoint, method="DELETE")
+        return await self.handler.request(self._detail_path(path, item_id), method="DELETE")

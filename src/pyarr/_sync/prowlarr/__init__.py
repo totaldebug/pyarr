@@ -15,6 +15,7 @@ from pyarr._sync.common.notification import Notification
 from pyarr._sync.common.tag import Tag
 from pyarr._sync.common.update import Update
 from pyarr._sync.prowlarr.applications import Applications
+from pyarr._sync.prowlarr.config import Config
 from pyarr._sync.prowlarr.indexer import Indexer
 from pyarr._sync.prowlarr.indexer_proxy import IndexerProxy
 from pyarr._sync.prowlarr.search import Search
@@ -73,4 +74,5 @@ class Prowlarr(BaseArrClient):
         self.update = Update(self.http_utils)
         self.search = Search(self.http_utils)
         self.applications = Applications(self.http_utils)
+        self.config = Config(self.http_utils)
         self.indexer_proxy = IndexerProxy(self.http_utils)

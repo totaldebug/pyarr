@@ -3,7 +3,11 @@ from pyarr.types import JsonArray, JsonObject
 
 
 class System(CommonActions):
-    """System actions for Arr clients."""
+    """System actions shared by every Servarr client.
+
+    Sonarr, Radarr, Lidarr, Readarr, Prowlarr and Whisparr all serve these. Diskspace is
+    not among them, since Prowlarr manages no media, so it lives on :class:`MediaSystem`.
+    """
 
     async def get_status(self) -> JsonObject:
         """Gets system status.
@@ -20,14 +24,6 @@ class System(CommonActions):
             JsonArray: List of dictionaries with items.
         """
         return await self._get("health")
-
-    async def get_diskspace(self) -> JsonArray:
-        """Get diskspace information.
-
-        Returns:
-            JsonArray: List of dictionaries with items.
-        """
-        return await self._get("diskspace")
 
     async def get_task(self, item_id: int | None = None) -> JsonArray | JsonObject:
         """Get task information.
@@ -79,3 +75,19 @@ class System(CommonActions):
             JsonObject: dict with routes duplicate.
         """
         return await self._get("system/routes/duplicate")
+
+
+class MediaSystem(System):
+    """System actions for the media manager clients.
+
+    Sonarr, Radarr, Lidarr, Readarr and Whisparr report on the disks holding their
+    libraries. Prowlarr does not serve this endpoint.
+    """
+
+    async def get_diskspace(self) -> JsonArray:
+        """Get diskspace information.
+
+        Returns:
+            JsonArray: List of dictionaries with items.
+        """
+        return await self._get("diskspace")

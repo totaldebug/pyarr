@@ -1,3 +1,5 @@
+import pytest
+
 from pyarr import Readarr
 
 
@@ -27,6 +29,7 @@ def test_get_task(readarr_client: Readarr):
     assert isinstance(response, dict)
 
 
+@pytest.mark.destructive
 def test_request_restart(readarr_client: Readarr):
     response = readarr_client.system.request_restart()
     assert isinstance(response, dict)
