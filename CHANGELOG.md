@@ -1,5 +1,16 @@
 # Changelog
 
+## [7.0.0](https://github.com/totaldebug/pyarr/compare/6.9.0...7.0.0) (2026-11-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* correct endpoints, auth and paths that the live APIs reject ([#213](https://github.com/totaldebug/pyarr/issues/213))
+
+### Bug Fixes
+
+* Correct endpoints, auth and paths that the live APIs reject ([#213](https://github.com/totaldebug/pyarr/issues/213)) ([0fc2c3d](https://github.com/totaldebug/pyarr/commit/0fc2c3d169a6e6553a16d82b232ce15167ea5b64))
+
 ## [6.9.0](https://github.com/totaldebug/pyarr/compare/6.8.0...6.9.0) (2026-08-22)
 
 
