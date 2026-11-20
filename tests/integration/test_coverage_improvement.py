@@ -142,7 +142,7 @@ def test_sonarr_queue_extended(sonarr_client):
             999,
             remove_from_client=True,
             blocklist=True,
-            skip_redundant_dictionary_check=True,
+            skip_redownload=True,
             mark_as_failed=True,
             message="test",
         )

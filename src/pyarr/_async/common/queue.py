@@ -51,7 +51,7 @@ class Queue(CommonActions):
         item_id: int,
         remove_from_client: bool | None = None,
         blocklist: bool | None = None,
-        skip_redundant_dictionary_check: bool | None = None,
+        skip_redownload: bool | None = None,
         mark_as_failed: bool | None = None,
         message: str | None = None,
     ) -> None:
@@ -61,7 +61,7 @@ class Queue(CommonActions):
             item_id (int): ID of the item to be removed.
             remove_from_client (bool | None, optional): Remove the item from the client. Defaults to None.
             blocklist (bool | None, optional): Add the item to the blocklist. Defaults to None.
-            skip_redundant_dictionary_check (bool | None, optional): Skip redundant dictionary check. Defaults to None.
+            skip_redownload (bool | None, optional): Skip redownload. Defaults to None.
             mark_as_failed (bool | None, optional): Mark the item as failed (Sonarr v5). Defaults to None.
             message (str | None, optional): Message for failure (Sonarr v5). Defaults to None.
         """
@@ -70,8 +70,8 @@ class Queue(CommonActions):
             params["removeFromClient"] = remove_from_client
         if blocklist is not None:
             params["blocklist"] = blocklist
-        if skip_redundant_dictionary_check is not None:
-            params["skipRedundantDictionaryCheck"] = skip_redundant_dictionary_check
+        if skip_redownload is not None:
+            params["skipRedownload"] = skip_redownload
         if mark_as_failed is not None:
             params["markAsFailed"] = mark_as_failed
         if message is not None:
